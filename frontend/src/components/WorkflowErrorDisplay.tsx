@@ -178,9 +178,10 @@ const WorkflowErrorDisplay: React.FC<WorkflowErrorDisplayProps> = ({
       // Sanitize inputs to prevent NoSQL injection
       const sanitizedInputs: Record<string, unknown> = {};
       Object.entries(modifiedInputs).forEach(([key, value]) => {
-        sanitizedInputs[sanitizeInput(key)] = typeof value === 'string' ? sanitizeInput(value) : value;
+        sanitizedInputs[sanitizeInput(key)] =
+          typeof value === "string" ? sanitizeInput(value) : value;
       });
-      
+
       // Execute retry with sanitized inputs
       const response = await retryWorkflowExecution(
         executionId,

@@ -1,4 +1,4 @@
-import { Node as ReactFlowNode, Edge as ReactFlowEdge } from '@xyflow/react';
+import { Node as ReactFlowNode, Edge as ReactFlowEdge } from "@xyflow/react";
 
 export interface NodeConfig {
   [key: string]: unknown;
@@ -28,7 +28,7 @@ export interface WorkflowEdge extends ReactFlowEdge {
 export interface ExecutionLogEntry {
   id: string;
   timestamp: string;
-  level: 'debug' | 'info' | 'warn' | 'error';
+  level: "debug" | "info" | "warn" | "error";
   message: string;
   stepId?: string;
   metadata?: Record<string, unknown>;
@@ -37,7 +37,7 @@ export interface ExecutionLogEntry {
 export interface WorkflowExecution {
   id: string;
   workflowId: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   inputData: Record<string, unknown>;
   outputData?: Record<string, unknown>;
   startedAt: string;
@@ -46,5 +46,10 @@ export interface WorkflowExecution {
 }
 
 export interface FormData {
-  [key: string]: string | number | boolean | Record<string, unknown> | unknown[];
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | Record<string, unknown>
+    | unknown[];
 }

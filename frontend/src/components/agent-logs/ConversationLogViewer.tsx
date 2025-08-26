@@ -99,15 +99,21 @@ export const ConversationLogViewer: React.FC<ConversationLogViewerProps> = ({
       const sanitizedSearchTerm = sanitizeInput(searchTerm);
       filtered = filtered.filter(
         (log) =>
-          log.message.toLowerCase().includes(sanitizedSearchTerm.toLowerCase()) ||
-          log.agentName.toLowerCase().includes(sanitizedSearchTerm.toLowerCase()),
+          log.message
+            .toLowerCase()
+            .includes(sanitizedSearchTerm.toLowerCase()) ||
+          log.agentName
+            .toLowerCase()
+            .includes(sanitizedSearchTerm.toLowerCase()),
       );
     }
 
     // Apply agent filter
     if (filterAgent) {
       const sanitizedFilterAgent = sanitizeInput(filterAgent);
-      filtered = filtered.filter((log) => log.agentName === sanitizedFilterAgent);
+      filtered = filtered.filter(
+        (log) => log.agentName === sanitizedFilterAgent,
+      );
     }
 
     // Apply message type filter
@@ -200,7 +206,9 @@ export const ConversationLogViewer: React.FC<ConversationLogViewerProps> = ({
               <>
                 <select
                   value={filterAgent}
-                  onChange={(e) => setFilterAgent(sanitizeInput(e.target.value))}
+                  onChange={(e) =>
+                    setFilterAgent(sanitizeInput(e.target.value))
+                  }
                   className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 >
                   <option value="">All Agents</option>
@@ -213,7 +221,9 @@ export const ConversationLogViewer: React.FC<ConversationLogViewerProps> = ({
 
                 <select
                   value={filterMessageType}
-                  onChange={(e) => setFilterMessageType(sanitizeInput(e.target.value))}
+                  onChange={(e) =>
+                    setFilterMessageType(sanitizeInput(e.target.value))
+                  }
                   className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 >
                   <option value="">All Types</option>

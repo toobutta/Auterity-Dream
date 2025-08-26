@@ -1,9 +1,19 @@
 # Dependencies
 node_modules/
-__pycache__/
-*.pyc
+
+# Python Virtual Environments (ALL LOCATIONS)
 .venv/
 venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+.pytest_cache/
 backend/venv312/
 
 # Build outputs
@@ -23,6 +33,12 @@ build/
 .idea/
 *.swp
 *.swo
+
+# Temporary and build files
+*.tmp
+*.temp
+.tmp/
+node-installer.msi
 
 # OS files
 .DS_Store

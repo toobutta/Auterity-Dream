@@ -1,7 +1,7 @@
 """Authentication API endpoints."""
 
 from datetime import timedelta
-from typing import List, Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -18,7 +18,7 @@ from app.auth import (
     require_admin_access,
 )
 from app.database import get_db
-from app.models.user import User, Role, Permission
+from app.models.user import Permission, Role, User
 from app.schemas.auth import (
     CrossSystemTokenRequest,
     CrossSystemTokenResponse,
@@ -31,7 +31,6 @@ from app.schemas.auth import (
     UserResponse,
     UserRoleAssignment,
 )
-from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 

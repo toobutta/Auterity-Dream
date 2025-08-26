@@ -48,7 +48,7 @@ const defaultThemeConfig: ThemeConfig = {
   automotive: {
     primary: process.env.VITE_THEME_PRIMARY || "#2563eb",
     accent: process.env.VITE_THEME_ACCENT || "#f59e0b",
-    surface: process.env.VITE_THEME_SURFACE || "#f8fafc"
+    surface: process.env.VITE_THEME_SURFACE || "#f8fafc",
   },
   glassmorphism: {
     enabled: true,
@@ -257,7 +257,9 @@ export const getStoredTheme = (
   }
 };
 
-export const clearStoredTheme = (storageKey = process.env.VITE_THEME_STORAGE_KEY || "autmatrix-theme"): void => {
+export const clearStoredTheme = (
+  storageKey = process.env.VITE_THEME_STORAGE_KEY || "autmatrix-theme",
+): void => {
   if (typeof window === "undefined") return;
 
   try {

@@ -1,8 +1,31 @@
 {
   "python.defaultInterpreterPath": "./backend/.venv/Scripts/python.exe",
-  "python.terminal.activateEnvironment": true,
+  "python.terminal.activateEnvironment": false,
+  "python.envFile": "${workspaceFolder}/backend/.env",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "files.exclude": {
+    "**/.venv": true,
+    "**/venv": true,
+    "**/env": true,
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/node_modules": true,
+    "**/.git": false
+  },
+  "search.exclude": {
+    "**/.venv": true,
+    "**/venv": true,
+    "**/env": true,
+    "**/__pycache__": true,
+    "**/node_modules": true
+  },
   "python.linting.enabled": true,
   "python.linting.flake8Enabled": true,
   "python.formatting.provider": "black",
-  "python.formatting.blackPath": "./backend/.venv/Scripts/black.exe"
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "eslint.workingDirectories": ["frontend", "shared"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }

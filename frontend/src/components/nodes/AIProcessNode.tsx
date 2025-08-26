@@ -7,7 +7,8 @@ export const AIProcessNode: React.FC<NodeProps<Record<string, unknown>>> = ({
   isConnectable,
 }) => {
   const nodeData = data as NodeData;
-  const hasErrors = nodeData.validationErrors && nodeData.validationErrors.length > 0;
+  const hasErrors =
+    nodeData.validationErrors && nodeData.validationErrors.length > 0;
 
   return (
     <div

@@ -9,7 +9,9 @@ import { sanitizeInput } from "../../utils/sanitizer";
 vi.mock("reactflow", () => ({
   __esModule: true,
   default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="react-flow">{typeof children === 'string' ? sanitizeInput(children) : children}</div>
+    <div data-testid="react-flow">
+      {typeof children === "string" ? sanitizeInput(children) : children}
+    </div>
   ),
   Background: () => <div data-testid="background" />,
   Controls: () => <div data-testid="controls" />,

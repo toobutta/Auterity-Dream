@@ -4,15 +4,15 @@ import os
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import InvalidTokenError
+from passlib.context import CryptContext
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
-from app.models.user import User, Role, Permission
-from passlib.context import CryptContext
+from app.models.user import Permission, Role, User
 
 # Configuration
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")

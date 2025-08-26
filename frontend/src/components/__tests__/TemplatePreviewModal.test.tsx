@@ -7,20 +7,20 @@ import { Template } from "../../types/template";
 // Mock ReactFlow
 vi.mock("reactflow", () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="react-flow">{children}</div>
+  default: () => (
+    <div data-testid="react-flow">Mocked ReactFlow</div>
   ),
   Background: () => <div data-testid="background" />,
   Controls: () => <div data-testid="controls" />,
   MiniMap: () => <div data-testid="minimap" />,
-  Panel: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="panel">{children}</div>
+  Panel: () => (
+    <div data-testid="panel">Mocked Panel</div>
   ),
   useReactFlow: () => ({
     fitView: vi.fn(),
   }),
   ReactFlowProvider: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
+    <div data-testid="react-flow-provider">{children}</div>
   ),
 }));
 
@@ -341,6 +341,24 @@ describe("TemplatePreviewModal", () => {
   });
 
   it("shows empty state when template has no parameters", () => {
+    const templateWithoutParams = {
+      ...mockTemplate,
+      parameters: [],
+    };
+
+    render(
+      <TemplatePreviewModal
+        template={templateWithoutParams}
+        isOpen={true}
+        onClose={mockOnClose}
+        onInstantiate={mockOnInstantiate}
+      />,
+    );
+
+    fireEvent.click(screen.getByText("Parameters"));
+    expect(screen.getByText("No parameters defined")).toBeInTheDocument();
+  });
+});en template has no parameters", () => {
     const templateWithoutParams = {
       ...mockTemplate,
       parameters: [],

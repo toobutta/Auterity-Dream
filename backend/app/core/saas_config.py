@@ -17,8 +17,12 @@ class SaaSConfig(BaseSettings):
 
     # Stripe Price IDs for different plans
     STRIPE_PRICE_ID_STARTER: str = Field(default="", env="STRIPE_PRICE_ID_STARTER")
-    STRIPE_PRICE_ID_PROFESSIONAL: str = Field(default="", env="STRIPE_PRICE_ID_PROFESSIONAL")
-    STRIPE_PRICE_ID_ENTERPRISE: str = Field(default="", env="STRIPE_PRICE_ID_ENTERPRISE")
+    STRIPE_PRICE_ID_PROFESSIONAL: str = Field(
+        default="", env="STRIPE_PRICE_ID_PROFESSIONAL"
+    )
+    STRIPE_PRICE_ID_ENTERPRISE: str = Field(
+        default="", env="STRIPE_PRICE_ID_ENTERPRISE"
+    )
     STRIPE_PRICE_ID_WHITE_LABEL_STARTER: str = Field(
         default="", env="STRIPE_PRICE_ID_WHITE_LABEL_STARTER"
     )

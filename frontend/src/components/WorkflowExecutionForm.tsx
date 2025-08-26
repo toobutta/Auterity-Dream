@@ -150,7 +150,8 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
   };
 
   const handleInputChange = (name: string, value: unknown) => {
-    const sanitizedValue = typeof value === 'string' ? sanitizeInput(value) : value;
+    const sanitizedValue =
+      typeof value === "string" ? sanitizeInput(value) : value;
     setFormData((prev) => ({
       ...prev,
       [name]: sanitizedValue,
@@ -212,13 +213,14 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
         if (field.type === "number" && value !== "") {
           value = Number(value);
         }
-        processedData[field.name] = typeof value === 'string' ? sanitizeInput(value) : value;
+        processedData[field.name] =
+          typeof value === "string" ? sanitizeInput(value) : value;
       });
 
       const execution = await executeWorkflow(workflowId, processedData);
 
       setSuccess(
-        `Workflow execution started successfully! Execution ID: ${String(execution.id)}`,
+        `Workflow execution started successfully! Execution ID: ${sanitizeInput(String(execution.id))}`,
       );
       onExecutionStart?.(execution.id);
 

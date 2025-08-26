@@ -63,7 +63,7 @@ from .template import (
 from .tenant import (
     SSOConfigurationCreate,
     TenantCreate,
-    TenantResponse, 
+    TenantResponse,
     TenantStatsResponse,
     TenantUpdate,
 )
