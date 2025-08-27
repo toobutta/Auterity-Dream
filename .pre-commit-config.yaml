@@ -83,6 +83,12 @@ repos:
         pass_filenames: false
         stages: [pre-push]
 
+      - id: compliance
+        name: Compliance checks
+        entry: scripts/compliance/precommit.sh
+        language: system
+        pass_filenames: false
+
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:

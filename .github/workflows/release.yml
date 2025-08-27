@@ -12,6 +12,18 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v4
+    - name: Install compliance tools
+      run: scripts/compliance/install_tools.sh
+    - name: Generate SBOM
+      run: scripts/compliance/generate_sbom.sh
+    - name: Scan licenses
+      run: scripts/compliance/scan_licenses.sh
+    - name: Evaluate policy
+      run: scripts/compliance/evaluate_policy.sh
+    - name: Format artifacts
+      run: scripts/compliance/format_artifacts.sh
+    - name: Archive compliance artifacts
+      run: tar -czf COMPLIANCE.tar.gz COMPLIANCE
     - name: Create Release
       uses: actions/create-release@v1
       env:
@@ -26,3 +38,12 @@ jobs:
           - See commit history for detailed changes
 
           **Full Changelog**: https://github.com/toobutta/auterity-error-iq/compare/v${{ github.ref_name }}...HEAD
+    - name: Upload compliance bundle
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: COMPLIANCE.tar.gz
+        asset_name: COMPLIANCE-${{ github.ref_name }}.tar.gz
+        asset_content_type: application/gzip
