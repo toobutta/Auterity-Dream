@@ -31,9 +31,9 @@ log_warning() {
 # Create Grafana dashboards
 create_grafana_dashboards() {
     log_info "Creating Grafana dashboards..."
-    
+
     mkdir -p monitoring/grafana/dashboards
-    
+
     # Workflow Performance Dashboard
     cat > monitoring/grafana/dashboards/workflow-performance.json << 'EOF'
 {
@@ -145,9 +145,9 @@ EOF
 # Create Prometheus alerts
 create_prometheus_alerts() {
     log_info "Creating Prometheus alert rules..."
-    
+
     mkdir -p monitoring/prometheus/rules
-    
+
     cat > monitoring/prometheus/rules/workflow-alerts.yml << EOF
 groups:
   - name: workflow.rules
@@ -195,9 +195,9 @@ EOF
 # Create Alertmanager configuration
 create_alertmanager_config() {
     log_info "Creating Alertmanager configuration..."
-    
+
     mkdir -p monitoring/alertmanager
-    
+
     cat > monitoring/alertmanager/alertmanager.yml << EOF
 global:
   smtp_smarthost: 'localhost:587'
@@ -238,7 +238,7 @@ EOF
 # Setup monitoring stack
 setup_monitoring_stack() {
     log_info "Setting up monitoring stack..."
-    
+
     # Create monitoring docker-compose override
     cat > docker-compose.monitoring.yml << EOF
 version: '3.8'
@@ -274,7 +274,7 @@ EOF
 # Create monitoring scripts
 create_monitoring_scripts() {
     log_info "Creating monitoring utility scripts..."
-    
+
     # Health check script
     cat > scripts/health-check.sh << 'EOF'
 #!/bin/bash
@@ -285,7 +285,7 @@ check_service() {
     local service=$1
     local url=$2
     local expected_code=${3:-200}
-    
+
     if curl -s -o /dev/null -w "%{http_code}" "$url" | grep -q "$expected_code"; then
         echo "✅ $service is healthy"
         return 0
@@ -363,15 +363,15 @@ EOF
 # Main setup function
 main() {
     log_info "Setting up comprehensive monitoring for Auterity Error IQ..."
-    
+
     create_grafana_dashboards
     create_prometheus_alerts
     create_alertmanager_config
     setup_monitoring_stack
     create_monitoring_scripts
-    
+
     log_success "🎯 Monitoring setup completed!"
-    
+
     echo ""
     echo "Next steps:"
     echo "1. Start monitoring stack: docker-compose -f docker-compose.unified.yml -f docker-compose.monitoring.yml up -d"

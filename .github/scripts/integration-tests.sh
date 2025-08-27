@@ -12,7 +12,7 @@ if [ -d "backend" ]; then
     cd ..
 fi
 
-# Frontend integration tests  
+# Frontend integration tests
 if [ -d "frontend" ]; then
     echo "Running frontend integration tests..."
     cd frontend

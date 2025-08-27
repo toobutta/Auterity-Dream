@@ -239,10 +239,10 @@ describe("ErrorRecoveryGuide", () => {
 
     // Find the Contact Support button (not the header)
     const contactButtons = screen.getAllByText("Contact Support");
-    const contactButton = contactButtons.find(element => 
-      element.tagName === 'BUTTON'
+    const contactButton = contactButtons.find(
+      (element) => element.tagName === "BUTTON",
     );
-    
+
     expect(contactButton).toBeInTheDocument();
     fireEvent.click(contactButton!);
 

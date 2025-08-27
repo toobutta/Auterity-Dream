@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
 interface Agent {
   id: string;
@@ -518,7 +518,10 @@ export default function AgentDashboard() {
                   </div>
                   {execution.result && (
                     <pre className="text-xs bg-gray-50 p-2 rounded overflow-x-auto">
-                      {DOMPurify.sanitize(JSON.stringify(execution.result, null, 2), { ALLOWED_TAGS: [] })}
+                      {DOMPurify.sanitize(
+                        JSON.stringify(execution.result, null, 2),
+                        { ALLOWED_TAGS: [] },
+                      )}
                     </pre>
                   )}
                 </div>
@@ -604,7 +607,9 @@ export default function AgentDashboard() {
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded">
                     <h4 className="font-medium text-blue-900">Answer:</h4>
                     <p className="text-blue-800">
-                      {DOMPurify.sanitize(ragResults.answer, { ALLOWED_TAGS: [] })}
+                      {DOMPurify.sanitize(ragResults.answer, {
+                        ALLOWED_TAGS: [],
+                      })}
                     </p>
                     {ragResults.confidence && (
                       <p className="text-sm text-blue-600 mt-1">
@@ -629,11 +634,16 @@ export default function AgentDashboard() {
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 line-clamp-3">
-                            {DOMPurify.sanitize(doc.content, { ALLOWED_TAGS: [] })}
+                            {DOMPurify.sanitize(doc.content, {
+                              ALLOWED_TAGS: [],
+                            })}
                           </p>
                           {doc.source && (
                             <p className="text-xs text-gray-500 mt-1">
-                              Source: {DOMPurify.sanitize(doc.source, { ALLOWED_TAGS: [] })}
+                              Source:{" "}
+                              {DOMPurify.sanitize(doc.source, {
+                                ALLOWED_TAGS: [],
+                              })}
                             </p>
                           )}
                         </div>

@@ -230,10 +230,10 @@ describe("WorkflowExecutionHistory", () => {
 
     // Find the Status header in the table (not the filter label)
     const statusHeaders = screen.getAllByText("Status");
-    const tableStatusHeader = statusHeaders.find(element => 
-      element.closest('th') !== null
+    const tableStatusHeader = statusHeaders.find(
+      (element) => element.closest("th") !== null,
     );
-    
+
     expect(tableStatusHeader).toBeInTheDocument();
 
     // Click the status header to sort by status

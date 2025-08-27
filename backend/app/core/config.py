@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     # Database configuration
     SQLALCHEMY_DATABASE_URL: str = (
-        "postgresql+psycopg2://user:password@localhost:5432/auterity"
+        "postgresql+psycopg2://user:${ADMIN_SET_PASSWORD}@localhost:5432/auterity"
     )
 
     # Environment settings
@@ -16,8 +16,8 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
 
     # Security settings
-    SECRET_KEY: str = "your-secret-key-here-change-in-production"
-    ENCRYPTION_KEY: str = "your-encryption-key-here-change-in-production"
+    SECRET_KEY: str = "${ADMIN_SET_SECRET_KEY}"
+    ENCRYPTION_KEY: str = "${ADMIN_SET_ENCRYPTION_KEY}"
 
     # CORS settings
     CORS_ORIGINS: str = "http://localhost:3000"

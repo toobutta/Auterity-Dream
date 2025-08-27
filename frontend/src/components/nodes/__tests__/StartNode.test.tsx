@@ -37,7 +37,7 @@ describe("StartNode", () => {
     render(
       <ReactFlowWrapper>
         <StartNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByText("Start Node")).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("StartNode", () => {
     render(
       <ReactFlowWrapper>
         <StartNode data={dataWithoutDescription} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByText("Start Node")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("StartNode", () => {
     render(
       <ReactFlowWrapper>
         <StartNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByTestId("handle-source-bottom")).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("StartNode", () => {
     const { container } = render(
       <ReactFlowWrapper>
         <StartNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     const nodeElement = container.querySelector(".bg-green-100");

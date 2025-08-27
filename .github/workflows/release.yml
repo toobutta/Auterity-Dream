@@ -278,10 +278,10 @@ jobs:
         run: |
           chmod +x scripts/production-deploy.sh
           chmod +x scripts/validate-deployment.sh
-          
+
           # Run production deployment
           ./scripts/production-deploy.sh ${{ needs.pre-release-validation.outputs.version }} production false
-          
+
           # Validate deployment
           ./scripts/validate-deployment.sh production
 

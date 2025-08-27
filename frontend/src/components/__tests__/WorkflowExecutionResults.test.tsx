@@ -188,7 +188,9 @@ describe("WorkflowExecutionResults Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Error Loading Results")).toBeInTheDocument();
-      expect(screen.getByText(/Failed to fetch execution results: API Error/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Failed to fetch execution results: API Error/),
+      ).toBeInTheDocument();
     });
   });
 });

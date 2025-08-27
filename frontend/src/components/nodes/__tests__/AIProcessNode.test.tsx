@@ -39,7 +39,7 @@ describe("AIProcessNode", () => {
     render(
       <ReactFlowWrapper>
         <AIProcessNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByText("AI Process")).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe("AIProcessNode", () => {
     render(
       <ReactFlowWrapper>
         <AIProcessNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     // The prompt gets truncated to 30 characters plus "..."
@@ -63,7 +63,7 @@ describe("AIProcessNode", () => {
     render(
       <ReactFlowWrapper>
         <AIProcessNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByTestId("handle-target-top")).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe("AIProcessNode", () => {
     render(
       <ReactFlowWrapper>
         <AIProcessNode data={dataWithErrors} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByText("AI prompt is required")).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe("AIProcessNode", () => {
     const { container } = render(
       <ReactFlowWrapper>
         <AIProcessNode data={dataWithErrors} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     const nodeElement = container.querySelector(".border-red-400");
@@ -105,7 +105,7 @@ describe("AIProcessNode", () => {
     const { container } = render(
       <ReactFlowWrapper>
         <AIProcessNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     const nodeElement = container.querySelector(".border-blue-300");
@@ -121,7 +121,7 @@ describe("AIProcessNode", () => {
     render(
       <ReactFlowWrapper>
         <AIProcessNode data={dataWithoutPrompt} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.queryByText(/\.\.\./)).not.toBeInTheDocument();

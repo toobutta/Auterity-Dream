@@ -483,6 +483,7 @@ infrastructure/
 ## 🔄 GitHub Workflows & CI/CD (Optimized)
 
 ### **Active Workflows (Consolidated)**
+
 - `optimized-ci.yml` - **Primary CI/CD pipeline** (50-60% faster)
 - `workflow-monitoring.yml` - Performance monitoring and metrics
 - `enforce-standards.yml` - Code standards and commit validation
@@ -491,11 +492,13 @@ infrastructure/
 - `config.yml` - Workflow configuration reference
 
 ### **Disabled Workflows (Consolidated)**
+
 - `ci.yml.disabled` - Replaced by optimized pipeline
 - `comprehensive-ci.yml.disabled` - Functionality merged
 - `quality-gates.yml.disabled` - Integrated into main pipeline
 
 ### **Centralized Scripts**
+
 - `.github/scripts/security-scan.py` - Unified security scanning
 - `.github/scripts/integration-tests.sh` - Integration test execution
 

@@ -27,37 +27,37 @@ validate_service_health() {
     local service_name=$1
     local health_url=$2
     local expected_status=${3:-200}
-    
+
     log_info "Validating $service_name health..."
-    
+
     local attempts=0
     local max_attempts=$((TIMEOUT / RETRY_INTERVAL))
-    
+
     while [ $attempts -lt $max_attempts ]; do
         if curl -s -f -o /dev/null -w "%{http_code}" "$health_url" | grep -q "$expected_status"; then
             log_success "$service_name is healthy"
             return 0
         fi
-        
+
         attempts=$((attempts + 1))
         log_warning "$service_name not ready, attempt $attempts/$max_attempts"
         sleep $RETRY_INTERVAL
     done
-    
+
     log_error "$service_name failed health check after $max_attempts attempts"
     return 1
 }
 
 validate_database_connectivity() {
     log_info "Validating database connectivity..."
-    
+
     if docker-compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1; then
         log_success "PostgreSQL is accessible"
     else
         log_error "PostgreSQL is not accessible"
         return 1
     fi
-    
+
     # Test database queries
     if docker-compose exec -T postgres psql -U postgres -d auterity -c "SELECT 1;" >/dev/null 2>&1; then
         log_success "Database queries are working"
@@ -69,14 +69,14 @@ validate_database_connectivity() {
 
 validate_cache_connectivity() {
     log_info "Validating cache connectivity..."
-    
+
     if docker-compose exec -T redis redis-cli ping | grep -q "PONG"; then
         log_success "Redis is accessible"
     else
         log_error "Redis is not accessible"
         return 1
     fi
-    
+
     # Test cache operations
     if docker-compose exec -T redis redis-cli set test_key "test_value" | grep -q "OK"; then
         if docker-compose exec -T redis redis-cli get test_key | grep -q "test_value"; then
@@ -94,27 +94,27 @@ validate_cache_connectivity() {
 
 validate_api_endpoints() {
     log_info "Validating API endpoints..."
-    
+
     local base_url="http://localhost:8080/api"
-    
+
     # Test health endpoint
     if ! validate_service_health "API Health" "$base_url/health"; then
         return 1
     fi
-    
+
     # Test authentication endpoint
     local auth_response=$(curl -s -X POST "$base_url/auth/login" \
         -H "Content-Type: application/json" \
         -d '{"username":"test","password":"test"}' \
         -w "%{http_code}")
-    
+
     if echo "$auth_response" | grep -q "401\|400"; then
         log_success "Authentication endpoint is responding correctly"
     else
         log_error "Authentication endpoint is not responding correctly"
         return 1
     fi
-    
+
     # Test workflow endpoints
     local workflows_response=$(curl -s "$base_url/workflows" -w "%{http_code}")
     if echo "$workflows_response" | grep -q "200\|401"; then
@@ -127,21 +127,21 @@ validate_api_endpoints() {
 
 validate_frontend_functionality() {
     log_info "Validating frontend functionality..."
-    
+
     local frontend_url="http://localhost:3000"
-    
+
     # Check if frontend is serving content
     if ! validate_service_health "Frontend" "$frontend_url"; then
         return 1
     fi
-    
+
     # Check for critical assets
     local assets_to_check=(
         "/static/js"
         "/static/css"
         "/manifest.json"
     )
-    
+
     for asset in "${assets_to_check[@]}"; do
         if curl -s -f "$frontend_url$asset" >/dev/null 2>&1; then
             log_success "Frontend asset $asset is accessible"
@@ -153,7 +153,7 @@ validate_frontend_functionality() {
 
 validate_monitoring_stack() {
     log_info "Validating monitoring stack..."
-    
+
     # Prometheus
     if validate_service_health "Prometheus" "http://localhost:9090/-/healthy"; then
         # Check if Prometheus is scraping targets
@@ -164,20 +164,20 @@ validate_monitoring_stack() {
             log_warning "Prometheus may not be scraping all targets"
         fi
     fi
-    
+
     # Grafana
     validate_service_health "Grafana" "http://localhost:3001/api/health"
-    
+
     # AlertManager
     validate_service_health "AlertManager" "http://localhost:9093/-/healthy"
 }
 
 validate_workflow_execution() {
     log_info "Validating workflow execution capabilities..."
-    
+
     # This would typically create and execute a test workflow
     # For now, we'll just check if the workflow engine is responsive
-    
+
     local workflow_test_payload='{
         "name": "validation_test_workflow",
         "description": "Test workflow for deployment validation",
@@ -201,14 +201,14 @@ validate_workflow_execution() {
             }
         ]
     }'
-    
+
     # Test workflow creation (this would need proper authentication)
     log_info "Testing workflow engine responsiveness..."
     local workflow_response=$(curl -s -X POST "http://localhost:8080/api/workflows" \
         -H "Content-Type: application/json" \
         -d "$workflow_test_payload" \
         -w "%{http_code}" || echo "000")
-    
+
     if echo "$workflow_response" | grep -q "401\|403"; then
         log_success "Workflow engine is responding (authentication required as expected)"
     elif echo "$workflow_response" | grep -q "201\|200"; then
@@ -220,14 +220,14 @@ validate_workflow_execution() {
 
 validate_security_headers() {
     log_info "Validating security headers..."
-    
+
     local security_headers=(
         "X-Content-Type-Options"
         "X-Frame-Options"
         "X-XSS-Protection"
         "Strict-Transport-Security"
     )
-    
+
     for header in "${security_headers[@]}"; do
         if curl -s -I "http://localhost:3000" | grep -i "$header" >/dev/null; then
             log_success "Security header $header is present"
@@ -239,17 +239,17 @@ validate_security_headers() {
 
 validate_performance_metrics() {
     log_info "Validating performance metrics..."
-    
+
     # Check response times
     local api_response_time=$(curl -s -o /dev/null -w "%{time_total}" "http://localhost:8080/api/health")
     local frontend_response_time=$(curl -s -o /dev/null -w "%{time_total}" "http://localhost:3000")
-    
+
     if (( $(echo "$api_response_time < 2.0" | bc -l) )); then
         log_success "API response time is acceptable (${api_response_time}s)"
     else
         log_warning "API response time is slow (${api_response_time}s)"
     fi
-    
+
     if (( $(echo "$frontend_response_time < 3.0" | bc -l) )); then
         log_success "Frontend response time is acceptable (${frontend_response_time}s)"
     else
@@ -259,14 +259,14 @@ validate_performance_metrics() {
 
 generate_validation_report() {
     log_info "Generating validation report..."
-    
+
     local report_file="deployment-validation-$(date +%Y%m%d_%H%M%S).md"
-    
+
     cat > "$report_file" << EOF
 # Deployment Validation Report
 
-**Environment:** $ENVIRONMENT  
-**Timestamp:** $(date)  
+**Environment:** $ENVIRONMENT
+**Timestamp:** $(date)
 **Validation Duration:** ${SECONDS}s
 
 ## Validation Results
@@ -308,28 +308,28 @@ EOF
 # Main validation process
 main() {
     log_info "Starting deployment validation for $ENVIRONMENT environment..."
-    
+
     # Redirect logs for report generation
     exec > >(tee /tmp/validation.log)
     exec 2>&1
-    
+
     local validation_failed=false
-    
+
     # Core service validations
     validate_database_connectivity || validation_failed=true
     validate_cache_connectivity || validation_failed=true
     validate_api_endpoints || validation_failed=true
     validate_frontend_functionality || validation_failed=true
-    
+
     # Optional validations (warnings only)
     validate_monitoring_stack || true
     validate_workflow_execution || true
     validate_security_headers || true
     validate_performance_metrics || true
-    
+
     # Generate report
     generate_validation_report
-    
+
     if [ "$validation_failed" = true ]; then
         log_error "❌ Deployment validation failed - critical issues detected"
         exit 1

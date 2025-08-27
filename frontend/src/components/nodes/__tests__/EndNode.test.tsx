@@ -37,7 +37,7 @@ describe("EndNode", () => {
     render(
       <ReactFlowWrapper>
         <EndNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByText("End Node")).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("EndNode", () => {
     render(
       <ReactFlowWrapper>
         <EndNode data={dataWithoutDescription} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByText("End Node")).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("EndNode", () => {
     render(
       <ReactFlowWrapper>
         <EndNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(screen.getByTestId("handle-target-top")).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("EndNode", () => {
     render(
       <ReactFlowWrapper>
         <EndNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     expect(
@@ -82,7 +82,7 @@ describe("EndNode", () => {
     const { container } = render(
       <ReactFlowWrapper>
         <EndNode data={mockData} isConnectable={true} />
-      </ReactFlowWrapper>
+      </ReactFlowWrapper>,
     );
 
     const nodeElement = container.querySelector(".bg-red-100");
