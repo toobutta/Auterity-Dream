@@ -1,0 +1,18 @@
+allowed_licenses:
+  - MIT
+  - Apache-2.0
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - ISC
+  - MPL-2.0
+prohibited_licenses:
+  - GPL-2.0
+  - GPL-3.0
+  - AGPL-3.0
+  - SSPL
+  - BUSL
+  - Unlicense
+
+fail_on:
+  - prohibited_licenses
+warn_on: []

@@ -1,0 +1,9 @@
+Component,Version,License(s),Evidence Path(s),Usage,Linking,Distribution,Obligations,Risk,Action,Replacement Candidates
+cors,2.8.5,MIT,package.json,linked,dynamic,SaaS,"Include copyright and license",Low,None,-
+dotenv,17.2.1,MIT,package.json,linked,dynamic,SaaS,"Include copyright and license",Low,None,-
+express,5.1.0,MIT,package.json,linked,dynamic,SaaS,"Include copyright and license",Low,None,-
+fastapi,0.104.1,MIT,backend/requirements.txt,linked,dynamic,SaaS,"Include copyright and license",Low,None,-
+uvicorn,0.24.0,BSD-3-Clause,backend/requirements.txt,linked,dynamic,SaaS,"Redistribute license",Low,None,-
+sqlalchemy,2.0.23,MIT,backend/requirements.txt,linked,dynamic,SaaS,"Include copyright and license",Low,None,-
+PyMuPDF,1.23.8,AGPL-3.0,backend/requirements.txt,linked,dynamic,SaaS,"Provide source, network copyleft",High,Replace,"pdfminer.six (MIT); PyPDF2 (BSD-3-Clause)"
+react,18.3.1,MIT,frontend/package.json,linked,dynamic,SaaS,"Include copyright and license",Low,None,-
