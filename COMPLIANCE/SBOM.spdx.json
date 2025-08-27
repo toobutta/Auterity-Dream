@@ -1,0 +1,14 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "name": "auterity-unified-platform",
+  "packages": [
+    {"name": "cors", "version": "2.8.5", "licenseConcluded": "MIT"},
+    {"name": "dotenv", "version": "17.2.1", "licenseConcluded": "MIT"},
+    {"name": "express", "version": "5.1.0", "licenseConcluded": "MIT"},
+    {"name": "fastapi", "version": "0.104.1", "licenseConcluded": "MIT"},
+    {"name": "uvicorn", "version": "0.24.0", "licenseConcluded": "BSD-3-Clause"},
+    {"name": "sqlalchemy", "version": "2.0.23", "licenseConcluded": "MIT"},
+    {"name": "pymupdf", "version": "1.23.8", "licenseConcluded": "AGPL-3.0"},
+    {"name": "react", "version": "18.3.1", "licenseConcluded": "MIT"}
+  ]
+}
