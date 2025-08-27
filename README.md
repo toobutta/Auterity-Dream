@@ -34,6 +34,8 @@
 
 ## ⚡ Quick Start
 
+Note: For AI coding agents and contributor rules, consult `.github/copilot-instructions.md` (canonical source of truth).
+
 ```bash
 # Clone and deploy complete platform
 git clone https://github.com/toobutta/auterity-error-iq.git
