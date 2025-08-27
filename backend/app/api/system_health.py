@@ -7,7 +7,7 @@ Provides detailed status for all 25+ services in the Auterity platform.
 import asyncio
 import logging
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import httpx
 import redis.asyncio as redis
@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 class ServiceHealthChecker:
     """Comprehensive service health checker for all platform services."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = httpx.AsyncClient(timeout=5.0)
         self.redis_client = None
 
-    async def get_redis_client(self):
+    async def get_redis_client(self) -> Any:
         """Get Redis client for health checks."""
         if not self.redis_client:
             self.redis_client = redis.from_url(
@@ -307,7 +307,7 @@ class ServiceHealthChecker:
 
         # Celery workers don't have HTTP endpoints, check via Redis/RabbitMQ
         try:
-            redis_client = await self.get_redis_client()
+            await self.get_redis_client()
             # Check if workers are active by looking at Celery stats
             services["celery_workers"] = {
                 "name": "Celery Task Workers",
@@ -361,14 +361,23 @@ class ServiceHealthChecker:
             }
 
             # Calculate summary statistics
-            total_services = sum(len(category) for category in all_services.values())
+            valid_categories = [
+                category for category in all_services.values()
+                if isinstance(category, dict)
+            ]
+            total_services = sum(
+                len(category) for category in valid_categories
+            )
             healthy_services = sum(
-                len([s for s in category.values() if s.get("status") == "healthy"])
-                for category in all_services.values()
+                len([s for s in category.values()
+                     if isinstance(s, dict) and s.get("status") == "healthy"])
+                for category in valid_categories
             )
             configured_services = sum(
-                len([s for s in category.values() if s.get("status") == "configured"])
-                for category in all_services.values()
+                len([s for s in category.values()
+                     if isinstance(s, dict) and
+                     s.get("status") == "configured"])
+                for category in valid_categories
             )
 
             return {
@@ -380,7 +389,8 @@ class ServiceHealthChecker:
                     - healthy_services
                     - configured_services,
                     "health_percentage": round(
-                        (healthy_services + configured_services) / total_services * 100,
+                        (healthy_services + configured_services)
+                        / total_services * 100,
                         1,
                     )
                     if total_services > 0
@@ -394,7 +404,7 @@ class ServiceHealthChecker:
             logger.error(f"Failed to get all services status: {e}")
             return {"error": str(e)}
 
-    async def close(self):
+    async def close(self) -> None:
         """Close HTTP client and Redis connection."""
         await self.client.aclose()
         if self.redis_client:
@@ -406,13 +416,13 @@ _health_checker: ServiceHealthChecker = ServiceHealthChecker()
 
 
 @router.get("/services/status")
-async def get_all_services_status():
+async def get_all_services_status() -> Dict[str, Any]:
     """Get comprehensive status of all 25+ services."""
     return await _health_checker.get_all_services_status()
 
 
 @router.get("/services/status/{category}")
-async def get_category_services_status(category: str):
+async def get_category_services_status(category: str) -> Dict[str, Any]:
     """Get status of services in a specific category."""
     health_checker = ServiceHealthChecker()
 
@@ -428,7 +438,9 @@ async def get_category_services_status(category: str):
     }
 
     if category not in category_map:
-        raise HTTPException(status_code=404, detail=f"Category '{category}' not found")
+        raise HTTPException(
+            status_code=404, detail=f"Category '{category}' not found"
+        )
 
     try:
         result = await category_map[category]()
@@ -448,20 +460,21 @@ async def get_category_services_status(category: str):
 
 
 @router.get("/services/count")
-async def get_service_count():
+async def get_service_count() -> Dict[str, Any]:
     """Get total count of services."""
     status = await _health_checker.get_all_services_status()
+    summary = status.get("summary", {})
     return {
-        "total_services": status.get("summary", {}).get("total_services", 0),
-        "healthy_services": status.get("summary", {}).get("healthy_services", 0),
-        "configured_services": status.get("summary", {}).get("configured_services", 0),
-        "health_percentage": status.get("summary", {}).get("health_percentage", 0),
+        "total_services": summary.get("total_services", 0),
+        "healthy_services": summary.get("healthy_services", 0),
+        "configured_services": summary.get("configured_services", 0),
+        "health_percentage": summary.get("health_percentage", 0),
         "timestamp": datetime.utcnow().isoformat(),
     }
 
 
 @router.get("/services/health")
-async def get_services_health_summary():
+async def get_services_health_summary() -> Dict[str, Any]:
     """Get simplified health summary for monitoring."""
     status = await _health_checker.get_all_services_status()
     summary = status.get("summary", {})

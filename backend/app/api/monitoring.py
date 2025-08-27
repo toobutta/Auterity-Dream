@@ -2,6 +2,7 @@
 
 import time
 from datetime import datetime, timedelta
+from typing import Dict, Any
 
 from app.database import get_db
 from app.models.execution import ExecutionStatus, WorkflowExecution
@@ -14,8 +15,9 @@ router = APIRouter(prefix="/monitoring", tags=["monitoring"])
 
 
 @router.get("/health")
-async def health_check(db: Session = Depends(get_db)):
-    """Comprehensive health check with database connectivity and performance metrics."""
+async def health_check(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """Comprehensive health check with database connectivity and
+    performance metrics."""
     start_time = time.time()
 
     try:
@@ -40,7 +42,7 @@ async def health_check(db: Session = Depends(get_db)):
 
 
 @router.get("/health/detailed")
-async def detailed_health_check(db: Session = Depends(get_db)):
+async def detailed_health_check(db: Session = Depends(get_db)) -> Dict[str, Any]:
     """Detailed health check with comprehensive system metrics."""
     start_time = time.time()
     health_data = {
@@ -91,18 +93,27 @@ async def detailed_health_check(db: Session = Depends(get_db)):
 async def get_performance_metrics(
     hours: int = Query(24, ge=1, le=168, description="Hours of data to analyze"),
     db: Session = Depends(get_db),
-):
+) -> Dict[str, Any]:
     """Get performance metrics for workflow executions."""
     start_time = datetime.utcnow() - timedelta(hours=hours)
 
-    # Get execution metrics
-    executions = (
-        db.query(WorkflowExecution)
+    # Get execution metrics using proper SQLAlchemy queries
+    total_executions = (
+        db.query(func.count(WorkflowExecution.id))
         .filter(WorkflowExecution.started_at >= start_time)
-        .all()
+        .scalar()
     )
-
-    if not executions:
+    
+    successful_executions = (
+        db.query(func.count(WorkflowExecution.id))
+        .filter(
+            WorkflowExecution.started_at >= start_time,
+            WorkflowExecution.status == ExecutionStatus.COMPLETED
+        )
+        .scalar()
+    )
+    
+    if total_executions == 0:
         return {
             "period_hours": hours,
             "total_executions": 0,
@@ -111,53 +122,78 @@ async def get_performance_metrics(
             "status_breakdown": {},
             "performance_trends": [],
         }
-
-    # Calculate metrics
-    total_executions = len(executions)
-    successful_executions = len(
-        [e for e in executions if e.status == ExecutionStatus.COMPLETED]
-    )
+    
     success_rate = (successful_executions / total_executions) * 100
 
     # Calculate average duration for completed executions
-    completed_executions = [e for e in executions if e.completed_at and e.started_at]
-    if completed_executions:
-        durations = [
-            (e.completed_at - e.started_at).total_seconds() * 1000
-            for e in completed_executions
-        ]
-        average_duration_ms = sum(durations) / len(durations)
-    else:
-        average_duration_ms = 0
+    avg_duration_result = (
+        db.query(
+            func.avg(
+                func.extract(
+                    'epoch',
+                    WorkflowExecution.completed_at -
+                    WorkflowExecution.started_at
+                ) * 1000
+            )
+        )
+        .filter(
+            WorkflowExecution.started_at >= start_time,
+            WorkflowExecution.status == ExecutionStatus.COMPLETED,
+            WorkflowExecution.completed_at.isnot(None)
+        )
+        .scalar()
+    )
+    
+    average_duration_ms = avg_duration_result or 0
 
     # Status breakdown
     status_breakdown = {}
-    for execution in executions:
-        status = execution.status.value
-        status_breakdown[status] = status_breakdown.get(status, 0) + 1
+    status_results = (
+        db.query(
+            WorkflowExecution.status,
+            func.count(WorkflowExecution.id).label('count')
+        )
+        .filter(WorkflowExecution.started_at >= start_time)
+        .group_by(WorkflowExecution.status)
+        .all()
+    )
+    
+    for status, count in status_results:
+        status_breakdown[status.value] = count
 
-    # Performance trends (hourly buckets)
+    # Performance trends (hourly buckets) - simplified for now
     trends = []
-    for i in range(hours):
+    for i in range(min(hours, 24)):  # Limit to 24 hours for performance
         hour_start = start_time + timedelta(hours=i)
         hour_end = hour_start + timedelta(hours=1)
 
-        hour_executions = [
-            e for e in executions if hour_start <= e.started_at < hour_end
-        ]
-
-        if hour_executions:
-            hour_successful = len(
-                [e for e in hour_executions if e.status == ExecutionStatus.COMPLETED]
+        hour_total = (
+            db.query(func.count(WorkflowExecution.id))
+            .filter(
+                WorkflowExecution.started_at >= hour_start,
+                WorkflowExecution.started_at < hour_end
             )
-            hour_success_rate = (hour_successful / len(hour_executions)) * 100
-        else:
-            hour_success_rate = 0
+            .scalar()
+        )
+        
+        hour_successful = (
+            db.query(func.count(WorkflowExecution.id))
+            .filter(
+                WorkflowExecution.started_at >= hour_start,
+                WorkflowExecution.started_at < hour_end,
+                WorkflowExecution.status == ExecutionStatus.COMPLETED
+            )
+            .scalar()
+        )
+
+        hour_success_rate = (
+            (hour_successful / hour_total * 100) if hour_total > 0 else 0
+        )
 
         trends.append(
             {
                 "hour": hour_start.isoformat(),
-                "executions": len(hour_executions),
+                "executions": hour_total,
                 "success_rate": round(hour_success_rate, 2),
             }
         )
@@ -173,14 +209,14 @@ async def get_performance_metrics(
 
 
 @router.get("/metrics/system")
-async def get_system_metrics(db: Session = Depends(get_db)):
+async def get_system_metrics(db: Session = Depends(get_db)) -> Dict[str, Any]:
     """Get system-level metrics and statistics."""
     try:
         # Database metrics
         total_workflows = db.query(func.count(Workflow.id)).scalar()
         active_workflows = (
             db.query(func.count(Workflow.id))
-            .filter(Workflow.is_active is True)
+            .filter(Workflow.is_active == True)  # noqa: E712
             .scalar()
         )
 
@@ -233,7 +269,7 @@ async def get_workflow_metrics(
         10, ge=1, le=50, description="Number of top workflows to return"
     ),
     db: Session = Depends(get_db),
-):
+) -> Dict[str, Any]:
     """Get workflow-specific performance metrics."""
     try:
         # Get workflow execution statistics
@@ -257,7 +293,7 @@ async def get_workflow_metrics(
                 ).label("avg_duration_ms"),
             )
             .outerjoin(WorkflowExecution)
-            .filter(Workflow.is_active is True)
+            .filter(Workflow.is_active == True)  # noqa: E712
             .group_by(Workflow.id, Workflow.name)
             .order_by(func.count(WorkflowExecution.id).desc())
             .limit(limit)

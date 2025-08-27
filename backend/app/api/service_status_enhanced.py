@@ -35,8 +35,8 @@ class CapacityForecastRequest(BaseModel):
 
 
 @router.get("/services/ecosystem", response_model=Dict[str, Any])
-async def get_ecosystem_analysis():
-    """🚀 FIRST-TO-MARKET: Complete ecosystem analysis with AI insights"""
+async def get_ecosystem_analysis() -> Dict[str, Any]:
+    """FIRST-TO-MARKET: Complete ecosystem analysis with AI insights"""
     try:
         return await ai_orchestrator.analyze_service_ecosystem()
     except Exception as e:
@@ -46,7 +46,7 @@ async def get_ecosystem_analysis():
 
 
 @router.get("/services/health/realtime")
-async def realtime_health_stream():
+async def realtime_health_stream() -> StreamingResponse:
     """Real-time health streaming with AI predictions"""
 
     async def generate_health_stream():
@@ -86,7 +86,7 @@ async def realtime_health_stream():
 
 
 @router.websocket("/services/health/ws")
-async def websocket_health_monitoring(websocket: WebSocket):
+async def websocket_health_monitoring(websocket: WebSocket) -> None:
     """WebSocket for real-time health monitoring with AI insights"""
     await websocket.accept()
     ai_orchestrator.active_websockets.append(websocket)
@@ -115,8 +115,8 @@ async def websocket_health_monitoring(websocket: WebSocket):
 
 
 @router.get("/services/{service_name}/ai-insights")
-async def get_service_ai_insights(service_name: str):
-    """🧠 AI-powered service insights"""
+async def get_service_ai_insights(service_name: str) -> Dict[str, Any]:
+    """AI-powered service insights"""
     try:
         # Mock health data for the specific service
         health_data = ai_orchestrator._mock_health_data(service_name)
@@ -167,8 +167,8 @@ async def get_service_ai_insights(service_name: str):
 
 
 @router.post("/services/auto-optimize")
-async def trigger_auto_optimization(background_tasks: BackgroundTasks):
-    """🤖 FIRST-TO-MARKET: Autonomous service optimization"""
+async def trigger_auto_optimization(background_tasks: BackgroundTasks) -> Dict[str, Any]:
+    """FIRST-TO-MARKET: Autonomous service optimization"""
     try:
         background_tasks.add_task(ai_orchestrator.auto_optimize_ecosystem)
 
@@ -188,7 +188,7 @@ async def trigger_auto_optimization(background_tasks: BackgroundTasks):
 @router.post("/services/{service_name}/optimize")
 async def optimize_specific_service(
     service_name: str, optimization_request: ServiceOptimizationRequest
-):
+) -> Dict[str, Any]:
     """Optimize specific service with AI recommendations"""
     try:
         health_data = ai_orchestrator._mock_health_data(service_name)
@@ -234,8 +234,8 @@ async def optimize_specific_service(
 @router.get("/services/capacity/forecast")
 async def get_capacity_forecast(
     forecast_request: CapacityForecastRequest = CapacityForecastRequest(),
-):
-    """📈 Capacity planning with ML forecasting"""
+) -> Dict[str, Any]:
+    """Capacity planning with ML forecasting"""
     try:
         services = service_registry.get_all_services()
         forecasts = {}
@@ -267,8 +267,8 @@ async def get_capacity_forecast(
 
 
 @router.get("/services/anomalies")
-async def detect_service_anomalies():
-    """🔍 AI-powered anomaly detection across all services"""
+async def detect_service_anomalies() -> Dict[str, Any]:
+    """AI-powered anomaly detection across all services"""
     try:
         services = service_registry.get_all_services()
         anomalies = {}
@@ -304,8 +304,8 @@ async def detect_service_anomalies():
 
 
 @router.get("/services/predictive/failures")
-async def predict_service_failures():
-    """⚠️ Predictive failure analysis"""
+async def predict_service_failures() -> Dict[str, Any]:
+    """Predictive failure analysis"""
     try:
         services = service_registry.get_all_services()
         failure_predictions = {}
@@ -344,7 +344,7 @@ async def predict_service_failures():
 
 # Enhanced legacy endpoints
 @router.get("/services")
-async def get_all_services_enhanced():
+async def get_all_services_enhanced() -> Dict[str, Any]:
     """Enhanced service listing with AI metadata"""
     try:
         services = service_registry.get_all_services()
@@ -392,7 +392,7 @@ async def get_all_services_enhanced():
 
 
 @router.get("/services/health")
-async def get_service_health_enhanced():
+async def get_service_health_enhanced() -> Dict[str, Any]:
     """Enhanced health check with AI insights"""
     try:
         return await ai_orchestrator.analyze_service_ecosystem()
@@ -403,7 +403,7 @@ async def get_service_health_enhanced():
 
 
 @router.get("/services/production")
-async def get_production_services_enhanced():
+async def get_production_services_enhanced() -> Dict[str, Any]:
     """Enhanced production services with AI monitoring"""
     try:
         production_services = service_registry.get_production_services()

@@ -1,6 +1,5 @@
 """
 Strategic Development Plan: Next-Generation Collaborative Architecture
-================================================================
 
 INNOVATION PILLARS:
 1. Event-Driven Microservices with CQRS/Event Sourcing

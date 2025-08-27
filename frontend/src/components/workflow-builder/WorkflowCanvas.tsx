@@ -12,8 +12,9 @@ import {
   NodeTypes,
   MiniMap,
   Panel,
-  useReactFlow,
   ReactFlowProvider,
+  ReactFlowInstance,
+  Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { v4 as uuidv4 } from "uuid";
@@ -22,6 +23,7 @@ import {
   WorkflowCanvasProps,
   WorkflowNode,
   DragItem,
+  NodeTemplate,
 } from "../../types/workflow-builder";
 import { NodeData as LegacyNodeData } from "../../types/workflow";
 
@@ -95,10 +97,9 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
   onNodeSelect,
 }) => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState<unknown>(null);
-  const { project } = useReactFlow();
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
   // Drop zone for dragging nodes from palette
   const [{ isOver, canDrop }, drop] = useDrop({
@@ -110,7 +111,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
       }
 
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const position = project({
+      const position = (reactFlowInstance as ReactFlowInstance).screenToFlowPosition({
         x: clientOffset.x - reactFlowBounds.left,
         y: clientOffset.y - reactFlowBounds.top,
       });
@@ -125,7 +126,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
 
   const addNodeFromTemplate = useCallback(
     (
-      template: { type: string; name: string; category: string },
+      template: NodeTemplate,
       position: { x: number; y: number },
     ) => {
       const nodeId = uuidv4();
@@ -151,7 +152,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
 
   const onConnect = useCallback(
     (params: Connection) => {
-      const newEdge = {
+      const newEdge: Edge = {
         ...params,
         id: uuidv4(),
         animated: true,
@@ -163,28 +164,29 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
   );
 
   const onNodeClick = useCallback(
-    (event: React.MouseEvent, node: Node) => {
+    (_event: React.MouseEvent, node: Node) => {
+      const nodeData = node.data as LegacyNodeData;
       // Convert ReactFlow node to WorkflowNode format
       const workflowNode: WorkflowNode = {
         id: node.id,
         type:
-          node.data.type === "start"
+          nodeData.type === "start"
             ? "trigger"
-            : node.data.type === "end"
+            : nodeData.type === "end"
               ? "action"
-              : node.data.type.includes("condition")
+              : nodeData.type.includes("condition")
                 ? "condition"
-                : node.data.type.includes("ai")
+                : nodeData.type.includes("ai")
                   ? "ai_step"
                   : "action",
         position: node.position,
         data: {
-          label: node.data.label,
-          description: node.data.description,
-          type: node.data.type,
-          config: node.data.config,
+          label: nodeData.label,
+          description: nodeData.description,
+          type: nodeData.type,
+          config: nodeData.config,
           validation: [],
-          validationErrors: node.data.validationErrors,
+          validationErrors: nodeData.validationErrors,
         },
         connections: [], // We'll populate this from edges if needed
       };
@@ -213,7 +215,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
 
   // Keyboard shortcuts
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
       if (event.key === "Delete" || event.key === "Backspace") {
         if (selectedNode && document.activeElement?.tagName !== "INPUT") {
           event.preventDefault();
@@ -223,7 +225,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return (): void => document.removeEventListener("keydown", handleKeyDown);
   }, [selectedNode, deleteSelectedNode]);
 
   // Combine refs for drop functionality
@@ -245,14 +247,17 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
       name: "Automotive Workflow",
       description: "Auto-generated workflow",
       category: "sales" as const,
-      steps: nodes.map((node) => ({
-        id: node.id,
-        type: node.data.type,
-        name: node.data.label,
-        description: node.data.description,
-        config: node.data.config,
-        position: node.position,
-      })),
+      steps: nodes.map((node) => {
+        const nodeData = node.data as LegacyNodeData;
+        return {
+          id: node.id,
+          type: nodeData.type,
+          name: nodeData.label,
+          description: nodeData.description,
+          config: nodeData.config,
+          position: node.position,
+        };
+      }),
       connections: edges.map((edge) => ({
         id: edge.id,
         source: edge.source,
@@ -276,14 +281,17 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
       name: "Automotive Workflow",
       description: "Auto-generated workflow",
       category: "sales" as const,
-      steps: nodes.map((node) => ({
-        id: node.id,
-        type: node.data.type,
-        name: node.data.label,
-        description: node.data.description,
-        config: node.data.config,
-        position: node.position,
-      })),
+      steps: nodes.map((node) => {
+        const nodeData = node.data as LegacyNodeData;
+        return {
+          id: node.id,
+          type: nodeData.type,
+          name: nodeData.label,
+          description: nodeData.description,
+          config: nodeData.config,
+          position: node.position,
+        };
+      }),
       connections: edges.map((edge) => ({
         id: edge.id,
         source: edge.source,

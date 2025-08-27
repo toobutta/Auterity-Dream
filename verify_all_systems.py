@@ -43,7 +43,9 @@ def check_system_health(name: str, url: str) -> Dict[str, Any]:
                         "status": "✅ HEALTHY",
                         "url": endpoint,
                         "response_time": response.elapsed.total_seconds(),
-                        "details": (response.text[:200] if response.text else "OK"),
+                        "details": (
+                            response.text[:200] if response.text else "OK"
+                        ),
                     }
             except requests.RequestException:
                 continue
@@ -81,7 +83,9 @@ def test_integration_endpoints():
                 "status": "✅ SUCCESS"
                 if response.status_code in [200, 201]
                 else f"❌ FAILED ({response.status_code})",
-                "details": (response.text[:100] if response.text else "No response"),
+                "details": (
+                    response.text[:100] if response.text else "No response"
+                ),
             }
         )
     except Exception as e:
@@ -98,59 +102,29 @@ def test_integration_endpoints():
 
 def main():
     """Verify all systems and return exit code."""
-    # print("🚀 Auterity Unified AI Platform - System Verification")
-    # print("=" * 60)
-
     # Check all systems
     results = {}
     for name, url in SYSTEMS.items():
-        # print(f"Checking {name}...")
         results[name] = check_system_health(name, url)
         time.sleep(0.5)  # Brief pause between checks
 
-    # Display results
-    # print("\n📊 SYSTEM STATUS REPORT")
-    # print("=" * 60)
-
     healthy_count = 0
     for _name, result in results.items():
-        # print(f"{result['status']} {name}")
-        # print(f"   URL: {result['url']}")
         if result["response_time"]:
-            # print(f"   Response Time: {result['response_time']:.3f}s")
-            # print(f"   Details: {result['details']}")
-            # print()
-
             if "HEALTHY" in result["status"]:
                 healthy_count += 1
 
-    # Test integration
-    # print("🔗 INTEGRATION TESTS")
-    # print("=" * 60)
-
     integration_results = test_integration_endpoints()
     for _test in integration_results:
-        # print(f"{test['status']} {test['test']}")
-        # print(f"   Details: {test['details']}")
-        # print()
         pass
 
-    # Summary
     total_systems = len(SYSTEMS)
-    # print("📈 SUMMARY")
-    # print("=" * 60)
-    # print(f"Systems Healthy: {healthy_count}/{total_systems}")
-    # print(f"Success Rate: {(healthy_count/total_systems)*100:.1f}%")
 
     if healthy_count == total_systems:
-        # print("\n🎉 ALL SYSTEMS OPERATIONAL! Platform ready for use.")
         return 0
     elif healthy_count >= total_systems * 0.75:
-        # print("\n⚠️  Most systems operational. Check failed systems above.")
         return 1
     else:
-        # print("\n🚨 CRITICAL: Multiple systems down. Platform not"
-        #       " operational.")
         return 2
 
 
