@@ -1,0 +1,4 @@
+Component,Version,License(s),Evidence Path(s)
+fastapi,0.104.1,MIT,backend/requirements.txt
+uvicorn,0.24.0,BSD-3-Clause,backend/requirements.txt
+PyMuPDF,1.23.8,AGPL-3.0,backend/requirements.txt
