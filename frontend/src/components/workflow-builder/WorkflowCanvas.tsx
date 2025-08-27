@@ -95,7 +95,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
   onNodeSelect,
 }) => {
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState<unknown>(null);
   const { project } = useReactFlow();

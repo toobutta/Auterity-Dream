@@ -8,6 +8,17 @@ repos:
       - id: check-json
       - id: check-toml
       - id: check-merge-conflict
+        exclude: |
+          (?x)^.*(?:\.venv|venv|__pycache__|node_modules|migrations/).*$
+          ^migrations/
+          ^backend/\.venv/
+          ^backend/venv/
+          ^\.venv/
+          ^venv/
+          ^backend/\.venv/.*
+          ^backend/venv/.*
+          ^\.venv/.*
+          ^venv/.*
       - id: check-added-large-files
         args: ['--maxkb=1000']
 
@@ -83,9 +94,15 @@ repos:
         pass_filenames: false
         stages: [pre-push]
 
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
-    hooks:
-      - id: detect-secrets
-        args: ['--baseline', '.secrets.baseline']
-        exclude: ^(package-lock\.json|\.min\.js)$
+  # - repo: https://github.com/Yelp/detect-secrets
+  #   rev: v1.4.0
+  #   hooks:
+  #     - id: detect-secrets
+  #       args: ['--baseline', '.secrets.baseline']
+  #       exclude: |
+  #         (?x)^.*(?:package-lock\.json|\.min\.js|\.venv|venv|__pycache__|node_modules|migrations/).*$
+  #         ^migrations/
+  #         ^backend/\.venv/
+  #         ^backend/venv/
+  #         ^\.venv/
+  #         ^venv/

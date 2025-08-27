@@ -53,6 +53,7 @@
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "@xyflow/react": "^12.8.4",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
@@ -60,5 +61,8 @@
     "lucide-react": "^0.541.0",
     "morgan": "^1.10.1",
     "redis": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/morgan": "^1.9.10"
   }
 }
