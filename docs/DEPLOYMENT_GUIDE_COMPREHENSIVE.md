@@ -2,11 +2,11 @@
 
 ## 🎯 Deployment Overview
 
-**Platform**: Auterity Unified AI Platform  
-**Architecture**: Microservices with 26 Integrated Services  
-**Deployment Options**: Development, Staging, Production  
-**Container Technology**: Docker + Docker Compose  
-**Orchestration**: Kubernetes Ready  
+**Platform**: Auterity Unified AI Platform
+**Architecture**: Microservices with 26 Integrated Services
+**Deployment Options**: Development, Staging, Production
+**Container Technology**: Docker + Docker Compose
+**Orchestration**: Kubernetes Ready
 
 ## 🚀 Quick Start Deployment
 
@@ -104,34 +104,35 @@ docker-compose -f docker-compose.unified.yml -f docker-compose.production.yml up
 
 ### **26 Integrated Services**
 
-| Service               | Type          | Port        | Health Check                    |
-| --------------------- | ------------- | ----------- | ------------------------------- |
-| **kong**              | Gateway       | 8000, 8001  | `curl localhost:8001/status`    |
-| **nginx**             | Load Balancer | 80, 443     | `curl localhost/health`         |
-| **backend**           | API           | 8080        | `curl localhost:8080/api/health`|
-| **frontend**          | Web           | 3000        | `curl localhost:3000`           |
-| **postgres**          | Database      | 5432        | `pg_isready -h localhost`       |
-| **redis**             | Cache         | 6379        | `redis-cli ping`                |
-| **rabbitmq**          | Queue         | 5672, 15672 | `curl localhost:15672`          |
-| **kafka**             | Streaming     | 9092        | `kafka-topics.sh --list`       |
-| **vault**             | Secrets       | 8200        | `curl localhost:8200/v1/sys/health`|
-| **mlflow**            | ML            | 5000        | `curl localhost:5000/health`    |
-| **weaviate**          | Vector DB     | 8081        | `curl localhost:8081/v1/meta`   |
-| **puppeteer**         | Automation    | 3000        | `curl localhost:3000/health`    |
-| **celery-worker**     | Workers       | -           | `celery inspect ping`           |
-| **prometheus**        | Metrics       | 9090        | `curl localhost:9090/-/healthy` |
-| **grafana**           | Monitoring    | 3001        | `curl localhost:3001/api/health`|
-| **jaeger**            | Tracing       | 16686       | `curl localhost:16686/health`   |
-| **minio**             | Storage       | 9000, 9001  | `curl localhost:9000/minio/health/live`|
+| Service           | Type          | Port        | Health Check                            |
+| ----------------- | ------------- | ----------- | --------------------------------------- |
+| **kong**          | Gateway       | 8000, 8001  | `curl localhost:8001/status`            |
+| **nginx**         | Load Balancer | 80, 443     | `curl localhost/health`                 |
+| **backend**       | API           | 8080        | `curl localhost:8080/api/health`        |
+| **frontend**      | Web           | 3000        | `curl localhost:3000`                   |
+| **postgres**      | Database      | 5432        | `pg_isready -h localhost`               |
+| **redis**         | Cache         | 6379        | `redis-cli ping`                        |
+| **rabbitmq**      | Queue         | 5672, 15672 | `curl localhost:15672`                  |
+| **kafka**         | Streaming     | 9092        | `kafka-topics.sh --list`                |
+| **vault**         | Secrets       | 8200        | `curl localhost:8200/v1/sys/health`     |
+| **mlflow**        | ML            | 5000        | `curl localhost:5000/health`            |
+| **weaviate**      | Vector DB     | 8081        | `curl localhost:8081/v1/meta`           |
+| **puppeteer**     | Automation    | 3000        | `curl localhost:3000/health`            |
+| **celery-worker** | Workers       | -           | `celery inspect ping`                   |
+| **prometheus**    | Metrics       | 9090        | `curl localhost:9090/-/healthy`         |
+| **grafana**       | Monitoring    | 3001        | `curl localhost:3001/api/health`        |
+| **jaeger**        | Tracing       | 16686       | `curl localhost:16686/health`           |
+| **minio**         | Storage       | 9000, 9001  | `curl localhost:9000/minio/health/live` |
 
 ## 🔧 Configuration Management
 
 ### **Environment Configurations**
 
 #### Development Environment
+
 ```yaml
 # docker-compose.unified.yml
-version: '3.8'
+version: "3.8"
 services:
   backend:
     build: ./backend
@@ -145,9 +146,10 @@ services:
 ```
 
 #### Production Environment
+
 ```yaml
 # docker-compose.production.yml
-version: '3.8'
+version: "3.8"
 services:
   backend:
     environment:
@@ -158,7 +160,7 @@ services:
       replicas: 3
       resources:
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 2G
 ```
 
@@ -261,19 +263,19 @@ rule_files:
   - "alert_rules.yml"
 
 scrape_configs:
-  - job_name: 'backend-api'
+  - job_name: "backend-api"
     static_configs:
-      - targets: ['backend:8000']
-    metrics_path: '/metrics'
+      - targets: ["backend:8000"]
+    metrics_path: "/metrics"
     scrape_interval: 10s
 
-  - job_name: 'postgres'
+  - job_name: "postgres"
     static_configs:
-      - targets: ['postgres-exporter:9187']
+      - targets: ["postgres-exporter:9187"]
 
-  - job_name: 'redis'
+  - job_name: "redis"
     static_configs:
-      - targets: ['redis-exporter:9121']
+      - targets: ["redis-exporter:9121"]
 ```
 
 ### **Log Aggregation**
@@ -320,7 +322,7 @@ for service in backend-1 backend-2 backend-3; do
     docker-compose stop $service
     docker-compose pull $service
     docker-compose up -d $service
-    
+
     # Wait for health check
     sleep 30
     curl -f http://localhost:8080/api/health || exit 1
@@ -387,6 +389,7 @@ k6 run tests/load/api-load-test.js
 ### **Common Issues**
 
 #### Service Won't Start
+
 ```bash
 # Check logs
 docker-compose logs backend
@@ -399,6 +402,7 @@ df -h
 ```
 
 #### Database Connection Issues
+
 ```bash
 # Check PostgreSQL status
 docker-compose exec postgres pg_isready
@@ -408,6 +412,7 @@ docker-compose exec backend env | grep DATABASE_URL
 ```
 
 #### Performance Issues
+
 ```bash
 # Monitor resource usage
 docker stats
@@ -419,6 +424,7 @@ docker-compose exec postgres psql -U postgres -d auterity -c "SELECT * FROM pg_s
 ### **Recovery Procedures**
 
 #### Database Recovery
+
 ```bash
 # Backup database
 docker-compose exec postgres pg_dump -U postgres auterity > backup.sql
@@ -428,6 +434,7 @@ docker-compose exec postgres psql -U postgres auterity < backup.sql
 ```
 
 #### Service Recovery
+
 ```bash
 # Restart specific service
 docker-compose restart backend
@@ -442,16 +449,16 @@ docker-compose down && docker-compose up -d
 
 ```yaml
 # docker-compose.scale.yml
-version: '3.8'
+version: "3.8"
 services:
   backend:
     deploy:
       replicas: 3
-  
+
   frontend:
     deploy:
       replicas: 2
-      
+
   celery-worker:
     deploy:
       replicas: 5
@@ -503,6 +510,6 @@ postgres-slave:
 
 ---
 
-**Last Updated**: August 25, 2025  
-**Version**: 1.0.0  
+**Last Updated**: August 25, 2025
+**Version**: 1.0.0
 **Maintained By**: Auterity DevOps Team

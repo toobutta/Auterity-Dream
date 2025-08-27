@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import Layout from "../components/Layout";
 import WorkflowErrorDisplay from "../components/WorkflowErrorDisplay";
 import ErrorRecoveryGuide from "../components/ErrorRecoveryGuide";
@@ -9,67 +9,106 @@ import { createAppError } from "../utils/errorUtils";
 const ErrorDisplayDemo: React.FC = () => {
   const [selectedDemo, setSelectedDemo] = useState<string>("workflow-error");
   const [showReportModal, setShowReportModal] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
 
-  // Sample error for demonstration
-  const sampleError: AppError = createAppError(
-    "WORKFLOW_EXECUTION_FAILED",
-    "AI service timeout: Request timed out after 30 seconds",
-    {
-      workflowId: "workflow-demo-123",
-      executionId: "exec-demo-456",
-      component: "WorkflowEngine",
-    },
-    "The AI service failed to respond within the timeout period. This may be due to high load or service maintenance.",
-    undefined,
-    "corr-demo-789",
+  // Memoize sample error to prevent recreation on every render
+  const sampleError: AppError = useMemo(
+    () =>
+      createAppError(
+        "WORKFLOW_EXECUTION_FAILED",
+        "AI service timeout: Request timed out after 30 seconds",
+        {
+          workflowId: "workflow-demo-123",
+          executionId: "exec-demo-456",
+          component: "WorkflowEngine",
+        },
+        "The AI service failed to respond within the timeout period. This may be due to high load or service maintenance.",
+        undefined,
+        "corr-demo-789",
+      ),
+    [],
   );
 
-  const demoSections = [
-    {
-      id: "workflow-error",
-      title: "Workflow Error Display",
-      description: "Comprehensive error display for failed workflow executions",
+  const demoSections = useMemo(
+    () => [
+      {
+        id: "workflow-error",
+        title: "Workflow Error Display",
+        description:
+          "Comprehensive error display for failed workflow executions",
+      },
+      {
+        id: "recovery-guide",
+        title: "Error Recovery Guide",
+        description:
+          "Step-by-step recovery instructions for different error types",
+      },
+      {
+        id: "error-categories",
+        title: "Error Categories",
+        description: "Different error categories and their recovery steps",
+      },
+    ],
+    [],
+  );
+
+  const errorCategories = useMemo(
+    () => [
+      { category: ErrorCategory.AUTHENTICATION, severity: ErrorSeverity.HIGH },
+      { category: ErrorCategory.VALIDATION, severity: ErrorSeverity.MEDIUM },
+      { category: ErrorCategory.NETWORK, severity: ErrorSeverity.MEDIUM },
+      { category: ErrorCategory.AI_SERVICE, severity: ErrorSeverity.MEDIUM },
+      { category: ErrorCategory.WORKFLOW, severity: ErrorSeverity.HIGH },
+      { category: ErrorCategory.DATABASE, severity: ErrorSeverity.CRITICAL },
+    ],
+    [],
+  );
+
+  const showNotification = useCallback((message: string) => {
+    setNotification(message);
+    setTimeout(() => setNotification(null), 3000);
+  }, []);
+
+  const handleRetrySuccess = useCallback(
+    (newExecutionId: string) => {
+      showNotification(
+        `Workflow retried successfully! New execution ID: ${newExecutionId}`,
+      );
     },
-    {
-      id: "recovery-guide",
-      title: "Error Recovery Guide",
-      description:
-        "Step-by-step recovery instructions for different error types",
-    },
-    {
-      id: "error-categories",
-      title: "Error Categories",
-      description: "Different error categories and their recovery steps",
-    },
-  ];
+    [showNotification],
+  );
 
-  const errorCategories = [
-    { category: ErrorCategory.AUTHENTICATION, severity: ErrorSeverity.HIGH },
-    { category: ErrorCategory.VALIDATION, severity: ErrorSeverity.MEDIUM },
-    { category: ErrorCategory.NETWORK, severity: ErrorSeverity.MEDIUM },
-    { category: ErrorCategory.AI_SERVICE, severity: ErrorSeverity.MEDIUM },
-    { category: ErrorCategory.WORKFLOW, severity: ErrorSeverity.HIGH },
-    { category: ErrorCategory.DATABASE, severity: ErrorSeverity.CRITICAL },
-  ];
+  const handleContactSupport = useCallback(() => {
+    showNotification("Redirecting to support portal...");
+  }, [showNotification]);
 
-  const handleRetrySuccess = (newExecutionId: string) => {
-    alert(`Workflow retried successfully! New execution ID: ${newExecutionId}`);
-  };
-
-  const handleContactSupport = () => {
-    alert("Redirecting to support portal...");
-  };
-
-  const handleRetryAction = async () => {
-    // Simulate retry action
+  const handleRetryAction = useCallback(async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    alert("Retry completed successfully!");
-  };
+    showNotification("Retry completed successfully!");
+  }, [showNotification]);
+
+  const handleErrorReportSubmit = useCallback(
+    async (reportData: any) => {
+      // Sanitize report data before logging
+      const sanitizedData = {
+        ...reportData,
+        description: reportData.description
+          ? String(reportData.description).substring(0, 1000)
+          : "",
+        userEmail: reportData.userEmail
+          ? String(reportData.userEmail).substring(0, 100)
+          : "",
+      };
+
+      console.log("Error report submitted:", sanitizedData);
+      showNotification("Error report submitted successfully!");
+    },
+    [showNotification],
+  );
 
   return (
     <Layout>
       <div className="px-4 py-6 sm:px-0">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             Error Display Demo
@@ -79,7 +118,29 @@ const ErrorDisplayDemo: React.FC = () => {
           </p>
         </div>
 
-        {/* Navigation */}
+        {notification && (
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-green-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-green-800">{notification}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-8">
           <nav className="flex space-x-8">
             {demoSections.map((section) => (
@@ -98,9 +159,7 @@ const ErrorDisplayDemo: React.FC = () => {
           </nav>
         </div>
 
-        {/* Demo Content */}
         <div className="space-y-8">
-          {/* Workflow Error Display Demo */}
           {selectedDemo === "workflow-error" && (
             <div>
               <div className="mb-6">
@@ -114,7 +173,6 @@ const ErrorDisplayDemo: React.FC = () => {
                 </p>
               </div>
 
-              {/* Features List */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <h3 className="font-medium text-blue-900 mb-2">
                   Key Features:
@@ -139,7 +197,6 @@ const ErrorDisplayDemo: React.FC = () => {
                 </ul>
               </div>
 
-              {/* Demo Component */}
               <WorkflowErrorDisplay
                 executionId="demo-execution-123"
                 workflowId="demo-workflow-456"
@@ -147,7 +204,6 @@ const ErrorDisplayDemo: React.FC = () => {
                 className="mb-6"
               />
 
-              {/* Usage Example */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-medium text-gray-900 mb-2">
                   Usage Example:
@@ -170,7 +226,6 @@ const ErrorDisplayDemo: React.FC = () => {
             </div>
           )}
 
-          {/* Error Recovery Guide Demo */}
           {selectedDemo === "recovery-guide" && (
             <div>
               <div className="mb-6">
@@ -183,7 +238,6 @@ const ErrorDisplayDemo: React.FC = () => {
                 </p>
               </div>
 
-              {/* AI Service Error Example */}
               <div className="mb-8">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                   AI Service Error Recovery
@@ -197,7 +251,6 @@ const ErrorDisplayDemo: React.FC = () => {
                 />
               </div>
 
-              {/* Network Error Example */}
               <div className="mb-8">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                   Network Error Recovery
@@ -210,7 +263,6 @@ const ErrorDisplayDemo: React.FC = () => {
                 />
               </div>
 
-              {/* Usage Example */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <h3 className="font-medium text-gray-900 mb-2">
                   Usage Example:
@@ -234,7 +286,6 @@ const ErrorDisplayDemo: React.FC = () => {
             </div>
           )}
 
-          {/* Error Categories Demo */}
           {selectedDemo === "error-categories" && (
             <div>
               <div className="mb-6">
@@ -286,7 +337,6 @@ const ErrorDisplayDemo: React.FC = () => {
           )}
         </div>
 
-        {/* Error Report Modal Demo Button */}
         <div className="mt-8 p-6 bg-white border border-gray-200 rounded-lg">
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             Error Reporting
@@ -303,18 +353,13 @@ const ErrorDisplayDemo: React.FC = () => {
           </button>
         </div>
 
-        {/* Error Report Modal */}
         <ErrorReportModal
           error={sampleError}
           isOpen={showReportModal}
           onClose={() => setShowReportModal(false)}
-          onSubmit={async (reportData) => {
-            console.log("Error report submitted:", reportData);
-            alert("Error report submitted successfully!");
-          }}
+          onSubmit={handleErrorReportSubmit}
         />
 
-        {/* Integration Guide */}
         <div className="mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
           <h3 className="text-lg font-medium text-yellow-900 mb-2">
             Integration Guide

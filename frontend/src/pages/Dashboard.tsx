@@ -1,9 +1,9 @@
-import React, { useEffect, useState, Suspense, lazy } from "react";
+import React, { useEffect, useState, useCallback, Suspense, lazy } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { MetricCard } from "../components/MetricCard";
 import { getDashboardMetrics, DashboardMetrics } from "../api/workflows";
 
-// Lazy load the PerformanceDashboard to reduce initial bundle size
 const PerformanceDashboard = lazy(() =>
   import("../components/PerformanceDashboard").then((module) => ({
     default: module.PerformanceDashboard,
@@ -11,45 +11,60 @@ const PerformanceDashboard = lazy(() =>
 );
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     try {
       setError(null);
       const data = await getDashboardMetrics();
       setMetrics(data);
       setLastUpdated(new Date());
     } catch (err) {
-      setError("Failed to load dashboard metrics");
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to load dashboard metrics";
+      setError(errorMessage);
       console.error("Dashboard metrics error:", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchMetrics();
-
-    // Set up auto-refresh every 30 seconds
     const interval = setInterval(fetchMetrics, 30000);
-
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchMetrics]);
 
-  const formatPercentage = (value: number) => `${(value * 100).toFixed(1)}%`;
-  const formatTime = (ms: number) => {
+  const formatPercentage = useCallback(
+    (value: number) => `${(value * 100).toFixed(1)}%`,
+    [],
+  );
+
+  const formatTime = useCallback((ms: number) => {
     if (ms < 1000) return `${ms}ms`;
     if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
     return `${(ms / 60000).toFixed(1)}m`;
-  };
+  }, []);
+
+  const handleNavigateToWorkflows = useCallback(() => {
+    navigate("/workflows");
+  }, [navigate]);
+
+  const handleNavigateToTemplates = useCallback(() => {
+    navigate("/templates");
+  }, [navigate]);
+
+  const handleNavigateToAnalytics = useCallback(() => {
+    navigate("/analytics");
+  }, [navigate]);
 
   return (
     <Layout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="glass-card p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -115,7 +130,6 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Error State */}
         {error && (
           <div className="glass-card border-l-4 border-red-500 p-4">
             <div className="flex">
@@ -146,7 +160,6 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
             title="Total Workflows"
@@ -192,7 +205,6 @@ const Dashboard: React.FC = () => {
           />
         </div>
 
-        {/* Secondary Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <MetricCard
             title="Today's Executions"
@@ -221,7 +233,6 @@ const Dashboard: React.FC = () => {
           />
         </div>
 
-        {/* Performance Dashboard */}
         <div className="glass-card p-6">
           <Suspense
             fallback={
@@ -235,16 +246,15 @@ const Dashboard: React.FC = () => {
           </Suspense>
         </div>
 
-        {/* Quick Actions */}
         <div className="glass-card p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
             <span className="text-xl mr-2">⚡</span>
             Quick Actions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a
-              href="/workflows"
-              className="glass-button flex items-center p-4 hover:scale-105 transition-all duration-200"
+            <button
+              onClick={handleNavigateToWorkflows}
+              className="glass-button flex items-center p-4 hover:scale-105 transition-all duration-200 text-left"
             >
               <div className="text-2xl mr-3">⚙️</div>
               <div>
@@ -255,10 +265,10 @@ const Dashboard: React.FC = () => {
                   Build a new AI workflow
                 </p>
               </div>
-            </a>
-            <a
-              href="/templates"
-              className="glass-button flex items-center p-4 hover:scale-105 transition-all duration-200"
+            </button>
+            <button
+              onClick={handleNavigateToTemplates}
+              className="glass-button flex items-center p-4 hover:scale-105 transition-all duration-200 text-left"
             >
               <div className="text-2xl mr-3">📋</div>
               <div>
@@ -269,9 +279,9 @@ const Dashboard: React.FC = () => {
                   Use automotive templates
                 </p>
               </div>
-            </a>
+            </button>
             <button
-              onClick={() => window.location.reload()}
+              onClick={handleNavigateToAnalytics}
               className="glass-button flex items-center p-4 hover:scale-105 transition-all duration-200 text-left"
             >
               <div className="text-2xl mr-3">📊</div>

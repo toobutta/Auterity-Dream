@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import Layout from "../components/Layout";
 import WorkflowExecutionForm from "../components/WorkflowExecutionForm";
 import ExecutionStatus from "../components/ExecutionStatus";
@@ -24,11 +24,29 @@ const Workflows: React.FC = () => {
   });
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  const tabs = useMemo(
+    () => [
+      { id: "execute" as const, name: "Execute Workflow", icon: "▶️" },
+      { id: "history" as const, name: "Execution History", icon: "📋" },
+    ],
+    [],
+  );
+
   const handleExecutionStart = useCallback(
-    (executionId: string, workflowId: string) => {
+    (executionId: string, workflowId?: string) => {
+      // Validate execution ID
+      if (
+        !executionId ||
+        typeof executionId !== "string" ||
+        executionId.trim() === ""
+      ) {
+        console.error("Invalid execution ID provided");
+        return;
+      }
+
       setExecutionState({
-        executionId,
-        workflowId,
+        executionId: executionId.trim(),
+        workflowId: workflowId?.trim() || null,
         status: "executing",
         execution: null,
       });
@@ -44,7 +62,6 @@ const Workflows: React.FC = () => {
         status: execution.status === "completed" ? "completed" : "failed",
         execution,
       }));
-      // Refresh history to show the new execution
       setRefreshTrigger((prev) => prev + 1);
     },
     [],
@@ -69,10 +86,100 @@ const Workflows: React.FC = () => {
     });
   }, []);
 
-  const tabs = [
-    { id: "execute" as const, name: "Execute Workflow", icon: "▶️" },
-    { id: "history" as const, name: "Execution History", icon: "📋" },
-  ];
+  const handleRetrySuccess = useCallback(
+    (newExecutionId: string) => {
+      if (executionState.workflowId && newExecutionId) {
+        handleExecutionStart(newExecutionId, executionState.workflowId);
+      }
+    },
+    [executionState.workflowId, handleExecutionStart],
+  );
+
+  const renderExecutionContent = () => {
+    switch (executionState.status) {
+      case "idle":
+        return (
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">
+              Start New Execution
+            </h2>
+            <WorkflowExecutionForm
+              onExecutionStart={handleExecutionStart}
+              className="max-w-2xl"
+            />
+          </div>
+        );
+
+      case "executing":
+        return executionState.executionId ? (
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">
+                Execution Status
+              </h2>
+              <button
+                onClick={handleNewExecution}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                Start New Execution
+              </button>
+            </div>
+            <ExecutionStatus
+              executionId={executionState.executionId}
+              onComplete={handleExecutionComplete}
+              showTimeline={true}
+              showLogs={true}
+            />
+          </div>
+        ) : null;
+
+      case "completed":
+        return executionState.executionId ? (
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">
+                Execution Results
+              </h2>
+              <button
+                onClick={handleNewExecution}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Start New Execution
+              </button>
+            </div>
+            <WorkflowExecutionResults
+              executionId={executionState.executionId}
+              workflowId={executionState.workflowId || undefined}
+            />
+          </div>
+        ) : null;
+
+      case "failed":
+        return executionState.executionId ? (
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">
+                Execution Failed
+              </h2>
+              <button
+                onClick={handleNewExecution}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Start New Execution
+              </button>
+            </div>
+            <WorkflowErrorDisplay
+              executionId={executionState.executionId}
+              workflowId={executionState.workflowId || undefined}
+              onRetrySuccess={handleRetrySuccess}
+            />
+          </div>
+        ) : null;
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <Layout>
@@ -86,7 +193,6 @@ const Workflows: React.FC = () => {
           </p>
         </div>
 
-        {/* Tab Navigation */}
         <div className="mb-6">
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
@@ -108,105 +214,8 @@ const Workflows: React.FC = () => {
           </div>
         </div>
 
-        {/* Tab Content */}
         {activeTab === "execute" && (
-          <div className="space-y-6">
-            {/* Execution Form */}
-            {executionState.status === "idle" && (
-              <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">
-                  Start New Execution
-                </h2>
-                <WorkflowExecutionForm
-                  onExecutionStart={(executionId) => {
-                    // We need to get the workflowId from the form component
-                    // For now, we'll use a placeholder - this should be improved
-                    handleExecutionStart(
-                      executionId,
-                      "workflow-id-placeholder",
-                    );
-                  }}
-                  className="max-w-2xl"
-                />
-              </div>
-            )}
-
-            {/* Execution Status */}
-            {executionState.executionId &&
-              executionState.status === "executing" && (
-                <div className="bg-white shadow rounded-lg p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-medium text-gray-900">
-                      Execution Status
-                    </h2>
-                    <button
-                      onClick={handleNewExecution}
-                      className="text-sm text-blue-600 hover:text-blue-800"
-                    >
-                      Start New Execution
-                    </button>
-                  </div>
-                  <ExecutionStatus
-                    executionId={executionState.executionId}
-                    onComplete={handleExecutionComplete}
-                    showTimeline={true}
-                    showLogs={true}
-                  />
-                </div>
-              )}
-
-            {/* Execution Results */}
-            {executionState.executionId &&
-              executionState.status === "completed" && (
-                <div className="bg-white shadow rounded-lg p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-medium text-gray-900">
-                      Execution Results
-                    </h2>
-                    <button
-                      onClick={handleNewExecution}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-                    >
-                      Start New Execution
-                    </button>
-                  </div>
-                  <WorkflowExecutionResults
-                    executionId={executionState.executionId}
-                    workflowId={executionState.workflowId || undefined}
-                  />
-                </div>
-              )}
-
-            {/* Execution Error */}
-            {executionState.executionId &&
-              executionState.status === "failed" && (
-                <div className="bg-white shadow rounded-lg p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-medium text-gray-900">
-                      Execution Failed
-                    </h2>
-                    <button
-                      onClick={handleNewExecution}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-                    >
-                      Start New Execution
-                    </button>
-                  </div>
-                  <WorkflowErrorDisplay
-                    executionId={executionState.executionId}
-                    workflowId={executionState.workflowId || undefined}
-                    onRetrySuccess={(newExecutionId: string) => {
-                      if (executionState.workflowId) {
-                        handleExecutionStart(
-                          newExecutionId,
-                          executionState.workflowId,
-                        );
-                      }
-                    }}
-                  />
-                </div>
-              )}
-          </div>
+          <div className="space-y-6">{renderExecutionContent()}</div>
         )}
 
         {activeTab === "history" && (

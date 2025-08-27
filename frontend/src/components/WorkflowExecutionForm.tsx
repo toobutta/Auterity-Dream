@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { getWorkflow, executeWorkflow } from "../api/workflows";
 import { WorkflowDefinition } from "../types/workflow";
 import { sanitizeInput } from "../utils/sanitizer";
 
-// Interface for API error responses
 interface ApiErrorResponse {
   response?: {
     data?: {
@@ -27,6 +26,36 @@ interface FormField {
   placeholder?: string;
 }
 
+// Validate and sanitize workflow ID
+const validateWorkflowId = (id: string): boolean => {
+  return (
+    typeof id === "string" &&
+    id.trim().length > 0 &&
+    /^[a-zA-Z0-9_-]+$/.test(id) &&
+    id.length <= 100
+  );
+};
+
+// Sanitize form data to prevent injection attacks
+const sanitizeFormData = (
+  data: Record<string, unknown>,
+): Record<string, unknown> => {
+  const sanitized: Record<string, unknown> = {};
+
+  Object.entries(data).forEach(([key, value]) => {
+    const sanitizedKey = key.replace(/[^a-zA-Z0-9_]/g, "").substring(0, 50);
+    if (sanitizedKey && typeof value === "string") {
+      sanitized[sanitizedKey] = sanitizeInput(value);
+    } else if (sanitizedKey && typeof value === "number") {
+      sanitized[sanitizedKey] = isFinite(value) ? value : 0;
+    } else if (sanitizedKey) {
+      sanitized[sanitizedKey] = value;
+    }
+  });
+
+  return sanitized;
+};
+
 const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
   workflowId,
   onExecutionStart,
@@ -41,8 +70,92 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const extractFormFields = useCallback(
+    (workflow: WorkflowDefinition): FormField[] => {
+      const fields: FormField[] = [];
+
+      if (workflow.parameters) {
+        Object.entries(workflow.parameters).forEach(([key, config]) => {
+          if (typeof config === "object" && config !== null) {
+            const configObj = config as Record<string, unknown>;
+            fields.push({
+              name: sanitizeInput(key).substring(0, 50),
+              type: (configObj.type as FormField["type"]) || "text",
+              label: sanitizeInput(String(configObj.label || key)).substring(
+                0,
+                100,
+              ),
+              required: Boolean(configObj.required),
+              placeholder: configObj.placeholder
+                ? sanitizeInput(String(configObj.placeholder)).substring(0, 200)
+                : undefined,
+            });
+          } else {
+            fields.push({
+              name: sanitizeInput(key).substring(0, 50),
+              type: "text",
+              label: sanitizeInput(key).substring(0, 100),
+              required: true,
+            });
+          }
+        });
+      }
+
+      const startStep = workflow.steps.find((step) => step.type === "start");
+      if (startStep?.config?.parameters) {
+        Object.entries(startStep.config.parameters).forEach(([key, config]) => {
+          if (!fields.find((f) => f.name === key)) {
+            if (typeof config === "object" && config !== null) {
+              fields.push({
+                name: sanitizeInput(key).substring(0, 50),
+                type:
+                  ((config as Record<string, unknown>)
+                    .type as FormField["type"]) || "text",
+                label: sanitizeInput(
+                  String((config as Record<string, unknown>).label || key),
+                ).substring(0, 100),
+                required: Boolean((config as Record<string, unknown>).required),
+                placeholder: (config as Record<string, unknown>).placeholder
+                  ? sanitizeInput(
+                      String((config as Record<string, unknown>).placeholder),
+                    ).substring(0, 200)
+                  : undefined,
+              });
+            } else {
+              fields.push({
+                name: sanitizeInput(key).substring(0, 50),
+                type: "text",
+                label: sanitizeInput(key).substring(0, 100),
+                required: true,
+              });
+            }
+          }
+        });
+      }
+
+      if (fields.length === 0) {
+        fields.push({
+          name: "input",
+          type: "textarea",
+          label: "Input",
+          required: true,
+          placeholder: "Enter your input here...",
+        });
+      }
+
+      return fields;
+    },
+    [],
+  );
+
   useEffect(() => {
     const fetchWorkflow = async () => {
+      if (!validateWorkflowId(workflowId)) {
+        setError("Invalid workflow ID");
+        onError?.("Invalid workflow ID");
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError(null);
@@ -50,11 +163,9 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
         const workflowData = await getWorkflow(workflowId);
         setWorkflow(workflowData);
 
-        // Extract input parameters from workflow definition
         const fields = extractFormFields(workflowData);
         setFormFields(fields);
 
-        // Initialize form data with empty values
         const initialData: Record<string, unknown> = {};
         fields.forEach((field) => {
           initialData[field.name] = field.type === "number" ? 0 : "";
@@ -75,95 +186,27 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
     if (workflowId) {
       fetchWorkflow();
     }
-  }, [workflowId, onError]);
+  }, [workflowId, onError, extractFormFields]);
 
-  const extractFormFields = (workflow: WorkflowDefinition): FormField[] => {
-    const fields: FormField[] = [];
+  const handleInputChange = useCallback(
+    (name: string, value: unknown) => {
+      const sanitizedName = name.replace(/[^a-zA-Z0-9_]/g, "").substring(0, 50);
+      const sanitizedValue =
+        typeof value === "string" ? sanitizeInput(value) : value;
 
-    // Look for workflow parameters
-    if (workflow.parameters) {
-      Object.entries(workflow.parameters).forEach(([key, config]) => {
-        if (typeof config === "object" && config !== null) {
-          const configObj = config as Record<string, unknown>;
-          fields.push({
-            name: key,
-            type: (configObj.type as FormField["type"]) || "text",
-            label: (configObj.label as string) || key,
-            required: (configObj.required as boolean) || false,
-            placeholder: configObj.placeholder as string,
-          });
-        } else {
-          // Simple parameter definition
-          fields.push({
-            name: key,
-            type: "text",
-            label: key,
-            required: true,
-          });
-        }
-      });
-    }
+      setFormData((prev) => ({
+        ...prev,
+        [sanitizedName]: sanitizedValue,
+      }));
 
-    // Look for input requirements in start step
-    const startStep = workflow.steps.find((step) => step.type === "start");
-    if (startStep?.config?.parameters) {
-      Object.entries(startStep.config.parameters).forEach(([key, config]) => {
-        if (!fields.find((f) => f.name === key)) {
-          if (typeof config === "object" && config !== null) {
-            fields.push({
-              name: key,
-              type:
-                ((config as Record<string, unknown>)
-                  .type as FormField["type"]) || "text",
-              label:
-                ((config as Record<string, unknown>).label as string) || key,
-              required:
-                ((config as Record<string, unknown>).required as boolean) ||
-                false,
-              placeholder: (config as Record<string, unknown>)
-                .placeholder as string,
-            });
-          } else {
-            fields.push({
-              name: key,
-              type: "text",
-              label: key,
-              required: true,
-            });
-          }
-        }
-      });
-    }
+      if (success) {
+        setSuccess(null);
+      }
+    },
+    [success],
+  );
 
-    // If no parameters found, add a default input field
-    if (fields.length === 0) {
-      fields.push({
-        name: "input",
-        type: "textarea",
-        label: "Input",
-        required: true,
-        placeholder: "Enter your input here...",
-      });
-    }
-
-    return fields;
-  };
-
-  const handleInputChange = (name: string, value: unknown) => {
-    const sanitizedValue =
-      typeof value === "string" ? sanitizeInput(value) : value;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: sanitizedValue,
-    }));
-
-    // Clear success message when user starts typing
-    if (success) {
-      setSuccess(null);
-    }
-  };
-
-  const validateForm = (): string | null => {
+  const validateForm = useCallback((): string | null => {
     for (const field of formFields) {
       if (
         field.required &&
@@ -187,60 +230,72 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
         return `${field.label} must be a valid number`;
       }
     }
-
     return null;
-  };
+  }, [formFields, formData]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError);
-      setSuccess(null);
-      return;
-    }
+      const validationError = validateForm();
+      if (validationError) {
+        setError(validationError);
+        setSuccess(null);
+        return;
+      }
 
-    try {
-      setIsSubmitting(true);
-      setError(null);
-      setSuccess(null);
+      try {
+        setIsSubmitting(true);
+        setError(null);
+        setSuccess(null);
 
-      // Convert form data to appropriate types
-      const processedData: Record<string, unknown> = {};
-      formFields.forEach((field) => {
-        let value = formData[field.name];
-        if (field.type === "number" && value !== "") {
-          value = Number(value);
-        }
-        processedData[field.name] =
-          typeof value === "string" ? sanitizeInput(value) : value;
-      });
+        const processedData: Record<string, unknown> = {};
+        formFields.forEach((field) => {
+          let value = formData[field.name];
+          if (field.type === "number" && value !== "") {
+            value = Number(value);
+          }
+          processedData[field.name] =
+            typeof value === "string" ? sanitizeInput(value) : value;
+        });
 
-      const execution = await executeWorkflow(workflowId, processedData);
+        const sanitizedData = sanitizeFormData(processedData);
+        const execution = await executeWorkflow(workflowId, sanitizedData);
 
-      setSuccess(
-        `Workflow execution started successfully! Execution ID: ${sanitizeInput(String(execution.id))}`,
-      );
-      onExecutionStart?.(execution.id);
+        const executionId = sanitizeInput(String(execution.id));
+        setSuccess(
+          `Workflow execution started successfully! Execution ID: ${executionId}`,
+        );
+        onExecutionStart?.(execution.id);
 
-      // Reset form after successful submission
-      const resetData: Record<string, unknown> = {};
-      formFields.forEach((field) => {
-        resetData[field.name] = field.type === "number" ? 0 : "";
-      });
-      setFormData(resetData);
-    } catch (err: unknown) {
-      const apiError = err as ApiErrorResponse;
-      const errorMessage =
-        apiError?.response?.data?.detail ||
-        (err instanceof Error ? err.message : "Failed to execute workflow");
-      setError(errorMessage);
-      onError?.(errorMessage);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        const resetData: Record<string, unknown> = {};
+        formFields.forEach((field) => {
+          resetData[field.name] = field.type === "number" ? 0 : "";
+        });
+        setFormData(resetData);
+      } catch (err: unknown) {
+        const apiError = err as ApiErrorResponse;
+        const errorMessage =
+          apiError?.response?.data?.detail ||
+          (err instanceof Error ? err.message : "Failed to execute workflow");
+        setError(errorMessage);
+        onError?.(errorMessage);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [validateForm, formFields, formData, workflowId, onExecutionStart, onError],
+  );
+
+  const handleReset = useCallback(() => {
+    const resetData: Record<string, unknown> = {};
+    formFields.forEach((field) => {
+      resetData[field.name] = field.type === "number" ? 0 : "";
+    });
+    setFormData(resetData);
+    setError(null);
+    setSuccess(null);
+  }, [formFields]);
 
   if (isLoading) {
     return (
@@ -325,15 +380,7 @@ const WorkflowExecutionForm: React.FC<WorkflowExecutionFormProps> = ({
         <div className="flex justify-end space-x-3 pt-4">
           <button
             type="button"
-            onClick={() => {
-              const resetData: { [key: string]: string | number } = {};
-              formFields.forEach((field) => {
-                resetData[field.name] = field.type === "number" ? 0 : "";
-              });
-              setFormData(resetData);
-              setError(null);
-              setSuccess(null);
-            }}
+            onClick={handleReset}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Reset

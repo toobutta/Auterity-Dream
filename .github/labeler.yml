@@ -1,32 +1,129 @@
-backend:
-  - backend/**/*
-  - '**/*.py'
+# Configuration for the GitHub Labeler action
+# This file defines which labels to apply based on file paths changed in PRs
 
+# Frontend related changes
 frontend:
-  - frontend/**/*
-  - '**/*.tsx'
-  - '**/*.ts'
-  - '**/*.jsx'
-  - '**/*.js'
+  - 'frontend/**'
+  - 'shared/**'
+  - '*.js'
+  - '*.ts'
+  - '*.tsx'
+  - '*.jsx'
+  - '*.css'
+  - '*.scss'
+  - '*.html'
 
-documentation:
-  - docs/**/*
-  - '**/*.md'
-  - README.md
+# Backend related changes
+backend:
+  - 'backend/**'
+  - '*.py'
+  - 'requirements*.txt'
+  - 'pyproject.toml'
+  - 'setup.py'
 
+# Infrastructure and DevOps
 infrastructure:
-  - infrastructure/**/*
-  - docker-compose*.yml
-  - Dockerfile*
+  - 'docker-compose*.yml'
+  - 'Dockerfile*'
+  - '.dockerignore'
+  - 'nginx/**'
+  - 'kong/**'
+  - 'infra/**'
+  - 'infrastructure/**'
   - '**/*.tf'
 
-ci/cd:
-  - .github/**/*
+# CI/CD and GitHub Actions
+ci-cd:
+  - '.github/workflows/**'
+  - '.github/actions/**'
+  - 'scripts/**'
+  - '.github/*.yml'
 
+# Documentation
+documentation:
+  - '**/*.md'
+  - 'docs/**'
+  - 'README*'
+  - 'CHANGELOG*'
+  - 'LICENSE*'
+
+# Configuration files
+configuration:
+  - 'config/**'
+  - '*.config.js'
+  - '*.config.ts'
+  - '.env*'
+  - '*.json'
+  - '*.yml'
+  - '*.yaml'
+  - '.github/dependabot.yml'
+
+# Dependencies
+dependencies:
+  - 'package*.json'
+  - 'requirements*.txt'
+  - 'yarn.lock'
+  - 'poetry.lock'
+  - 'Pipfile*'
+
+# Testing
+testing:
+  - 'tests/**'
+  - '**/*.test.*'
+  - '**/*.spec.*'
+  - 'cypress/**'
+  - 'e2e/**'
+  - 'jest.config.*'
+  - 'pytest.ini'
+  - 'codecov.yml'
+
+# Security
 security:
+  - '.github/workflows/*security*'
+  - '.github/workflows/*audit*'
+  - 'security/**'
+  - '.snyk'
+  - '.safety-policy.yml'
   - any: ['security', 'vulnerability', 'auth', 'jwt']
 
-dependencies:
-  - package*.json
-  - requirements.txt
-  - pyproject.toml
+# Database and migrations
+database:
+  - 'alembic/**'
+  - '**/*migration*'
+  - '**/*migrate*'
+  - 'models/**'
+  - 'schemas/**'
+
+# Monitoring and observability
+monitoring:
+  - 'monitoring/**'
+  - 'mlflow/**'
+  - 'logs/**'
+  - '**/*metric*'
+  - '**/*monitor*'
+
+# AI/ML specific
+ai-ml:
+  - 'systems/neuroweaver/**'
+  - '**/*model*'
+  - '**/*ai*'
+  - '**/*ml*'
+  - '**/*neural*'
+
+# RelayCore system
+relaycore:
+  - 'systems/relaycore/**'
+  - '**/*relay*'
+
+# Enterprise features
+enterprise:
+  - 'enterprise-platform/**'
+  - '**/*enterprise*'
+  - '**/*saas*'
+
+# Performance
+performance:
+  - '**/*performance*'
+  - '**/*perf*'
+  - '**/*optimization*'
+  - '**/*optimize*'

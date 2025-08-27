@@ -1,28 +1,336 @@
-name: Release
+name: Automated Release
 
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.2.3)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.12'
 
 jobs:
-  release:
+  # Build and test before release
+  pre-release-validation:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
     steps:
-    - uses: actions/checkout@v4
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-        body: |
-          ## What's Changed
-          - See commit history for detailed changes
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-          **Full Changelog**: https://github.com/toobutta/auterity-error-iq/compare/v${{ github.ref_name }}...HEAD
+      - name: Extract version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            version="${{ github.event.inputs.version }}"
+          else
+            version="${{ github.ref_name }}"
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "Releasing version: $version"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd frontend && npm ci && cd ..
+          cd backend && pip install -r requirements.txt && cd ..
+
+      - name: Run tests
+        run: |
+          # Frontend tests
+          cd frontend
+          npm test -- --coverage --watchAll=false
+          npm run build
+          cd ..
+
+          # Backend tests
+          cd backend
+          python -m pytest tests/ -v
+          cd ..
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          previous_tag=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          current_tag="${{ steps.version.outputs.version }}"
+
+          echo "Generating changelog from $previous_tag to $current_tag"
+
+          # Generate changelog using git log
+          if [ -n "$previous_tag" ]; then
+            changelog=$(git log --pretty=format:"- %s (%an)" $previous_tag..HEAD --no-merges)
+          else
+            changelog=$(git log --pretty=format:"- %s (%an)" --no-merges)
+          fi
+
+          # Categorize commits
+          features=$(echo "$changelog" | grep -E "^- (feat|feature)" || echo "")
+          fixes=$(echo "$changelog" | grep -E "^- (fix|bugfix)" || echo "")
+          docs=$(echo "$changelog" | grep -E "^- (docs|doc)" || echo "")
+          chores=$(echo "$changelog" | grep -E "^- (chore|refactor|style)" || echo "")
+
+          # Build formatted changelog
+          formatted_changelog="## What's New in $current_tag"$'\n'$'\n'
+
+          if [ -n "$features" ]; then
+            formatted_changelog+="### 🚀 Features"$'\n'
+            formatted_changelog+="$features"$'\n'$'\n'
+          fi
+
+          if [ -n "$fixes" ]; then
+            formatted_changelog+="### 🐛 Bug Fixes"$'\n'
+            formatted_changelog+="$fixes"$'\n'$'\n'
+          fi
+
+          if [ -n "$docs" ]; then
+            formatted_changelog+="### 📚 Documentation"$'\n'
+            formatted_changelog+="$docs"$'\n'$'\n'
+          fi
+
+          if [ -n "$chores" ]; then
+            formatted_changelog+="### 🔧 Maintenance"$'\n'
+            formatted_changelog+="$chores"$'\n'$'\n'
+          fi
+
+          formatted_changelog+="**Full Changelog**: https://github.com/toobutta/auterity-error-iq/compare/$previous_tag...$current_tag"
+
+          # Save changelog to file and output
+          echo "$formatted_changelog" > RELEASE_CHANGELOG.md
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$formatted_changelog" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  # Build release artifacts
+  build-artifacts:
+    runs-on: ubuntu-latest
+    needs: pre-release-validation
+    strategy:
+      matrix:
+        component: [frontend, backend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: matrix.component == 'frontend'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Python
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Build frontend
+        if: matrix.component == 'frontend'
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+          # Create production build archive
+          tar -czf ../frontend-build-${{ needs.pre-release-validation.outputs.version }}.tar.gz build/
+
+      - name: Build backend
+        if: matrix.component == 'backend'
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+          # Create distributable package
+          pip install build
+          python -m build
+
+          # Create backend archive
+          tar -czf ../backend-dist-${{ needs.pre-release-validation.outputs.version }}.tar.gz dist/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.component }}-build
+          path: ${{ matrix.component }}-*-${{ needs.pre-release-validation.outputs.version }}.tar.gz
+          retention-days: 30
+
+  # Create Docker images
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: pre-release-validation
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker images
+        run: |
+          version="${{ needs.pre-release-validation.outputs.version }}"
+
+          # Build frontend image
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag ghcr.io/toobutta/auterity-frontend:$version \
+            --tag ghcr.io/toobutta/auterity-frontend:latest \
+            --push \
+            ./frontend
+
+          # Build backend image
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --tag ghcr.io/toobutta/auterity-backend:$version \
+            --tag ghcr.io/toobutta/auterity-backend:latest \
+            --push \
+            ./backend
+
+  # Create GitHub release
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [pre-release-validation, build-artifacts, build-docker]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.pre-release-validation.outputs.version }}
+          release_name: ${{ needs.pre-release-validation.outputs.version }}
+          body: ${{ needs.pre-release-validation.outputs.changelog }}
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease == 'true' }}
+
+      - name: Upload Release Assets
+        run: |
+          version="${{ needs.pre-release-validation.outputs.version }}"
+
+          # Upload frontend build
+          if [ -f "frontend-build/frontend-build-$version.tar.gz" ]; then
+            gh release upload $version "frontend-build/frontend-build-$version.tar.gz"
+          fi
+
+          # Upload backend build
+          if [ -f "backend-build/backend-dist-$version.tar.gz" ]; then
+            gh release upload $version "backend-build/backend-dist-$version.tar.gz"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Deploy to production (if main branch)
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [pre-release-validation, create-release]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to production
+        run: |
+          chmod +x scripts/production-deploy.sh
+          chmod +x scripts/validate-deployment.sh
+          
+          # Run production deployment
+          ./scripts/production-deploy.sh ${{ needs.pre-release-validation.outputs.version }} production false
+          
+          # Validate deployment
+          ./scripts/validate-deployment.sh production
+
+      - name: Create deployment notification
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: '${{ needs.pre-release-validation.outputs.version }}',
+              environment: 'production',
+              description: 'Automated production deployment',
+              auto_merge: false
+            });
+
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              description: 'Successfully deployed to production',
+              environment_url: 'https://your-production-url.com'
+            });
+
+  # Notify stakeholders
+  notify:
+    runs-on: ubuntu-latest
+    needs: [pre-release-validation, create-release, deploy-production]
+    if: always()
+    steps:
+      - name: Notify release completion
+        run: |
+          version="${{ needs.pre-release-validation.outputs.version }}"
+
+          if [[ "${{ needs.create-release.result }}" == "success" ]]; then
+            echo "✅ Release $version created successfully"
+
+            if [[ "${{ needs.deploy-production.result }}" == "success" ]]; then
+              echo "🚀 Successfully deployed to production"
+            else
+              echo "⚠️ Production deployment skipped or failed"
+            fi
+          else
+            echo "❌ Release creation failed"
+          fi
+
+          # Here you could add notifications to:
+          # - Slack channels
+          # - Email lists
+          # - Discord servers
+          # - Teams channels

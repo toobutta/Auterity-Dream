@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import MetricCard from "../components/MetricCard";
 import MetricGrid from "../components/MetricGrid";
 import RevenueMetricCard from "../components/RevenueMetricCard";
@@ -6,7 +7,6 @@ import CustomerMetricCard from "../components/CustomerMetricCard";
 import WorkflowMetricCard from "../components/WorkflowMetricCard";
 import ServiceMetricCard from "../components/ServiceMetricCard";
 
-// Mock data - replace with real API calls
 const mockMetrics = {
   activeWorkflows: {
     value: 147,
@@ -40,26 +40,46 @@ const mockMetrics = {
   },
 };
 
-// Quick action buttons
-const QuickActions = () => {
+const QuickActions: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleNewVehicle = useCallback(() => {
+    navigate("/inventory/new");
+  }, [navigate]);
+
+  const handleScheduleService = useCallback(() => {
+    navigate("/service/schedule");
+  }, [navigate]);
+
+  const handleViewReports = useCallback(() => {
+    navigate("/reports");
+  }, [navigate]);
+
+  const handleManageInventory = useCallback(() => {
+    navigate("/inventory");
+  }, [navigate]);
+
   return (
     <div className="flex flex-wrap gap-3">
-      <button className="btn-automotive-primary">
+      <button onClick={handleNewVehicle} className="btn-automotive-primary">
         <span className="mr-2">🚗</span>
         New Vehicle Entry
       </button>
-      <button className="btn-automotive-secondary">
+      <button
+        onClick={handleScheduleService}
+        className="btn-automotive-secondary"
+      >
         <span className="mr-2">📅</span>
         Schedule Service
       </button>
-      <button
-        className="btn-automotive-secondary"
-        onClick={() => console.log("Navigate to reports")}
-      >
+      <button onClick={handleViewReports} className="btn-automotive-secondary">
         <span className="mr-2">📊</span>
         View Reports
       </button>
-      <button className="btn-automotive-secondary">
+      <button
+        onClick={handleManageInventory}
+        className="btn-automotive-secondary"
+      >
         <span className="mr-2">📦</span>
         Manage Inventory
       </button>
@@ -67,45 +87,47 @@ const QuickActions = () => {
   );
 };
 
-// Recent activity feed
-const RecentActivityFeed = () => {
-  const activities = [
-    {
-      id: 1,
-      type: "sale",
-      message: "New vehicle sold: 2024 Honda Civic",
-      time: "2 minutes ago",
-      icon: "🚗",
-    },
-    {
-      id: 2,
-      type: "service",
-      message: "Service appointment completed for Customer #1234",
-      time: "15 minutes ago",
-      icon: "🔧",
-    },
-    {
-      id: 3,
-      type: "inquiry",
-      message: "New customer inquiry for SUV models",
-      time: "1 hour ago",
-      icon: "📞",
-    },
-    {
-      id: 4,
-      type: "finance",
-      message: "Loan application approved for $25,000",
-      time: "2 hours ago",
-      icon: "💰",
-    },
-    {
-      id: 5,
-      type: "inventory",
-      message: "Low stock alert: 2024 Toyota Camry",
-      time: "3 hours ago",
-      icon: "📦",
-    },
-  ];
+const RecentActivityFeed: React.FC = () => {
+  const activities = useMemo(
+    () => [
+      {
+        id: 1,
+        type: "sale",
+        message: "New vehicle sold: 2024 Honda Civic",
+        time: "2 minutes ago",
+        icon: "🚗",
+      },
+      {
+        id: 2,
+        type: "service",
+        message: "Service appointment completed for Customer #1234",
+        time: "15 minutes ago",
+        icon: "🔧",
+      },
+      {
+        id: 3,
+        type: "inquiry",
+        message: "New customer inquiry for SUV models",
+        time: "1 hour ago",
+        icon: "📞",
+      },
+      {
+        id: 4,
+        type: "finance",
+        message: "Loan application approved for $25,000",
+        time: "2 hours ago",
+        icon: "💰",
+      },
+      {
+        id: 5,
+        type: "inventory",
+        message: "Low stock alert: 2024 Toyota Camry",
+        time: "3 hours ago",
+        icon: "📦",
+      },
+    ],
+    [],
+  );
 
   return (
     <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -129,14 +151,16 @@ const RecentActivityFeed = () => {
   );
 };
 
-// Status indicators
-const SystemStatus = () => {
-  const systems = [
-    { name: "AutoMatrix Core", status: "operational", uptime: "99.9%" },
-    { name: "Inventory Sync", status: "operational", uptime: "99.8%" },
-    { name: "Customer Portal", status: "operational", uptime: "99.7%" },
-    { name: "Payment Gateway", status: "operational", uptime: "99.9%" },
-  ];
+const SystemStatus: React.FC = () => {
+  const systems = useMemo(
+    () => [
+      { name: "AutoMatrix Core", status: "operational", uptime: "99.9%" },
+      { name: "Inventory Sync", status: "operational", uptime: "99.8%" },
+      { name: "Customer Portal", status: "operational", uptime: "99.7%" },
+      { name: "Payment Gateway", status: "operational", uptime: "99.9%" },
+    ],
+    [],
+  );
 
   return (
     <div className="space-y-3">
@@ -160,8 +184,7 @@ const SystemStatus = () => {
   );
 };
 
-// Loading component
-const DashboardSkeleton = () => (
+const DashboardSkeleton: React.FC = () => (
   <div className="space-y-6">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {[...Array(4)].map((_, i) => (
@@ -193,10 +216,10 @@ const DashboardSkeleton = () => (
 );
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [metrics] = useState(mockMetrics);
 
-  // Simulate loading data
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -205,13 +228,28 @@ const Dashboard: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleNavigateToWorkflows = useCallback(() => {
+    navigate("/workflows");
+  }, [navigate]);
+
+  const handleNavigateToCustomers = useCallback(() => {
+    navigate("/customers");
+  }, [navigate]);
+
+  const handleNavigateToService = useCallback(() => {
+    navigate("/service");
+  }, [navigate]);
+
+  const handleNavigateToFinancials = useCallback(() => {
+    navigate("/financials");
+  }, [navigate]);
+
   if (loading) {
     return <DashboardSkeleton />;
   }
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -224,39 +262,37 @@ const Dashboard: React.FC = () => {
         <QuickActions />
       </div>
 
-      {/* Primary Metrics Grid */}
       <MetricGrid columns={4}>
         <WorkflowMetricCard
           title="Active Workflows"
           value={metrics.activeWorkflows.value}
           change={metrics.activeWorkflows.change}
           changeType={metrics.activeWorkflows.changeType}
-          onClick={() => console.log("Navigate to workflows")}
+          onClick={handleNavigateToWorkflows}
         />
         <CustomerMetricCard
           title="Customer Inquiries"
           value={metrics.customerInquiries.value}
           change={metrics.customerInquiries.change}
           changeType={metrics.customerInquiries.changeType}
-          onClick={() => console.log("Navigate to customers")}
+          onClick={handleNavigateToCustomers}
         />
         <ServiceMetricCard
           title="Service Appointments"
           value={metrics.serviceAppointments.value}
           change={metrics.serviceAppointments.change}
           changeType={metrics.serviceAppointments.changeType}
-          onClick={() => console.log("Navigate to service")}
+          onClick={handleNavigateToService}
         />
         <RevenueMetricCard
           title="Monthly Revenue"
           value={metrics.monthlyRevenue.value}
           change={metrics.monthlyRevenue.change}
           changeType={metrics.monthlyRevenue.changeType}
-          onClick={() => console.log("Navigate to financials")}
+          onClick={handleNavigateToFinancials}
         />
       </MetricGrid>
 
-      {/* Secondary Metrics */}
       <MetricGrid columns={2}>
         <MetricCard
           title="Inventory Turnover"
@@ -276,9 +312,7 @@ const Dashboard: React.FC = () => {
         />
       </MetricGrid>
 
-      {/* Charts and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Performance Chart */}
         <div className="lg:col-span-2">
           <div className="glass-card p-6">
             <div className="flex items-center justify-between mb-6">
@@ -298,7 +332,6 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Chart placeholder */}
             <div className="h-64 rounded-lg bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-800/50 dark:to-slate-700/50 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-4xl mb-2">📈</div>
@@ -313,7 +346,6 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
         <div className="space-y-6">
           <div className="glass-card p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -331,7 +363,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Automotive-specific insights */}
       <div className="glass-card p-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
           Dealership Insights

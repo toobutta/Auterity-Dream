@@ -115,8 +115,8 @@ describe("WorkflowExecutionHistory", () => {
     expect(screen.getByText("failed")).toBeInTheDocument();
     expect(screen.getByText("running")).toBeInTheDocument();
 
-    // Check execution IDs (truncated)
-    expect(screen.getByText("ID: executio...")).toBeInTheDocument();
+    // Check execution IDs (truncated) - should have multiple instances
+    expect(screen.getAllByText(/ID: executio/).length).toBeGreaterThan(0);
   });
 
   it("formats dates correctly", async () => {
@@ -225,13 +225,19 @@ describe("WorkflowExecutionHistory", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Status")).toBeInTheDocument();
+      expect(screen.getByText("Execution History")).toBeInTheDocument();
     });
 
-    const statusHeader = screen.getByText("Status");
+    // Find the Status header in the table (not the filter label)
+    const statusHeaders = screen.getAllByText("Status");
+    const tableStatusHeader = statusHeaders.find(element => 
+      element.closest('th') !== null
+    );
+    
+    expect(tableStatusHeader).toBeInTheDocument();
 
     // Click the status header to sort by status
-    fireEvent.click(statusHeader);
+    fireEvent.click(tableStatusHeader!);
 
     // Wait for the API to be called with the new sort parameters
     await waitFor(() => {

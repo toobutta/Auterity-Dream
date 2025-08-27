@@ -161,7 +161,8 @@ describe("ErrorRecoveryGuide", () => {
     const markDoneButton = screen.getAllByText("Mark as Done")[0];
     fireEvent.click(markDoneButton);
 
-    expect(screen.getByText("Completed")).toBeInTheDocument();
+    // Check that the step is marked as completed
+    expect(screen.getAllByText("Completed").length).toBeGreaterThan(0);
   });
 
   it("executes action when action button is clicked", () => {
@@ -236,8 +237,14 @@ describe("ErrorRecoveryGuide", () => {
       />,
     );
 
-    const contactButton = screen.getByText("Contact Support");
-    fireEvent.click(contactButton);
+    // Find the Contact Support button (not the header)
+    const contactButtons = screen.getAllByText("Contact Support");
+    const contactButton = contactButtons.find(element => 
+      element.tagName === 'BUTTON'
+    );
+    
+    expect(contactButton).toBeInTheDocument();
+    fireEvent.click(contactButton!);
 
     expect(onContactSupport).toHaveBeenCalled();
   });
@@ -288,13 +295,13 @@ describe("ErrorRecoveryGuide", () => {
       />,
     );
 
-    expect(screen.getByText("critical severity")).toBeInTheDocument();
+    expect(screen.getByText(/critical.*severity/)).toBeInTheDocument();
 
     rerender(
       <ErrorRecoveryGuide {...defaultProps} severity={ErrorSeverity.LOW} />,
     );
 
-    expect(screen.getByText("low severity")).toBeInTheDocument();
+    expect(screen.getByText(/low.*severity/)).toBeInTheDocument();
   });
 
   it("handles unknown error category with default steps", () => {

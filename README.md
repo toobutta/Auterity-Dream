@@ -1,11 +1,36 @@
-# Auterity - Unified AI Platform
+# Auterity Unified AI Platform
 
-[![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green)](https://github.com/toobutta/auterity-error-iq)
-[![All Services](https://img.shields.io/badge/Services-26%20Deployed-blue)](#services)
+[![Production Ready](<https://img.shields.io/badge/Status-Production%20Ready%20(90%25)-brightgreen>)](https://github.com/toobutta/auterity-error-iq)
+[![Services](https://img.shields.io/badge/Services-26%20Integrated-blue)](#services)
+[![Architecture](https://img.shields.io/badge/Architecture-Three--System%20Integration-purple)](#architecture)
+[![Documentation](https://img.shields.io/badge/Documentation-Comprehensive-orange)](#documentation)
 
-## 🚀 Complete Enterprise AI Platform
+## 🎯 Enterprise AI Platform with Three-System Integration
 
-Auterity is a **production-ready AI platform** with 26 integrated services for enterprise workflow automation, AI routing, and intelligent operations.
+**Auterity** is a **production-ready unified AI platform** featuring three integrated systems: **AutoMatrix** (workflow automation), **RelayCore** (AI routing), and **NeuroWeaver** (model management) with 26 enterprise services for intelligent operations.
+
+### **🏗️ Three-System Architecture**
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        AUTERITY UNIFIED AI PLATFORM                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐        │
+│  │   AutoMatrix    │◄──►│   RelayCore     │◄──►│ NeuroWeaver     │        │
+│  │   (Core Engine) │    │   (AI Router)   │    │ (Model Mgmt)    │        │
+│  │   Port: 8000    │    │   Port: 3001    │    │ Port: 3002      │        │
+│  │   Python/React  │    │   Node.js/TS    │    │   Python/React  │        │
+│  └─────────────────┘    └─────────────────┘    └─────────────────┘        │
+│           │                       │                       │                │
+│           └───────────────────────┼───────────────────────┘                │
+│                                   │                                        │
+│              ┌─────────────────────────────────────┐                       │
+│              │        Shared Infrastructure        │                       │
+│              │   Auth • Monitoring • Database     │                       │
+│              └─────────────────────────────────────┘                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## ⚡ Quick Start
 
@@ -13,18 +38,57 @@ Auterity is a **production-ready AI platform** with 26 integrated services for e
 # Clone and deploy complete platform
 git clone https://github.com/toobutta/auterity-error-iq.git
 cd auterity-error-iq
+
+# Setup environment
 cp .env.example .env
-# Edit .env with your API keys
-docker-compose -f docker-compose.unified.yml up -d
+# Edit .env with your API keys and configuration
+
+# Install dependencies
+npm install
+cd frontend && npm install
+cd ../backend && pip install -r requirements-dev.txt
+
+# Start development environment (all 26 services)
+npm run dev
+
+# Production deployment
+npm run prod
 ```
 
-**Access Points:**
+**🌐 Access Points:**
 
-- **Application**: http://localhost:3000
+- **Application Dashboard**: http://localhost:3000
 - **API Gateway**: http://localhost:8000
-- **Admin Dashboard**: http://localhost:8001
-- **Monitoring**: http://localhost:3001 (Grafana)
-- **ML Tracking**: http://localhost:5000 (MLflow)
+- **Kong Admin**: http://localhost:8001
+- **Monitoring (Grafana)**: http://localhost:3001
+- **ML Tracking (MLflow)**: http://localhost:5000
+- **Tracing (Jaeger)**: http://localhost:16686
+
+## 🏗️ System Components
+
+### **AutoMatrix** - Core Workflow Engine (Port 8000)
+
+- **Visual Workflow Builder**: Drag-and-drop interface with React Flow
+- **Execution Engine**: Parallel processing with retry mechanisms
+- **Template Library**: Pre-built workflow templates
+- **Real-time Monitoring**: WebSocket-based progress tracking
+- **API Integration**: RESTful API with OpenAPI documentation
+
+### **RelayCore** - AI Request Router (Port 3001)
+
+- **Intelligent Routing**: Cost-optimized AI model selection
+- **Budget Management**: Real-time cost tracking and limits
+- **Performance Analytics**: Latency and accuracy metrics
+- **Multi-Provider Support**: OpenAI, Anthropic, custom models
+- **Steering Rules**: Configurable routing logic
+
+### **NeuroWeaver** - Model Management (Port 3002)
+
+- **Custom Model Training**: Automated fine-tuning pipeline
+- **Model Registry**: Centralized catalog with versioning
+- **Performance Monitoring**: Model accuracy and speed tracking
+- **Automotive Specialization**: Pre-built automotive AI templates
+- **Deployment Automation**: One-click model deployment
 
 ## 🏗️ Service Architecture
 
@@ -186,11 +250,55 @@ python -m pytest tests/load/
 python -m pytest tests/security/
 ```
 
-## 📚 API Documentation
+## 📚 Comprehensive Documentation
 
-- **OpenAPI Spec**: http://localhost:8080/docs
-- **Service Registry**: http://localhost:8080/api/services
-- **Health Dashboard**: http://localhost:8080/api/health/dashboard
+### **📖 For AI Coding Tools**
+
+- **[AI Comprehensive Context Document](AI_COMPREHENSIVE_CONTEXT_DOCUMENT.md)** - Essential context for any AI coding tool to immediately understand the project
+
+### **🔧 Development & Technical**
+
+- **[Development Guide](docs/DEVELOPMENT_GUIDE_COMPREHENSIVE.md)** - Complete development workflow, testing, debugging
+- **[API Documentation](docs/API_DOCUMENTATION_COMPREHENSIVE.md)** - Full API reference with examples and SDKs
+- **[Technical Specifications](docs/TECHNICAL_SPECIFICATIONS.md)** - System architecture and design patterns
+- **[Technology Stack](docs/architecture/technology-stack.md)** - Detailed framework and tooling documentation
+
+### **🚀 Deployment & Operations**
+
+- **[Deployment Guide](docs/DEPLOYMENT_GUIDE_COMPREHENSIVE.md)** - Production deployment with 26 services
+- **[Architecture Overview](docs/ARCHITECTURE_OVERVIEW.md)** - System design and data flow
+- **[Monitoring Setup](docs/MONITORING_SETUP.md)** - Observability and performance tracking
+
+### **📊 Project Status & Planning**
+
+- **[Current Project Status](CURRENT_PROJECT_STATUS.md)** - Real-time implementation progress
+- **[Project Structure](PROJECT_STRUCTURE_COMPREHENSIVE.md)** - Complete directory organization
+- **[Development Roadmap](DEVELOPMENT_ROADMAP.md)** - Future features and milestones
+
+## 🧪 Testing & Quality
+
+```bash
+# Complete test suite
+npm run test                       # All tests across systems
+npm run test:frontend              # React component tests
+npm run test:backend               # Python API tests
+npm run test:integration           # Cross-system integration tests
+npm run test:e2e                   # End-to-end Playwright tests
+
+# Code quality pipeline
+npm run quality-gate               # Full CI/CD quality check
+npm run lint                       # ESLint + Flake8 linting
+npm run type-check                 # TypeScript compliance
+npm run security-scan              # Dependency vulnerability scan
+```
+
+## 🔒 Security & Compliance
+
+- **🔐 Authentication**: JWT with refresh tokens, OAuth2, SAML integration
+- **🛡️ API Security**: Rate limiting, CORS, input validation
+- **🔑 Secrets Management**: HashiCorp Vault integration
+- **📊 Audit Logging**: Comprehensive audit trail with structured logging
+- **🔍 Security Scanning**: Automated dependency and vulnerability scanning
 
 ## 🤝 Contributing
 

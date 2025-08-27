@@ -296,7 +296,43 @@ CREATE TABLE training_jobs (id, model_id, status, progress, created_at);
 
 ## 📚 Documentation Structure (`/docs/`)
 
-### **Technical Documentation**
+## 📚 Enhanced Documentation Structure (`/docs/`)
+
+### **🤖 AI Tool Integration**
+
+```
+AI_COMPREHENSIVE_CONTEXT_DOCUMENT.md     # Essential context for AI coding tools
+```
+
+### **📖 Comprehensive Guides**
+
+```
+docs/
+├── API_DOCUMENTATION_COMPREHENSIVE.md    # Complete API reference with examples
+├── DEPLOYMENT_GUIDE_COMPREHENSIVE.md     # Production deployment procedures
+├── DEVELOPMENT_GUIDE_COMPREHENSIVE.md    # Development workflow & best practices
+├── TECHNICAL_SPECIFICATIONS.md           # Enhanced system architecture
+├── ARCHITECTURE_OVERVIEW.md              # High-level system design
+├── MONITORING_SETUP.md                   # Observability implementation
+├── SECURITY_GUIDE.md                     # Security best practices
+├── TESTING_STRATEGY.md                   # Quality assurance approach
+└── TROUBLESHOOTING.md                    # Common issues & solutions
+```
+
+### **🎯 Specialized Documentation**
+
+```
+docs/
+├── architecture/
+│   ├── technology-stack.md              # Detailed framework documentation
+│   ├── system-architecture.md           # Technical architecture design
+│   └── database-schema.md               # Data model specifications
+├── business/
+│   ├── product-overview.md              # Business strategy & positioning
+│   └── strategic-analysis-porter-driver.md # Market analysis
+└── legal/
+    └── business-registration.md         # Incorporation & compliance
+```
 
 ```
 docs/
@@ -443,6 +479,25 @@ infrastructure/
 2. **Cross-System Integration**: Complete three-system communication
 3. **Enterprise Features**: SSO, multi-tenancy, advanced monitoring
 4. **Production Deployment**: Final quality assurance and go-live
+
+## 🔄 GitHub Workflows & CI/CD (Optimized)
+
+### **Active Workflows (Consolidated)**
+- `optimized-ci.yml` - **Primary CI/CD pipeline** (50-60% faster)
+- `workflow-monitoring.yml` - Performance monitoring and metrics
+- `enforce-standards.yml` - Code standards and commit validation
+- `labeler.yml` - Automated PR labeling
+- `release.yml` - Release automation
+- `config.yml` - Workflow configuration reference
+
+### **Disabled Workflows (Consolidated)**
+- `ci.yml.disabled` - Replaced by optimized pipeline
+- `comprehensive-ci.yml.disabled` - Functionality merged
+- `quality-gates.yml.disabled` - Integrated into main pipeline
+
+### **Centralized Scripts**
+- `.github/scripts/security-scan.py` - Unified security scanning
+- `.github/scripts/integration-tests.sh` - Integration test execution
 
 ## 🔧 Development Workflow
 

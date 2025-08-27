@@ -1,0 +1,29 @@
+name: Workflow Configuration
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.12'
+  CACHE_VERSION: 'v1'
+  QUALITY_GATE_BLOCKING: true
+  SECURITY_THRESHOLD: 'HIGH'
+  COVERAGE_THRESHOLD: 80
+  PERFORMANCE_THRESHOLD: 2000
+
+jobs:
+  config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display Configuration
+        run: |
+          echo "📋 Current Workflow Configuration"
+          echo "================================"
+          echo "Node.js Version: ${{ env.NODE_VERSION }}"
+          echo "Python Version: ${{ env.PYTHON_VERSION }}"
+          echo "Cache Version: ${{ env.CACHE_VERSION }}"
+          echo "Quality Gate Blocking: ${{ env.QUALITY_GATE_BLOCKING }}"
+          echo "Security Threshold: ${{ env.SECURITY_THRESHOLD }}"
+          echo "Coverage Threshold: ${{ env.COVERAGE_THRESHOLD }}%"
+          echo "Performance Threshold: ${{ env.PERFORMANCE_THRESHOLD }}ms"

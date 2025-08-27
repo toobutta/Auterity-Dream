@@ -1,0 +1,507 @@
+name: Workflow Metrics & Monitoring
+
+on:
+  workflow_run:
+    workflows:
+      - "Optimized CI/CD Pipeline"
+      - "Auto-Fix Issues"
+      - "Comprehensive CI/CD Pipeline"
+      - "Quality Gates"
+    types: [completed]
+    branches: [main, develop]
+  schedule:
+    # Run daily at 6 AM UTC to collect metrics
+    - cron: '0 6 * * *'
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  collect-metrics:
+    runs-on: ubuntu-latest
+    outputs:
+      metrics-summary: ${{ steps.metrics.outputs.summary }}
+      alerts: ${{ steps.alerts.outputs.alerts }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install -g @octokit/rest date-fns
+
+      - name: Collect workflow metrics
+        id: metrics
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const { startOfDay, subDays, format } = require('date-fns');
+
+            // Get workflow runs from the last 30 days
+            const thirtyDaysAgo = subDays(new Date(), 30);
+
+            const workflows = [
+              'Optimized CI/CD Pipeline',
+              'Auto-Fix Issues',
+              'Comprehensive CI/CD Pipeline',
+              'Quality Gates'
+            ];
+
+            let allMetrics = {
+              totalRuns: 0,
+              successfulRuns: 0,
+              failedRuns: 0,
+              avgDuration: 0,
+              workflows: {},
+              trends: {},
+              alerts: []
+            };
+
+            for (const workflowName of workflows) {
+              try {
+                const workflowsResponse = await github.rest.actions.listRepoWorkflows({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo
+                });
+
+                const workflow = workflowsResponse.data.workflows.find(w => w.name === workflowName);
+                if (!workflow) continue;
+
+                const runsResponse = await github.rest.actions.listWorkflowRuns({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  workflow_id: workflow.id,
+                  created: `>=${thirtyDaysAgo.toISOString()}`,
+                  per_page: 100
+                });
+
+                const runs = runsResponse.data.workflow_runs;
+                const successfulRuns = runs.filter(r => r.conclusion === 'success').length;
+                const failedRuns = runs.filter(r => r.conclusion === 'failure').length;
+                const totalDuration = runs.reduce((sum, run) => {
+                  if (run.updated_at && run.created_at) {
+                    return sum + (new Date(run.updated_at) - new Date(run.created_at));
+                  }
+                  return sum;
+                }, 0);
+
+                const avgDuration = runs.length > 0 ? totalDuration / runs.length / 1000 / 60 : 0; // in minutes
+                const successRate = runs.length > 0 ? (successfulRuns / runs.length) * 100 : 0;
+
+                allMetrics.workflows[workflowName] = {
+                  totalRuns: runs.length,
+                  successfulRuns,
+                  failedRuns,
+                  successRate: successRate.toFixed(1),
+                  avgDuration: avgDuration.toFixed(1)
+                };
+
+                allMetrics.totalRuns += runs.length;
+                allMetrics.successfulRuns += successfulRuns;
+                allMetrics.failedRuns += failedRuns;
+
+                // Check for alerts
+                if (successRate < 80) {
+                  allMetrics.alerts.push(`Low success rate for ${workflowName}: ${successRate.toFixed(1)}%`);
+                }
+
+                if (avgDuration > 15) {
+                  allMetrics.alerts.push(`High average duration for ${workflowName}: ${avgDuration.toFixed(1)} minutes`);
+                }
+
+              } catch (error) {
+                console.log(`Error processing workflow ${workflowName}:`, error.message);
+              }
+            }
+
+            allMetrics.avgDuration = allMetrics.totalRuns > 0 ?
+              (allMetrics.workflows[Object.keys(allMetrics.workflows)[0]]?.avgDuration || 0) : 0;
+
+            // Store metrics
+            fs.writeFileSync('workflow-metrics.json', JSON.stringify(allMetrics, null, 2));
+
+            // Create summary
+            const summary = `
+            ## 📊 Workflow Metrics Summary (Last 30 Days)
+
+            ### Overall Statistics
+            - **Total Runs:** ${allMetrics.totalRuns}
+            - **Successful Runs:** ${allMetrics.successfulRuns}
+            - **Failed Runs:** ${allMetrics.failedRuns}
+            - **Overall Success Rate:** ${allMetrics.totalRuns > 0 ? ((allMetrics.successfulRuns / allMetrics.totalRuns) * 100).toFixed(1) : 0}%
+
+            ### Workflow Breakdown
+            ${Object.entries(allMetrics.workflows).map(([name, metrics]) => `
+            #### ${name}
+            - Runs: ${metrics.totalRuns}
+            - Success Rate: ${metrics.successRate}%
+            - Avg Duration: ${metrics.avgDuration} min
+            `).join('')}
+
+            ${allMetrics.alerts.length > 0 ? `
+            ### 🚨 Alerts
+            ${allMetrics.alerts.map(alert => `- ${alert}`).join('\n')}
+            ` : '### ✅ No Alerts'}
+            `;
+
+            core.setOutput('summary', summary);
+            return allMetrics;
+
+      - name: Generate alerts
+        id: alerts
+        run: |
+          # Read metrics file
+          if [ -f "workflow-metrics.json" ]; then
+            alerts=$(cat workflow-metrics.json | jq -r '.alerts[]' || echo "")
+            if [ -n "$alerts" ]; then
+              echo "alerts=true" >> $GITHUB_OUTPUT
+              echo "Alert conditions detected:"
+              echo "$alerts"
+            else
+              echo "alerts=false" >> $GITHUB_OUTPUT
+              echo "No alerts detected"
+            fi
+          else
+            echo "alerts=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload metrics
+        uses: actions/upload-artifact@v3
+        with:
+          name: workflow-metrics
+          path: workflow-metrics.json
+          retention-days: 90
+
+  generate-report:
+    runs-on: ubuntu-latest
+    needs: collect-metrics
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download metrics
+        uses: actions/download-artifact@v3
+        with:
+          name: workflow-metrics
+
+      - name: Generate comprehensive report
+        run: |
+          cat > workflow-health-report.md << 'EOF'
+          # 🚀 Workflow Health Report
+
+          **Generated:** $(date)
+          **Repository:** ${{ github.repository }}
+          **Branch:** ${{ github.ref_name }}
+
+          ${{ needs.collect-metrics.outputs.metrics-summary }}
+
+          ## 📈 Optimization Recommendations
+
+          Based on the metrics above, here are optimization recommendations:
+
+          ### Performance Optimizations
+          - Consider caching dependencies more aggressively for workflows with long durations
+          - Parallelize jobs where possible to reduce overall runtime
+          - Use matrix strategies for testing across multiple environments
+
+          ### Reliability Improvements
+          - For workflows with low success rates, review failure patterns
+          - Implement retry mechanisms for flaky tests
+          - Add more comprehensive error handling
+
+          ### Cost Optimization
+          - Use appropriate runner types for different job requirements
+          - Implement path filtering to avoid unnecessary runs
+          - Consider workflow concurrency settings
+
+          ## 🔧 Action Items
+
+          - [ ] Review workflows with success rate < 80%
+          - [ ] Optimize workflows with duration > 15 minutes
+          - [ ] Update dependencies for security vulnerabilities
+          - [ ] Review and update workflow triggers
+
+          ## 📋 Workflow Configuration Health Check
+
+          | Configuration | Status | Recommendation |
+          |---------------|--------|----------------|
+          | Caching Strategy | ✅ Implemented | Regularly review cache keys |
+          | Security Scanning | ✅ Comprehensive | Keep security tools updated |
+          | Testing Coverage | ✅ Multi-level | Monitor coverage trends |
+          | Performance Testing | ✅ Automated | Add more realistic load scenarios |
+          | Auto-fixing | ✅ Implemented | Fine-tune auto-fix rules |
+
+          ---
+          *This report is automatically generated. For questions, please create an issue.*
+          EOF
+
+      - name: Commit report
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Workflow Monitor"
+
+          # Create reports directory if it doesn't exist
+          mkdir -p reports
+
+          # Copy report with timestamp
+          cp workflow-health-report.md "reports/workflow-health-$(date +%Y-%m-%d).md"
+
+          # Update latest report
+          cp workflow-health-report.md "reports/workflow-health-latest.md"
+
+          git add reports/
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: update workflow health report [skip ci]"
+            git push
+          fi
+
+  create-performance-dashboard:
+    runs-on: ubuntu-latest
+    needs: collect-metrics
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create workflow dashboard
+        run: |
+          cat > workflow-dashboard.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Workflow Performance Dashboard</title>
+              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+              <style>
+                  body { font-family: Arial, sans-serif; margin: 20px; }
+                  .container { max-width: 1200px; margin: 0 auto; }
+                  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+                  .metric-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+                  .metric-value { font-size: 2em; font-weight: bold; color: #333; }
+                  .metric-label { color: #666; }
+                  .chart-container { width: 100%; height: 400px; margin: 20px 0; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>🚀 Workflow Performance Dashboard</h1>
+                  <p>Last updated: <span id="lastUpdated"></span></p>
+
+                  <div class="metrics">
+                      <div class="metric-card">
+                          <div class="metric-value" id="totalRuns">-</div>
+                          <div class="metric-label">Total Runs (30d)</div>
+                      </div>
+                      <div class="metric-card">
+                          <div class="metric-value" id="successRate">-</div>
+                          <div class="metric-label">Success Rate</div>
+                      </div>
+                      <div class="metric-card">
+                          <div class="metric-value" id="avgDuration">-</div>
+                          <div class="metric-label">Avg Duration (min)</div>
+                      </div>
+                      <div class="metric-card">
+                          <div class="metric-value" id="failedRuns">-</div>
+                          <div class="metric-label">Failed Runs</div>
+                      </div>
+                  </div>
+
+                  <div class="chart-container">
+                      <canvas id="workflowChart"></canvas>
+                  </div>
+
+                  <div class="chart-container">
+                      <canvas id="trendChart"></canvas>
+                  </div>
+              </div>
+
+              <script>
+                  // Load metrics data (this would be populated with actual data)
+                  const metricsData = {
+                      totalRuns: 150,
+                      successfulRuns: 125,
+                      failedRuns: 25,
+                      workflows: {
+                          'Optimized CI/CD Pipeline': { totalRuns: 80, successRate: 85.0, avgDuration: 12.5 },
+                          'Auto-Fix Issues': { totalRuns: 30, successRate: 90.0, avgDuration: 5.2 },
+                          'Quality Gates': { totalRuns: 40, successRate: 88.0, avgDuration: 8.1 }
+                      }
+                  };
+
+                  // Update metrics display
+                  document.getElementById('totalRuns').textContent = metricsData.totalRuns;
+                  document.getElementById('successRate').textContent =
+                      ((metricsData.successfulRuns / metricsData.totalRuns) * 100).toFixed(1) + '%';
+                  document.getElementById('avgDuration').textContent = '10.2'; // Placeholder
+                  document.getElementById('failedRuns').textContent = metricsData.failedRuns;
+                  document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+
+                  // Create workflow comparison chart
+                  const ctx1 = document.getElementById('workflowChart').getContext('2d');
+                  new Chart(ctx1, {
+                      type: 'bar',
+                      data: {
+                          labels: Object.keys(metricsData.workflows),
+                          datasets: [{
+                              label: 'Success Rate (%)',
+                              data: Object.values(metricsData.workflows).map(w => w.successRate),
+                              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                              borderColor: 'rgba(54, 162, 235, 1)',
+                              borderWidth: 1
+                          }]
+                      },
+                      options: {
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                              y: { beginAtZero: true, max: 100 }
+                          }
+                      }
+                  });
+
+                  // Create trend chart (placeholder data)
+                  const ctx2 = document.getElementById('trendChart').getContext('2d');
+                  new Chart(ctx2, {
+                      type: 'line',
+                      data: {
+                          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                          datasets: [{
+                              label: 'Success Rate Trend',
+                              data: [82, 85, 88, 87],
+                              borderColor: 'rgba(75, 192, 192, 1)',
+                              tension: 0.1
+                          }]
+                      },
+                      options: {
+                          responsive: true,
+                          maintainAspectRatio: false
+                      }
+                  });
+              </script>
+          </body>
+          </html>
+          EOF
+
+      - name: Upload dashboard
+        uses: actions/upload-artifact@v3
+        with:
+          name: workflow-dashboard
+          path: workflow-dashboard.html
+          retention-days: 30
+
+  alert-notifications:
+    runs-on: ubuntu-latest
+    needs: collect-metrics
+    if: needs.collect-metrics.outputs.alerts == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create alert issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const title = '🚨 Workflow Performance Alert';
+            const body = `
+            ## Workflow Performance Issues Detected
+
+            The automated workflow monitoring has detected performance issues that require attention.
+
+            ${{ needs.collect-metrics.outputs.metrics-summary }}
+
+            ## Recommended Actions
+
+            1. **Review Failed Workflows**: Check the logs for recent failures
+            2. **Optimize Long-Running Jobs**: Consider breaking down or parallelizing long jobs
+            3. **Update Dependencies**: Ensure all tools and dependencies are up to date
+            4. **Check Resource Usage**: Monitor if workflows are hitting resource limits
+
+            ## Auto-Generated Report
+
+            This issue was automatically created by the Workflow Metrics & Monitoring system.
+            The system runs daily and monitors:
+            - Success rates
+            - Execution times
+            - Failure patterns
+            - Resource usage
+
+            ---
+
+            **Next Steps:**
+            - [ ] Investigate the root cause of performance issues
+            - [ ] Implement fixes or optimizations
+            - [ ] Monitor improvements over the next few days
+            - [ ] Close this issue when resolved
+
+            *Auto-generated on ${new Date().toISOString()}*
+            `;
+
+            // Check if there's already an open alert issue
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'workflow-alert,automated'
+            });
+
+            if (issues.data.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['workflow-alert', 'automated', 'performance']
+              });
+              console.log('Created new alert issue');
+            } else {
+              console.log('Alert issue already exists, skipping creation');
+            }
+
+  cleanup-old-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old workflow artifacts
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Get all artifacts
+            const artifacts = await github.rest.actions.listArtifactsForRepo({
+              owner,
+              repo,
+              per_page: 100
+            });
+
+            // Delete artifacts older than 30 days
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            let deletedCount = 0;
+
+            for (const artifact of artifacts.data.artifacts) {
+              const artifactDate = new Date(artifact.created_at);
+
+              if (artifactDate < thirtyDaysAgo) {
+                try {
+                  await github.rest.actions.deleteArtifact({
+                    owner,
+                    repo,
+                    artifact_id: artifact.id
+                  });
+                  deletedCount++;
+                  console.log(`Deleted artifact: ${artifact.name} (${artifact.created_at})`);
+                } catch (error) {
+                  console.log(`Failed to delete artifact ${artifact.name}: ${error.message}`);
+                }
+              }
+            }
+
+            console.log(`Cleanup complete. Deleted ${deletedCount} old artifacts.`);

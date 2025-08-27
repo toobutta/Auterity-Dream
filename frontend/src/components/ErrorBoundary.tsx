@@ -18,6 +18,14 @@ interface State {
   showDetails: boolean;
 }
 
+// Sanitize log output to prevent log injection
+const sanitizeForLog = (input: string): string => {
+  return input
+    .replace(/[\r\n]/g, " ")
+    .replace(/[<>]/g, "")
+    .substring(0, 1000);
+};
+
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -43,7 +51,15 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    // Sanitize error data before logging
+    const sanitizedMessage = sanitizeForLog(error.message);
+    const sanitizedStack = error.stack ? sanitizeForLog(error.stack) : "";
+
+    console.error("ErrorBoundary caught an error:", {
+      message: sanitizedMessage,
+      stack: sanitizedStack,
+      componentStack: sanitizeForLog(errorInfo.componentStack),
+    });
 
     const appError = createAppError(
       "REACT_ERROR_BOUNDARY",
@@ -67,12 +83,24 @@ export class ErrorBoundary extends Component<Props, State> {
   handleReportError = () => {
     if (!this.props.enableReporting || !this.state.error) return;
 
-    // TODO: Implement error reporting
-    console.log("Reporting error:", this.state.error);
+    // Sanitize error data before reporting
+    const sanitizedError = {
+      ...this.state.error,
+      message: sanitizeForLog(this.state.error.message),
+      details: this.state.error.details
+        ? sanitizeForLog(this.state.error.details)
+        : undefined,
+    };
+
+    console.log("Reporting error:", sanitizedError);
   };
 
   toggleDetails = () => {
     this.setState((prev) => ({ showDetails: !prev.showDetails }));
+  };
+
+  handleRefreshPage = () => {
+    window.location.reload();
   };
 
   render() {
@@ -87,7 +115,6 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
           <div className="max-w-2xl w-full bg-white shadow-lg rounded-lg overflow-hidden">
-            {/* Header */}
             <div
               className={`px-6 py-4 ${isCritical ? "bg-red-50 border-b border-red-200" : "bg-yellow-50 border-b border-yellow-200"}`}
             >
@@ -138,9 +165,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
             </div>
 
-            {/* Content */}
             <div className="px-6 py-4">
-              {/* Error Details */}
               {this.props.showDetails && (
                 <div className="mb-4">
                   <button
@@ -189,7 +214,7 @@ export class ErrorBoundary extends Component<Props, State> {
                           <div>
                             <strong>Details:</strong>
                             <pre className="mt-1 text-xs bg-white p-2 rounded border overflow-auto max-h-32">
-                              {error.details}
+                              {sanitizeForLog(error.details)}
                             </pre>
                           </div>
                         )}
@@ -199,7 +224,6 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
               )}
 
-              {/* Suggested Actions */}
               {error.actionable &&
                 error.suggestedActions &&
                 error.suggestedActions.length > 0 && (
@@ -218,7 +242,6 @@ export class ErrorBoundary extends Component<Props, State> {
                   </div>
                 )}
 
-              {/* Action Buttons */}
               <div className="flex flex-wrap gap-3">
                 <button
                   type="button"
@@ -231,7 +254,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 <button
                   type="button"
                   className="bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                  onClick={() => window.location.reload()}
+                  onClick={this.handleRefreshPage}
                 >
                   Refresh Page
                 </button>

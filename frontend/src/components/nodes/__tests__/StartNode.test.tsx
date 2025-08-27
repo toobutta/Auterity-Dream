@@ -1,19 +1,29 @@
 import { render, screen } from "@testing-library/react";
+import { ReactFlowProvider } from "reactflow";
 import { StartNode } from "../StartNode";
 import { NodeData } from "../../../types/workflow";
 
 // Mock ReactFlow Handle component
-vi.mock("reactflow", () => ({
-  Handle: ({ type, position }: { type: string; position: string }) => (
-    <div data-testid={`handle-${type}-${position}`} />
-  ),
-  Position: {
-    Top: "top",
-    Bottom: "bottom",
-    Left: "left",
-    Right: "right",
-  },
-}));
+vi.mock("reactflow", async () => {
+  const actual = await vi.importActual("reactflow");
+  return {
+    ...actual,
+    Handle: ({ type, position }: { type: string; position: string }) => (
+      <div data-testid={`handle-${type}-${position}`} />
+    ),
+    Position: {
+      Top: "top",
+      Bottom: "bottom",
+      Left: "left",
+      Right: "right",
+    },
+  };
+});
+
+// Wrapper component for ReactFlow provider
+const ReactFlowWrapper = ({ children }: { children: React.ReactNode }) => (
+  <ReactFlowProvider>{children}</ReactFlowProvider>
+);
 
 describe("StartNode", () => {
   const mockData: NodeData = {
@@ -24,7 +34,11 @@ describe("StartNode", () => {
   };
 
   it("renders start node with label and description", () => {
-    render(<StartNode data={mockData} isConnectable={true} />);
+    render(
+      <ReactFlowWrapper>
+        <StartNode data={mockData} isConnectable={true} />
+      </ReactFlowWrapper>
+    );
 
     expect(screen.getByText("Start Node")).toBeInTheDocument();
     expect(screen.getByText("This is a start node")).toBeInTheDocument();
@@ -32,21 +46,31 @@ describe("StartNode", () => {
 
   it("renders without description when not provided", () => {
     const dataWithoutDescription = { ...mockData, description: undefined };
-    render(<StartNode data={dataWithoutDescription} isConnectable={true} />);
+    render(
+      <ReactFlowWrapper>
+        <StartNode data={dataWithoutDescription} isConnectable={true} />
+      </ReactFlowWrapper>
+    );
 
     expect(screen.getByText("Start Node")).toBeInTheDocument();
     expect(screen.queryByText("This is a start node")).not.toBeInTheDocument();
   });
 
   it("renders source handle at bottom", () => {
-    render(<StartNode data={mockData} isConnectable={true} />);
+    render(
+      <ReactFlowWrapper>
+        <StartNode data={mockData} isConnectable={true} />
+      </ReactFlowWrapper>
+    );
 
     expect(screen.getByTestId("handle-source-bottom")).toBeInTheDocument();
   });
 
   it("applies correct styling classes", () => {
     const { container } = render(
-      <StartNode data={mockData} isConnectable={true} />,
+      <ReactFlowWrapper>
+        <StartNode data={mockData} isConnectable={true} />
+      </ReactFlowWrapper>
     );
 
     const nodeElement = container.querySelector(".bg-green-100");

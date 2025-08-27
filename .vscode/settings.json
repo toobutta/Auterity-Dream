@@ -26,6 +26,6 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "eslint.workingDirectories": ["frontend", "shared"],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import TemplateLibrary from "../components/TemplateLibrary";
@@ -16,83 +16,109 @@ const Templates: React.FC = () => {
   );
   const [showComparison, setShowComparison] = useState(false);
   const [isInstantiating, setIsInstantiating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleTemplateSelect = (template: Template) => {
-    // Open the template in preview mode for instantiation
+  const handleTemplateSelect = useCallback((template: Template) => {
     setPreviewTemplate(template);
-  };
+    setError(null);
+  }, []);
 
-  const handleTemplatePreview = (template: Template) => {
+  const handleTemplatePreview = useCallback((template: Template) => {
     setPreviewTemplate(template);
-  };
+    setError(null);
+  }, []);
 
-  const handleTemplateInstantiate = async (
-    template: Template,
-    parameterValues: { [key: string]: string | number | boolean },
-  ) => {
-    setIsInstantiating(true);
-    try {
-      // First, instantiate the template to get the workflow definition
-      const workflowDefinition = await instantiateTemplate(template.id, {
-        name: `${template.name} - ${new Date().toLocaleDateString()}`,
-        description: `Created from template: ${template.name}`,
-        parameterValues,
-      });
+  const handleTemplateInstantiate = useCallback(
+    async (
+      template: Template,
+      parameterValues: { [key: string]: string | number | boolean },
+    ) => {
+      setIsInstantiating(true);
+      setError(null);
 
-      // Then create the workflow
-      const createdWorkflow = await createWorkflow(workflowDefinition);
+      try {
+        // Validate template ID to prevent injection
+        if (
+          !template.id ||
+          typeof template.id !== "string" ||
+          template.id.trim() === ""
+        ) {
+          throw new Error("Invalid template ID");
+        }
 
-      // Navigate to the workflow builder with the new workflow
-      navigate(`/workflows/builder/${createdWorkflow.id}`);
-    } catch (error) {
-      console.error("Failed to instantiate template:", error);
-      alert("Failed to create workflow from template. Please try again.");
-    } finally {
-      setIsInstantiating(false);
-    }
-  };
+        // Sanitize parameter values
+        const sanitizedParams = Object.entries(parameterValues).reduce(
+          (acc, [key, value]) => {
+            if (typeof key === "string" && key.trim() !== "") {
+              acc[key.trim()] = value;
+            }
+            return acc;
+          },
+          {} as { [key: string]: string | number | boolean },
+        );
 
-  const handleAddToComparison = (template: Template) => {
-    if (comparisonTemplates.find((t) => t.id === template.id)) {
-      // Template already in comparison, show comparison view
-      setShowComparison(true);
-      return;
-    }
+        const workflowDefinition = await instantiateTemplate(template.id, {
+          name: `${template.name} - ${new Date().toLocaleDateString()}`,
+          description: `Created from template: ${template.name}`,
+          parameterValues: sanitizedParams,
+        });
 
-    if (comparisonTemplates.length >= 3) {
-      alert("You can compare up to 3 templates at once.");
-      return;
-    }
+        const createdWorkflow = await createWorkflow(workflowDefinition);
+        navigate(`/workflows/builder/${createdWorkflow.id}`);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "Failed to create workflow from template";
+        setError(errorMessage);
+        console.error("Template instantiation failed:", error);
+      } finally {
+        setIsInstantiating(false);
+      }
+    },
+    [navigate],
+  );
 
-    setComparisonTemplates((prev) => [...prev, template]);
+  const handleAddToComparison = useCallback((template: Template) => {
+    setComparisonTemplates((prev) => {
+      if (prev.find((t) => t.id === template.id)) {
+        setShowComparison(true);
+        return prev;
+      }
 
-    // Auto-open comparison if we have 2 or more templates
-    if (comparisonTemplates.length >= 1) {
-      setShowComparison(true);
-    }
-  };
+      if (prev.length >= 3) {
+        setError("You can compare up to 3 templates at once.");
+        return prev;
+      }
 
-  const handleRemoveFromComparison = (templateId: string) => {
-    setComparisonTemplates((prev) => prev.filter((t) => t.id !== templateId));
+      const newTemplates = [...prev, template];
+      // Auto-open comparison when we have 2 templates
+      if (newTemplates.length >= 2) {
+        setShowComparison(true);
+      }
+      return newTemplates;
+    });
+    setError(null);
+  }, []);
 
-    // Close comparison if no templates left
-    if (comparisonTemplates.length <= 1) {
-      setShowComparison(false);
-    }
-  };
+  const handleRemoveFromComparison = useCallback((templateId: string) => {
+    setComparisonTemplates((prev) => {
+      const filtered = prev.filter((t) => t.id !== templateId);
+      if (filtered.length <= 1) {
+        setShowComparison(false);
+      }
+      return filtered;
+    });
+  }, []);
 
-  const handleSelectFromComparison = (template: Template) => {
+  const handleSelectFromComparison = useCallback((template: Template) => {
     setShowComparison(false);
     setPreviewTemplate(template);
-  };
+  }, []);
 
-  const handleClosePreview = () => {
-    setPreviewTemplate(null);
-  };
-
-  const handleCloseComparison = () => {
-    setShowComparison(false);
-  };
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   return (
     <Layout>
@@ -107,7 +133,6 @@ const Templates: React.FC = () => {
               </p>
             </div>
 
-            {/* Comparison indicator */}
             {comparisonTemplates.length > 0 && (
               <div className="flex items-center space-x-2">
                 <button
@@ -153,6 +178,47 @@ const Templates: React.FC = () => {
           </div>
         </div>
 
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
+              <div className="ml-auto pl-3">
+                <button
+                  onClick={clearError}
+                  className="inline-flex text-red-400 hover:text-red-600"
+                >
+                  <svg
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <TemplateLibrary
           onTemplateSelect={handleTemplateSelect}
           onTemplatePreview={handleTemplatePreview}
@@ -160,7 +226,6 @@ const Templates: React.FC = () => {
           comparisonTemplates={comparisonTemplates}
         />
 
-        {/* Quick comparison panel */}
         {comparisonTemplates.length > 0 && !showComparison && (
           <div className="fixed bottom-6 right-6 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
             <div className="flex items-center justify-between mb-2">
@@ -223,25 +288,22 @@ const Templates: React.FC = () => {
           </div>
         )}
 
-        {/* Template Preview Modal */}
         <TemplatePreviewModal
           template={previewTemplate}
           isOpen={!!previewTemplate}
-          onClose={handleClosePreview}
+          onClose={() => setPreviewTemplate(null)}
           onInstantiate={handleTemplateInstantiate}
           onCompare={handleAddToComparison}
         />
 
-        {/* Template Comparison Modal */}
         <TemplateComparison
           templates={comparisonTemplates}
           isOpen={showComparison}
-          onClose={handleCloseComparison}
+          onClose={() => setShowComparison(false)}
           onSelectTemplate={handleSelectFromComparison}
           onRemoveTemplate={handleRemoveFromComparison}
         />
 
-        {/* Loading overlay for instantiation */}
         {isInstantiating && (
           <div className="fixed inset-0 z-50 bg-gray-500 bg-opacity-75 flex items-center justify-center">
             <div className="bg-white rounded-lg p-6 flex items-center space-x-3">

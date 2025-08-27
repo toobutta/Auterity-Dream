@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DOMPurify from 'dompurify';
 
 interface Agent {
   id: string;
@@ -517,7 +518,7 @@ export default function AgentDashboard() {
                   </div>
                   {execution.result && (
                     <pre className="text-xs bg-gray-50 p-2 rounded overflow-x-auto">
-                      {JSON.stringify(execution.result, null, 2)}
+                      {DOMPurify.sanitize(JSON.stringify(execution.result, null, 2), { ALLOWED_TAGS: [] })}
                     </pre>
                   )}
                 </div>
@@ -602,7 +603,9 @@ export default function AgentDashboard() {
                 {ragResults.answer && (
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded">
                     <h4 className="font-medium text-blue-900">Answer:</h4>
-                    <p className="text-blue-800">{ragResults.answer}</p>
+                    <p className="text-blue-800">
+                      {DOMPurify.sanitize(ragResults.answer, { ALLOWED_TAGS: [] })}
+                    </p>
                     {ragResults.confidence && (
                       <p className="text-sm text-blue-600 mt-1">
                         Confidence: {(ragResults.confidence * 100).toFixed(1)}%
@@ -626,11 +629,11 @@ export default function AgentDashboard() {
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 line-clamp-3">
-                            {doc.content}
+                            {DOMPurify.sanitize(doc.content, { ALLOWED_TAGS: [] })}
                           </p>
                           {doc.source && (
                             <p className="text-xs text-gray-500 mt-1">
-                              Source: {doc.source}
+                              Source: {DOMPurify.sanitize(doc.source, { ALLOWED_TAGS: [] })}
                             </p>
                           )}
                         </div>
