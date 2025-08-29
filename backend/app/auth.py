@@ -1,11 +1,15 @@
 """Authentication utilities for JWT token management and password hashing."""
 
 import os
+from datetime import datetime, timedelta
 from typing import Optional
 
 import jwt
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import InvalidTokenError
 from passlib.context import CryptContext
+from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 

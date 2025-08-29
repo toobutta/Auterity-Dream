@@ -6,12 +6,13 @@ from unittest.mock import Mock, patch
 from uuid import uuid4
 
 import pytest
+from sqlalchemy.orm import Session
+
 from app.core.saas_config import saas_config
 from app.models.tenant import SubscriptionPlan, Tenant, TenantStatus
 from app.models.user import User
 from app.services.billing_service import BillingService
 from app.services.branding_service import BrandingService
-from sqlalchemy.orm import Session
 
 
 class TestBillingService:

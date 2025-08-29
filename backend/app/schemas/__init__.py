@@ -60,13 +60,6 @@ from .template import (
     TemplateResponse,
     TemplateUpdate,
 )
-from .tenant import (
-    SSOConfigurationCreate,
-    TenantCreate,
-    TenantResponse,
-    TenantStatsResponse,
-    TenantUpdate,
-)
 from .workflow import (
     ExecutionLogResponse,
     ExecutionResultResponse,

@@ -57,7 +57,7 @@ class AgentRegistry:
             .join(AgentCapability)
             .filter(
                 AgentCapability.capability_name == capability_name,
-                AgentCapability.is_active == True,
+                AgentCapability.is_active,
             )
             .all()
         )

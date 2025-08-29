@@ -4,11 +4,11 @@ FastAPI router for AgentRegistry endpoints.
 
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
 from app.services.agent_registry import AgentRegistry
-from fastapi import APIRouter, Depends, HTTPException, status
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 

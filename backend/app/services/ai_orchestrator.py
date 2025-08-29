@@ -3,9 +3,9 @@ AI Service Orchestrator - First-to-market AI service orchestration
 Revolutionary ecosystem-wide analysis with predictive analytics and autonomous optimization
 """
 
+import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
-import logging
 
 import numpy as np
 from fastapi import WebSocket

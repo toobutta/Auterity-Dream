@@ -298,7 +298,7 @@ class EnhancedRecoveryService:
         """Get historical data for this error type."""
         try:
             # Get recent occurrences of this error
-            keys = await self.redis.keys(f"recovery_attempt:*")
+            keys = await self.redis.keys("recovery_attempt:*")
             historical_attempts = []
 
             for key in keys:
@@ -391,7 +391,7 @@ class EnhancedRecoveryService:
         try:
             value = await self.redis.get(f"system_metric:{metric_name}")
             return float(value) if value else default_value
-        except:
+        except Exception:
             return default_value
 
     async def _select_recovery_strategies(
@@ -615,7 +615,7 @@ class EnhancedRecoveryService:
         """Execute exponential backoff retry strategy."""
         config = self.strategy_configs[RecoveryStrategy.EXPONENTIAL_BACKOFF]
 
-        retry_config = RetryConfig(
+        _retry_config = RetryConfig(
             max_attempts=config["max_attempts"],
             base_delay=config["base_delay"],
             max_delay=config["max_delay"],
@@ -625,7 +625,7 @@ class EnhancedRecoveryService:
             # In real implementation, this would retry the actual failed operation
             await asyncio.sleep(1)  # Simulate operation
             return RecoveryOutcome.SUCCESS
-        except:
+        except Exception:
             return RecoveryOutcome.FAILURE
 
     async def _execute_circuit_breaker(

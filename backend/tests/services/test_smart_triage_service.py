@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 
 import pytest
+
 from app.models.auterity_expansion import TriageRule, TriageRuleType
 from app.models.tenant import Tenant
 from app.services.smart_triage_service import SmartTriageService, TriageDecision

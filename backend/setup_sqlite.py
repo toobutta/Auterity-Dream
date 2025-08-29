@@ -12,8 +12,9 @@ backend_dir = Path(__file__).parent
 sys.path.insert(0, str(backend_dir))
 
 try:
-    from app.models import Base
     from sqlalchemy import create_engine, text
+
+    from app.models import Base
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure all dependencies are installed:")
@@ -39,7 +40,7 @@ def setup_sqlite_database():
         with engine.connect() as conn:
             result = conn.execute(text("SELECT sqlite_version()"))
             version = result.fetchone()[0]
-            print(f"✅ SQLite database connection successful!")
+            print("✅ SQLite database connection successful!")
             print(f"SQLite version: {version}")
 
             return engine
@@ -73,13 +74,13 @@ def test_models():
         print("✅ Auterity expansion models imported successfully")
 
         # Test model attributes
-        triage_rule = TriageRule()
+        TriageRule()
         print("✅ TriageRule model instantiated")
 
-        vector_embedding = VectorEmbedding()
+        VectorEmbedding()
         print("✅ VectorEmbedding model instantiated")
 
-        integration = Integration()
+        Integration()
         print("✅ Integration model instantiated")
 
         return True
@@ -119,13 +120,13 @@ def test_services():
         print("✅ All Auterity expansion services imported successfully")
 
         # Test service instantiation
-        triage_service = SmartTriageService()
+        SmartTriageService()
         print("✅ SmartTriageService instantiated")
 
-        vector_service = VectorDuplicateService()
+        VectorDuplicateService()
         print("✅ VectorDuplicateService instantiated")
 
-        agent_service = AutonomousAgentService()
+        AutonomousAgentService()
         print("✅ AutonomousAgentService instantiated")
 
         return True

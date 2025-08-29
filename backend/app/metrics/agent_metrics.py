@@ -4,11 +4,9 @@ Extends existing Prometheus metrics with agent-specific measurements.
 """
 
 import time
-from functools import wraps
-from typing import Any, Dict
 
 from fastapi import Request
-from prometheus_client import Counter, Gauge, Histogram, Info
+from prometheus_client import Counter, Gauge, Histogram
 
 # Agent-specific metrics
 agent_requests_total = Counter(

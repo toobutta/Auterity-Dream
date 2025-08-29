@@ -310,7 +310,7 @@ class AutonomousAgentService:
                 raise ValueError(f"Primary agent {primary_agent_id} not found")
 
             # Get coordination rules
-            coordination_rules = primary_agent.config.get("coordination_rules", {})
+            primary_agent.config.get("coordination_rules", {})
 
             # Find agents to coordinate with
             coordination_agents = await self._find_coordination_agents(
@@ -566,7 +566,7 @@ class AutonomousAgentService:
         """Find agents to coordinate with for a task."""
         try:
             # Get coordination rules
-            coordination_rules = primary_agent.config.get("coordination_rules", {})
+            primary_agent.config.get("coordination_rules", {})
             required_capabilities = coordination_task.get("required_capabilities", [])
 
             # Find agents with required capabilities

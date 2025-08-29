@@ -3,11 +3,12 @@
 import uuid
 
 import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
+
 from app.auth import get_password_hash
 from app.main import app
 from app.models.user import User
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
 
 client = TestClient(app)
 
@@ -273,7 +274,7 @@ class TestWorkflowUpdate:
         workflow2_data = sample_workflow_data.copy()
         workflow2_data["name"] = "Workflow 2"
 
-        response1 = client.post(
+        _response1 = client.post(
             "/api/workflows/", json=workflow1_data, headers=auth_headers
         )
         response2 = client.post(

@@ -2,46 +2,25 @@
 
 import logging
 import time
+from typing import List, Optional
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.tenant import Tenant
 from app.schemas.auterity_expansion import (
-    ChannelTriggerResponse,
     AgentDeployRequest,
     AgentDeployResponse,
     AgentMemoryCreate,
-    AgentMemoryResponse,
-    ChannelTriggerCreate,
-    ChannelTriggerRequest,
-    ChannelTriggerUpdate,
-    CustomModelCreate,
-    CustomModelHealthCheck,
-    CustomModelResponse,
-    CustomModelUpdate,
-    ExecutionMetricCreate,
-    ExecutionMetricResponse,
-    IntegrationCreate,
-    IntegrationResponse,
-    IntegrationSyncRequest,
-    IntegrationSyncResponse,
-    IntegrationUpdate,
-    IntegrationWebhookCreate,
-    IntegrationWebhookResponse,
-    LiveInsightsRequest,
-    LiveInsightsResponse,
     SimilarityResult,
     SimilaritySearchRequest,
     SimilaritySearchResponse,
     TriageRequest,
     TriageResponse,
-    TriageResultCreate,
-    TriageResultResponse,
     TriageRuleCreate,
     TriageRuleResponse,
-    TriageRuleUpdate,
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )

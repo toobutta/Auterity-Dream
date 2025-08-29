@@ -254,7 +254,7 @@ class WorkflowCoordinationEngine:
 
         try:
             return eval(condition)  # Note: Use safer evaluation in production
-        except:
+        except Exception:
             return True
 
     async def _execute_step(self, step: WorkflowStep, context: WorkflowContext):

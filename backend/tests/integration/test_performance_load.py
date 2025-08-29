@@ -62,7 +62,7 @@ class TestWorkflowPerformance:
         ), f"Standard deviation {std_dev:.3f}s indicates inconsistent performance"
 
         # Log performance metrics for monitoring
-        print(f"\nPerformance Metrics:")
+        print("\nPerformance Metrics:")
         print(f"  Average: {avg_time:.3f}s")
         print(f"  Median:  {median_time:.3f}s")
         print(f"  Min:     {min_time:.3f}s")
@@ -146,7 +146,7 @@ class TestWorkflowPerformance:
             ), f"Throughput {throughput:.2f} executions/sec below 5/sec threshold"
 
             # Log load test metrics
-            print(f"\nConcurrent Load Test Results:")
+            print("\nConcurrent Load Test Results:")
             print(f"  Total executions: {len(results)}")
             print(f"  Successful: {len(successful_executions)}")
             print(f"  Failed: {len(failed_executions)}")
@@ -217,7 +217,7 @@ class TestWorkflowPerformance:
             avg_retrieval_time < 0.5
         ), f"Average retrieval time {avg_retrieval_time:.3f}s exceeds 0.5s threshold"
 
-        print(f"\nDatabase Performance Results:")
+        print("\nDatabase Performance Results:")
         print(f"  Workflow listing time: {list_time:.3f}s")
         print(f"  Average retrieval time: {avg_retrieval_time:.3f}s")
         print(f"  Total workflows tested: {len(workflow_ids)}")
@@ -264,7 +264,7 @@ class TestWorkflowPerformance:
         final_memory = process.memory_info().rss / 1024 / 1024  # MB
         total_memory_increase = final_memory - initial_memory
 
-        print(f"\nMemory Usage Results:")
+        print("\nMemory Usage Results:")
         print(f"  Initial memory: {initial_memory:.2f}MB")
         print(f"  Final memory: {final_memory:.2f}MB")
         print(f"  Total increase: {total_memory_increase:.2f}MB")
@@ -331,7 +331,7 @@ class TestWorkflowPerformance:
             ), f"Response time std dev for {endpoint} is {std_dev:.3f}s, indicates inconsistency"
 
         # Log performance results
-        print(f"\nAPI Response Time Consistency Results:")
+        print("\nAPI Response Time Consistency Results:")
         for endpoint, metrics in endpoint_performance.items():
             print(f"  {endpoint}:")
             print(f"    Average: {metrics['average']:.3f}s")
@@ -390,7 +390,7 @@ class TestScalabilityLimits:
                 success_rate >= 0.70
             ), f"Success rate {success_rate:.2%} below 70% at maximum load"
 
-            print(f"\nMaximum Concurrency Test Results:")
+            print("\nMaximum Concurrency Test Results:")
             print(f"  Total executions: {len(results)}")
             print(f"  Successful: {len(successful)}")
             print(f"  Failed: {len(failed)}")
@@ -463,7 +463,7 @@ class TestScalabilityLimits:
             retrieval_time < 2.0
         ), f"Large workflow retrieval took {retrieval_time:.3f}s, exceeds 2s"
 
-        print(f"\nLarge Workflow Handling Results:")
+        print("\nLarge Workflow Handling Results:")
         print(f"  Nodes: {len(large_definition['nodes'])}")
         print(f"  Edges: {len(large_definition['edges'])}")
         print(f"  Creation time: {creation_time:.3f}s")

@@ -376,11 +376,7 @@ Respond in this exact JSON format:
         if cache_key not in self._rule_cache:
             rules = (
                 self.db.query(TriageRule)
-                .filter(
-                    and_(
-                        TriageRule.tenant_id == tenant_id, TriageRule.is_active == True
-                    )
-                )
+                .filter(and_(TriageRule.tenant_id == tenant_id, TriageRule.is_active))
                 .order_by(TriageRule.priority.desc())
                 .all()
             )

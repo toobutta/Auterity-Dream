@@ -552,7 +552,7 @@ class AICostOptimizationService:
     ) -> str:
         """Generate reasoning for optimization recommendation."""
         model_id = evaluation["model_id"]
-        profile = self.model_profiles[model_id]
+        self.model_profiles[model_id]
 
         if strategy == OptimizationStrategy.AGGRESSIVE:
             return f"Selected {model_id} for maximum cost savings. Performance score: {evaluation['performance_score']:.1f}/100"

@@ -326,7 +326,7 @@ class AIModelOrchestrationService:
     ) -> Optional[Experiment]:
         """Find active experiment that matches the request."""
         task_type = request_data.get("task_type", "general")
-        complexity = request_data.get("complexity", "medium")
+        request_data.get("complexity", "medium")
 
         for experiment in self.active_experiments.values():
             if experiment.status != "active":

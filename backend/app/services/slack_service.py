@@ -4,7 +4,6 @@ Real Slack Integration Service
 Provides actual Slack API integration for notifications and alerts.
 """
 
-import json
 import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional

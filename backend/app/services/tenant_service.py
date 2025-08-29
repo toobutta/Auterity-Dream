@@ -270,7 +270,7 @@ class TenantService:
     ) -> Optional[SSOConfiguration]:
         """Get SSO configuration for a tenant."""
         query = self.db.query(SSOConfiguration).filter(
-            SSOConfiguration.tenant_id == tenant_id, SSOConfiguration.is_active == True
+            SSOConfiguration.tenant_id == tenant_id, SSOConfiguration.is_active
         )
 
         if provider:
@@ -300,7 +300,7 @@ class TenantService:
             self.db.query(SSOConfiguration)
             .filter(
                 SSOConfiguration.tenant_id == tenant_id,
-                SSOConfiguration.is_active == True,
+                SSOConfiguration.is_active,
             )
             .count()
         )
@@ -347,7 +347,7 @@ class TenantService:
         total_users = self.db.query(User).filter(User.tenant_id == tenant_id).count()
         active_users = (
             self.db.query(User)
-            .filter(User.tenant_id == tenant_id, User.is_active == True)
+            .filter(User.tenant_id == tenant_id, User.is_active)
             .count()
         )
         sso_users = (

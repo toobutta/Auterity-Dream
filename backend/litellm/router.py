@@ -3,7 +3,6 @@ LiteLLM Multi-Model Routing Service
 Scaffold for integrating LiteLLM and dynamic model selection.
 """
 
-import os
 from typing import Any, Dict
 
 

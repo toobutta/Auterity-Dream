@@ -10,6 +10,8 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
+from sqlalchemy import and_
+
 from app.core.saas_config import SaaSConfig
 from app.models.tenant import UsageLog
 
@@ -713,7 +715,7 @@ class AgentMarketplaceService:
     async def get_marketplace_analytics(self, days: int = 30) -> Dict[str, Any]:
         """Get marketplace-wide analytics."""
         try:
-            period_start = datetime.utcnow() - timedelta(days=days)
+            _period_start = datetime.utcnow() - timedelta(days=days)
 
             analytics = {
                 "period_days": days,

@@ -12,15 +12,8 @@ from datetime import datetime
 from threading import Lock
 from typing import Any, Dict, List, Optional
 
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status,
-    BackgroundTasks,
-    Request,
-)
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
 
 from ..core.config import get_settings
@@ -756,7 +749,7 @@ async def get_metrics(user_info: Dict[str, Any] = Depends(verify_token)):
         try:
             cache_stats = cache_manager.get_stats()
             metrics_data["cache"] = cache_stats
-        except:
+        except Exception:
             metrics_data["cache"] = {"error": "Cache stats unavailable"}
 
     # Add rate limiter statistics
@@ -766,7 +759,7 @@ async def get_metrics(user_info: Dict[str, Any] = Depends(verify_token)):
             "total_requests": sum(len(reqs) for reqs in rate_limiter.requests.values()),
         }
         metrics_data["rate_limiting"] = rate_limit_stats
-    except:
+    except Exception:
         metrics_data["rate_limiting"] = {"error": "Rate limit stats unavailable"}
 
     return metrics_data

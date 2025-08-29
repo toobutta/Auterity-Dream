@@ -198,7 +198,7 @@ async def get_sso_configurations(
     from app.models.tenant import SSOConfiguration
 
     query = db.query(SSOConfiguration).filter(
-        SSOConfiguration.tenant_id == tenant_id, SSOConfiguration.is_active == True
+        SSOConfiguration.tenant_id == tenant_id, SSOConfiguration.is_active
     )
 
     if provider:

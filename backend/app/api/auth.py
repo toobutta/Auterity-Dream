@@ -1,14 +1,13 @@
 """Authentication API endpoints."""
 
 from datetime import timedelta
-
-from fastapi.security import OAuth2PasswordRequestForm
-
-from app.auth import (
+from typing import List, Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
-from sqlalchemy import Session, joinedload
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session, joinedload
+
+from app.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     RoleManager,
     authenticate_user,
@@ -19,6 +18,7 @@ from sqlalchemy import Session, joinedload
     require_admin_access,
 )
 from app.database import get_db
+from app.models import User, Role, Permission
 from app.schemas.auth import (
     CrossSystemTokenRequest,
     CrossSystemTokenResponse,

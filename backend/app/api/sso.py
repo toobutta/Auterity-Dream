@@ -2,14 +2,22 @@
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    Form,
+    HTTPException,
+    Query,
+    Request,
+    Response,
+    status,
+)
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.schemas import SSOInitiateResponse, SSOLoginResponse
 from app.services.audit_service import AuditService
 from app.services.sso_service import SSOService
-from fastapi import Response
 
 router = APIRouter(prefix="/sso", tags=["sso"])
 
@@ -217,7 +225,7 @@ async def get_saml_metadata(tenant_slug: str, db: Session = Depends(get_db)):
         .filter(
             SSOConfiguration.tenant_id == tenant.id,
             SSOConfiguration.provider == "saml",
-            SSOConfiguration.is_active == True,
+            SSOConfiguration.is_active,
         )
         .first()
     )
@@ -265,7 +273,7 @@ async def get_oidc_configuration(tenant_slug: str, db: Session = Depends(get_db)
         .filter(
             SSOConfiguration.tenant_id == tenant.id,
             SSOConfiguration.provider == "oidc",
-            SSOConfiguration.is_active == True,
+            SSOConfiguration.is_active,
         )
         .first()
     )

@@ -201,7 +201,7 @@ class IndustrySpecializationService:
         """Parse Python-based configuration (simplified implementation)."""
         # In a real implementation, this would safely execute Python code
         # For now, we'll just convert it to a standard config
-        python_code = config_data.get("code", "")
+        config_data.get("code", "")
 
         # Basic parsing - extract key-value pairs
         config_dict = {

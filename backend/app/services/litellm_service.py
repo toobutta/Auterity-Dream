@@ -305,7 +305,7 @@ class LiteLLMService:
             ]
 
             # Set short timeout and no retries for health check
-            response = await acompletion(
+            _response = await acompletion(
                 model=model, messages=messages, max_tokens=5, timeout=5
             )
 

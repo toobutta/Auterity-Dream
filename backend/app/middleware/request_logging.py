@@ -8,7 +8,7 @@ import json
 import logging
 import time
 import uuid
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, Optional
 
 from fastapi import Request, Response
 from fastapi.responses import StreamingResponse
@@ -196,7 +196,7 @@ class RequestResponseLogger:
                 try:
                     # Try to parse as JSON for better formatting
                     logged_response_body = json.loads(response_body)
-                except:
+                except Exception:
                     logged_response_body = response_body
             else:
                 logged_response_body = (
@@ -293,7 +293,7 @@ class RequestLoggingMiddleware:
                 try:
                     if hasattr(response, "body"):
                         response_body = response.body.decode("utf-8", errors="replace")
-                except:
+                except Exception:
                     pass
 
             # Log response

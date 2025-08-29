@@ -15,13 +15,7 @@ from typing import Optional
 def run_command(cmd: list, cwd: Optional[Path] = None) -> bool:
     """Run a command and return success status."""
     try:
-        subprocess.run(
-            cmd,
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            check=True
-        )
+        subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=True)
         print(f"✅ {' '.join(cmd)}")
         return True
     except subprocess.CalledProcessError as e:
@@ -38,27 +32,21 @@ def main():
 
     # 1. Format Python files with Black
     print("\n1. Formatting Python files with Black...")
-    run_command([
-        sys.executable, "-m", "black",
-        "--line-length", "88",
-        "app/"
-    ], cwd=backend_dir)
+    run_command(
+        [sys.executable, "-m", "black", "--line-length", "88", "app/"], cwd=backend_dir
+    )
 
     # 2. Sort imports with isort
     print("\n2. Sorting imports with isort...")
-    run_command([
-        sys.executable, "-m", "isort",
-        "--profile", "black",
-        "app/"
-    ], cwd=backend_dir)
+    run_command(
+        [sys.executable, "-m", "isort", "--profile", "black", "app/"], cwd=backend_dir
+    )
 
     # 3. Run flake8 to check for remaining issues
     print("\n3. Checking with flake8...")
-    success = run_command([
-        sys.executable, "-m", "flake8",
-        "--config", ".flake8",
-        "app/"
-    ], cwd=backend_dir)
+    success = run_command(
+        [sys.executable, "-m", "flake8", "--config", ".flake8", "app/"], cwd=backend_dir
+    )
 
     if success:
         print("\n✅ All linting issues have been resolved!")

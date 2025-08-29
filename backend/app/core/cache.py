@@ -3,16 +3,14 @@ Response caching system for Agent API read-heavy operations.
 Implements both in-memory and Redis caching with TTL support.
 """
 
-import asyncio
 import hashlib
 import json
 import logging
 import time
 from functools import wraps
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
-from fastapi import Request, Response
-from fastapi.responses import JSONResponse
+from fastapi import Request
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +21,7 @@ try:
 except ImportError:
     REDIS_AVAILABLE = False
 
-from cachetools import LRUCache, TTLCache
+from cachetools import TTLCache
 
 
 class CacheConfig:

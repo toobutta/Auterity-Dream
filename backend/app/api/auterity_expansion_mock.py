@@ -1,51 +1,24 @@
 """Mock Auterity AI Platform Expansion API endpoints for testing."""
 
 import logging
+from typing import List, Optional
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.tenant import Tenant
 from app.schemas.auterity_expansion import (
-
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from typing import List, Optional
-    ChannelTriggerResponse,  # Triage schemas; Vector and similarity schemas; Integration schemas; Channel trigger schemas; Custom model schemas; Agent and execution schemas
-)
-from app.schemas.auterity_expansion import (
     AgentDeployRequest,
     AgentDeployResponse,
-    AgentMemoryCreate,
-    AgentMemoryResponse,
-    ChannelTriggerCreate,
-    ChannelTriggerRequest,
-    ChannelTriggerUpdate,
-    CustomModelCreate,
-    CustomModelHealthCheck,
-    CustomModelResponse,
-    CustomModelUpdate,
-    ExecutionMetricCreate,
-    ExecutionMetricResponse,
-    IntegrationCreate,
-    IntegrationResponse,
-    IntegrationSyncRequest,
-    IntegrationSyncResponse,
-    IntegrationUpdate,
-    IntegrationWebhookCreate,
-    IntegrationWebhookResponse,
-    LiveInsightsRequest,
-    LiveInsightsResponse,
     SimilarityResult,
     SimilaritySearchRequest,
     SimilaritySearchResponse,
     TriageRequest,
     TriageResponse,
-    TriageResultCreate,
-    TriageResultResponse,
     TriageRuleCreate,
     TriageRuleResponse,
-    TriageRuleUpdate,
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )

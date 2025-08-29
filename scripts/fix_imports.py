@@ -7,7 +7,6 @@ that are causing F821 undefined name errors.
 """
 
 import re
-import os
 from pathlib import Path
 from typing import Set, Dict
 
@@ -19,7 +18,7 @@ def get_missing_imports_from_flake8_output(flake8_output: str) -> Dict[str, Set[
     # Pattern to match F821 undefined name errors
     pattern = r"(.+?):\d+:\d+: F821 undefined name '(\w+)'"
 
-    for line in flake8_output.split('\n'):
+    for line in flake8_output.split("\n"):
         match = re.search(pattern, line)
         if match:
             file_path = match.group(1)
@@ -35,45 +34,48 @@ def get_missing_imports_from_flake8_output(flake8_output: str) -> Dict[str, Set[
 def get_required_imports(undefined_names: Set[str]) -> Set[str]:
     """Map undefined names to their required import statements."""
     fastapi_imports = {
-        'APIRouter', 'Depends', 'HTTPException', 'status', 'BackgroundTasks',
-        'Request', 'Response', 'Query', 'File', 'UploadFile', 'Form'
+        "APIRouter",
+        "Depends",
+        "HTTPException",
+        "status",
+        "BackgroundTasks",
+        "Request",
+        "Response",
+        "Query",
+        "File",
+        "UploadFile",
+        "Form",
     }
 
     fastapi_security_imports = {
-        'HTTPBearer', 'HTTPAuthorizationCredentials', 'OAuth2PasswordBearer'
+        "HTTPBearer",
+        "HTTPAuthorizationCredentials",
+        "OAuth2PasswordBearer",
     }
 
-    pydantic_imports = {
-        'BaseModel', 'Field', 'EmailStr', 'validator', 'root_validator'
-    }
+    pydantic_imports = {"BaseModel", "Field", "EmailStr", "validator", "root_validator"}
 
-    typing_imports = {
-        'Dict', 'Any', 'List', 'Optional', 'Union', 'Tuple'
-    }
+    typing_imports = {"Dict", "Any", "List", "Optional", "Union", "Tuple"}
 
-    datetime_imports = {
-        'datetime', 'timedelta'
-    }
+    datetime_imports = {"datetime", "timedelta"}
 
-    sqlalchemy_imports = {
-        'Session', 'joinedload', 'select', 'and_', 'or_'
-    }
+    sqlalchemy_imports = {"Session", "joinedload", "select", "and_", "or_"}
 
     required_imports = set()
 
     for name in undefined_names:
         if name in fastapi_imports:
-            required_imports.add('fastapi')
+            required_imports.add("fastapi")
         elif name in fastapi_security_imports:
-            required_imports.add('fastapi.security')
+            required_imports.add("fastapi.security")
         elif name in pydantic_imports:
-            required_imports.add('pydantic')
+            required_imports.add("pydantic")
         elif name in typing_imports:
-            required_imports.add('typing')
+            required_imports.add("typing")
         elif name in datetime_imports:
-            required_imports.add('datetime')
+            required_imports.add("datetime")
         elif name in sqlalchemy_imports:
-            required_imports.add('sqlalchemy')
+            required_imports.add("sqlalchemy")
 
     return required_imports
 
@@ -81,7 +83,7 @@ def get_required_imports(undefined_names: Set[str]) -> Set[str]:
 def add_imports_to_file(file_path: str, undefined_names: Set[str]):
     """Add missing imports to a Python file."""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Get required imports
@@ -90,64 +92,108 @@ def add_imports_to_file(file_path: str, undefined_names: Set[str]):
         # Prepare import statements
         import_statements = []
 
-        if 'fastapi' in required_imports:
-            fastapi_names = [name for name in undefined_names if name in {
-                'APIRouter', 'Depends', 'HTTPException', 'status', 'BackgroundTasks',
-                'Request', 'Response', 'Query', 'File', 'UploadFile', 'Form'
-            }]
+        if "fastapi" in required_imports:
+            fastapi_names = [
+                name
+                for name in undefined_names
+                if name
+                in {
+                    "APIRouter",
+                    "Depends",
+                    "HTTPException",
+                    "status",
+                    "BackgroundTasks",
+                    "Request",
+                    "Response",
+                    "Query",
+                    "File",
+                    "UploadFile",
+                    "Form",
+                }
+            ]
             if fastapi_names:
-                import_statements.append(f"from fastapi import {', '.join(sorted(fastapi_names))}")
+                import_statements.append(
+                    f"from fastapi import {', '.join(sorted(fastapi_names))}"
+                )
 
-        if 'fastapi.security' in required_imports:
-            security_names = [name for name in undefined_names if name in {
-                'HTTPBearer', 'HTTPAuthorizationCredentials', 'OAuth2PasswordBearer'
-            }]
-            if security_names:
-                import_statements.append(f"from fastapi.security import {', '.join(sorted(security_names))}")
+            if "fastapi.security" in required_imports:
+                security_names = [
+                    name
+                    for name in undefined_names
+                    if name
+                    in {
+                        "HTTPBearer",
+                        "HTTPAuthorizationCredentials",
+                        "OAuth2PasswordBearer",
+                    }
+                ]
+                if security_names:
+                    import_statements.append(
+                        "from fastapi.security import "
+                        f"{', '.join(sorted(security_names))}"
+                    )
 
-        if 'pydantic' in required_imports:
-            pydantic_names = [name for name in undefined_names if name in {
-                'BaseModel', 'Field', 'EmailStr', 'validator', 'root_validator'
-            }]
-            if pydantic_names:
-                import_statements.append(f"from pydantic import {', '.join(sorted(pydantic_names))}")
+            if "pydantic" in required_imports:
+                pydantic_names = [
+                    name
+                    for name in undefined_names
+                    if name
+                    in {"BaseModel", "Field", "EmailStr", "validator", "root_validator"}
+                ]
+                if pydantic_names:
+                    import_statements.append(
+                        "from pydantic import " f"{', '.join(sorted(pydantic_names))}"
+                    )
 
-        if 'typing' in required_imports:
-            typing_names = [name for name in undefined_names if name in {
-                'Dict', 'Any', 'List', 'Optional', 'Union', 'Tuple'
-            }]
-            if typing_names:
-                import_statements.append(f"from typing import {', '.join(sorted(typing_names))}")
+            if "typing" in required_imports:
+                typing_names = [
+                    name
+                    for name in undefined_names
+                    if name in {"Dict", "Any", "List", "Optional", "Union", "Tuple"}
+                ]
+                if typing_names:
+                    import_statements.append(
+                        "from typing import " f"{', '.join(sorted(typing_names))}"
+                    )
 
-        if 'datetime' in required_imports:
-            datetime_names = [name for name in undefined_names if name in {
-                'datetime', 'timedelta'
-            }]
-            if datetime_names:
-                import_statements.append(f"from datetime import {', '.join(sorted(datetime_names))}")
+            if "datetime" in required_imports:
+                datetime_names = [
+                    name
+                    for name in undefined_names
+                    if name in {"datetime", "timedelta"}
+                ]
+                if datetime_names:
+                    import_statements.append(
+                        "from datetime import " f"{', '.join(sorted(datetime_names))}"
+                    )
 
-        if 'sqlalchemy' in required_imports:
-            sqlalchemy_names = [name for name in undefined_names if name in {
-                'Session', 'joinedload', 'select', 'and_', 'or_'
-            }]
-            if sqlalchemy_names:
-                import_statements.append(f"from sqlalchemy import {', '.join(sorted(sqlalchemy_names))}")
+            if "sqlalchemy" in required_imports:
+                sqlalchemy_names = [
+                    name
+                    for name in undefined_names
+                    if name in {"Session", "joinedload", "select", "and_", "or_"}
+                ]
+                if sqlalchemy_names:
+                    import_statements.append(
+                        "from sqlalchemy import "
+                        f"{', '.join(sorted(sqlalchemy_names))}"
+                    )
 
         # Find the last import line
-        lines = content.split('\n')
+        lines = content.split("\n")
         last_import_idx = -1
 
         for i, line in enumerate(lines):
-            if line.startswith('import ') or line.startswith('from '):
+            if line.startswith("import ") or line.startswith("from "):
                 last_import_idx = i
-            elif line.strip() and not line.startswith('#') and last_import_idx != -1:
+            elif line.strip() and not line.startswith("#") and last_import_idx != -1:
                 break
 
         # Insert new imports after the last import
         if last_import_idx != -1 and import_statements:
             # Add a blank line before new imports if needed
             if lines[last_import_idx + 1].strip():
-                lines.insert(last_import_idx + 1, '')
+                lines.insert(last_import_idx + 1, "")
                 last_import_idx += 1
 
             # Insert new imports
@@ -155,8 +201,8 @@ def add_imports_to_file(file_path: str, undefined_names: Set[str]):
                 lines.insert(last_import_idx + 1 + i, import_stmt)
 
             # Write back to file
-            with open(file_path, 'w', encoding='utf-8') as f:
-                f.write('\n'.join(lines))
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write("\n".join(lines))
 
             print(f"✅ Added imports to {file_path}")
 
@@ -173,10 +219,14 @@ def main():
 
     # Run flake8 to get current errors
     import subprocess
+
     try:
-        result = subprocess.run([
-            'python', '-m', 'flake8', '--config', '.flake8', 'app/'
-        ], cwd=backend_dir, capture_output=True, text=True)
+        result = subprocess.run(
+            ["python", "-m", "flake8", "--config", ".flake8", "app/"],
+            cwd=backend_dir,
+            capture_output=True,
+            text=True,
+        )
 
         if result.returncode == 0:
             print("✅ No linting errors found!")
@@ -193,7 +243,9 @@ def main():
         for file_path, undefined_names in missing_imports.items():
             # Convert relative path to absolute path
             abs_file_path = backend_dir / file_path
-            if abs_file_path.exists() and ('api' in str(abs_file_path) or 'API' in str(abs_file_path)):
+            if abs_file_path.exists() and (
+                "api" in str(abs_file_path) or "API" in str(abs_file_path)
+            ):
                 add_imports_to_file(str(abs_file_path), undefined_names)
 
         print("\n✅ Import fixes completed!")

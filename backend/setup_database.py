@@ -13,9 +13,10 @@ backend_dir = Path(__file__).parent
 sys.path.insert(0, str(backend_dir))
 
 try:
-    from app.models import Base
     from sqlalchemy import create_engine, text
     from sqlalchemy.exc import OperationalError
+
+    from app.models import Base
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure all dependencies are installed:")
@@ -41,7 +42,7 @@ def test_database_connection():
         with engine.connect() as conn:
             result = conn.execute(text("SELECT version()"))
             version = result.fetchone()[0]
-            print(f"✅ Database connection successful!")
+            print("✅ Database connection successful!")
             print(f"PostgreSQL version: {version}")
 
             # Check if pgvector extension is available
@@ -99,13 +100,13 @@ def test_models():
         print("✅ Auterity expansion models imported successfully")
 
         # Test model attributes
-        triage_rule = TriageRule()
+        TriageRule()
         print("✅ TriageRule model instantiated")
 
-        vector_embedding = VectorEmbedding()
+        VectorEmbedding()
         print("✅ VectorEmbedding model instantiated")
 
-        integration = Integration()
+        Integration()
         print("✅ Integration model instantiated")
 
         return True

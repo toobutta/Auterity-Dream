@@ -5,7 +5,7 @@ Implements OWASP security headers and additional protections.
 
 import logging
 import time
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse

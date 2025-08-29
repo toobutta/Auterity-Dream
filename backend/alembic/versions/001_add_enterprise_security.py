@@ -6,8 +6,9 @@ Create Date: 2025-01-08 12:00:00.000000
 
 """
 import sqlalchemy as sa
-from alembic import op
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers
 revision = "001_enterprise_security"

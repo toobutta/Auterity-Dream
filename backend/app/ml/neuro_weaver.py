@@ -996,7 +996,7 @@ class NeuroWeaver:
             checkpoint = torch.load(model_path)
 
             # Recreate model architecture
-            arch_info = checkpoint.get("model_architecture", {})
+            checkpoint.get("model_architecture", {})
             self.model = AdaptiveNeuralNetwork(
                 input_dim=12, output_dim=1  # Default feature count
             )

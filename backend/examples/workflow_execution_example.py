@@ -105,20 +105,20 @@ async def example_complex_workflow():
     execution_time = (datetime.now() - start_time).total_seconds()
 
     # Display results
-    print(f"\n📊 Execution Results:")
+    print("\n📊 Execution Results:")
     print(f"Status: {result['status']}")
     print(f"Total Execution Time: {execution_time:.3f} seconds")
 
     if result["status"] == "completed":
-        print(f"\n📈 Step Results:")
+        print("\n📈 Step Results:")
         for step_id, step_result in result["results"].items():
             print(f"  {step_id}: {step_result}")
 
-        print(f"\n✅ Workflow completed successfully!")
+        print("\n✅ Workflow completed successfully!")
 
         # Show execution status
         status = engine.get_execution_status(workflow["id"])
-        print(f"\n📋 Final Status:")
+        print("\n📋 Final Status:")
         print(f"  Completed Steps: {len(status['completed_steps'])}")
         print(f"  Active Executions: {status['active_executions']}")
 

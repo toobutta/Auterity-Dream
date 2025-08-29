@@ -38,7 +38,7 @@ class SSOService:
             .filter(
                 SSOConfiguration.tenant_id == tenant.id,
                 SSOConfiguration.provider == "saml",
-                SSOConfiguration.is_active == True,
+                SSOConfiguration.is_active,
             )
             .first()
         )
@@ -121,7 +121,7 @@ class SSOService:
             .filter(
                 SSOConfiguration.tenant_id == tenant.id,
                 SSOConfiguration.provider == "oidc",
-                SSOConfiguration.is_active == True,
+                SSOConfiguration.is_active,
             )
             .first()
         )
@@ -157,7 +157,7 @@ class SSOService:
                 .filter(
                     SSOConfiguration.tenant_id == tenant.id,
                     SSOConfiguration.provider == "oidc",
-                    SSOConfiguration.is_active == True,
+                    SSOConfiguration.is_active,
                 )
                 .first()
             )
