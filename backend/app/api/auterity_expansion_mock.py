@@ -3,9 +3,14 @@
 import logging
 from uuid import UUID
 
+from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.models.tenant import Tenant
 from app.schemas.auterity_expansion import (
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from typing import List, Optional
     ChannelTriggerResponse,  # Triage schemas; Vector and similarity schemas; Integration schemas; Channel trigger schemas; Custom model schemas; Agent and execution schemas
 )
 from app.schemas.auterity_expansion import (
@@ -47,7 +52,6 @@ from app.schemas.auterity_expansion import (
 from app.services.autonomous_agent_service_mock import MockAutonomousAgentService
 from app.services.smart_triage_service_mock import MockSmartTriageService
 from app.services.vector_duplicate_service_mock import MockVectorDuplicateService
-from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 

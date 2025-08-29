@@ -2,9 +2,10 @@
 
 from typing import Any, Dict
 
+from jsonschema import Draft7Validator
+
 from app.interfaces.step_executor import StepExecutor
 from app.types.workflow import StepExecutionResult, WorkflowNode
-from jsonschema import Draft7Validator
 
 
 class WorkflowStepError(Exception):

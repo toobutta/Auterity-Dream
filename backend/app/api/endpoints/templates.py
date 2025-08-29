@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import TemplateResponse
 from ..services import template_service
+from typing import Dict, List
 
 router = APIRouter(prefix="/templates", tags=["templates"])
 

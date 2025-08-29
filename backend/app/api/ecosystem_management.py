@@ -8,12 +8,6 @@ import json
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from app.core.relay_core import MessagePriority, RelayMessage, relay_core
-from app.ml.neuro_weaver import ModelType, TrainingConfig, neuro_weaver
-
-# Import our enhanced components
-from app.services.ai_orchestrator import ai_orchestrator
-from app.services.registry import service_registry
 from fastapi import (
     APIRouter,
     BackgroundTasks,
@@ -23,6 +17,13 @@ from fastapi import (
 )
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+
+from app.core.relay_core import MessagePriority, RelayMessage, relay_core
+from app.ml.neuro_weaver import ModelType, TrainingConfig, neuro_weaver
+
+# Import our enhanced components
+from app.services.ai_orchestrator import ai_orchestrator
+from app.services.registry import service_registry
 
 router = APIRouter(prefix="/api/v2", tags=["AI Ecosystem Management"])
 

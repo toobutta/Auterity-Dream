@@ -9,10 +9,18 @@ import logging
 import time
 import traceback
 from datetime import datetime
+from threading import Lock
 from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+    BackgroundTasks,
+    Request,
+)
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 
 from ..core.config import get_settings
@@ -226,7 +234,6 @@ class AgentStatusResponse(APIResponse):
 
 
 # Service instances (using FastAPI's built-in dependency caching)
-from threading import Lock
 
 _service_lock = Lock()
 _services = {}

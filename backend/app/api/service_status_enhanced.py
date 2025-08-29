@@ -8,8 +8,6 @@ import json
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from app.services.ai_orchestrator import ai_orchestrator
-from app.services.registry import service_registry
 from fastapi import (
     APIRouter,
     BackgroundTasks,
@@ -19,6 +17,9 @@ from fastapi import (
 )
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+
+from app.services.ai_orchestrator import ai_orchestrator
+from app.services.registry import service_registry
 
 router = APIRouter(prefix="/api/v1", tags=["AI Service Orchestration"])
 
@@ -167,7 +168,9 @@ async def get_service_ai_insights(service_name: str) -> Dict[str, Any]:
 
 
 @router.post("/services/auto-optimize")
-async def trigger_auto_optimization(background_tasks: BackgroundTasks) -> Dict[str, Any]:
+async def trigger_auto_optimization(
+    background_tasks: BackgroundTasks,
+) -> Dict[str, Any]:
     """FIRST-TO-MARKET: Autonomous service optimization"""
     try:
         background_tasks.add_task(ai_orchestrator.auto_optimize_ecosystem)

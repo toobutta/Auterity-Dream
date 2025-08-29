@@ -1,7 +1,8 @@
 """Error correlation API endpoints."""
 
-from fastapi import APIRouter
 from typing import Dict
+
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/error-correlation", tags=["error-correlation"])
 

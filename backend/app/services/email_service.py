@@ -6,8 +6,9 @@ from typing import Any, Dict, List, Optional
 
 import requests
 import sendgrid
-from app.config.settings import get_settings
 from sendgrid.helpers.mail import Attachment, Content, Email, Mail, To
+
+from app.config.settings import get_settings
 
 
 class EmailService:

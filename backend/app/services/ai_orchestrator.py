@@ -7,9 +7,10 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from app.services.registry import service_registry
 from fastapi import WebSocket
 from pydantic import BaseModel
+
+from app.services.registry import service_registry
 
 
 class ServiceHealthMetrics(BaseModel):

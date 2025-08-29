@@ -11,8 +11,9 @@ from typing import Any, Dict
 
 import httpx
 import redis.asyncio as redis
-from app.config.settings import get_settings
 from fastapi import APIRouter, HTTPException
+
+from app.config.settings import get_settings
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -362,21 +363,29 @@ class ServiceHealthChecker:
 
             # Calculate summary statistics
             valid_categories = [
-                category for category in all_services.values()
+                category
+                for category in all_services.values()
                 if isinstance(category, dict)
             ]
-            total_services = sum(
-                len(category) for category in valid_categories
-            )
+            total_services = sum(len(category) for category in valid_categories)
             healthy_services = sum(
-                len([s for s in category.values()
-                     if isinstance(s, dict) and s.get("status") == "healthy"])
+                len(
+                    [
+                        s
+                        for s in category.values()
+                        if isinstance(s, dict) and s.get("status") == "healthy"
+                    ]
+                )
                 for category in valid_categories
             )
             configured_services = sum(
-                len([s for s in category.values()
-                     if isinstance(s, dict) and
-                     s.get("status") == "configured"])
+                len(
+                    [
+                        s
+                        for s in category.values()
+                        if isinstance(s, dict) and s.get("status") == "configured"
+                    ]
+                )
                 for category in valid_categories
             )
 
@@ -389,8 +398,7 @@ class ServiceHealthChecker:
                     - healthy_services
                     - configured_services,
                     "health_percentage": round(
-                        (healthy_services + configured_services)
-                        / total_services * 100,
+                        (healthy_services + configured_services) / total_services * 100,
                         1,
                     )
                     if total_services > 0
@@ -438,9 +446,7 @@ async def get_category_services_status(category: str) -> Dict[str, Any]:
     }
 
     if category not in category_map:
-        raise HTTPException(
-            status_code=404, detail=f"Category '{category}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Category '{category}' not found")
 
     try:
         result = await category_map[category]()

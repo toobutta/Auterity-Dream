@@ -22,10 +22,25 @@
   },
   "python.linting.enabled": true,
   "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    "--max-line-length=88",
+    "--extend-ignore=E203,W503,E501"
+  ],
   "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--line-length", "88"],
+  "editor.rulers": [88],
+  "python.linting.pylintEnabled": false,
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.pydocstyleEnabled": false,
   "typescript.preferences.importModuleSpecifier": "relative",
   "eslint.workingDirectories": ["frontend", "shared"],
+  "eslint.options": {
+    "env": {
+      "node": true
+    }
+  },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
   }
 }

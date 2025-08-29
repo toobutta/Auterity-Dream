@@ -2,6 +2,7 @@ import os
 from typing import Dict, Optional
 
 import hvac
+
 from app.exceptions import ServiceError
 
 

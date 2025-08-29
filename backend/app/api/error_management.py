@@ -7,12 +7,13 @@ Provides endpoints for error analytics, recovery management, and notifications.
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
+
 from app.services.enhanced_recovery import get_enhanced_recovery_service
 from app.services.error_analytics import get_error_analytics_service
 from app.services.error_correlation import get_correlation_service
 from app.services.notification_service import get_notification_service
-from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel
 
 router = APIRouter(prefix="/api/error-management", tags=["Error Management"])
 
@@ -158,13 +159,9 @@ async def get_recovery_stats() -> RecoveryStatsResponse:
             total_attempts=stats.get("total_attempts", 0),
             successful_attempts=stats.get("successful_attempts", 0),
             success_rate=stats.get("success_rate", 0.0),
-            average_duration_seconds=stats.get(
-                "average_duration_seconds", 0.0
-            ),
+            average_duration_seconds=stats.get("average_duration_seconds", 0.0),
             strategy_performance=stats.get("strategy_performance", {}),
-            last_updated=stats.get(
-                "last_updated", datetime.utcnow().isoformat()
-            ),
+            last_updated=stats.get("last_updated", datetime.utcnow().isoformat()),
         )
 
     except HTTPException:
@@ -202,9 +199,7 @@ async def get_recent_notifications(
     """Get recent error notifications."""
     try:
         notification_service = await get_notification_service()
-        notifications = await notification_service.get_recent_notifications(
-            limit
-        )
+        notifications = await notification_service.get_recent_notifications(limit)
         return {"notifications": notifications}
 
     except Exception as e:
@@ -239,11 +234,7 @@ async def trigger_manual_recovery(
         recovery_service = await get_enhanced_recovery_service()
 
         # Create a mock error for recovery planning
-        from app.exceptions import (
-            BaseAppException,
-            ErrorCategory,
-            ErrorSeverity,
-        )
+        from app.exceptions import BaseAppException, ErrorCategory, ErrorSeverity
 
         mock_error = BaseAppException(
             message=f"Manual recovery trigger for {error_code}",
@@ -253,9 +244,7 @@ async def trigger_manual_recovery(
         )
 
         # Create and execute recovery plan
-        plan = await recovery_service.create_recovery_plan(
-            mock_error, context or {}
-        )
+        plan = await recovery_service.create_recovery_plan(mock_error, context or {})
         attempts = await recovery_service.execute_recovery_plan(
             plan, mock_error, context or {}
         )
@@ -288,9 +277,7 @@ async def get_system_status() -> Dict[str, Any]:
         dashboard_data = await analytics_service.get_error_dashboard_data()
         recovery_stats = await recovery_service.get_recovery_stats()
         correlation_status = await correlation_service.get_correlation_status()
-        notification_stats = (
-            await notification_service.get_notification_stats()
-        )
+        notification_stats = await notification_service.get_notification_stats()
 
         # Calculate overall system health
         health_indicators = dashboard_data.get("health_indicators", {})
@@ -298,9 +285,7 @@ async def get_system_status() -> Dict[str, Any]:
 
         # Determine if system is in recovery mode
         active_recoveries = recovery_stats.get("total_attempts", 0) > 0
-        active_correlations = (
-            correlation_status.get("active_correlations", 0) > 0
-        )
+        active_correlations = correlation_status.get("active_correlations", 0) > 0
 
         return {
             "overall_status": overall_status,
@@ -309,9 +294,7 @@ async def get_system_status() -> Dict[str, Any]:
             "correlations_active": active_correlations,
             "notification_health": {
                 "success_rate": notification_stats.get("success_rate", 0),
-                "total_notifications": notification_stats.get(
-                    "total_notifications", 0
-                ),
+                "total_notifications": notification_stats.get("total_notifications", 0),
             },
             "last_updated": datetime.utcnow().isoformat(),
             "components": {

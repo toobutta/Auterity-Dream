@@ -4,10 +4,11 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 from uuid import UUID
 
-from app.models.tenant import AuditLog
-from app.models.user import User
 from fastapi import Request
 from sqlalchemy.orm import Session
+
+from app.models.tenant import AuditLog
+from app.models.user import User
 
 
 class AuditService:

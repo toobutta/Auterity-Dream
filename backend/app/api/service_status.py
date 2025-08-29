@@ -1,6 +1,8 @@
-from app.services.registry import service_registry
+from typing import Any, Dict
+
 from fastapi import APIRouter
-from typing import Dict, Any
+
+from app.services.registry import service_registry
 
 router = APIRouter()
 

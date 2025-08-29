@@ -6,10 +6,11 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 import numpy as np
-from app.models.auterity_expansion import VectorEmbedding
-from app.services.ai_service import AIService
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
+
+from app.models.auterity_expansion import VectorEmbedding
+from app.services.ai_service import AIService
 
 logger = logging.getLogger(__name__)
 

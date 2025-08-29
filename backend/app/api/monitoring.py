@@ -2,14 +2,15 @@
 
 import time
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from typing import Any, Dict
+
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import func, text
+from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.execution import ExecutionStatus, WorkflowExecution
 from app.models.workflow import Workflow
-from fastapi import APIRouter, Depends, Query
-from sqlalchemy import func, text
-from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/monitoring", tags=["monitoring"])
 
@@ -36,7 +37,10 @@ async def health_check(db: Session = Depends(get_db)) -> Dict[str, Any]:
         "status": "healthy" if db_status == "healthy" else "degraded",
         "timestamp": datetime.utcnow().isoformat(),
         "version": "0.1.0",
-        "database": {"status": db_status, "response_time_ms": db_response_time},
+        "database": {
+            "status": db_status,
+            "response_time_ms": db_response_time,
+        },
         "api": {"response_time_ms": total_response_time},
     }
 
@@ -103,16 +107,16 @@ async def get_performance_metrics(
         .filter(WorkflowExecution.started_at >= start_time)
         .scalar()
     )
-    
+
     successful_executions = (
         db.query(func.count(WorkflowExecution.id))
         .filter(
             WorkflowExecution.started_at >= start_time,
-            WorkflowExecution.status == ExecutionStatus.COMPLETED
+            WorkflowExecution.status == ExecutionStatus.COMPLETED,
         )
         .scalar()
     )
-    
+
     if total_executions == 0:
         return {
             "period_hours": hours,
@@ -122,7 +126,7 @@ async def get_performance_metrics(
             "status_breakdown": {},
             "performance_trends": [],
         }
-    
+
     success_rate = (successful_executions / total_executions) * 100
 
     # Calculate average duration for completed executions
@@ -130,34 +134,33 @@ async def get_performance_metrics(
         db.query(
             func.avg(
                 func.extract(
-                    'epoch',
-                    WorkflowExecution.completed_at -
-                    WorkflowExecution.started_at
-                ) * 1000
+                    "epoch",
+                    WorkflowExecution.completed_at - WorkflowExecution.started_at,
+                )
+                * 1000
             )
         )
         .filter(
             WorkflowExecution.started_at >= start_time,
             WorkflowExecution.status == ExecutionStatus.COMPLETED,
-            WorkflowExecution.completed_at.isnot(None)
+            WorkflowExecution.completed_at.isnot(None),
         )
         .scalar()
     )
-    
+
     average_duration_ms = avg_duration_result or 0
 
     # Status breakdown
     status_breakdown = {}
     status_results = (
         db.query(
-            WorkflowExecution.status,
-            func.count(WorkflowExecution.id).label('count')
+            WorkflowExecution.status, func.count(WorkflowExecution.id).label("count")
         )
         .filter(WorkflowExecution.started_at >= start_time)
         .group_by(WorkflowExecution.status)
         .all()
     )
-    
+
     for status, count in status_results:
         status_breakdown[status.value] = count
 
@@ -171,17 +174,17 @@ async def get_performance_metrics(
             db.query(func.count(WorkflowExecution.id))
             .filter(
                 WorkflowExecution.started_at >= hour_start,
-                WorkflowExecution.started_at < hour_end
+                WorkflowExecution.started_at < hour_end,
             )
             .scalar()
         )
-        
+
         hour_successful = (
             db.query(func.count(WorkflowExecution.id))
             .filter(
                 WorkflowExecution.started_at >= hour_start,
                 WorkflowExecution.started_at < hour_end,
-                WorkflowExecution.status == ExecutionStatus.COMPLETED
+                WorkflowExecution.status == ExecutionStatus.COMPLETED,
             )
             .scalar()
         )

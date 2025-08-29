@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 import redis.asyncio as redis
+
 from app.core.saas_config import SaaSConfig
 from app.models.tenant import Tenant
 from app.models.user import User

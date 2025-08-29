@@ -1,6 +1,9 @@
 import os
 from contextlib import asynccontextmanager
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.api import (
     agents,
     auterity_expansion,
@@ -41,8 +44,6 @@ from app.startup.ai_ecosystem_startup import (
     shutdown_event,
     startup_event,
 )
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 # Environment configuration
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")

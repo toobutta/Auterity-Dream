@@ -3,6 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from app.services.litellm_service import (
     LiteLLMService,
     get_litellm_service,

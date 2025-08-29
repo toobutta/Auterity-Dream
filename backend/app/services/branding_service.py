@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import Dict, Optional
 from uuid import UUID
 
-from app.models.tenant import Tenant
 from sqlalchemy.orm import Session
+
+from app.models.tenant import Tenant
 
 logger = logging.getLogger(__name__)
 

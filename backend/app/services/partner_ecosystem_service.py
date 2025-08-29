@@ -12,8 +12,9 @@ from uuid import UUID
 
 import aiohttp
 import jwt
-from app.core.saas_config import SaaSConfig
 from cryptography.fernet import Fernet
+
+from app.core.saas_config import SaaSConfig
 
 logger = logging.getLogger(__name__)
 

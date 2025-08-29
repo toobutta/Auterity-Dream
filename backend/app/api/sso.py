@@ -2,12 +2,14 @@
 
 from typing import Optional
 
+from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, status
+from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.schemas import SSOInitiateResponse, SSOLoginResponse
 from app.services.audit_service import AuditService
 from app.services.sso_service import SSOService
-from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request, status
-from sqlalchemy.orm import Session
+from fastapi import Response
 
 router = APIRouter(prefix="/sso", tags=["sso"])
 

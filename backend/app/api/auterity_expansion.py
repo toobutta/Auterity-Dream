@@ -2,15 +2,14 @@
 
 import logging
 import time
-from typing import List, Optional
 from uuid import UUID
+
+from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.tenant import Tenant
 from app.schemas.auterity_expansion import (
-    ChannelTriggerResponse,  # Triage schemas; Vector and similarity schemas; Integration schemas; Channel trigger schemas; Custom model schemas; Agent and execution schemas
-)
-from app.schemas.auterity_expansion import (
+    ChannelTriggerResponse,
     AgentDeployRequest,
     AgentDeployResponse,
     AgentMemoryCreate,
@@ -46,11 +45,8 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service import AgentConfig, AutonomousAgentService
 from app.services.smart_triage_service import SmartTriageService
 from app.services.vector_duplicate_service import VectorDuplicateService
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 

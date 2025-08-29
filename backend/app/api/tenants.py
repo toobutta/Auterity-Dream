@@ -4,6 +4,9 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from sqlalchemy.orm import Session
+
 from app.auth import require_admin_access
 from app.database import get_db
 from app.models.tenant import TenantStatus
@@ -19,8 +22,6 @@ from app.schemas import (
 )
 from app.services.audit_service import AuditService
 from app.services.tenant_service import TenantService
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
-from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/tenants", tags=["tenants"])
 

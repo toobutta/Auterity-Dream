@@ -7,8 +7,9 @@ from enum import Enum
 from typing import Any, Dict, Optional
 
 import redis
-from app.config.settings import get_settings
 from pydantic import BaseModel, Field
+
+from app.config.settings import get_settings
 
 
 class MessageStatus(str, Enum):
