@@ -29,6 +29,17 @@ class AgentCapabilityBase(BaseModel):
     is_active: bool = True
 
 
+class AgentConfig(BaseModel):
+    """Configuration for agent deployment and management."""
+    name: str
+    agent_type: str
+    capabilities: List[str] = []
+    memory_config: Optional[Dict[str, Any]] = None
+    coordination_rules: Optional[Dict[str, Any]] = None
+    escalation_policy: Optional[Dict[str, Any]] = None
+    tenant_id: Optional[UUID] = None
+
+
 class AgentCapabilityCreate(AgentCapabilityBase):
     pass
 

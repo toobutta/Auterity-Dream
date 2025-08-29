@@ -60,6 +60,13 @@ from .template import (
     TemplateResponse,
     TemplateUpdate,
 )
+from .tenant import (
+    SSOConfigurationCreate,
+    TenantCreate,
+    TenantResponse,
+    TenantStatsResponse,
+    TenantUpdate,
+)
 from .workflow import (
     ExecutionLogResponse,
     ExecutionResultResponse,
@@ -99,6 +106,12 @@ __all__ = [
     "TemplateResponse",
     "TemplateListResponse",
     "TemplateInstantiateRequest",
+    # Tenant Schemas
+    "SSOConfigurationCreate",
+    "TenantCreate",
+    "TenantResponse",
+    "TenantStatsResponse",
+    "TenantUpdate",
     # Auterity Expansion Schemas
     "TriageRuleCreate",
     "TriageRuleUpdate",
