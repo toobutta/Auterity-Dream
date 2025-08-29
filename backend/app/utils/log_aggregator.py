@@ -204,12 +204,8 @@ class LogAggregator:
         entries_by_event = dict(event_counts)
 
         # Calculate error rate
-        error_count = level_counts.get("error", 0) + level_counts.get(
-            "critical", 0
-        )
-        error_rate = (
-            (error_count / total_entries) * 100 if total_entries > 0 else 0.0
-        )
+        error_count = level_counts.get("error", 0) + level_counts.get("critical", 0)
+        error_rate = (error_count / total_entries) * 100 if total_entries > 0 else 0.0
 
         # Get top errors
         error_entries = [
@@ -217,9 +213,7 @@ class LogAggregator:
             for entry in entries
             if entry.level in [LogLevel.ERROR, LogLevel.CRITICAL]
         ]
-        error_message_counts = Counter(
-            entry.message for entry in error_entries
-        )
+        error_message_counts = Counter(entry.message for entry in error_entries)
         top_errors = [
             {
                 "message": message,
@@ -249,9 +243,7 @@ class LogAggregator:
         # Sort by timestamp
         return sorted(entries, key=lambda x: x.timestamp)
 
-    def get_user_activity(
-        self, user_id: str, hours: int = 24
-    ) -> List[LogEntry]:
+    def get_user_activity(self, user_id: str, hours: int = 24) -> List[LogEntry]:
         """Get log entries for a specific user."""
         end_time = datetime.utcnow()
         start_time = end_time - timedelta(hours=hours)
@@ -263,9 +255,7 @@ class LogAggregator:
         entries = self.filter_entries(user_filter)
         return sorted(entries, key=lambda x: x.timestamp, reverse=True)
 
-    def get_component_health(
-        self, component: str, hours: int = 1
-    ) -> Dict[str, Any]:
+    def get_component_health(self, component: str, hours: int = 1) -> Dict[str, Any]:
         """Get health metrics for a specific component."""
         end_time = datetime.utcnow()
         start_time = end_time - timedelta(hours=hours)
@@ -286,9 +276,7 @@ class LogAggregator:
             }
 
         error_count = sum(
-            1
-            for entry in entries
-            if entry.level in [LogLevel.ERROR, LogLevel.CRITICAL]
+            1 for entry in entries if entry.level in [LogLevel.ERROR, LogLevel.CRITICAL]
         )
         error_rate = (error_count / len(entries)) * 100
 

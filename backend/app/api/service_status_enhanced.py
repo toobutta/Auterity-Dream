@@ -166,9 +166,7 @@ async def get_service_ai_insights(service_name: str) -> Dict[str, Any]:
         return insights
 
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"AI insights failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"AI insights failed: {str(e)}")
 
 
 @router.post("/services/auto-optimize")
@@ -215,10 +213,8 @@ async def optimize_specific_service(
             issue_type = optimization_request.optimization_type
 
         # Apply healing/optimization
-        healing_result = (
-            await ai_orchestrator.service_healer.auto_heal_service(
-                service_name, issue_type
-            )
+        healing_result = await ai_orchestrator.service_healer.auto_heal_service(
+            service_name, issue_type
         )
 
         return {
@@ -256,8 +252,8 @@ async def get_capacity_forecast(
                 )
                 forecasts[f"{category}.{service_name}"] = forecast
 
-        ecosystem_recommendations = (
-            await _generate_ecosystem_capacity_recommendations(forecasts)
+        ecosystem_recommendations = await _generate_ecosystem_capacity_recommendations(
+            forecasts
         )
 
         return {
@@ -285,19 +281,15 @@ async def detect_service_anomalies() -> Dict[str, Any]:
         for category, category_services in services.items():
             for service_name in category_services.keys():
                 health_data = ai_orchestrator._mock_health_data(service_name)
-                anomaly_score = (
-                    await ai_orchestrator.anomaly_detector.detect_anomaly(
-                        service_name, health_data
-                    )
+                anomaly_score = await ai_orchestrator.anomaly_detector.detect_anomaly(
+                    service_name, health_data
                 )
 
                 if anomaly_score > 0.5:  # Threshold for reporting anomalies
                     anomalies[f"{category}.{service_name}"] = {
                         "anomaly_score": anomaly_score,
                         "health_data": health_data,
-                        "severity": "high"
-                        if anomaly_score > 0.8
-                        else "medium",
+                        "severity": "high" if anomaly_score > 0.8 else "medium",
                         "recommended_action": await _get_anomaly_action(
                             anomaly_score, health_data
                         ),
@@ -330,14 +322,10 @@ async def predict_service_failures() -> Dict[str, Any]:
                     service_name, health_data
                 )
 
-                if (
-                    failure_probability > 0.3
-                ):  # Report services with >30% failure risk
+                if failure_probability > 0.3:  # Report services with >30% failure risk
                     failure_predictions[f"{category}.{service_name}"] = {
                         "failure_probability": failure_probability,
-                        "risk_level": "high"
-                        if failure_probability > 0.7
-                        else "medium",
+                        "risk_level": "high" if failure_probability > 0.7 else "medium",
                         "time_to_failure": await _estimate_time_to_failure(
                             failure_probability
                         ),
@@ -350,9 +338,7 @@ async def predict_service_failures() -> Dict[str, Any]:
             "prediction_timestamp": datetime.now().isoformat(),
             "services_at_risk": len(failure_predictions),
             "failure_predictions": failure_predictions,
-            "ecosystem_risk": "high"
-            if len(failure_predictions) > 2
-            else "low",
+            "ecosystem_risk": "high" if len(failure_predictions) > 2 else "low",
         }
 
     except Exception as e:
@@ -373,9 +359,7 @@ async def get_all_services_enhanced() -> Dict[str, Any]:
             enhanced_services[category] = {}
             for service_name, service_data in category_services.items():
                 try:
-                    health_data = ai_orchestrator._mock_health_data(
-                        service_name
-                    )
+                    health_data = ai_orchestrator._mock_health_data(service_name)
                     ai_score = await ai_orchestrator._calculate_health_score(
                         health_data
                     )
@@ -402,8 +386,7 @@ async def get_all_services_enhanced() -> Dict[str, Any]:
                 "ai_enhanced": True,
                 "analysis_timestamp": datetime.now().isoformat(),
                 "total_services": sum(
-                    len(cat_services)
-                    for cat_services in enhanced_services.values()
+                    len(cat_services) for cat_services in enhanced_services.values()
                 ),
             },
         }
@@ -516,16 +499,12 @@ async def _estimate_time_to_failure(failure_probability: float) -> str:
         return "24-72 hours"
 
 
-async def _get_prevention_actions(
-    service_name: str, health_data: Dict
-) -> List[str]:
+async def _get_prevention_actions(service_name: str, health_data: Dict) -> List[str]:
     """Get preventive actions for service"""
     actions = []
 
     if health_data.get("cpu_usage", 0) > 80:
-        actions.append(
-            "Scale horizontally or optimize CPU-intensive operations"
-        )
+        actions.append("Scale horizontally or optimize CPU-intensive operations")
 
     if health_data.get("memory_usage", 0) > 85:
         actions.append("Investigate memory leaks and optimize memory usage")
@@ -534,8 +513,6 @@ async def _get_prevention_actions(
         actions.append("Optimize database queries and implement caching")
 
     if not actions:
-        actions.append(
-            "Continue monitoring and maintain current configuration"
-        )
+        actions.append("Continue monitoring and maintain current configuration")
 
     return actions

@@ -54,9 +54,7 @@ class PredictiveAnalytics:
 
         # Sophisticated probability calculation
         base_probability = sum(risk_factors) * 0.15
-        trend_factor = await self._calculate_trend_factor(
-            service_name, health_data
-        )
+        trend_factor = await self._calculate_trend_factor(service_name, health_data)
 
         return min(base_probability + trend_factor, 0.95)
 
@@ -64,9 +62,7 @@ class PredictiveAnalytics:
         self, service_name: str, days_ahead: int
     ) -> Dict[str, Any]:
         """Forecast capacity needs using time series analysis"""
-        historical_data = await self._get_historical_data(
-            service_name, days=30
-        )
+        historical_data = await self._get_historical_data(service_name, days=30)
 
         # Simple linear regression for demonstration
         # In production, use LSTM or Prophet
@@ -81,9 +77,7 @@ class PredictiveAnalytics:
                 historical_data.get("traffic", []), days_ahead
             ),
             "confidence_interval": 0.85,
-            "recommended_scaling": "horizontal"
-            if days_ahead > 3
-            else "vertical",
+            "recommended_scaling": "horizontal" if days_ahead > 3 else "vertical",
         }
 
         return forecast
@@ -97,17 +91,13 @@ class PredictiveAnalytics:
                 service_name, health_data
             ),
             "capacity_forecast": await self.forecast_capacity(service_name, 7),
-            "performance_trend": await self._analyze_performance_trend(
-                service_name
-            ),
+            "performance_trend": await self._analyze_performance_trend(service_name),
             "optimization_potential": await self._calculate_optimization_potential(
                 service_name, health_data
             ),
         }
 
-    def _linear_forecast(
-        self, data: List[float], days_ahead: int
-    ) -> List[float]:
+    def _linear_forecast(self, data: List[float], days_ahead: int) -> List[float]:
         """Simple linear forecasting"""
         if len(data) < 2:
             return [data[-1] if data else 0.0] * days_ahead
@@ -143,16 +133,14 @@ class PredictiveAnalytics:
 
         return {
             "cpu": [
-                max(0, min(100, base_cpu + np.random.normal(0, 5)))
-                for _ in range(days)
+                max(0, min(100, base_cpu + np.random.normal(0, 5))) for _ in range(days)
             ],
             "memory": [
                 max(0, min(100, base_memory + np.random.normal(0, 8)))
                 for _ in range(days)
             ],
             "traffic": [
-                max(0, base_traffic + np.random.normal(0, 100))
-                for _ in range(days)
+                max(0, base_traffic + np.random.normal(0, 100)) for _ in range(days)
             ],
         }
 
@@ -168,9 +156,7 @@ class PredictiveAnalytics:
         """Calculate optimization potential score"""
         cpu_opt = max(0, 1 - (health_data.get("cpu_usage", 50) / 100))
         memory_opt = max(0, 1 - (health_data.get("memory_usage", 50) / 100))
-        response_opt = max(
-            0, 1 - (health_data.get("response_time", 100) / 2000)
-        )
+        response_opt = max(0, 1 - (health_data.get("response_time", 100) / 2000))
 
         return (cpu_opt + memory_opt + response_opt) / 3
 
@@ -178,9 +164,7 @@ class PredictiveAnalytics:
 class AnomalyDetector:
     """AI-powered anomaly detection"""
 
-    async def detect_anomaly(
-        self, service_name: str, health_data: Dict
-    ) -> float:
+    async def detect_anomaly(self, service_name: str, health_data: Dict) -> float:
         """Detect anomalies in service behavior"""
         # Simplified anomaly detection using statistical methods
         cpu_score = self._calculate_anomaly_score(
@@ -195,9 +179,7 @@ class AnomalyDetector:
 
         return max(cpu_score, memory_score, response_score)
 
-    def _calculate_anomaly_score(
-        self, value: float, mean: float, std: float
-    ) -> float:
+    def _calculate_anomaly_score(self, value: float, mean: float, std: float) -> float:
         """Calculate anomaly score using z-score"""
         if std == 0:
             return 0.0
@@ -216,22 +198,14 @@ class AutoScaler:
         memory_usage = health_data.get("memory_usage", 0)
         response_time = health_data.get("response_time", 0)
 
-        should_scale_up = (
-            cpu_usage > 80 or memory_usage > 85 or response_time > 1500
-        )
+        should_scale_up = cpu_usage > 80 or memory_usage > 85 or response_time > 1500
 
-        should_scale_down = (
-            cpu_usage < 30 and memory_usage < 40 and response_time < 200
-        )
+        should_scale_down = cpu_usage < 30 and memory_usage < 40 and response_time < 200
 
         return {
             "should_scale": should_scale_up or should_scale_down,
             "direction": (
-                "up"
-                if should_scale_up
-                else "down"
-                if should_scale_down
-                else "none"
+                "up" if should_scale_up else "down" if should_scale_down else "none"
             ),
             "recommended_instances": self._calculate_instance_recommendation(
                 health_data
@@ -261,9 +235,7 @@ class AutoScaler:
         base_cost = 50.0  # Base hourly cost
         return {
             "current_hourly": base_cost,
-            "projected_hourly": base_cost * 1.5
-            if scaling_up
-            else base_cost * 0.7,
+            "projected_hourly": base_cost * 1.5 if scaling_up else base_cost * 0.7,
             "monthly_impact": (
                 (base_cost * 1.5 - base_cost) * 24 * 30
                 if scaling_up
@@ -393,18 +365,18 @@ class AIServiceOrchestrator:
                 total_health += enhanced_metrics.health_score or 0.0
 
                 # Predictive Failure Analysis
-                failure_prediction = await self.predictive_analytics.get_comprehensive_prediction(
-                    service_name, self._mock_health_data(service_name)
+                failure_prediction = (
+                    await self.predictive_analytics.get_comprehensive_prediction(
+                        service_name, self._mock_health_data(service_name)
+                    )
                 )
                 ecosystem_analysis["predictive_insights"][
                     f"{category}.{service_name}"
                 ] = failure_prediction
 
                 # Auto-scaling Analysis
-                scaling_recommendation = (
-                    await self.auto_scaler.analyze_scaling_needs(
-                        service_name, self._mock_health_data(service_name)
-                    )
+                scaling_recommendation = await self.auto_scaler.analyze_scaling_needs(
+                    service_name, self._mock_health_data(service_name)
                 )
                 if scaling_recommendation["should_scale"]:
                     ecosystem_analysis["auto_scaling_recommendations"][
@@ -416,10 +388,8 @@ class AIServiceOrchestrator:
                     enhanced_metrics.health_score
                     and enhanced_metrics.health_score < 0.6
                 ):
-                    healing_action = (
-                        await self.service_healer.auto_heal_service(
-                            service_name, "high_latency"
-                        )
+                    healing_action = await self.service_healer.auto_heal_service(
+                        service_name, "high_latency"
                     )
                     ecosystem_analysis["autonomous_healing_actions"].append(
                         healing_action
@@ -428,9 +398,9 @@ class AIServiceOrchestrator:
         ecosystem_analysis["ecosystem_health"] = (
             total_health / service_count if service_count > 0 else 0.0
         )
-        ecosystem_analysis[
-            "cascade_failure_risk"
-        ] = await self._calculate_cascade_risk(services)
+        ecosystem_analysis["cascade_failure_risk"] = await self._calculate_cascade_risk(
+            services
+        )
         ecosystem_analysis[
             "optimization_opportunities"
         ] = await self._identify_optimizations(services)
@@ -458,15 +428,11 @@ class AIServiceOrchestrator:
         # AI Enhancements
         try:
             # Health score calculation
-            base_metrics.health_score = await self._calculate_health_score(
-                mock_data
-            )
+            base_metrics.health_score = await self._calculate_health_score(mock_data)
 
             # Anomaly detection
-            base_metrics.anomaly_score = (
-                await self.anomaly_detector.detect_anomaly(
-                    service_name, mock_data
-                )
+            base_metrics.anomaly_score = await self.anomaly_detector.detect_anomaly(
+                service_name, mock_data
             )
 
             # Failure prediction
@@ -507,18 +473,12 @@ class AIServiceOrchestrator:
         """Calculate overall health score"""
         cpu_score = max(0, 1 - (health_data.get("cpu_usage", 0) / 100))
         memory_score = max(0, 1 - (health_data.get("memory_usage", 0) / 100))
-        response_score = max(
-            0, 1 - (health_data.get("response_time", 0) / 2000)
-        )
+        response_score = max(0, 1 - (health_data.get("response_time", 0) / 2000))
         availability_score = health_data.get("availability", 100) / 100
         error_score = max(0, 1 - (health_data.get("error_rate", 0) / 10))
 
         return (
-            cpu_score
-            + memory_score
-            + response_score
-            + availability_score
-            + error_score
+            cpu_score + memory_score + response_score + availability_score + error_score
         ) / 5
 
     async def _generate_optimization_recommendations(
@@ -528,19 +488,13 @@ class AIServiceOrchestrator:
         recommendations = []
 
         if health_data.get("cpu_usage", 0) > 80:
-            recommendations.append(
-                "Consider horizontal scaling or CPU optimization"
-            )
+            recommendations.append("Consider horizontal scaling or CPU optimization")
 
         if health_data.get("memory_usage", 0) > 85:
-            recommendations.append(
-                "Memory optimization needed - check for leaks"
-            )
+            recommendations.append("Memory optimization needed - check for leaks")
 
         if health_data.get("response_time", 0) > 1000:
-            recommendations.append(
-                "Optimize database queries and enable caching"
-            )
+            recommendations.append("Optimize database queries and enable caching")
 
         if health_data.get("error_rate", 0) > 5:
             recommendations.append(
@@ -566,9 +520,7 @@ class AIServiceOrchestrator:
                 if health_data.get("status") == "unhealthy":
                     unhealthy_services += 1
 
-        return (
-            unhealthy_services / total_services if total_services > 0 else 0.0
-        )
+        return unhealthy_services / total_services if total_services > 0 else 0.0
 
     async def _identify_optimizations(self, services: Dict) -> List[str]:
         """Identify ecosystem-wide optimizations"""
@@ -590,9 +542,7 @@ class AIServiceOrchestrator:
             "auto_scaling_recommendations", {}
         ).items():
             if recommendations["should_scale"]:
-                await self.service_healer.auto_heal_service(
-                    service_name, "high_cpu"
-                )
+                await self.service_healer.auto_heal_service(service_name, "high_cpu")
 
         # Trigger healing actions for unhealthy services
         for action in ecosystem_data.get("autonomous_healing_actions", []):

@@ -47,9 +47,7 @@ class MessageQueue:
         self.redis_url = redis_url or getattr(
             settings, "REDIS_URL", "redis://localhost:6379"
         )
-        self.redis_client = redis.from_url(
-            self.redis_url, decode_responses=True
-        )
+        self.redis_client = redis.from_url(self.redis_url, decode_responses=True)
 
         # Queue configuration
         self.default_ttl = 86400  # 24 hours
@@ -102,15 +100,11 @@ class MessageQueue:
 
         # Set expiration if TTL provided
         if ttl_seconds:
-            message.expires_at = datetime.utcnow() + timedelta(
-                seconds=ttl_seconds
-            )
+            message.expires_at = datetime.utcnow() + timedelta(seconds=ttl_seconds)
 
         # Set scheduled time if delay provided
         if delay_seconds > 0:
-            message.scheduled_at = datetime.utcnow() + timedelta(
-                seconds=delay_seconds
-            )
+            message.scheduled_at = datetime.utcnow() + timedelta(seconds=delay_seconds)
 
         # Store message data
         message_key = self._get_message_key(message.id)
@@ -134,18 +128,14 @@ class MessageQueue:
 
         return message.id
 
-    def dequeue(
-        self, queue_name: str, timeout: int = 0
-    ) -> Optional[QueueMessage]:
+    def dequeue(self, queue_name: str, timeout: int = 0) -> Optional[QueueMessage]:
         """Dequeue a message with blocking support."""
         queue_key = self._get_queue_key(queue_name)
         processing_key = self._get_processing_key(queue_name)
 
         # Move message from queue to processing with atomic operation
         if timeout > 0:
-            result = self.redis_client.brpoplpush(
-                queue_key, processing_key, timeout
-            )
+            result = self.redis_client.brpoplpush(queue_key, processing_key, timeout)
         else:
             result = self.redis_client.rpoplpush(queue_key, processing_key)
 
@@ -337,9 +327,7 @@ class MessageQueue:
 
         # Delete message data
         if all_ids:
-            message_keys = [
-                self._get_message_key(msg_id) for msg_id in all_ids
-            ]
+            message_keys = [self._get_message_key(msg_id) for msg_id in all_ids]
             self.redis_client.delete(*message_keys)
 
         # Clear queues

@@ -201,9 +201,7 @@ class ToolSpecializationMatrix:
             ),
         }
 
-    def get_best_tool_for_capability(
-        self, capability: str
-    ) -> Optional[AITool]:
+    def get_best_tool_for_capability(self, capability: str) -> Optional[AITool]:
         """Find the best tool for a specific capability"""
         primary_tools = []
         support_tools = []
@@ -222,9 +220,7 @@ class ToolSpecializationMatrix:
 
         return None
 
-    def can_tool_handle_block(
-        self, tool: AITool, block: DevelopmentBlock
-    ) -> bool:
+    def can_tool_handle_block(self, tool: AITool, block: DevelopmentBlock) -> bool:
         """Check if a tool can handle a specific development block"""
         spec = self.specializations.get(tool)
         if not spec:
@@ -392,9 +388,7 @@ class QualityGateFramework:
 
         # Tool-specific gates
         if block.assigned_tool == AITool.AMAZON_Q:
-            gates.extend(
-                [QualityGateType.SECURITY, QualityGateType.INTEGRATION]
-            )
+            gates.extend([QualityGateType.SECURITY, QualityGateType.INTEGRATION])
         elif block.assigned_tool == AITool.CURSOR_IDE:
             gates.extend(
                 [
@@ -403,9 +397,7 @@ class QualityGateFramework:
                 ]
             )
         elif block.assigned_tool == AITool.CLINE:
-            gates.extend(
-                [QualityGateType.INTEGRATION, QualityGateType.PERFORMANCE]
-            )
+            gates.extend([QualityGateType.INTEGRATION, QualityGateType.PERFORMANCE])
 
         # Context-specific gates
         capabilities = block.context.get("required_capabilities", [])
@@ -594,10 +586,8 @@ class KiroOrchestrator:
 
         # Create quality gates for each block
         for block in phase_1_blocks:
-            quality_gates = (
-                await self.quality_framework.create_quality_gates_for_block(
-                    block
-                )
+            quality_gates = await self.quality_framework.create_quality_gates_for_block(
+                block
             )
             block.quality_gates = [gate.__dict__ for gate in quality_gates]
 
@@ -618,9 +608,7 @@ class KiroOrchestrator:
     ) -> Dict[str, Any]:
         """Assign a development block to a specific tool"""
         if not self.specialization_matrix.can_tool_handle_block(tool, block):
-            raise ValueError(
-                f"Tool {tool.value} cannot handle block {block.id}"
-            )
+            raise ValueError(f"Tool {tool.value} cannot handle block {block.id}")
 
         block.assigned_tool = tool
         block.status = BlockStatus.IN_PROGRESS
@@ -657,14 +645,10 @@ class KiroOrchestrator:
         stream_progress = []
         for tool in AITool:
             tool_blocks = [
-                b
-                for b in self.active_blocks.values()
-                if b.assigned_tool == tool
+                b for b in self.active_blocks.values() if b.assigned_tool == tool
             ]
             tool_completed = [
-                b
-                for b in self.completed_blocks.values()
-                if b.assigned_tool == tool
+                b for b in self.completed_blocks.values() if b.assigned_tool == tool
             ]
 
             total_tool_blocks = len(tool_blocks) + len(tool_completed)
@@ -673,11 +657,7 @@ class KiroOrchestrator:
             if total_tool_blocks > 0:
                 progress = completed_tool_blocks / total_tool_blocks * 100
                 current_block = next(
-                    (
-                        b
-                        for b in tool_blocks
-                        if b.status == BlockStatus.IN_PROGRESS
-                    ),
+                    (b for b in tool_blocks if b.status == BlockStatus.IN_PROGRESS),
                     None,
                 )
 
@@ -686,9 +666,7 @@ class KiroOrchestrator:
                         "tool": tool.value,
                         "completed_blocks": completed_tool_blocks,
                         "total_blocks": total_tool_blocks,
-                        "current_block": current_block.name
-                        if current_block
-                        else None,
+                        "current_block": current_block.name if current_block else None,
                         "progress": progress,
                         "velocity": self.specialization_matrix.specializations[
                             tool
@@ -757,9 +735,7 @@ class KiroOrchestrator:
         for gate_data in block.quality_gates:
             gate = self.quality_gates.get(gate_data["id"])
             if gate:
-                result = await self.quality_framework.validate_quality_gate(
-                    gate
-                )
+                result = await self.quality_framework.validate_quality_gate(gate)
                 quality_results.append(
                     {
                         "gate_id": gate.id,
@@ -785,9 +761,7 @@ class KiroOrchestrator:
         else:
             block.status = BlockStatus.BLOCKED
             block.updated_at = datetime.now()
-            logger.warning(
-                f"Block {block_id} blocked by quality gate failures"
-            )
+            logger.warning(f"Block {block_id} blocked by quality gate failures")
 
         return {
             "block_id": block_id,

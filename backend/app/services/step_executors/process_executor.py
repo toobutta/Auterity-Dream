@@ -57,9 +57,7 @@ class ProcessStepExecutor(BaseStepExecutor):
                 field = rule.get("field")
                 operation = rule.get("operation")
                 if field in result and operation:
-                    result[field] = self._apply_operation(
-                        result[field], operation
-                    )
+                    result[field] = self._apply_operation(result[field], operation)
         return result
 
     def _apply_operation(self, value: Any, operation: str) -> Any:

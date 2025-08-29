@@ -114,9 +114,7 @@ class ComplianceLayer:
             )
 
         self.compliance_rules = base_rules
-        logger.info(
-            f"Initialized compliance rules for {self.compliance_level.value}"
-        )
+        logger.info(f"Initialized compliance rules for {self.compliance_level.value}")
 
     def validate_compliance(
         self, data: Dict[str, Any], compliance_rules: List[str]
@@ -131,9 +129,7 @@ class ComplianceLayer:
 
         # Simple validation logic
         if "GDPR" in compliance_rules and "personal" in str(data).lower():
-            violations.append(
-                "GDPR: Personal data detected without proper consent"
-            )
+            violations.append("GDPR: Personal data detected without proper consent")
             compliance_status = "violation"
 
         if "HIPAA" in compliance_rules and "health" in str(data).lower():
@@ -183,9 +179,7 @@ class ComplianceLayer:
 
             if not access_validation["allowed"]:
                 validation_result["allowed"] = False
-                validation_result["violations"].extend(
-                    access_validation["violations"]
-                )
+                validation_result["violations"].extend(access_validation["violations"])
 
             # Check data protection requirements
             protection_validation = self._validate_data_protection(
@@ -220,9 +214,7 @@ class ComplianceLayer:
         except Exception as e:
             logger.error(f"Compliance validation failed: {str(e)}")
             validation_result["allowed"] = False
-            validation_result["violations"].append(
-                f"Validation error: {str(e)}"
-            )
+            validation_result["violations"].append(f"Validation error: {str(e)}")
             return validation_result
 
     def _classify_data(self, data: Dict[str, Any]) -> DataClassification:
@@ -295,9 +287,7 @@ class ComplianceLayer:
             )
 
         # Check data classification access
-        max_classification = user_permissions.get(
-            "max_data_classification", "internal"
-        )
+        max_classification = user_permissions.get("max_data_classification", "internal")
 
         classification_levels = {
             "public": 0,
@@ -309,9 +299,7 @@ class ComplianceLayer:
         }
 
         user_level = classification_levels.get(max_classification, 1)
-        required_level = classification_levels.get(
-            data_classification.value, 1
-        )
+        required_level = classification_levels.get(data_classification.value, 1)
 
         if user_level < required_level:
             violations.append(
@@ -390,13 +378,9 @@ class ComplianceLayer:
 
         # Alert on violations
         if event.get("violations"):
-            logger.warning(
-                f"Compliance violations detected: {event['violations']}"
-            )
+            logger.warning(f"Compliance violations detected: {event['violations']}")
 
-    def _generate_audit_id(
-        self, operation: str, user_id: str, tenant_id: str
-    ) -> str:
+    def _generate_audit_id(self, operation: str, user_id: str, tenant_id: str) -> str:
         """Generate unique audit ID for tracking"""
 
         timestamp = datetime.now(timezone.utc).isoformat()
@@ -426,9 +410,7 @@ class ComplianceLayer:
                 anonymized[field] = self._anonymize_value(anonymized[field])
 
         anonymized["anonymized"] = True
-        anonymized["anonymization_timestamp"] = datetime.now(
-            timezone.utc
-        ).isoformat()
+        anonymized["anonymization_timestamp"] = datetime.now(timezone.utc).isoformat()
 
         return anonymized
 
@@ -451,17 +433,13 @@ class ComplianceLayer:
             for event in self.audit_log
             if (
                 event.get("tenant_id") == tenant_id
-                and start_date
-                <= datetime.fromisoformat(event["timestamp"])
-                <= end_date
+                and start_date <= datetime.fromisoformat(event["timestamp"]) <= end_date
             )
         ]
 
         # Aggregate statistics
         total_operations = len(filtered_events)
-        violations = [
-            event for event in filtered_events if event.get("violations")
-        ]
+        violations = [event for event in filtered_events if event.get("violations")]
 
         report = {
             "tenant_id": tenant_id,
@@ -489,13 +467,9 @@ class ComplianceLayer:
         """Get current compliance status"""
 
         recent_events = (
-            self.audit_log[-100:]
-            if len(self.audit_log) > 100
-            else self.audit_log
+            self.audit_log[-100:] if len(self.audit_log) > 100 else self.audit_log
         )
-        violations = [
-            event for event in recent_events if event.get("violations")
-        ]
+        violations = [event for event in recent_events if event.get("violations")]
 
         return {
             "compliance_level": self.compliance_level.value,
@@ -507,7 +481,5 @@ class ComplianceLayer:
                 if recent_events
                 else 1.0
             ),
-            "status": "compliant"
-            if len(violations) == 0
-            else "violations_detected",
+            "status": "compliant" if len(violations) == 0 else "violations_detected",
         }

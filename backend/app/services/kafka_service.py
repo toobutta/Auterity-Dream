@@ -41,9 +41,7 @@ class KafkaService:
     """Service for managing Kafka operations with HTTP interface."""
 
     def __init__(self):
-        self.bootstrap_servers = os.getenv(
-            "KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"
-        )
+        self.bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
         self.producer = None
         self.consumer = None
         self.admin_client = None
@@ -148,15 +146,11 @@ class KafkaService:
                         partitions.append(
                             {
                                 "id": partition_id,
-                                "leader": getattr(
-                                    partition_metadata, "leader", None
-                                ),
+                                "leader": getattr(partition_metadata, "leader", None),
                                 "replicas": list(
                                     getattr(partition_metadata, "replicas", [])
                                 ),
-                                "isr": list(
-                                    getattr(partition_metadata, "isr", [])
-                                ),
+                                "isr": list(getattr(partition_metadata, "isr", [])),
                             }
                         )
 
@@ -203,9 +197,7 @@ class KafkaService:
                         logger.info(f"Topic {topic} created successfully")
                     except Exception as e:
                         logger.error(f"Failed to create topic {topic}: {e}")
-                        raise SystemError(
-                            f"Failed to create topic {topic}: {str(e)}"
-                        )
+                        raise SystemError(f"Failed to create topic {topic}: {str(e)}")
 
             return {
                 "message": f"Topic '{topic_config.name}' created successfully",
@@ -237,9 +229,7 @@ class KafkaService:
                         logger.info(f"Topic {topic} deleted successfully")
                     except Exception as e:
                         logger.error(f"Failed to delete topic {topic}: {e}")
-                        raise SystemError(
-                            f"Failed to delete topic {topic}: {str(e)}"
-                        )
+                        raise SystemError(f"Failed to delete topic {topic}: {str(e)}")
 
             return {
                 "message": f"Topic '{topic_name}' deleted successfully",
@@ -258,9 +248,7 @@ class KafkaService:
             # Prepare headers
             headers = []
             if event.headers:
-                headers = [
-                    (k, v.encode("utf-8")) for k, v in event.headers.items()
-                ]
+                headers = [(k, v.encode("utf-8")) for k, v in event.headers.items()]
 
             # Send the message
             future = producer.send(

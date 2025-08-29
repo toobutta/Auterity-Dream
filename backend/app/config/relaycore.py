@@ -8,18 +8,14 @@ from pydantic import BaseSettings, Field
 class RelayCoreCostSettings(BaseSettings):
     """Cost optimization settings for RelayCore."""
 
-    max_cost_per_request: float = Field(
-        0.10, description="Maximum cost per AI request"
-    )
+    max_cost_per_request: float = Field(0.10, description="Maximum cost per AI request")
     prefer_cheaper_models: bool = Field(
         True, description="Prefer cheaper models when possible"
     )
     fallback_to_cheaper: bool = Field(
         True, description="Fallback to cheaper models on budget limits"
     )
-    daily_budget_limit: float = Field(
-        50.0, description="Daily budget limit per user"
-    )
+    daily_budget_limit: float = Field(50.0, description="Daily budget limit per user")
     monthly_budget_limit: float = Field(
         1000.0, description="Monthly budget limit per user"
     )
@@ -33,9 +29,7 @@ class RelayCoreCacheSettings(BaseSettings):
 
     enable_cache: bool = Field(True, description="Enable request caching")
     cache_ttl: int = Field(3600, description="Cache TTL in seconds")
-    cache_similar_requests: bool = Field(
-        True, description="Cache similar requests"
-    )
+    cache_similar_requests: bool = Field(True, description="Cache similar requests")
     redis_url: Optional[str] = Field(None, description="Redis URL for caching")
     max_cache_size: int = Field(1000, description="Maximum cache entries")
 
@@ -49,9 +43,7 @@ class RelayCoreSteering(BaseSettings):
     preferred_providers: List[str] = Field(
         ["openai", "anthropic"], description="Preferred AI providers in order"
     )
-    quality_threshold: float = Field(
-        0.8, description="Minimum quality threshold"
-    )
+    quality_threshold: float = Field(0.8, description="Minimum quality threshold")
     latency_threshold: float = Field(
         5.0, description="Maximum latency threshold in seconds"
     )
@@ -101,16 +93,10 @@ class RelayCoreSecurity(BaseSettings):
     """Security settings for RelayCore integration."""
 
     api_key: Optional[str] = Field(None, description="RelayCore API key")
-    enable_request_signing: bool = Field(
-        False, description="Enable request signing"
-    )
+    enable_request_signing: bool = Field(False, description="Enable request signing")
     request_timeout: int = Field(30, description="Request timeout in seconds")
-    max_concurrent_requests: int = Field(
-        10, description="Maximum concurrent requests"
-    )
-    rate_limit_requests_per_minute: int = Field(
-        60, description="Rate limit per minute"
-    )
+    max_concurrent_requests: int = Field(10, description="Maximum concurrent requests")
+    rate_limit_requests_per_minute: int = Field(60, description="Rate limit per minute")
 
     class Config:
         env_prefix = "RELAYCORE_SECURITY_"
@@ -136,15 +122,11 @@ class RelayCoreTelemetry(BaseSettings):
 class RelayCoreDevelopment(BaseSettings):
     """Development and testing settings."""
 
-    enable_mock_mode: bool = Field(
-        False, description="Enable mock mode for testing"
-    )
+    enable_mock_mode: bool = Field(False, description="Enable mock mode for testing")
     mock_response_delay: float = Field(
         0.1, description="Mock response delay in seconds"
     )
-    enable_debug_logging: bool = Field(
-        False, description="Enable debug logging"
-    )
+    enable_debug_logging: bool = Field(False, description="Enable debug logging")
     test_api_key: Optional[str] = Field(None, description="Test API key")
 
     class Config:

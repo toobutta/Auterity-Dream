@@ -131,17 +131,11 @@ class UsageSummary(BaseModel):
 class UsageTrackingRequest(BaseModel):
     """Schema for usage tracking request."""
 
-    resource_type: str = Field(
-        ..., description="Type of resource being tracked"
-    )
+    resource_type: str = Field(..., description="Type of resource being tracked")
     quantity: int = Field(1, description="Quantity of resources used")
     cost: Decimal = Field(Decimal("0.00"), description="Cost of the usage")
-    workflow_id: Optional[UUID] = Field(
-        None, description="Associated workflow ID"
-    )
-    metadata: Optional[Dict[str, Any]] = Field(
-        None, description="Additional metadata"
-    )
+    workflow_id: Optional[UUID] = Field(None, description="Associated workflow ID")
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Additional metadata")
 
     @validator("resource_type")
     def validate_resource_type(cls, v):
@@ -154,9 +148,7 @@ class UsageTrackingRequest(BaseModel):
             "integration_usage",
         ]
         if v not in valid_types:
-            raise ValueError(
-                f'Resource type must be one of: {", ".join(valid_types)}'
-            )
+            raise ValueError(f'Resource type must be one of: {", ".join(valid_types)}')
         return v
 
     @validator("quantity")
@@ -176,25 +168,17 @@ class UsageTrackingRequest(BaseModel):
 class BrandingUpdate(BaseModel):
     """Schema for updating tenant branding."""
 
-    primary_color: Optional[str] = Field(
-        None, description="Primary brand color (hex)"
-    )
+    primary_color: Optional[str] = Field(None, description="Primary brand color (hex)")
     secondary_color: Optional[str] = Field(
         None, description="Secondary brand color (hex)"
     )
     logo_url: Optional[str] = Field(None, description="URL to company logo")
-    company_name: Optional[str] = Field(
-        None, description="Company name for branding"
-    )
-    custom_css: Optional[str] = Field(
-        None, description="Custom CSS for branding"
-    )
+    company_name: Optional[str] = Field(None, description="Company name for branding")
+    custom_css: Optional[str] = Field(None, description="Custom CSS for branding")
     remove_auterity_branding: Optional[bool] = Field(
         None, description="Remove Auterity branding"
     )
-    custom_domain: Optional[str] = Field(
-        None, description="Custom domain for tenant"
-    )
+    custom_domain: Optional[str] = Field(None, description="Custom domain for tenant")
 
     @validator("primary_color", "secondary_color")
     def validate_color(cls, v):
@@ -202,9 +186,7 @@ class BrandingUpdate(BaseModel):
             import re
 
             if not re.match(r"^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", v):
-                raise ValueError(
-                    "Color must be a valid hex color (e.g., #FF0000)"
-                )
+                raise ValueError("Color must be a valid hex color (e.g., #FF0000)")
         return v
 
     @validator("custom_domain")
@@ -248,9 +230,7 @@ class BrandingPreview(BaseModel):
 class ComplianceCheck(BaseModel):
     """Schema for compliance check result."""
 
-    score: int = Field(
-        ..., ge=0, le=100, description="Compliance score (0-100)"
-    )
+    score: int = Field(..., ge=0, le=100, description="Compliance score (0-100)")
     issues: List[str] = Field(
         default_factory=list, description="List of compliance issues"
     )
@@ -281,23 +261,13 @@ class ComplianceReport(BaseModel):
 class TenantCreate(BaseModel):
     """Schema for creating a new tenant."""
 
-    name: str = Field(
-        ..., min_length=1, max_length=255, description="Tenant name"
-    )
-    slug: str = Field(
-        ..., min_length=1, max_length=100, description="Tenant slug"
-    )
+    name: str = Field(..., min_length=1, max_length=255, description="Tenant name")
+    slug: str = Field(..., min_length=1, max_length=100, description="Tenant slug")
     domain: str = Field(..., description="Tenant domain")
-    industry_profile: Optional[str] = Field(
-        None, description="Industry profile"
-    )
-    subscription_plan: str = Field(
-        "starter", description="Initial subscription plan"
-    )
+    industry_profile: Optional[str] = Field(None, description="Industry profile")
+    subscription_plan: str = Field("starter", description="Initial subscription plan")
     max_users: int = Field(5, ge=1, description="Maximum number of users")
-    max_workflows: int = Field(
-        100, ge=1, description="Maximum number of workflows"
-    )
+    max_workflows: int = Field(100, ge=1, description="Maximum number of workflows")
     max_ai_requests_per_month: int = Field(
         10000, ge=1, description="Monthly AI request limit"
     )
@@ -397,9 +367,7 @@ class PlanInfo(BaseModel):
 class UsageAnalytics(BaseModel):
     """Schema for usage analytics."""
 
-    period: str = Field(
-        ..., description="Analysis period (daily, weekly, monthly)"
-    )
+    period: str = Field(..., description="Analysis period (daily, weekly, monthly)")
     start_date: datetime
     end_date: datetime
     total_requests: int
@@ -414,9 +382,7 @@ class UsageAnalytics(BaseModel):
 class BillingAnalytics(BaseModel):
     """Schema for billing analytics."""
 
-    period: str = Field(
-        ..., description="Analysis period (monthly, quarterly, yearly)"
-    )
+    period: str = Field(..., description="Analysis period (monthly, quarterly, yearly)")
     start_date: datetime
     end_date: datetime
     total_revenue: Decimal
@@ -434,9 +400,7 @@ class ErrorResponse(BaseModel):
     """Schema for error responses."""
 
     error: str = Field(..., description="Error message")
-    detail: Optional[str] = Field(
-        None, description="Detailed error information"
-    )
+    detail: Optional[str] = Field(None, description="Detailed error information")
     code: Optional[str] = Field(None, description="Error code")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
@@ -474,12 +438,8 @@ class SaaSConfig(BaseModel):
     auto_suspend_days: int = Field(
         7, description="Days after payment failure to suspend"
     )
-    usage_tracking_enabled: bool = Field(
-        True, description="Enable usage tracking"
-    )
-    branding_enabled: bool = Field(
-        True, description="Enable white-label branding"
-    )
+    usage_tracking_enabled: bool = Field(True, description="Enable usage tracking")
+    branding_enabled: bool = Field(True, description="Enable white-label branding")
     industry_profiles: List[str] = Field(
         default_factory=list, description="Available industry profiles"
     )

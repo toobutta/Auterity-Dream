@@ -43,11 +43,7 @@ class AIStepExecutor(BaseStepExecutor):
         """Validate AI input data"""
         return isinstance(input_data, dict) and "prompt" in input_data
 
-    async def _process_with_ai(
-        self, prompt: str, context: Dict[str, Any]
-    ) -> str:
+    async def _process_with_ai(self, prompt: str, context: Dict[str, Any]) -> str:
         """Process data using AI service"""
         # Placeholder for actual AI service integration
-        return (
-            f"AI processed: {prompt} with context keys: {list(context.keys())}"
-        )
+        return f"AI processed: {prompt} with context keys: {list(context.keys())}"

@@ -330,9 +330,7 @@ def with_retry(
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs):
-                return await retry_async(
-                    func, config, context, *args, **kwargs
-                )
+                return await retry_async(func, config, context, *args, **kwargs)
 
             return async_wrapper
         else:
@@ -383,9 +381,7 @@ class CircuitBreaker:
             if self.success_count >= 3:  # Require 3 successes to fully close
                 self.state = CircuitBreakerState.CLOSED
                 self.success_count = 0
-                logger.info(
-                    f"Circuit breaker {self.name} transitioned to CLOSED"
-                )
+                logger.info(f"Circuit breaker {self.name} transitioned to CLOSED")
 
     def _on_failure(self, exception: Exception) -> None:
         """Handle failed operation."""
@@ -413,9 +409,7 @@ class CircuitBreaker:
         if self.state == CircuitBreakerState.OPEN:
             if self._should_attempt_reset():
                 self.state = CircuitBreakerState.HALF_OPEN
-                logger.info(
-                    f"Circuit breaker {self.name} transitioned to HALF_OPEN"
-                )
+                logger.info(f"Circuit breaker {self.name} transitioned to HALF_OPEN")
             else:
                 raise Exception(f"Circuit breaker {self.name} is OPEN")
 
@@ -433,9 +427,7 @@ class CircuitBreaker:
         if self.state == CircuitBreakerState.OPEN:
             if self._should_attempt_reset():
                 self.state = CircuitBreakerState.HALF_OPEN
-                logger.info(
-                    f"Circuit breaker {self.name} transitioned to HALF_OPEN"
-                )
+                logger.info(f"Circuit breaker {self.name} transitioned to HALF_OPEN")
             else:
                 raise Exception(f"Circuit breaker {self.name} is OPEN")
 
@@ -459,9 +451,7 @@ class CircuitBreaker:
             "failure_count": self.failure_count,
             "success_count": self.success_count,
             "last_failure_time": (
-                self.last_failure_time.isoformat()
-                if self.last_failure_time
-                else None
+                self.last_failure_time.isoformat() if self.last_failure_time else None
             ),
             "failure_threshold": self.failure_threshold,
             "reset_timeout": self.reset_timeout,

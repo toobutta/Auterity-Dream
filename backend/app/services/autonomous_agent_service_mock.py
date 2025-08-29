@@ -30,12 +30,8 @@ class MockAutonomousAgentService:
             "id": agent_id,
             "tenant_id": str(tenant_id),
             "name": agent_config.get("name", "Mock Agent"),
-            "agent_type": agent_config.get(
-                "agent_type", "workflow_automation"
-            ),
-            "capabilities": agent_config.get(
-                "capabilities", ["triage", "routing"]
-            ),
+            "agent_type": agent_config.get("agent_type", "workflow_automation"),
+            "capabilities": agent_config.get("capabilities", ["triage", "routing"]),
             "status": "active",
             "deployed_at": datetime.utcnow().isoformat(),
             "last_heartbeat": datetime.utcnow().isoformat(),
@@ -114,9 +110,7 @@ class MockAutonomousAgentService:
         memory = {
             "id": memory_id,
             "agent_id": str(agent_id),
-            "context_hash": memory_data.get(
-                "context_hash", "mock_context_002"
-            ),
+            "context_hash": memory_data.get("context_hash", "mock_context_002"),
             "memory_data": memory_data.get("memory_data", {}),
             "importance_score": memory_data.get("importance_score", 0.5),
             "created_at": datetime.utcnow().isoformat(),
@@ -136,8 +130,7 @@ class MockAutonomousAgentService:
         available_agents = [
             agent
             for agent in self.mock_agents.values()
-            if agent["tenant_id"] == str(tenant_id)
-            and agent["status"] == "active"
+            if agent["tenant_id"] == str(tenant_id) and agent["status"] == "active"
         ]
 
         coordination_id = str(uuid.uuid4())
@@ -156,9 +149,7 @@ class MockAutonomousAgentService:
                     "role": "primary" if i == 0 else "support",
                     "assigned_tasks": 1,
                 }
-                for i, agent in enumerate(
-                    available_agents[:3]
-                )  # Limit to 3 agents
+                for i, agent in enumerate(available_agents[:3])  # Limit to 3 agents
             ],
         }
 
@@ -199,12 +190,9 @@ class MockAutonomousAgentService:
             }
 
         total_tasks = sum(
-            agent["performance_metrics"]["tasks_completed"]
-            for agent in tenant_agents
+            agent["performance_metrics"]["tasks_completed"] for agent in tenant_agents
         )
-        active_agents = sum(
-            1 for agent in tenant_agents if agent["status"] == "active"
-        )
+        active_agents = sum(1 for agent in tenant_agents if agent["status"] == "active")
 
         return {
             "tenant_id": str(tenant_id),

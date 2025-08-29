@@ -25,8 +25,6 @@ async def get_task_status(task_id: str) -> Dict[str, Any]:
 
 
 @router.post("/ai/generate")
-async def queue_ai_request(
-    prompt: str, model: str = "gpt-3.5-turbo"
-) -> Dict[str, Any]:
+async def queue_ai_request(prompt: str, model: str = "gpt-3.5-turbo") -> Dict[str, Any]:
     task = process_ai_request.delay(prompt, model)
     return {"task_id": task.id, "status": "queued"}

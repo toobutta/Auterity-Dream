@@ -18,9 +18,7 @@ from app.models.user import Permission, Role, User
 
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = int(
-    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
-)
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
 
 # Password hashing
@@ -40,17 +38,13 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(
-    data: dict, expires_delta: Optional[timedelta] = None
-) -> str:
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Create JWT access token."""
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({"exp": expire, "type": "access"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -69,9 +63,7 @@ def create_refresh_token(data: dict) -> str:
 def create_cross_system_token(user: User, target_system: str) -> str:
     """Create JWT token for cross-system authentication."""
     permissions = user.get_permissions()
-    system_permissions = [
-        p for p in permissions if p.startswith(f"{target_system}:")
-    ]
+    system_permissions = [p for p in permissions if p.startswith(f"{target_system}:")]
 
     token_data = {
         "sub": user.email,
@@ -94,9 +86,7 @@ def verify_token(token: str) -> Optional[dict]:
         return None
 
 
-def authenticate_user(
-    db: Session, email: str, password: str
-) -> Optional[User]:
+def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
     """Authenticate user with email and password."""
     user = db.query(User).filter(User.email == email).first()
     if not user:
@@ -179,9 +169,7 @@ def require_system_access(system: str, action: str = "read"):
         if not current_user.has_system_access(system, action):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=(
-                    f"Access denied to {system} system for action: {action}"
-                ),
+                detail=(f"Access denied to {system} system for action: {action}"),
             )
         return current_user
 
@@ -200,9 +188,7 @@ def require_admin_access():
             "neuroweaver:admin",
         ]
 
-        has_admin = any(
-            current_user.has_permission(perm) for perm in admin_permissions
-        )
+        has_admin = any(current_user.has_permission(perm) for perm in admin_permissions)
         if not has_admin:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -301,9 +287,7 @@ class RoleManager:
             action,
         ) in default_permissions:
             permission = (
-                self.db.query(Permission)
-                .filter(Permission.name == perm_name)
-                .first()
+                self.db.query(Permission).filter(Permission.name == perm_name).first()
             )
             if not permission:
                 permission = Permission(

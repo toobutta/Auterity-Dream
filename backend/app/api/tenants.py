@@ -26,9 +26,7 @@ from app.services.tenant_service import TenantService
 router = APIRouter(prefix="/tenants", tags=["tenants"])
 
 
-@router.post(
-    "/", response_model=TenantResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/", response_model=TenantResponse, status_code=status.HTTP_201_CREATED)
 async def create_tenant(
     tenant_data: TenantCreate,
     request: Request,
@@ -207,14 +205,10 @@ async def get_sso_configurations(
         query = query.filter(SSOConfiguration.provider == provider)
 
     configs = query.all()
-    return [
-        SSOConfigurationResponse.from_sso_config(config) for config in configs
-    ]
+    return [SSOConfigurationResponse.from_sso_config(config) for config in configs]
 
 
-@router.delete(
-    "/{tenant_id}/sso/{provider}", status_code=status.HTTP_204_NO_CONTENT
-)
+@router.delete("/{tenant_id}/sso/{provider}", status_code=status.HTTP_204_NO_CONTENT)
 async def disable_sso(
     tenant_id: UUID,
     provider: str,
@@ -319,9 +313,7 @@ async def get_tenant_users(
             "name": user.name,
             "is_active": user.is_active,
             "sso_provider": user.sso_provider,
-            "last_login": user.last_login.isoformat()
-            if user.last_login
-            else None,
+            "last_login": user.last_login.isoformat() if user.last_login else None,
             "created_at": user.created_at.isoformat(),
             "roles": [role.name for role in user.roles],
         }

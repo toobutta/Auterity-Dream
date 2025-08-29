@@ -69,9 +69,7 @@ class AIEcosystemManager:
             self.components_status["service_registry"] = True
             startup_results["components"]["service_registry"] = {
                 "status": "initialized",
-                "services_registered": len(
-                    service_registry.get_all_services()
-                ),
+                "services_registered": len(service_registry.get_all_services()),
             }
 
             # 3. Start RelayCore
@@ -103,9 +101,7 @@ class AIEcosystemManager:
             }
 
             # 5. Generate sample training data and train initial model
-            logger.info(
-                "📊 Generating sample data and training initial model..."
-            )
+            logger.info("📊 Generating sample data and training initial model...")
             sample_data = self._generate_sample_training_data()
 
             # Train a lightweight initial model
@@ -122,9 +118,7 @@ class AIEcosystemManager:
                 sample_data, ModelType.REGRESSION, "performance_score"
             )
 
-            startup_results["components"]["neuro_weaver"][
-                "initial_training"
-            ] = {
+            startup_results["components"]["neuro_weaver"]["initial_training"] = {
                 "status": training_result.get("status"),
                 "training_time": training_result.get("training_time", 0),
                 "epochs_trained": training_result.get("epochs_trained", 0),
@@ -141,9 +135,7 @@ class AIEcosystemManager:
             startup_results["status"] = "completed"
             self.initialization_complete = True
 
-            logger.info(
-                f"✅ AI Ecosystem startup completed in {total_time:.2f} seconds"
-            )
+            logger.info(f"✅ AI Ecosystem startup completed in {total_time:.2f} seconds")
 
             return startup_results
 
@@ -199,9 +191,7 @@ class AIEcosystemManager:
 
         try:
             # Test AI Orchestrator to RelayCore integration
-            ecosystem_analysis = (
-                await ai_orchestrator.analyze_service_ecosystem()
-            )
+            ecosystem_analysis = await ai_orchestrator.analyze_service_ecosystem()
             if ecosystem_analysis and "services" in ecosystem_analysis:
                 integration_results["ai_orchestrator_to_relaycore"] = True
 
@@ -259,9 +249,7 @@ class AIEcosystemManager:
             # Clear AI Orchestrator websockets
             if self.components_status["ai_orchestrator"]:
                 ai_orchestrator.active_websockets.clear()
-                shutdown_results["components_stopped"].append(
-                    "ai_orchestrator"
-                )
+                shutdown_results["components_stopped"].append("ai_orchestrator")
                 self.components_status["ai_orchestrator"] = False
 
             # NeuroWeaver cleanup (if needed)

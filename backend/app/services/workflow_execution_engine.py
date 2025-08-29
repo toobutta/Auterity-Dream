@@ -30,9 +30,7 @@ class ExecutionPlan:
     """Execution plan with topological ordering"""
 
     workflow_id: str
-    execution_order: List[
-        List[str]
-    ]  # Batches of steps that can run in parallel
+    execution_order: List[List[str]]  # Batches of steps that can run in parallel
     dependencies: Dict[str, List[str]]
     step_configs: Dict[str, Dict[str, Any]]
     created_at: datetime = field(default_factory=datetime.now)
@@ -60,9 +58,7 @@ class RetryManager:
         self.base_delay = base_delay
         self.max_delay = max_delay
 
-    async def should_retry(
-        self, context: ExecutionContext, error: Exception
-    ) -> bool:
+    async def should_retry(self, context: ExecutionContext, error: Exception) -> bool:
         """Determine if step should be retried"""
         if context.retry_count >= context.max_retries:
             return False
@@ -120,9 +116,7 @@ class TopologicalExecutor:
             step_configs=steps,
         )
 
-    def _extract_dependencies(
-        self, steps: Dict[str, Any]
-    ) -> Dict[str, List[str]]:
+    def _extract_dependencies(self, steps: Dict[str, Any]) -> Dict[str, List[str]]:
         """Extract dependencies from step definitions"""
         dependencies = {}
         for step_id, step_config in steps.items():
@@ -188,9 +182,7 @@ class WorkflowExecutionEngine:
         """Execute complete workflow with dependency resolution"""
         try:
             # Create execution plan
-            plan = self.topological_executor.create_execution_plan(
-                workflow_definition
-            )
+            plan = self.topological_executor.create_execution_plan(workflow_definition)
             workflow_id = plan.workflow_id
 
             logger.info(f"Starting workflow execution: {workflow_id}")
@@ -202,9 +194,7 @@ class WorkflowExecutionEngine:
                 )
 
                 # Execute steps in current batch in parallel
-                batch_results = await self._execute_batch(
-                    workflow_id, batch, plan
-                )
+                batch_results = await self._execute_batch(workflow_id, batch, plan)
 
                 # Check for failures
                 failed_steps = [
@@ -223,9 +213,7 @@ class WorkflowExecutionEngine:
             return {
                 "status": "completed",
                 "results": self.step_results[workflow_id],
-                "execution_time": (
-                    datetime.now() - plan.created_at
-                ).total_seconds(),
+                "execution_time": (datetime.now() - plan.created_at).total_seconds(),
             }
 
         except Exception as e:
@@ -253,9 +241,7 @@ class WorkflowExecutionEngine:
                 max_retries=step_config.get("max_retries", 3),
             )
 
-            task = asyncio.create_task(
-                self._execute_step_with_semaphore(context)
-            )
+            task = asyncio.create_task(self._execute_step_with_semaphore(context))
             tasks.append((step_id, task))
 
         # Wait for all tasks to complete
@@ -306,9 +292,7 @@ class WorkflowExecutionEngine:
                     "attempt": attempt + 1,
                 }
 
-                result = await executor.execute(
-                    context.input_data, execution_context
-                )
+                result = await executor.execute(context.input_data, execution_context)
 
                 if result.success:
                     context.status = ExecutionStatus.COMPLETED
@@ -355,19 +339,14 @@ class WorkflowExecutionEngine:
 
         for dep_step in step_dependencies:
             if dep_step in self.step_results[workflow_id]:
-                dependency_results[dep_step] = self.step_results[workflow_id][
-                    dep_step
-                ]
+                dependency_results[dep_step] = self.step_results[workflow_id][dep_step]
 
         # Merge dependency data into input data
         if dependency_results:
             input_data["dependency_results"] = dependency_results
 
             # For process steps, merge the collected data from input steps
-            if (
-                step_config.get("type") == "process"
-                and "data" not in input_data
-            ):
+            if step_config.get("type") == "process" and "data" not in input_data:
                 merged_data = {}
                 for dep_result in dependency_results.values():
                     if "collected_data" in dep_result:
@@ -378,10 +357,7 @@ class WorkflowExecutionEngine:
                     input_data["data"] = merged_data
 
             # For output steps, collect all results as data
-            elif (
-                step_config.get("type") == "output"
-                and "data" not in input_data
-            ):
+            elif step_config.get("type") == "output" and "data" not in input_data:
                 output_data = {}
                 for dep_step, dep_result in dependency_results.items():
                     output_data[dep_step] = dep_result
@@ -405,9 +381,7 @@ class WorkflowExecutionEngine:
         """Get current execution status for a workflow"""
         return {
             "workflow_id": workflow_id,
-            "completed_steps": list(
-                self.completed_steps.get(workflow_id, set())
-            ),
+            "completed_steps": list(self.completed_steps.get(workflow_id, set())),
             "active_executions": len(
                 [
                     ctx

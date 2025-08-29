@@ -188,9 +188,9 @@ class ServiceRegistry:
             health_status[category] = {}
             for service, details in services.items():
                 if details.get("status") == ServiceStatus.PRODUCTION:
-                    health_status[category][
-                        service
-                    ] = await self._check_service_health(service, details)
+                    health_status[category][service] = await self._check_service_health(
+                        service, details
+                    )
 
         return health_status
 
@@ -205,9 +205,7 @@ class ServiceRegistry:
                     async with session.get(url, timeout=5) as response:
                         return {
                             "status": (
-                                "healthy"
-                                if response.status == 200
-                                else "unhealthy"
+                                "healthy" if response.status == 200 else "unhealthy"
                             ),
                             "response_time": response.headers.get(
                                 "X-Response-Time", "unknown"

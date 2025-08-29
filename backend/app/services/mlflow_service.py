@@ -6,18 +6,14 @@ import mlflow
 
 class MLflowService:
     def __init__(self):
-        mlflow.set_tracking_uri(
-            os.getenv("MLFLOW_TRACKING_URI", "http://mlflow:5000")
-        )
+        mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "http://mlflow:5000"))
 
     def log_workflow_metrics(self, workflow_id: str, metrics: Dict[str, Any]):
         with mlflow.start_run(run_name=f"workflow_{workflow_id}"):
             for key, value in metrics.items():
                 mlflow.log_metric(key, value)
 
-    def log_model_performance(
-        self, model_name: str, accuracy: float, latency: float
-    ):
+    def log_model_performance(self, model_name: str, accuracy: float, latency: float):
         with mlflow.start_run(run_name=f"model_{model_name}"):
             mlflow.log_metric("accuracy", accuracy)
             mlflow.log_metric("latency_ms", latency)

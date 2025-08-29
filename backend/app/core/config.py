@@ -7,7 +7,9 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Database configuration
-    SQLALCHEMY_DATABASE_URL: str = "postgresql+psycopg2://user:${ADMIN_SET_PASSWORD}@localhost:5432/auterity"
+    SQLALCHEMY_DATABASE_URL: str = (
+        "postgresql+psycopg2://user:${ADMIN_SET_PASSWORD}@localhost:5432/auterity"
+    )
 
     # Environment settings
     DEBUG: bool = True

@@ -146,8 +146,7 @@ app.include_router(websockets.router)
 async def root():
     return {
         "message": (
-            "AutoMatrix AI Hub Workflow Engine MVP - "
-            "Enhanced with AI Ecosystem"
+            "AutoMatrix AI Hub Workflow Engine MVP - " "Enhanced with AI Ecosystem"
         ),
         "version": "0.2.0",
         "features": [
@@ -168,40 +167,28 @@ async def health_check():
 
     return {
         "status": (
-            (
-                "healthy"
-                if ecosystem_status.get("ready_for_production")
-                else "starting"
-            )
+            ("healthy" if ecosystem_status.get("ready_for_production") else "starting")
         ),
         "ecosystem": ecosystem_status,
         "components": {
             "ai_orchestrator": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get(
-                    "ai_orchestrator"
-                )
+                if ecosystem_status.get("components_status", {}).get("ai_orchestrator")
                 else "offline"
             ),
             "relay_core": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get(
-                    "relay_core"
-                )
+                if ecosystem_status.get("components_status", {}).get("relay_core")
                 else "offline"
             ),
             "neuro_weaver": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get(
-                    "neuro_weaver"
-                )
+                if ecosystem_status.get("components_status", {}).get("neuro_weaver")
                 else "offline"
             ),
             "service_registry": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get(
-                    "service_registry"
-                )
+                if ecosystem_status.get("components_status", {}).get("service_registry")
                 else "offline"
             ),
         },

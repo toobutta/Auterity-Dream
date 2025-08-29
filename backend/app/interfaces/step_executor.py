@@ -22,9 +22,7 @@ class StepExecutorFactory:
     def __init__(self):
         self._executors: Dict[str, StepExecutor] = {}
 
-    def register_executor(
-        self, step_type: str, executor: StepExecutor
-    ) -> None:
+    def register_executor(self, step_type: str, executor: StepExecutor) -> None:
         """Register a step executor for a given type."""
         self._executors[step_type] = executor
 

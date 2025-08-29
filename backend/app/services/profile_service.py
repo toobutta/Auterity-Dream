@@ -56,15 +56,11 @@ class ProfileService:
 
         # Find dependent tenants/users
         dependent_tenants = (
-            self.db.query(Tenant)
-            .filter(Tenant.industry_profile == profile_id)
-            .all()
+            self.db.query(Tenant).filter(Tenant.industry_profile == profile_id).all()
         )
 
         dependent_users = (
-            self.db.query(User)
-            .filter(User.preferred_profile == profile_id)
-            .all()
+            self.db.query(User).filter(User.preferred_profile == profile_id).all()
         )
 
         if dependent_tenants or dependent_users:
@@ -79,9 +75,7 @@ class ProfileService:
         tenant = self.db.query(Tenant).get(tenant_id)
         return tenant.industry_profile
 
-    def set_tenant_profile(
-        self, tenant_id: str, profile_id: str
-    ) -> Optional[Tenant]:
+    def set_tenant_profile(self, tenant_id: str, profile_id: str) -> Optional[Tenant]:
         """Assign a profile to a tenant with validation"""
         tenant = self.db.query(Tenant).get(tenant_id)
         profile = self.get_profile(profile_id)
@@ -100,9 +94,7 @@ class ProfileService:
         user = self.db.query(User).get(user_id)
         return user.preferred_profile
 
-    def set_user_profile(
-        self, user_id: str, profile_id: str
-    ) -> Optional[User]:
+    def set_user_profile(self, user_id: str, profile_id: str) -> Optional[User]:
         """Set user's preferred profile"""
         user = self.db.query(User).get(user_id)
         profile = self.get_profile(profile_id)
@@ -126,14 +118,10 @@ class ProfileService:
 
         return workflow_type in profile.workflow_patterns
 
-    def get_compatible_profiles(
-        self, workflow_type: str
-    ) -> List[IndustryProfile]:
+    def get_compatible_profiles(self, workflow_type: str) -> List[IndustryProfile]:
         """Find all profiles compatible with a workflow type"""
         return (
             self.db.query(IndustryProfile)
-            .filter(
-                IndustryProfile.workflow_patterns.contains([workflow_type])
-            )
+            .filter(IndustryProfile.workflow_patterns.contains([workflow_type]))
             .all()
         )

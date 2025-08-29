@@ -318,8 +318,7 @@ class ErrorAggregator:
                     else:
                         error_text = await response.text()
                         self.logger.error(
-                  \
-                                          f"Failed to aggregate batch errors: {response.status} - {error_text}"
+                            f"Failed to aggregate batch errors: {response.status} - {error_text}"
                         )
                         return False
 
@@ -360,8 +359,7 @@ class ErrorAggregator:
                     else:
                         error_text = await response.text()
                         self.logger.error(
-                 \
-                                           f"Failed to aggregate error: {response.status} - {error_text}"
+                            f"Failed to aggregate error: {response.status} - {error_text}"
                         )
                         return False
 

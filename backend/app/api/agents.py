@@ -117,9 +117,7 @@ class AgentRegistrationRequest(BaseModel):
 
 class WorkflowExecutionRequest(BaseModel):
     workflow_id: str = Field(..., description="Workflow identifier")
-    input_data: Dict[str, Any] = Field(
-        ..., description="Input data for the workflow"
-    )
+    input_data: Dict[str, Any] = Field(..., description="Input data for the workflow")
     coordination_strategy: Optional[str] = Field(
         default="sequential", description="Agent coordination strategy"
     )
@@ -165,9 +163,7 @@ class DocumentIndexRequest(BaseModel):
 
 class ComplianceValidationRequest(BaseModel):
     operation: str = Field(..., description="Operation to validate")
-    data: Dict[str, Any] = Field(
-        ..., description="Data involved in the operation"
-    )
+    data: Dict[str, Any] = Field(..., description="Data involved in the operation")
     context: Optional[Dict[str, Any]] = Field(
         default=None, description="Additional context"
     )
@@ -177,13 +173,9 @@ class ComplianceValidationRequest(BaseModel):
 class APIResponse(BaseModel):
     """Base response model for all API endpoints"""
 
-    status: str = Field(
-        ..., description="Response status: success|error|warning"
-    )
+    status: str = Field(..., description="Response status: success|error|warning")
     message: str = Field(..., description="Human-readable message")
-    data: Optional[Dict[str, Any]] = Field(
-        default=None, description="Response data"
-    )
+    data: Optional[Dict[str, Any]] = Field(default=None, description="Response data")
     metadata: Dict[str, Any] = Field(
         default_factory=lambda: {
             "timestamp": datetime.now().isoformat(),
@@ -305,9 +297,7 @@ def get_rag_engine() -> RAGEngine:
         if "rag_engine" not in _services:
             settings = get_settings()
             config = {
-                "document_store": getattr(
-                    settings, "DOCUMENT_STORE", "inmemory"
-                ),
+                "document_store": getattr(settings, "DOCUMENT_STORE", "inmemory"),
                 "use_gpu": getattr(settings, "USE_GPU", False),
                 "openai_api_key": getattr(settings, "OPENAI_API_KEY", None),
             }
@@ -321,12 +311,8 @@ def get_compliance_layer() -> ComplianceLayer:
         if "compliance_layer" not in _services:
             settings = get_settings()
             config = {
-                "compliance_level": getattr(
-                    settings, "COMPLIANCE_LEVEL", "gdpr"
-                ),
-                "audit_retention_days": getattr(
-                    settings, "AUDIT_RETENTION_DAYS", 365
-                ),
+                "compliance_level": getattr(settings, "COMPLIANCE_LEVEL", "gdpr"),
+                "audit_retention_days": getattr(settings, "AUDIT_RETENTION_DAYS", 365),
             }
             _services["compliance_layer"] = ComplianceLayer(config)
         return _services["compliance_layer"]
@@ -339,9 +325,7 @@ def get_security_manager() -> SecurityManager:
             settings = get_settings()
             config = {
                 "jwt_secret": getattr(settings, "SECRET_KEY", None),
-                "encryption_password": getattr(
-                    settings, "ENCRYPTION_KEY", None
-                ),
+                "encryption_password": getattr(settings, "ENCRYPTION_KEY", None),
             }
             _services["security_manager"] = SecurityManager(config)
         return _services["security_manager"]
@@ -353,9 +337,7 @@ async def verify_token(
 ) -> Dict[str, Any]:
     """Verify JWT token and return user info"""
 
-    auth_result = await security_mgr.authenticate_request(
-        credentials.credentials
-    )
+    auth_result = await security_mgr.authenticate_request(credentials.credentials)
 
     if not auth_result["authenticated"]:
         raise HTTPException(
@@ -408,9 +390,7 @@ async def register_agent(
             raise ValueError(f"Failed to register agent {request.agent_id}")
 
     except Exception as e:
-        raise handle_service_error(
-            "agent_registration", e, user_info.get("user_id")
-        )
+        raise handle_service_error("agent_registration", e, user_info.get("user_id"))
 
 
 @router.post("/execute", response_model=WorkflowExecutionResponse)
@@ -451,9 +431,7 @@ async def execute_workflow(
                     result="denied",
                     tenant_id=user_info["tenant_id"],
                 )
-            raise PermissionError(
-                f"Compliance violation: {validation['violations']}"
-            )
+            raise PermissionError(f"Compliance violation: {validation['violations']}")
 
         # Record compliance success
         if METRICS_AVAILABLE:
@@ -515,9 +493,7 @@ async def execute_workflow(
             AgentMetricsCollector.record_error(
                 "permission_denied", "/execute", user_info.get("tenant_id")
             )
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
     except Exception as e:
         if METRICS_AVAILABLE:
             duration = time.time() - start_time
@@ -531,9 +507,7 @@ async def execute_workflow(
             AgentMetricsCollector.record_error(
                 "execution_failed", "/execute", user_info.get("tenant_id")
             )
-        raise handle_service_error(
-            "workflow_execution", e, user_info.get("user_id")
-        )
+        raise handle_service_error("workflow_execution", e, user_info.get("user_id"))
 
 
 @router.post("/rag/query", response_model=RAGQueryResponse)
@@ -556,9 +530,7 @@ async def query_rag(
         )
 
         if threat_result["threats_detected"]:
-            logger.warning(
-                f"Threats detected in RAG query: {threat_result['threats']}"
-            )
+            logger.warning(f"Threats detected in RAG query: {threat_result['threats']}")
             if threat_result["action_required"]:
                 raise ValueError("Query contains potential security threats")
 
@@ -590,9 +562,7 @@ async def query_rag(
         )
 
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     except Exception as e:
         raise handle_service_error("rag_query", e, user_info.get("user_id"))
 
@@ -624,9 +594,7 @@ async def index_documents(
         )
 
         if not validation["allowed"]:
-            raise PermissionError(
-                f"Compliance violation: {validation['violations']}"
-            )
+            raise PermissionError(f"Compliance violation: {validation['violations']}")
 
         # Execute indexing in background
         background_tasks.add_task(
@@ -654,18 +622,12 @@ async def index_documents(
         )
 
     except PermissionError as e:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
     except Exception as e:
-        raise handle_service_error(
-            "document_indexing", e, user_info.get("user_id")
-        )
+        raise handle_service_error("document_indexing", e, user_info.get("user_id"))
 
 
-@router.post(
-    "/compliance/validate", response_model=ComplianceValidationResponse
-)
+@router.post("/compliance/validate", response_model=ComplianceValidationResponse)
 async def validate_compliance(
     request: ComplianceValidationRequest,
     user_info: Dict[str, Any] = Depends(verify_token),
@@ -703,9 +665,7 @@ async def validate_compliance(
         )
 
     except Exception as e:
-        raise handle_service_error(
-            "compliance_validation", e, user_info.get("user_id")
-        )
+        raise handle_service_error("compliance_validation", e, user_info.get("user_id"))
 
 
 @router.get("/status", response_model=AgentStatusResponse)
@@ -754,9 +714,7 @@ async def get_agent_status(
                 tenant_id=user_info["tenant_id"],
             )
 
-        logger.info(
-            f"Agent status retrieved for user {user_info.get('user_id')}"
-        )
+        logger.info(f"Agent status retrieved for user {user_info.get('user_id')}")
 
         return AgentStatusResponse(
             status="success",
@@ -814,14 +772,10 @@ async def get_metrics(user_info: Dict[str, Any] = Depends(verify_token)):
     try:
         rate_limit_stats = {
             "requests_tracked": len(rate_limiter.requests),
-            "total_requests": sum(
-                len(reqs) for reqs in rate_limiter.requests.values()
-            ),
+            "total_requests": sum(len(reqs) for reqs in rate_limiter.requests.values()),
         }
         metrics_data["rate_limiting"] = rate_limit_stats
     except Exception:
-        metrics_data["rate_limiting"] = {
-            "error": "Rate limit stats unavailable"
-        }
+        metrics_data["rate_limiting"] = {"error": "Rate limit stats unavailable"}
 
     return metrics_data

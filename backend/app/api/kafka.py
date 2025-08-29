@@ -169,9 +169,7 @@ async def publish_workflow_event(
 ) -> Dict[str, str]:
     """Publish a workflow-specific event (legacy endpoint)."""
     try:
-        await kafka_service.publish_workflow_event(
-            workflow_id, event_type, data
-        )
+        await kafka_service.publish_workflow_event(workflow_id, event_type, data)
         return {"message": "Workflow event published successfully"}
     except Exception as e:
         raise HTTPException(

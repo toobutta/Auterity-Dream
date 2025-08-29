@@ -15,12 +15,8 @@ class WhatsAppService:
         """Initialize WhatsApp service."""
         settings = get_settings()
         self.access_token = getattr(settings, "WHATSAPP_ACCESS_TOKEN", "")
-        self.phone_number_id = getattr(
-            settings, "WHATSAPP_PHONE_NUMBER_ID", ""
-        )
-        self.business_account_id = getattr(
-            settings, "WHATSAPP_BUSINESS_ACCOUNT_ID", ""
-        )
+        self.phone_number_id = getattr(settings, "WHATSAPP_PHONE_NUMBER_ID", "")
+        self.business_account_id = getattr(settings, "WHATSAPP_BUSINESS_ACCOUNT_ID", "")
         self.webhook_verify_token = getattr(
             settings, "WHATSAPP_WEBHOOK_VERIFY_TOKEN", ""
         )
@@ -31,9 +27,7 @@ class WhatsAppService:
             "Content-Type": "application/json",
         }
 
-    def send_text_message(
-        self, to_number: str, message: str
-    ) -> Dict[str, Any]:
+    def send_text_message(self, to_number: str, message: str) -> Dict[str, Any]:
         """Send text message via WhatsApp."""
         if not self.access_token or not self.phone_number_id:
             return {"error": "WhatsApp not configured"}
@@ -266,17 +260,13 @@ class WhatsAppService:
             "note": "Status tracking requires webhook implementation",
         }
 
-    def verify_webhook(
-        self, verify_token: str, challenge: str
-    ) -> Optional[str]:
+    def verify_webhook(self, verify_token: str, challenge: str) -> Optional[str]:
         """Verify webhook for WhatsApp."""
         if verify_token == self.webhook_verify_token:
             return challenge
         return None
 
-    def process_webhook_message(
-        self, webhook_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def process_webhook_message(self, webhook_data: Dict[str, Any]) -> Dict[str, Any]:
         """Process incoming webhook message."""
         try:
             entry = webhook_data.get("entry", [{}])[0]

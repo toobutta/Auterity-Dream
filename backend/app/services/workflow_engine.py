@@ -71,9 +71,7 @@ class WorkflowEngine:
         factory.register_executor("process", ProcessStepExecutor())
         factory.register_executor("output", OutputStepExecutor())
         factory.register_executor("ai", AIStepExecutor())
-        factory.register_executor(
-            "data_validation", DataValidationStepExecutor()
-        )
+        factory.register_executor("data_validation", DataValidationStepExecutor())
         factory.register_executor("default", DefaultStepExecutor())
         return factory
 
@@ -152,9 +150,7 @@ class WorkflowEngine:
                 )
 
         except Exception as e:
-            self.logger.error(
-                f"Workflow execution {execution_id} failed: {str(e)}"
-            )
+            self.logger.error(f"Workflow execution {execution_id} failed: {str(e)}")
 
             # Update execution status to failed
             if execution_id:
@@ -171,16 +167,12 @@ class WorkflowEngine:
                             execution.completed_at = datetime.utcnow()
                             db.commit()
                 except Exception as db_error:
-                    self.logger.error(
-                        f"Failed to update execution status: {db_error}"
-                    )
+                    self.logger.error(f"Failed to update execution status: {db_error}")
 
             if isinstance(e, WorkflowExecutionError):
                 raise
             else:
-                raise WorkflowExecutionError(
-                    f"Workflow execution failed: {str(e)}"
-                )
+                raise WorkflowExecutionError(f"Workflow execution failed: {str(e)}")
 
     async def get_execution_status(
         self, execution_id: UUID
@@ -217,12 +209,8 @@ class WorkflowEngine:
                 }
 
         except Exception as e:
-            self.logger.error(
-                f"Failed to get execution status for {execution_id}: {e}"
-            )
-            raise WorkflowExecutionError(
-                f"Failed to get execution status: {str(e)}"
-            )
+            self.logger.error(f"Failed to get execution status for {execution_id}: {e}")
+            raise WorkflowExecutionError(f"Failed to get execution status: {str(e)}")
 
     async def cancel_execution(self, execution_id: UUID) -> bool:
         """
@@ -262,15 +250,11 @@ class WorkflowEngine:
                 execution.error_message = "Execution cancelled by user"
                 db.commit()
 
-                self.logger.info(
-                    f"Execution {execution_id} cancelled successfully"
-                )
+                self.logger.info(f"Execution {execution_id} cancelled successfully")
                 return True
 
         except Exception as e:
-            self.logger.error(
-                f"Failed to cancel execution {execution_id}: {e}"
-            )
+            self.logger.error(f"Failed to cancel execution {execution_id}: {e}")
             return False
 
     async def get_execution_logs(
@@ -314,12 +298,8 @@ class WorkflowEngine:
                 ]
 
         except Exception as e:
-            self.logger.error(
-                f"Failed to get execution logs for {execution_id}: {e}"
-            )
-            raise WorkflowExecutionError(
-                f"Failed to get execution logs: {str(e)}"
-            )
+            self.logger.error(f"Failed to get execution logs for {execution_id}: {e}")
+            raise WorkflowExecutionError(f"Failed to get execution logs: {str(e)}")
 
     async def _execute_workflow_steps(
         self,
@@ -398,9 +378,7 @@ class WorkflowEngine:
             in_degree[target] += 1
 
         # Find nodes with no incoming edges (start nodes)
-        queue = deque(
-            [node_id for node_id, degree in in_degree.items() if degree == 0]
-        )
+        queue = deque([node_id for node_id, degree in in_degree.items() if degree == 0])
         execution_order = []
 
         while queue:
@@ -431,18 +409,12 @@ class WorkflowEngine:
         """Execute step with retry logic."""
         last_error = None
 
-        for attempt in range(
-            1, self.error_handler.retry_config.max_attempts + 1
-        ):
+        for attempt in range(1, self.error_handler.retry_config.max_attempts + 1):
             try:
-                return await self._execute_step(
-                    db, execution, node, input_data
-                )
+                return await self._execute_step(db, execution, node, input_data)
             except Exception as e:
                 last_error = e
-                self.logger.warning(
-                    f"Step {node.id} failed on attempt {attempt}: {e}"
-                )
+                self.logger.warning(f"Step {node.id} failed on attempt {attempt}: {e}")
 
                 should_retry = await self.error_handler.handle_step_error(
                     e, node, attempt
@@ -479,9 +451,7 @@ class WorkflowEngine:
         start_time = asyncio.get_event_loop().time()
 
         try:
-            self.logger.info(
-                f"Executing step '{step_name}' of type '{step_type}'"
-            )
+            self.logger.info(f"Executing step '{step_name}' of type '{step_type}'")
 
             # Execute step using factory pattern with performance monitoring
             async with self.performance_monitor.measure_step_execution(
@@ -491,14 +461,10 @@ class WorkflowEngine:
                 result = await executor.execute_step(node, input_data)
 
             if not result.success:
-                raise WorkflowStepError(
-                    result.error_message or "Step execution failed"
-                )
+                raise WorkflowStepError(result.error_message or "Step execution failed")
 
             # Calculate duration
-            duration_ms = int(
-                (asyncio.get_event_loop().time() - start_time) * 1000
-            )
+            duration_ms = int((asyncio.get_event_loop().time() - start_time) * 1000)
 
             # Log successful step execution
             log_entry = ExecutionLog(
@@ -516,9 +482,7 @@ class WorkflowEngine:
 
         except Exception as e:
             # Calculate duration even for failed steps
-            duration_ms = int(
-                (asyncio.get_event_loop().time() - start_time) * 1000
-            )
+            duration_ms = int((asyncio.get_event_loop().time() - start_time) * 1000)
 
             error_message = str(e)
             self.logger.error(
@@ -538,6 +502,4 @@ class WorkflowEngine:
             db.add(log_entry)
             db.commit()
 
-            raise WorkflowStepError(
-                f"Step '{step_name}' failed: {error_message}"
-            )
+            raise WorkflowStepError(f"Step '{step_name}' failed: {error_message}")

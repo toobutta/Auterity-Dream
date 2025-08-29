@@ -478,9 +478,7 @@ class EnterpriseGovernanceService:
 
             elif policy.type == PolicyType.MODEL_RESTRICTION:
                 model = request_data.get("model", "")
-                restricted_models = policy.conditions.get(
-                    "restricted_models", []
-                )
+                restricted_models = policy.conditions.get("restricted_models", [])
 
                 if model in restricted_models:
                     return {
@@ -508,9 +506,7 @@ class EnterpriseGovernanceService:
         try:
             for action in policy.actions:
                 if action == EnforcementAction.WARN:
-                    evaluation_result["warnings"].append(
-                        violation["description"]
-                    )
+                    evaluation_result["warnings"].append(violation["description"])
                 elif action == EnforcementAction.BLOCK:
                     evaluation_result["approved"] = False
                     evaluation_result["violations"].append(violation)
@@ -542,9 +538,7 @@ class EnterpriseGovernanceService:
                 tenant_id=tenant_id,
                 user_id=user_id,
                 violation_type=violation_details.get("type", ""),
-                severity=violation_details.get(
-                    "severity", PolicySeverity.MEDIUM
-                ),
+                severity=violation_details.get("severity", PolicySeverity.MEDIUM),
                 description=violation_details.get("description", ""),
                 details=violation_details.get("details", {}),
                 action_taken=violation_details.get("action_taken"),
@@ -606,16 +600,12 @@ class EnterpriseGovernanceService:
             workflow = self.workflows[workflow_id]
 
             if workflow.tenant_id != tenant_id:
-                raise ValueError(
-                    "Workflow does not belong to the specified tenant"
-                )
+                raise ValueError("Workflow does not belong to the specified tenant")
 
             request_id = f"approval_{uuid.uuid4().hex}"
 
             # Set expiration
-            expires_at = datetime.utcnow() + timedelta(
-                hours=workflow.timeout_hours
-            )
+            expires_at = datetime.utcnow() + timedelta(hours=workflow.timeout_hours)
 
             approval_request = ApprovalRequest(
                 id=request_id,
@@ -664,9 +654,7 @@ class EnterpriseGovernanceService:
             if approved:
                 if request.require_all_approvers:
                     # Check if all required approvers have approved
-                    if len(request.approvals_received) >= len(
-                        request.approvers
-                    ):
+                    if len(request.approvals_received) >= len(request.approvers):
                         request.status = "approved"
                 else:
                     # Any approval is sufficient
@@ -719,15 +707,9 @@ class EnterpriseGovernanceService:
             ]
 
             total_violations = len(period_violations)
-            resolved_violations = len(
-                [v for v in period_violations if v.resolved]
-            )
+            resolved_violations = len([v for v in period_violations if v.resolved])
             critical_violations = len(
-                [
-                    v
-                    for v in period_violations
-                    if v.severity == PolicySeverity.CRITICAL
-                ]
+                [v for v in period_violations if v.severity == PolicySeverity.CRITICAL]
             )
 
             # Calculate compliance score
@@ -804,9 +786,7 @@ class EnterpriseGovernanceService:
             recommendations.append("Implement stricter cost control measures")
 
         if violation_types.get("model_restriction", 0) > 0:
-            recommendations.append(
-                "Review model access policies and restrictions"
-            )
+            recommendations.append("Review model access policies and restrictions")
 
         # General recommendations
         recommendations.extend(
@@ -925,8 +905,7 @@ class EnterpriseGovernanceService:
                 )
                 * 100,
                 "resolution_rate": (
-                    report.resolved_violations
-                    / max(report.total_violations, 1)
+                    report.resolved_violations / max(report.total_violations, 1)
                 )
                 * 100,
                 "critical_issues": len(report.critical_issues),

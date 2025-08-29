@@ -17,9 +17,7 @@ from app.services.agent_registry import AgentRegistry
 router = APIRouter(prefix="/agents", tags=["agents"])
 
 
-@router.post(
-    "/register", response_model=Agent, status_code=status.HTTP_201_CREATED
-)
+@router.post("/register", response_model=Agent, status_code=status.HTTP_201_CREATED)
 def register_agent(agent: AgentCreate, db: Session = Depends(get_db)):
     registry = AgentRegistry(db)
     return registry.register_agent(agent)
@@ -41,9 +39,7 @@ def list_agents(db: Session = Depends(get_db)):
 
 
 @router.get("/discover/{capability_name}", response_model=List[Agent])
-def discover_agents_by_capability(
-    capability_name: str, db: Session = Depends(get_db)
-):
+def discover_agents_by_capability(capability_name: str, db: Session = Depends(get_db)):
     registry = AgentRegistry(db)
     return registry.discover_agents_by_capability(capability_name)
 

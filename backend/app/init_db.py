@@ -46,9 +46,7 @@ def create_seed_users():
                 db.query(User).filter(User.email == user_data["email"]).first()
             )
             if existing_user:
-                logger.info(
-                    f"User {user_data['email']} already exists, skipping"
-                )
+                logger.info(f"User {user_data['email']} already exists, skipping")
                 continue
 
             user = User(

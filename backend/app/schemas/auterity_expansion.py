@@ -17,9 +17,7 @@ class TriageRuleBase(BaseModel):
     conditions: Dict[str, Any] = Field(
         ..., description="JSON conditions for rule matching"
     )
-    routing_logic: Dict[str, Any] = Field(
-        ..., description="JSON routing decisions"
-    )
+    routing_logic: Dict[str, Any] = Field(..., description="JSON routing decisions")
     confidence_threshold: Decimal = Field(..., ge=0.0, le=1.0)
     priority: int = Field(1, ge=1, le=100)
     is_active: bool = True
@@ -59,9 +57,7 @@ class VectorEmbeddingBase(BaseModel):
     item_type: str = Field(..., pattern="^(workflow|ticket|template)$")
     item_id: UUID
     content_hash: str = Field(..., min_length=1, max_length=64)
-    embedding_vector: List[float] = Field(
-        ..., description="Vector embedding values"
-    )
+    embedding_vector: List[float] = Field(..., description="Vector embedding values")
     metadata: Optional[Dict[str, Any]] = None
 
 
@@ -98,9 +94,7 @@ class IntegrationBase(BaseModel):
         pattern="^(slack|zendesk|salesforce|fireflies|github|jira|custom)$",
     )
     name: str = Field(..., min_length=1, max_length=255)
-    config: Dict[str, Any] = Field(
-        ..., description="Integration configuration"
-    )
+    config: Dict[str, Any] = Field(..., description="Integration configuration")
     sync_interval_minutes: Optional[int] = Field(None, ge=1)
 
 
@@ -157,9 +151,7 @@ class IntegrationWebhookResponse(IntegrationWebhookBase):
 class ChannelTriggerBase(BaseModel):
     """Base schema for channel triggers."""
 
-    channel_type: str = Field(
-        ..., pattern="^(voice|sms|email|webhook|slack|api)$"
-    )
+    channel_type: str = Field(..., pattern="^(voice|sms|email|webhook|slack|api)$")
     name: str = Field(..., min_length=1, max_length=255)
     trigger_config: Dict[str, Any] = Field(
         ..., description="Channel-specific configuration"
@@ -238,9 +230,7 @@ class AgentMemoryBase(BaseModel):
     """Base schema for agent memories."""
 
     context_hash: str = Field(..., min_length=1, max_length=64)
-    memory_data: Dict[str, Any] = Field(
-        ..., description="Contextual memory data"
-    )
+    memory_data: Dict[str, Any] = Field(..., description="Contextual memory data")
     importance_score: Decimal = Field(0.5, ge=0.0, le=1.0)
 
 
@@ -288,16 +278,10 @@ class ExecutionMetricResponse(ExecutionMetricBase):
 class TriageResultBase(BaseModel):
     """Base schema for triage results."""
 
-    input_content: str = Field(
-        ..., description="Input content that was triaged"
-    )
-    predicted_routing: str = Field(
-        ..., description="Predicted routing decision"
-    )
+    input_content: str = Field(..., description="Input content that was triaged")
+    predicted_routing: str = Field(..., description="Predicted routing decision")
     confidence_score: Decimal = Field(..., ge=0.0, le=1.0)
-    human_override: Optional[str] = Field(
-        None, description="Human override decision"
-    )
+    human_override: Optional[str] = Field(None, description="Human override decision")
     processing_time_ms: int = Field(..., ge=0)
 
 
@@ -344,12 +328,8 @@ class SimilaritySearchRequest(BaseModel):
 
     content: str = Field(..., description="Content to search for similarities")
     item_type: str = Field(..., pattern="^(workflow|ticket|template)$")
-    threshold: float = Field(
-        0.8, ge=0.0, le=1.0, description="Similarity threshold"
-    )
-    limit: int = Field(
-        10, ge=1, le=100, description="Maximum results to return"
-    )
+    threshold: float = Field(0.8, ge=0.0, le=1.0, description="Similarity threshold")
+    limit: int = Field(10, ge=1, le=100, description="Maximum results to return")
 
 
 class SimilaritySearchResponse(BaseModel):
@@ -364,9 +344,7 @@ class SimilaritySearchResponse(BaseModel):
 class AgentDeployRequest(BaseModel):
     """Schema for agent deployment requests."""
 
-    agent_config: Dict[str, Any] = Field(
-        ..., description="Agent configuration"
-    )
+    agent_config: Dict[str, Any] = Field(..., description="Agent configuration")
     memory_config: Optional[Dict[str, Any]] = None
     coordination_rules: Optional[Dict[str, Any]] = None
     escalation_policy: Optional[Dict[str, Any]] = None

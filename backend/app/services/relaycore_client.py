@@ -67,9 +67,7 @@ class RelayCoreClient:
             max_retries: Maximum retry attempts
             retry_delay: Delay between retries
         """
-        self.base_url = base_url or os.getenv(
-            "RELAYCORE_URL", "http://localhost:3001"
-        )
+        self.base_url = base_url or os.getenv("RELAYCORE_URL", "http://localhost:3001")
         self.timeout = ClientTimeout(total=timeout)
         self.max_retries = max_retries
         self.retry_delay = retry_delay
@@ -162,9 +160,7 @@ class RelayCoreClient:
         Returns:
             List of provider configurations
         """
-        response = await self._make_request(
-            "/api/v1/ai/providers", method="GET"
-        )
+        response = await self._make_request("/api/v1/ai/providers", method="GET")
         return response.get("data", [])
 
     async def health_check(self) -> bool:
@@ -175,9 +171,7 @@ class RelayCoreClient:
             True if service is healthy, False otherwise
         """
         try:
-            async with aiohttp.ClientSession(
-                timeout=ClientTimeout(total=5)
-            ) as session:
+            async with aiohttp.ClientSession(timeout=ClientTimeout(total=5)) as session:
                 async with session.get(f"{self.base_url}/health") as response:
                     return response.status == 200
         except Exception as e:
@@ -210,24 +204,18 @@ class RelayCoreClient:
                     f"RelayCore request attempt {attempt + 1}/{self.max_retries + 1}"
                 )
 
-                async with aiohttp.ClientSession(
-                    timeout=self.timeout
-                ) as session:
+                async with aiohttp.ClientSession(timeout=self.timeout) as session:
                     if method.upper() == "GET":
                         async with session.get(url) as response:
                             return await self._handle_response(response)
                     else:
                         request_payload = self._prepare_payload(data)
-                        async with session.post(
-                            url, json=request_payload
-                        ) as response:
+                        async with session.post(url, json=request_payload) as response:
                             return await self._handle_response(response)
 
             except aiohttp.ClientTimeout as e:
                 last_error = e
-                self.logger.warning(
-                    f"RelayCore timeout on attempt {attempt + 1}: {e}"
-                )
+                self.logger.warning(f"RelayCore timeout on attempt {attempt + 1}: {e}")
                 if attempt < self.max_retries:
                     await asyncio.sleep(self.retry_delay * (2**attempt))
                     continue
@@ -243,9 +231,7 @@ class RelayCoreClient:
 
             except Exception as e:
                 last_error = e
-                self.logger.error(
-                    f"Unexpected error on attempt {attempt + 1}: {e}"
-                )
+                self.logger.error(f"Unexpected error on attempt {attempt + 1}: {e}")
                 if attempt < self.max_retries:
                     await asyncio.sleep(self.retry_delay)
                     continue
@@ -270,9 +256,7 @@ class RelayCoreClient:
                 raise AIServiceError(f"RelayCore API error: {error_msg}")
         else:
             error_text = await response.text()
-            raise AIServiceError(
-                f"RelayCore HTTP {response.status}: {error_text}"
-            )
+            raise AIServiceError(f"RelayCore HTTP {response.status}: {error_text}")
 
     def _prepare_payload(self, data: Any) -> Dict[str, Any]:
         """Prepare request payload for RelayCore API."""
@@ -382,13 +366,11 @@ class RelayCoreAIService:
             if self.enable_fallback and self.fallback_service:
                 self.logger.info("Falling back to direct AI service")
                 try:
-                    fallback_response = (
-                        await self.fallback_service.process_text(
-                            prompt=prompt,
-                            context=context,
-                            temperature=temperature,
-                            max_tokens=max_tokens,
-                        )
+                    fallback_response = await self.fallback_service.process_text(
+                        prompt=prompt,
+                        context=context,
+                        temperature=temperature,
+                        max_tokens=max_tokens,
                     )
 
                     # Add fallback indicator
@@ -408,9 +390,7 @@ class RelayCoreAIService:
                         return fallback_response
 
                 except Exception as fallback_error:
-                    self.logger.error(
-                        f"Fallback service also failed: {fallback_error}"
-                    )
+                    self.logger.error(f"Fallback service also failed: {fallback_error}")
                     raise AIServiceError(
                         f"Both RelayCore and fallback failed: {e}, {fallback_error}"
                     )
@@ -444,13 +424,11 @@ class RelayCoreAIService:
         ):
             try:
                 # Use fallback service just for template formatting
-                template_response = (
-                    await self.fallback_service.process_with_template(
-                        template_name=template_name,
-                        variables=variables,
-                        context=context,
-                        model=model,
-                    )
+                template_response = await self.fallback_service.process_with_template(
+                    template_name=template_name,
+                    variables=variables,
+                    context=context,
+                    model=model,
                 )
 
                 # Extract the formatted prompt and use RelayCore

@@ -52,9 +52,7 @@ class ExternalServicesManager:
 
         # Anthropic
         if self.config["llm_providers"]["anthropic"]["enabled"]:
-            self.anthropic_client = Anthropic(
-                api_key=os.getenv("ANTHROPIC_API_KEY")
-            )
+            self.anthropic_client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
     def _init_auth_providers(self):
         """Initialize authentication providers"""
@@ -72,9 +70,7 @@ class ExternalServicesManager:
             vector = response["data"][0]["embedding"]
 
             # Store in Pinecone
-            self.pinecone_index.upsert(
-                [(metadata.get("id", ""), vector, metadata)]
-            )
+            self.pinecone_index.upsert([(metadata.get("id", ""), vector, metadata)])
 
         elif provider == "weaviate" and hasattr(self, "weaviate_client"):
             # Store in Weaviate

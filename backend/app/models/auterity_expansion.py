@@ -35,14 +35,10 @@ class TriageRule(Base):
     __tablename__ = "triage_rules"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     rule_type = Column(String(50), nullable=False)
     name = Column(String(255), nullable=False)
-    conditions = Column(
-        JSON, nullable=False
-    )  # JSON conditions for rule matching
+    conditions = Column(JSON, nullable=False)  # JSON conditions for rule matching
     routing_logic = Column(JSON, nullable=False)  # JSON routing decisions
     confidence_threshold = Column(Numeric(3, 2), nullable=False, default=0.8)
     priority = Column(Integer, nullable=False, default=1)
@@ -68,12 +64,8 @@ class VectorEmbedding(Base):
     __tablename__ = "vector_embeddings"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
-    item_type = Column(
-        String(50), nullable=False
-    )  # 'workflow', 'ticket', 'template'
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
+    item_type = Column(String(50), nullable=False)  # 'workflow', 'ticket', 'template'
     item_id = Column(UUID(as_uuid=True), nullable=False)
     content_hash = Column(String(64), nullable=False)
     embedding_vector = Column(
@@ -115,9 +107,7 @@ class Integration(Base):
     __tablename__ = "integrations"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     provider = Column(String(100), nullable=False)
     name = Column(String(255), nullable=False)
     config = Column(JSON, nullable=False)  # OAuth2 tokens, API keys, etc.
@@ -181,17 +171,11 @@ class ChannelTrigger(Base):
     __tablename__ = "channel_triggers"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     channel_type = Column(String(50), nullable=False)
     name = Column(String(255), nullable=False)
-    trigger_config = Column(
-        JSON, nullable=False
-    )  # Channel-specific configuration
-    workflow_mapping = Column(
-        JSON, nullable=False
-    )  # Which workflows to trigger
+    trigger_config = Column(JSON, nullable=False)  # Channel-specific configuration
+    workflow_mapping = Column(JSON, nullable=False)  # Which workflows to trigger
     status = Column(String(20), nullable=False, default="active")
     created_at = Column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -233,9 +217,7 @@ class CustomModel(Base):
     __tablename__ = "custom_models"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     model_name = Column(String(255), nullable=False)
     endpoint_url = Column(Text, nullable=False)
     model_type = Column(String(50), nullable=False)
@@ -263,9 +245,7 @@ class AgentMemory(Base):
     __tablename__ = "agent_memories"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    agent_id = Column(
-        UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False
-    )
+    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False)
     context_hash = Column(String(64), nullable=False)
     memory_data = Column(JSON, nullable=False)  # Contextual memory data
     importance_score = Column(Numeric(3, 2), nullable=False, default=0.5)
@@ -308,12 +288,8 @@ class TriageResult(Base):
     __tablename__ = "triage_results"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
-    rule_id = Column(
-        UUID(as_uuid=True), ForeignKey("triage_rules.id"), nullable=True
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
+    rule_id = Column(UUID(as_uuid=True), ForeignKey("triage_rules.id"), nullable=True)
     input_content = Column(Text, nullable=False)
     predicted_routing = Column(String(100), nullable=False)
     confidence_score = Column(Numeric(3, 2), nullable=False)

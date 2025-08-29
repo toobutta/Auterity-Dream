@@ -115,9 +115,7 @@ class Tenant(Base):
     )
 
     # Relationships
-    users = relationship(
-        "User", back_populates="tenant", cascade="all, delete-orphan"
-    )
+    users = relationship("User", back_populates="tenant", cascade="all, delete-orphan")
     audit_logs = relationship(
         "AuditLog", back_populates="tenant", cascade="all, delete-orphan"
     )
@@ -159,6 +157,7 @@ class Tenant(Base):
             return True
         if self.status == TenantStatus.TRIAL and self.trial_end:
             from datetime import datetime
+
             return datetime.utcnow() < self.trial_end
         return False
 
@@ -172,8 +171,7 @@ class Tenant(Base):
 
     def can_make_ai_request(self):
         """Check if tenant can make more AI requests this month."""
-        return (self.current_month_ai_requests <
-                self.max_ai_requests_per_month)
+        return self.current_month_ai_requests < self.max_ai_requests_per_month
 
     def get_plan_features(self):
         """Get features available for current subscription plan."""
@@ -228,9 +226,7 @@ class SSOConfiguration(Base):
     __tablename__ = "sso_configurations"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     provider = Column(String(20), nullable=False)
 
     # SAML Configuration
@@ -273,9 +269,7 @@ class AuditLog(Base):
     __tablename__ = "audit_logs"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
 
     # Event details
@@ -319,9 +313,7 @@ class BillingRecord(Base):
     __tablename__ = "billing_records"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
 
     # Stripe information
     stripe_invoice_id = Column(String(255), nullable=True, index=True)
@@ -365,9 +357,7 @@ class UsageLog(Base):
     __tablename__ = "usage_logs"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(
-        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
-    )
+    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
 
     # Usage details
     resource_type = Column(
@@ -379,9 +369,7 @@ class UsageLog(Base):
 
     # Context
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
-    workflow_id = Column(
-        UUID(as_uuid=True), ForeignKey("workflows.id"), nullable=True
-    )
+    workflow_id = Column(UUID(as_uuid=True), ForeignKey("workflows.id"), nullable=True)
 
     # Metadata
     usage_metadata = Column(JSON, nullable=True)

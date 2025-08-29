@@ -53,9 +53,7 @@ class AgentRegistry:
             query = query.filter(Agent.status == status)
         return query.all()
 
-    def discover_agents_by_capability(
-        self, capability_name: str
-    ) -> List[Agent]:
+    def discover_agents_by_capability(self, capability_name: str) -> List[Agent]:
         agents = (
             self.db.query(Agent)
             .join(AgentCapability)
@@ -81,9 +79,7 @@ class AgentRegistry:
         # Placeholder for config validation logic
         return True
 
-    def update_agent_status(
-        self, agent_id: UUID, status: AgentStatus
-    ) -> Agent:
+    def update_agent_status(self, agent_id: UUID, status: AgentStatus) -> Agent:
         agent = self.get_agent(agent_id)
         if not agent:
             raise HTTPException(status_code=404, detail="Agent not found")

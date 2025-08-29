@@ -346,9 +346,7 @@ class ServiceHealthChecker:
 
             # Combine results
             all_services = {
-                "core": (
-                    results[0] if not isinstance(results[0], Exception) else {}
-                ),
+                "core": (results[0] if not isinstance(results[0], Exception) else {}),
                 "database": (
                     results[1] if not isinstance(results[1], Exception) else {}
                 ),
@@ -358,9 +356,7 @@ class ServiceHealthChecker:
                 "automation": results[3]
                 if not isinstance(results[3], Exception)
                 else {},
-                "ai": (
-                    results[4] if not isinstance(results[4], Exception) else {}
-                ),
+                "ai": (results[4] if not isinstance(results[4], Exception) else {}),
                 "infrastructure": results[5]
                 if not isinstance(results[5], Exception)
                 else {},
@@ -378,9 +374,7 @@ class ServiceHealthChecker:
                 for category in all_services.values()
                 if isinstance(category, dict)
             ]
-            total_services = sum(
-                len(category) for category in valid_categories
-            )
+            total_services = sum(len(category) for category in valid_categories)
             healthy_services = sum(
                 len(
                     [
@@ -396,10 +390,7 @@ class ServiceHealthChecker:
                     [
                         s
                         for s in category.values()
-                        if (
-                            isinstance(s, dict)
-                            and s.get("status") == "configured"
-                        )
+                        if (isinstance(s, dict) and s.get("status") == "configured")
                     ]
                 )
                 for category in valid_categories
@@ -414,9 +405,7 @@ class ServiceHealthChecker:
                     - healthy_services
                     - configured_services,
                     "health_percentage": round(
-                        (healthy_services + configured_services)
-                        / total_services
-                        * 100,
+                        (healthy_services + configured_services) / total_services * 100,
                         1,
                     )
                     if total_services > 0
@@ -464,9 +453,7 @@ async def get_category_services_status(category: str) -> Dict[str, Any]:
     }
 
     if category not in category_map:
-        raise HTTPException(
-            status_code=404, detail=f"Category '{category}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Category '{category}' not found")
 
     try:
         result = await category_map[category]()

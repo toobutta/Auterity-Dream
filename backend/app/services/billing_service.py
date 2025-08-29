@@ -35,9 +35,7 @@ class BillingService:
     ) -> Tuple[Tenant, str]:
         """Create a new subscription for a tenant."""
         try:
-            tenant = (
-                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
-            )
+            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -54,9 +52,7 @@ class BillingService:
                 "customer": tenant.stripe_customer_id,
                 "items": [{"price": self._get_stripe_price_id(plan)}],
                 "payment_behavior": "default_incomplete",
-                "payment_settings": {
-                    "save_default_payment_method": "on_subscription"
-                },
+                "payment_settings": {"save_default_payment_method": "on_subscription"},
                 "expand": ["latest_invoice.payment_intent"],
             }
 
@@ -76,9 +72,7 @@ class BillingService:
                 subscription.current_period_end
             )
             if trial_days > 0:
-                tenant.trial_end = datetime.fromtimestamp(
-                    subscription.trial_end
-                )
+                tenant.trial_end = datetime.fromtimestamp(subscription.trial_end)
 
             # Update plan limits
             self._update_tenant_plan_limits(tenant, plan)
@@ -100,13 +94,9 @@ class BillingService:
     ) -> Tenant:
         """Update tenant subscription plan."""
         try:
-            tenant = (
-                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
-            )
+            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             if not tenant or not tenant.stripe_subscription_id:
-                raise ValueError(
-                    f"Tenant {tenant_id} has no active subscription"
-                )
+                raise ValueError(f"Tenant {tenant_id} has no active subscription")
 
             # Update Stripe subscription
             subscription = self.stripe.Subscription.retrieve(
@@ -139,13 +129,9 @@ class BillingService:
     async def cancel_subscription(self, tenant_id: UUID) -> Tenant:
         """Cancel tenant subscription."""
         try:
-            tenant = (
-                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
-            )
+            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             if not tenant or not tenant.stripe_subscription_id:
-                raise ValueError(
-                    f"Tenant {tenant_id} has no active subscription"
-                )
+                raise ValueError(f"Tenant {tenant_id} has no active subscription")
 
             # Cancel Stripe subscription
             self.stripe.Subscription.modify(
@@ -190,9 +176,7 @@ class BillingService:
             self.db.add(usage_log)
 
             # Update tenant usage counters
-            tenant = (
-                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
-            )
+            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             if tenant and resource_type == "ai_request":
                 tenant.current_month_ai_requests += quantity
 
@@ -212,9 +196,7 @@ class BillingService:
     ) -> Dict:
         """Get usage summary for a tenant."""
         try:
-            query = self.db.query(UsageLog).filter(
-                UsageLog.tenant_id == tenant_id
-            )
+            query = self.db.query(UsageLog).filter(UsageLog.tenant_id == tenant_id)
 
             if start_date:
                 query = query.filter(UsageLog.timestamp >= start_date)
@@ -248,9 +230,7 @@ class BillingService:
                 summary["resource_breakdown"][log.resource_type][
                     "count"
                 ] += log.quantity
-                summary["resource_breakdown"][log.resource_type][
-                    "cost"
-                ] += log.cost
+                summary["resource_breakdown"][log.resource_type]["cost"] += log.cost
 
             return summary
 
@@ -307,16 +287,12 @@ class BillingService:
                 .first()
             )
             if not billing_record:
-                raise ValueError(
-                    f"Billing record {billing_record_id} not found"
-                )
+                raise ValueError(f"Billing record {billing_record_id} not found")
 
             billing_record.status = "paid"
             billing_record.paid_at = datetime.utcnow()
             if stripe_payment_intent_id:
-                billing_record.stripe_payment_intent_id = (
-                    stripe_payment_intent_id
-                )
+                billing_record.stripe_payment_intent_id = stripe_payment_intent_id
 
             self.db.commit()
             return billing_record
@@ -338,9 +314,7 @@ class BillingService:
         }
         return price_ids.get(plan, settings.STRIPE_PRICE_ID_STARTER)
 
-    def _update_tenant_plan_limits(
-        self, tenant: Tenant, plan: SubscriptionPlan
-    ):
+    def _update_tenant_plan_limits(self, tenant: Tenant, plan: SubscriptionPlan):
         """Update tenant limits based on subscription plan."""
         plan_features = tenant.get_plan_features()
         tenant.max_users = plan_features.get("max_users", 5)
@@ -405,12 +379,8 @@ class BillingService:
             ),  # Convert from cents
             description=f"Subscription payment for {tenant.subscription_plan} plan",
             stripe_invoice_id=invoice.get("id"),
-            billing_period_start=datetime.fromtimestamp(
-                invoice.get("period_start", 0)
-            ),
-            billing_period_end=datetime.fromtimestamp(
-                invoice.get("period_end", 0)
-            ),
+            billing_period_start=datetime.fromtimestamp(invoice.get("period_start", 0)),
+            billing_period_end=datetime.fromtimestamp(invoice.get("period_end", 0)),
         )
 
         self.db.commit()
@@ -477,9 +447,7 @@ class BillingService:
     async def get_tenant_billing_info(self, tenant_id: UUID) -> Dict:
         """Get comprehensive billing information for a tenant."""
         try:
-            tenant = (
-                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
-            )
+            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -487,9 +455,7 @@ class BillingService:
             start_of_month = datetime.utcnow().replace(
                 day=1, hour=0, minute=0, second=0, microsecond=0
             )
-            usage_summary = await self.get_usage_summary(
-                tenant_id, start_of_month
-            )
+            usage_summary = await self.get_usage_summary(tenant_id, start_of_month)
 
             # Get recent billing records
             recent_billing = (

@@ -77,9 +77,7 @@ class BaseAppException(Exception):
             ),
             ErrorCategory.BUSINESS_LOGIC: "Business rule validation failed.",
         }
-        return user_messages.get(
-            self.category, "An unexpected error occurred."
-        )
+        return user_messages.get(self.category, "An unexpected error occurred.")
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert exception to dictionary for API responses."""
@@ -278,9 +276,7 @@ class WorkflowNotFoundError(WorkflowError):
 class WorkflowExecutionError(WorkflowError):
     """Workflow execution failure."""
 
-    def __init__(
-        self, execution_id: str, step_name: Optional[str] = None, **kwargs
-    ):
+    def __init__(self, execution_id: str, step_name: Optional[str] = None, **kwargs):
         message = f"Workflow execution {execution_id} failed"
         if step_name:
             message += f" at step '{step_name}'"

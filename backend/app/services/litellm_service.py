@@ -114,9 +114,7 @@ class LiteLLMService:
                         provider=ModelProvider(model_data["provider"]),
                         endpoint=model_data.get("endpoint"),
                         api_key=model_data.get("api_key")
-                        or os.getenv(
-                            f"{model_data['provider'].upper()}_API_KEY"
-                        ),
+                        or os.getenv(f"{model_data['provider'].upper()}_API_KEY"),
                         max_tokens=model_data.get("max_tokens"),
                         cost_per_token=model_data.get("cost_per_token"),
                         capabilities=model_data.get("capabilities", []),
@@ -124,9 +122,7 @@ class LiteLLMService:
                     )
                     self.models[model_config.name] = model_config
 
-                self.logger.info(
-                    f"Loaded {len(self.models)} model configurations"
-                )
+                self.logger.info(f"Loaded {len(self.models)} model configurations")
             else:
                 self.logger.warning(
                     f"Model configuration file not found: {config_path}"
@@ -239,16 +235,12 @@ class LiteLLMService:
                     choice = response.choices[0]
                     content = choice.message.content
 
-                    self.logger.info(
-                        f"LiteLLM API call to {current_model} successful"
-                    )
+                    self.logger.info(f"LiteLLM API call to {current_model} successful")
 
                     return AIResponse(
                         content=content,
                         model=current_model,
-                        usage=response.usage.__dict__
-                        if response.usage
-                        else None,
+                        usage=response.usage.__dict__ if response.usage else None,
                         finish_reason=choice.finish_reason,
                     )
 
@@ -265,18 +257,14 @@ class LiteLLMService:
 
                 except (ServiceUnavailableError, APIError) as e:
                     last_error = e
-                    self.logger.error(
-                        f"API error on attempt {attempt + 1}: {e}"
-                    )
+                    self.logger.error(f"API error on attempt {attempt + 1}: {e}")
                     if attempt < self.max_retries:
                         await asyncio.sleep(self.retry_delay)
                         continue
 
                 except Exception as e:
                     last_error = e
-                    self.logger.error(
-                        f"Unexpected error on attempt {attempt + 1}: {e}"
-                    )
+                    self.logger.error(f"Unexpected error on attempt {attempt + 1}: {e}")
                     if attempt < self.max_retries:
                         await asyncio.sleep(self.retry_delay)
                         continue

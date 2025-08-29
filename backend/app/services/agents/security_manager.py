@@ -49,9 +49,7 @@ class SecurityManager:
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         self.config = config or {}
         self.encryption_key = self._initialize_encryption()
-        self.jwt_secret = self.config.get(
-            "jwt_secret", secrets.token_urlsafe(32)
-        )
+        self.jwt_secret = self.config.get("jwt_secret", secrets.token_urlsafe(32))
         self.threat_patterns = self._load_threat_patterns()
         self.security_events = []
         self.blocked_ips = set()
@@ -121,9 +119,7 @@ class SecurityManager:
 
             # Check required permissions
             if required_permissions:
-                missing_permissions = set(required_permissions) - set(
-                    permissions
-                )
+                missing_permissions = set(required_permissions) - set(permissions)
                 if missing_permissions:
                     return {
                         "authenticated": False,
@@ -269,8 +265,7 @@ class SecurityManager:
                             "pattern": pattern,
                             "severity": (
                                 "high"
-                                if threat_type
-                                in ["sql_injection", "command_injection"]
+                                if threat_type in ["sql_injection", "command_injection"]
                                 else "medium"
                             ),
                         }
@@ -279,8 +274,7 @@ class SecurityManager:
                         threat_level,
                         (
                             ThreatLevel.HIGH
-                            if threat_type
-                            in ["sql_injection", "command_injection"]
+                            if threat_type in ["sql_injection", "command_injection"]
                             else ThreatLevel.MEDIUM
                         ),
                     )
@@ -390,15 +384,11 @@ class SecurityManager:
             iterations=100000,
         )
 
-        hashed = base64.urlsafe_b64encode(
-            kdf.derive(password.encode())
-        ).decode()
+        hashed = base64.urlsafe_b64encode(kdf.derive(password.encode())).decode()
 
         return {"hash": hashed, "salt": salt}
 
-    def verify_password(
-        self, password: str, stored_hash: str, salt: str
-    ) -> bool:
+    def verify_password(self, password: str, stored_hash: str, salt: str) -> bool:
         """Verify password against stored hash"""
 
         try:
@@ -459,8 +449,7 @@ class SecurityManager:
                 [
                     event
                     for event in threat_events
-                    if event.get("threat_level", ThreatLevel.LOW)
-                    >= ThreatLevel.HIGH
+                    if event.get("threat_level", ThreatLevel.LOW) >= ThreatLevel.HIGH
                 ]
             ),
         }
