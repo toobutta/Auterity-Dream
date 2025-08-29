@@ -5,6 +5,7 @@ Revolutionary service monitoring with predictive analytics and autonomous optimi
 
 import asyncio
 import json
+import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -22,6 +23,7 @@ from app.services.ai_orchestrator import ai_orchestrator
 from app.services.registry import service_registry
 
 router = APIRouter(prefix="/api/v1", tags=["AI Service Orchestration"])
+logger = logging.getLogger(__name__)
 
 
 class ServiceOptimizationRequest(BaseModel):
@@ -110,7 +112,7 @@ async def websocket_health_monitoring(websocket: WebSocket) -> None:
     except WebSocketDisconnect:
         ai_orchestrator.active_websockets.remove(websocket)
     except Exception as e:
-        print(f"WebSocket error: {e}")
+        logger.error(f"WebSocket error: {e}")
         if websocket in ai_orchestrator.active_websockets:
             ai_orchestrator.active_websockets.remove(websocket)
 

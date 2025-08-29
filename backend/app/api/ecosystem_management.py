@@ -5,6 +5,7 @@ Complete ecosystem management with first-to-market AI capabilities
 
 import asyncio
 import json
+import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -26,6 +27,7 @@ from app.services.ai_orchestrator import ai_orchestrator
 from app.services.registry import service_registry
 
 router = APIRouter(prefix="/api/v2", tags=["AI Ecosystem Management"])
+logger = logging.getLogger(__name__)
 
 
 # Pydantic models for API
@@ -529,7 +531,7 @@ async def ecosystem_websocket(websocket: WebSocket):
         if websocket in ai_orchestrator.active_websockets:
             ai_orchestrator.active_websockets.remove(websocket)
     except Exception as e:
-        print(f"WebSocket error: {e}")
+        logger.error(f"WebSocket error: {e}")
         if websocket in ai_orchestrator.active_websockets:
             ai_orchestrator.active_websockets.remove(websocket)
 

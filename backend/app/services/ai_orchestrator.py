@@ -5,12 +5,15 @@ Revolutionary ecosystem-wide analysis with predictive analytics and autonomous o
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+import logging
 
 import numpy as np
 from fastapi import WebSocket
 from pydantic import BaseModel
 
 from app.services.registry import service_registry
+
+logger = logging.getLogger(__name__)
 
 
 class ServiceHealthMetrics(BaseModel):
@@ -446,7 +449,7 @@ class AIServiceOrchestrator:
             )
 
         except Exception as e:
-            print(f"AI enhancement failed for {service_name}: {e}")
+            logger.error(f"AI enhancement failed for {service_name}: {e}")
 
         return base_metrics
 
@@ -542,7 +545,7 @@ class AIServiceOrchestrator:
 
         # Trigger healing actions for unhealthy services
         for action in ecosystem_data.get("autonomous_healing_actions", []):
-            print(f"Autonomous healing: {action}")
+            logger.info(f"Autonomous healing: {action}")
 
     async def _calculate_optimization_score(self, health_data: Dict) -> float:
         """Calculate optimization score"""
