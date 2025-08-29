@@ -9,10 +9,12 @@ and configuration to maintain code quality while minimizing disruption.
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 
-def run_command(cmd: List[str], cwd: str = None) -> subprocess.CompletedProcess:
+def run_command(
+    cmd: List[str], cwd: Optional[str] = None
+) -> Optional[subprocess.CompletedProcess]:
     """Run a command and return the result."""
     try:
         result = subprocess.run(
@@ -54,7 +56,8 @@ def fix_backend_linting():
     # Step 2: Sort imports
     print("  📋 Sorting imports...")
     result = run_command(
-        [sys.executable, "-m", "isort", ".", "--profile", "black"], cwd=str(backend_dir)
+        [sys.executable, "-m", "isort", ".", "--profile", "black"],
+        cwd=str(backend_dir)
     )
 
     if result and result.returncode == 0:
@@ -104,7 +107,10 @@ def fix_frontend_linting():
 
     # Step 1: ESLint auto-fix
     print("  🎯 Running ESLint auto-fix...")
-    result = run_command(["npm", "run", "lint", "--", "--fix"], cwd=str(frontend_dir))
+    result = run_command(
+        ["npm", "run", "lint", "--", "--fix"],
+        cwd=str(frontend_dir)
+    )
 
     if result and result.returncode == 0:
         print("  ✅ ESLint auto-fix completed")
@@ -136,7 +142,9 @@ def install_required_tools():
                 raise ImportError(f"{tool} not found")
         except Exception:
             print(f"  📦 Installing {tool}...")
-            install_result = run_command([sys.executable, "-m", "pip", "install", tool])
+            install_result = run_command(
+                [sys.executable, "-m", "pip", "install", tool]
+            )
             if install_result and install_result.returncode == 0:
                 print(f"  ✅ {tool} installed successfully")
             else:
@@ -176,7 +184,8 @@ def main():
     print("1. Review changes with: git diff")
     print("2. Test functionality: npm run test")
     print(
-        "3. Commit clean code: git add . && git commit -m 'fix: resolve linting issues'"
+        "3. Commit clean code: git add . && "
+        "git commit -m 'fix: resolve linting issues'"
     )
 
     print("\n💡 To maintain quality going forward:")

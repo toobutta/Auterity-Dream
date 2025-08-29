@@ -62,6 +62,7 @@ This document defines the exact format and rules for AI-generated commit message
 ## Message Structure Rules
 
 ### Subject Line
+
 - **Format**: `<type>(<scope>): <description>`
 - **Length**: Maximum 50 characters
 - **Case**: Lowercase, imperative mood
@@ -69,7 +70,9 @@ This document defines the exact format and rules for AI-generated commit message
 - **Pattern**: `^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z-]+\))?: .{1,50}$`
 
 ### Body (For Significant Changes)
+
 Use structured format with bullet points:
+
 ```
 - What: <clear description of what changed>
 - Why: <business reason or problem being solved>
@@ -77,12 +80,14 @@ Use structured format with bullet points:
 ```
 
 **Requirements**:
+
 - Start with blank line after subject
 - Maximum 72 characters per line
 - Use present tense, imperative mood
 - Focus on what and why, not how
 
 ### Footer (Optional)
+
 ```
 Refs: #<issue_number>
 Tested: <testing evidence>
@@ -93,11 +98,13 @@ Co-authored-by: <if applicable>
 ## Examples
 
 ### Simple Bug Fix
+
 ```
 fix(auth): handle expired token edge case
 ```
 
 ### Feature with Full Structure
+
 ```
 feat(workflow): add parallel execution engine
 
@@ -110,6 +117,7 @@ Tested: Unit tests, integration tests, performance benchmarks
 ```
 
 ### Refactoring Example
+
 ```
 refactor(backend): standardize error handling patterns
 
@@ -121,6 +129,7 @@ Tested: All existing tests pass, error scenarios covered
 ```
 
 ### Breaking Change Example
+
 ```
 feat(api): implement new authentication flow
 
@@ -138,6 +147,7 @@ Tested: Full regression suite, security audit
 ## AI Generation Context
 
 ### Analysis Inputs
+
 - Changed files and their types
 - Diff statistics (additions, deletions, modifications)
 - Directory structure affected
@@ -146,12 +156,14 @@ Tested: Full regression suite, security audit
 - Breaking change detection
 
 ### Scope Detection Logic
+
 1. Analyze file patterns to determine primary scope
 2. If multiple scopes affected, choose the most business-critical
 3. For cross-cutting changes, use broader scope (e.g., `backend`, `frontend`)
 4. Prioritize business logic over infrastructure changes
 
 ### Type Classification
+
 - **New files**: Usually `feat`
 - **Deleted files**: Usually `refactor`
 - **Test files only**: Use `test`
@@ -163,6 +175,7 @@ Tested: Full regression suite, security audit
 ## Validation Rules
 
 ### Forbidden Patterns
+
 - Generic subjects: "update", "changes", "misc", "stuff", "work"
 - Capitalized first letter (except proper nouns)
 - Ending period
@@ -170,6 +183,7 @@ Tested: Full regression suite, security audit
 - WIP/TODO/TEMP prefixes
 
 ### Required for Large Changes
+
 - Body explanation for changes affecting >5 files
 - Test evidence for new features
 - Issue reference for bug fixes
@@ -178,6 +192,7 @@ Tested: Full regression suite, security audit
 ## Quality Checks
 
 ### Automated Validation
+
 1. Conventional commit format compliance
 2. Subject length validation
 3. Scope existence validation  
@@ -185,6 +200,7 @@ Tested: Full regression suite, security audit
 5. Footer format validation
 
 ### Manual Review Triggers
+
 - Breaking changes
 - Security-related changes
 - Performance modifications
@@ -194,13 +210,16 @@ Tested: Full regression suite, security audit
 ## Implementation
 
 ### VS Code Settings
+
 The rules are configured in `.vscode/settings.json` with:
+
 - Git input validation
 - Commit message templates
 - AI generation context
 - Project-specific mappings
 
 ### Git Hooks (Recommended)
+
 ```bash
 #!/bin/sh
 # .git/hooks/commit-msg
@@ -208,6 +227,7 @@ node .git/hooks/validate-commit-msg.js "$1"
 ```
 
 ### IDE Integration
+
 - Configure commit message templates
 - Enable conventional commit validation
 - Set up auto-completion for types/scopes
@@ -216,11 +236,13 @@ node .git/hooks/validate-commit-msg.js "$1"
 ## Project-Specific Guidelines
 
 ### Auterity Error IQ Platform
+
 - **Business Domains**: Workflow automation, AI agent orchestration, multi-tenant auth
 - **Technical Areas**: FastAPI backend, React frontend, PostgreSQL, Redis, Docker
 - **Quality Standards**: All changes need tests, breaking changes need migration guides
 
 ### Priority Keywords
+
 - Authentication, workflow, agent, security, performance
 - Database, API, frontend, backend, compliance
 - Error handling, testing, documentation

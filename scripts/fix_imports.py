@@ -11,7 +11,9 @@ from pathlib import Path
 from typing import Set, Dict
 
 
-def get_missing_imports_from_flake8_output(flake8_output: str) -> Dict[str, Set[str]]:
+def get_missing_imports_from_flake8_output(
+    flake8_output: str
+) -> Dict[str, Set[str]]:
     """Parse flake8 output to find missing imports per file."""
     missing_imports = {}
 
@@ -53,7 +55,9 @@ def get_required_imports(undefined_names: Set[str]) -> Set[str]:
         "OAuth2PasswordBearer",
     }
 
-    pydantic_imports = {"BaseModel", "Field", "EmailStr", "validator", "root_validator"}
+    pydantic_imports = {
+        "BaseModel", "Field", "EmailStr", "validator", "root_validator"
+    }
 
     typing_imports = {"Dict", "Any", "List", "Optional", "Union", "Tuple"}
 
@@ -137,23 +141,29 @@ def add_imports_to_file(file_path: str, undefined_names: Set[str]):
                 pydantic_names = [
                     name
                     for name in undefined_names
-                    if name
-                    in {"BaseModel", "Field", "EmailStr", "validator", "root_validator"}
+                    if name in {
+                        "BaseModel", "Field", "EmailStr",
+                        "validator", "root_validator"
+                    }
                 ]
                 if pydantic_names:
+                    pydantic_import = ', '.join(sorted(pydantic_names))
                     import_statements.append(
-                        "from pydantic import " f"{', '.join(sorted(pydantic_names))}"
+                        f"from pydantic import {pydantic_import}"
                     )
 
             if "typing" in required_imports:
                 typing_names = [
                     name
                     for name in undefined_names
-                    if name in {"Dict", "Any", "List", "Optional", "Union", "Tuple"}
+                    if name in {
+                        "Dict", "Any", "List", "Optional", "Union", "Tuple"
+                    }
                 ]
                 if typing_names:
+                    typing_import = ', '.join(sorted(typing_names))
                     import_statements.append(
-                        "from typing import " f"{', '.join(sorted(typing_names))}"
+                        f"from typing import {typing_import}"
                     )
 
             if "datetime" in required_imports:
@@ -163,15 +173,18 @@ def add_imports_to_file(file_path: str, undefined_names: Set[str]):
                     if name in {"datetime", "timedelta"}
                 ]
                 if datetime_names:
+                    datetime_import = ', '.join(sorted(datetime_names))
                     import_statements.append(
-                        "from datetime import " f"{', '.join(sorted(datetime_names))}"
+                        f"from datetime import {datetime_import}"
                     )
 
             if "sqlalchemy" in required_imports:
                 sqlalchemy_names = [
                     name
                     for name in undefined_names
-                    if name in {"Session", "joinedload", "select", "and_", "or_"}
+                    if name in {
+                        "Session", "joinedload", "select", "and_", "or_"
+                    }
                 ]
                 if sqlalchemy_names:
                     import_statements.append(
@@ -186,7 +199,8 @@ def add_imports_to_file(file_path: str, undefined_names: Set[str]):
         for i, line in enumerate(lines):
             if line.startswith("import ") or line.startswith("from "):
                 last_import_idx = i
-            elif line.strip() and not line.startswith("#") and last_import_idx != -1:
+            elif (line.strip() and not line.startswith("#") and
+                  last_import_idx != -1):
                 break
 
         # Insert new imports after the last import
