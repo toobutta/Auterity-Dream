@@ -638,12 +638,16 @@ class AutonomousAgentService:
         """Build prompt for autonomous task execution."""
         context_summary = "\n".join(
             [
-                f"- {memory.get('memory_data', {}).get('description', 'No description')}"
+          \
+               \
+                                         f"- {memory.get('memory_data', {}).get('description', 'No description')}"
                 for memory in context_memories[:5]
             ]
         )
 
-        prompt = f"""You are an autonomous AI agent executing a task. Use your context and capabilities to complete the task effectively.
+        prompt = f"""You are an autonomous AI agent executing a task. Use your context and \
+            \
+            capabilities to complete the task effectively.
 
 Task: {task.description}
 Type: {task.task_type}

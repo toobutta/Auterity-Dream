@@ -1,4 +1,5 @@
-"""White-Label AI Agent Marketplace Service - Templates, revenue sharing, and custom agent training."""
+"""White-Label AI Agent Marketplace Service - Templates, revenue sharing, and \
+    custom agent training."""
 
 import asyncio
 import logging
@@ -166,7 +167,8 @@ class CustomTrainingJob:
 
 
 class AgentMarketplaceService:
-    """White-Label AI Agent Marketplace Service - Templates, revenue sharing, and custom agent training."""
+    """White-Label AI Agent Marketplace Service - Templates, revenue sharing, and \
+        custom agent training."""
 
     def __init__(self, db_session):
         self.db = db_session
@@ -370,7 +372,9 @@ class AgentMarketplaceService:
 
         for field_item in required_fields:
             if field_item not in configuration:
-                raise ValueError(f"Required configuration field_item missing: {field_item}")
+                raise ValueError(
+                    f"Required configuration field_item missing: {field_item}"
+                )
 
         # Validate field_item types and constraints
         for field_name, constraints in schema.get("properties", {}).items():

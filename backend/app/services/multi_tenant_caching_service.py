@@ -1,4 +1,5 @@
-"""Enhanced Multi-Tenant Caching & Performance Service - Redis cluster and CDN integration."""
+"""Enhanced Multi-Tenant Caching & Performance Service - Redis cluster and \
+    CDN integration."""
 
 import asyncio
 import json
@@ -109,7 +110,8 @@ class PerformanceMetrics:
 
 
 class MultiTenantCachingService:
-    """Enhanced Multi-Tenant Caching & Performance Service - Redis cluster and CDN integration."""
+    """Enhanced Multi-Tenant Caching & Performance Service - Redis cluster and \
+        CDN integration."""
 
     def __init__(self, db_session):
         self.db = db_session

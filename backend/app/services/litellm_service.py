@@ -219,7 +219,9 @@ class LiteLLMService:
             for attempt in range(self.max_retries + 1):
                 try:
                     self.logger.debug(
-                        f"API call to {current_model}, attempt {attempt + 1}/{self.max_retries + 1}"
+                 \
+                      \
+                                                    f"API call to {current_model}, attempt {attempt + 1}/{self.max_retries + 1}"
                     )
 
                     # Make the API call through LiteLLM

@@ -144,7 +144,9 @@ class DataValidationStepExecutor(StepExecutor):
                 return StepExecutionResult(
                     success=False,
                     output_data={},
-                    error_message=f"Data validation failed: {'; '.join(error_messages)}",
+            \
+                  \
+                                                  error_message=f"Data validation failed: {'; '.join(error_messages)}",
                 )
 
             return StepExecutionResult(

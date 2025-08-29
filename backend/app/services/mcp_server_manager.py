@@ -1,6 +1,7 @@
 """
 MCPServerManager: Manages lifecycle and integration of external MCP servers.
-Implements process management, health checks, tool discovery, and configuration validation.
+Implements process management, health checks, tool discovery, and \
+    configuration validation.
 """
 
 import asyncio

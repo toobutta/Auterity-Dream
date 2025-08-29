@@ -267,7 +267,10 @@ class AgentOrchestrator:
 
             agent = self.agents[agent_id]
 
-            # Simulate agent execution (in a real implementation, this would call the actual agent)
+            # Simulate agent execution (
+                in a real implementation,
+                this would call the actual agent
+            )
             await asyncio.sleep(0.1)  # Simulate processing time
 
             # Mock response based on agent type and action

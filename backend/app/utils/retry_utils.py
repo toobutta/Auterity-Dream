@@ -177,7 +177,9 @@ async def retry_async(
                 e, config.retry_exceptions, config.stop_exceptions
             ):
                 logger.warning(
-                    f"Exception {type(e).__name__} is not retryable, failing immediately",
+             \
+                   \
+                                               f"Exception {type(e).__name__} is not retryable, failing immediately",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -190,7 +192,9 @@ async def retry_async(
             # If this was the last attempt, don't retry
             if attempt == config.max_attempts:
                 logger.error(
-                    f"Function {func.__name__} failed after {config.max_attempts} attempts",
+             \
+                  \
+                                                f"Function {func.__name__} failed after {config.max_attempts} attempts",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -211,7 +215,9 @@ async def retry_async(
             )
 
             logger.warning(
-                f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
+            \
+                \
+                                    f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
                 extra={
                     "function": func.__name__,
                     "exception": str(e),
@@ -268,7 +274,9 @@ def retry_sync(
                 e, config.retry_exceptions, config.stop_exceptions
             ):
                 logger.warning(
-                    f"Exception {type(e).__name__} is not retryable, failing immediately",
+             \
+                   \
+                                               f"Exception {type(e).__name__} is not retryable, failing immediately",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -281,7 +289,9 @@ def retry_sync(
             # If this was the last attempt, don't retry
             if attempt == config.max_attempts:
                 logger.error(
-                    f"Function {func.__name__} failed after {config.max_attempts} attempts",
+             \
+                  \
+                                                f"Function {func.__name__} failed after {config.max_attempts} attempts",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -302,7 +312,9 @@ def retry_sync(
             )
 
             logger.warning(
-                f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
+            \
+                \
+                                    f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
                 extra={
                     "function": func.__name__,
                     "exception": str(e),
@@ -399,7 +411,9 @@ class CircuitBreaker:
         elif self.failure_count >= self.failure_threshold:
             self.state = CircuitBreakerState.OPEN
             logger.warning(
-                f"Circuit breaker {self.name} transitioned to OPEN - failure threshold reached"
+             \
+                \
+                                  f"Circuit breaker {self.name} transitioned to OPEN - failure threshold reached"
             )
 
     async def call_async(self, func: Callable, *args, **kwargs) -> Any:

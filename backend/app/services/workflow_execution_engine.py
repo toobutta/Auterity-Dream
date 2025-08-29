@@ -190,7 +190,9 @@ class WorkflowExecutionEngine:
             # Execute batches in order
             for batch_index, batch in enumerate(plan.execution_order):
                 logger.info(
-                    f"Executing batch {batch_index + 1}/{len(plan.execution_order)}: {batch}"
+             \
+                  \
+                                                f"Executing batch {batch_index + 1}/{len(plan.execution_order)}: {batch}"
                 )
 
                 # Execute steps in current batch in parallel

@@ -23,13 +23,9 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service_mock import (
-    MockAutonomousAgentService,
-)
+from app.services.autonomous_agent_service_mock import MockAutonomousAgentService
 from app.services.smart_triage_service_mock import MockSmartTriageService
-from app.services.vector_duplicate_service_mock import (
-    MockVectorDuplicateService,
-)
+from app.services.vector_duplicate_service_mock import MockVectorDuplicateService
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +58,7 @@ async def triage_input(
         decision = await service.triage_content(
             tenant_id=UUID(str(tenant.id)),
             content=request.content,
-            context=request.context
+            context=request.context,
         )
 
         return TriageResponse(
@@ -70,9 +66,7 @@ async def triage_input(
             confidence_score=decision["confidence_score"],
             rule_applied=decision["rule_applied"],
             reasoning="Mock reasoning based on content analysis",
-            suggested_actions=[
-                "Route to appropriate team", "Escalate if urgent"
-            ],
+            suggested_actions=["Route to appropriate team", "Escalate if urgent"],
             processing_time_ms=decision["processing_time_ms"],
         )
 
@@ -209,9 +203,7 @@ async def create_embedding(
     """Mock create a new vector embedding."""
     try:
         service = MockVectorDuplicateService()
-        embedding = await service.generate_embedding(
-            "Mock content for embedding"
-        )
+        embedding = await service.generate_embedding("Mock content for embedding")
 
         return VectorEmbeddingResponse(
             id=UUID("12345678-1234-5678-9abc-123456789abc"),
@@ -300,9 +292,7 @@ async def assign_task_to_agent(
     """Mock assign a task to an agent."""
     try:
         service = MockAutonomousAgentService()
-        task = await service.assign_task(
-            agent_id=agent_id, task_data=task_data
-        )
+        task = await service.assign_task(agent_id=agent_id, task_data=task_data)
 
         return task
 
@@ -345,8 +335,7 @@ async def coordinate_agents(
     try:
         service = MockAutonomousAgentService()
         coordination = await service.coordinate_agents(
-            tenant_id=UUID(str(tenant.id)),
-            coordination_request=coordination_request
+            tenant_id=UUID(str(tenant.id)), coordination_request=coordination_request
         )
 
         return coordination
@@ -368,12 +357,10 @@ async def get_agent_performance(
     """Mock get agent performance metrics."""
     try:
         service = MockAutonomousAgentService()
-        
+
         if agent_id is None:
-            raise HTTPException(
-                status_code=400, detail="agent_id is required"
-            )
-            
+            raise HTTPException(status_code=400, detail="agent_id is required")
+
         performance = await service.get_agent_performance(
             tenant_id=UUID(str(tenant.id)), agent_id=agent_id
         )

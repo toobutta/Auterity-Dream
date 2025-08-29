@@ -130,7 +130,8 @@ class DocumentAIService:
                 Return as JSON format.
                 """,
                 "general": """
-                Extract key information from this document text and structure it as JSON.
+                Extract key information from this document text and \
+                    structure it as JSON.
                 Include entities like names, dates, amounts, addresses, and key facts.
                 """,
             }
@@ -184,7 +185,8 @@ class DocumentAIService:
                         - email
                         - other
 
-                        Return only the category name and confidence score (0-1) as JSON:
+                        Return only the category name and \
+                            confidence score (0-1) as JSON:
                         {"category": "invoice", "confidence": 0.95}
                         """,
                     },
@@ -316,7 +318,9 @@ class DocumentAIService:
                 messages=[
                     {
                         "role": "system",
-                        "content": f"Summarize this document in {max_length} words or less. Focus on key points and main information.",
+                        "content": f"Summarize this document in {max_length} words or less. Focus on key points and \
+                            \
+                            main information.",
                     },
                     {"role": "user", "content": text[:4000]},
                 ],

@@ -204,7 +204,9 @@ class NotificationService:
                     if success
                     else NotificationPriority.HIGH
                 ),
-                title=f"Recovery {'Successful' if success else 'Failed'}: {recovery_type}",
+           \
+                \
+                                      title=f"Recovery {'Successful' if success else 'Failed'}: {recovery_type}",
                 message=self._format_recovery_message(recovery_type, success, details),
                 data=details,
                 channels=rule.channels,
@@ -239,7 +241,9 @@ class NotificationService:
                 id=f"correlation_{datetime.utcnow().timestamp()}",
                 type=NotificationType.CORRELATION_DETECTED,
                 priority=NotificationPriority.HIGH,
-                title=f"Error Correlation Detected: {correlation_data.get('pattern', 'Unknown')}",
+          \
+               \
+                                         title=f"Error Correlation Detected: {correlation_data.get('pattern', 'Unknown')}",
                 message=self._format_correlation_message(correlation_data),
                 data=correlation_data,
                 channels=rule.channels,

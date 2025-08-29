@@ -31,6 +31,7 @@ class AgentCapabilityBase(BaseModel):
 
 class AgentConfig(BaseModel):
     """Configuration for agent deployment and management."""
+
     name: str
     agent_type: str
     capabilities: List[str] = []

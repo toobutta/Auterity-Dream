@@ -450,7 +450,9 @@ async def _generate_ecosystem_capacity_recommendations(forecasts: Dict) -> List[
 
     if high_cpu_services:
         recommendations.append(
-            f"Scale up services with high CPU forecast: {', '.join(high_cpu_services[:3])}"
+          \
+             \
+                           f"Scale up services with high CPU forecast: {', '.join(high_cpu_services[:3])}"
         )
 
     recommendations.extend(

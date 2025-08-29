@@ -1,4 +1,5 @@
-"""Partner Ecosystem & Integration Framework Service - API marketplace and partner integrations."""
+"""Partner Ecosystem & Integration Framework Service - API marketplace and \
+    partner integrations."""
 
 import json
 import logging
@@ -185,7 +186,8 @@ class WebhookEvent:
 
 
 class PartnerEcosystemService:
-    """Partner Ecosystem & Integration Framework Service - API marketplace and partner integrations."""
+    """Partner Ecosystem & Integration Framework Service - API marketplace and \
+        partner integrations."""
 
     def __init__(self, db_session):
         self.db = db_session

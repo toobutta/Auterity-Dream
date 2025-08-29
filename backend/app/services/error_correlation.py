@@ -103,7 +103,8 @@ class ErrorCorrelationService:
             CorrelationPattern.COMMON_ROOT_CAUSE: self._detect_common_root_cause,
             CorrelationPattern.DEPENDENCY_FAILURE: self._detect_dependency_failure,
             CorrelationPattern.RESOURCE_EXHAUSTION: self._detect_resource_exhaustion,
-            CorrelationPattern.AUTHENTICATION_PROPAGATION: self._detect_auth_propagation,
+            CorrelationPattern.AUTHENTICATION_PROPAGATION: \
+                self._detect_auth_propagation,
             CorrelationPattern.NETWORK_PARTITION: self._detect_network_partition,
         }
 
@@ -338,7 +339,8 @@ class ErrorCorrelationService:
         self, new_error: SystemError, recent_errors: List[SystemError]
     ) -> Optional[ErrorCorrelation]:
         """Detect cascading failure patterns across systems."""
-        # Look for errors that follow dependency chain: AutoMatrix -> RelayCore -> NeuroWeaver
+        # Look for errors that follow dependency chain: AutoMatrix -> RelayCore -> \
+            NeuroWeaver
         system_order = [
             SystemType.AUTMATRIX,
             SystemType.RELAYCORE,

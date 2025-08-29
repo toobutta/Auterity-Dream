@@ -300,9 +300,7 @@ class SmartTriageService:
 
         content_lower = content.lower()
         positive_count = sum(1 for word in positive_words if word in content_lower)
-        negative_count = sum(
-            1 for word in negative_words if word in content_lower
-        )
+        negative_count = sum(1 for word in negative_words if word in content_lower)
 
         if positive_count == 0 and negative_count == 0:
             return 0.0
@@ -313,7 +311,9 @@ class SmartTriageService:
         self, content: str, context: Dict[str, Any], rules: List[TriageRule]
     ) -> str:
         """Build AI prompt for triage analysis."""
-        prompt = f"""You are an AI workflow triage specialist. Analyze the following input and determine the best routing decision.
+        prompt = f"""You are an AI workflow triage specialist. Analyze the following input and \
+            \
+            determine the best routing decision.
 
 Input Content: {content}
 

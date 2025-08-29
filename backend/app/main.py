@@ -11,6 +11,7 @@ from app.api import (
     ecosystem_management,
     error_correlation,
     error_management,
+    kafka,
     logs,
     monitoring,
     service_status_enhanced,
@@ -62,7 +63,11 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="AutoMatrix AI Hub Workflow Engine MVP - Enhanced with AI Ecosystem",
-    description="A streamlined workflow automation platform with AI-driven service orchestration, predictive analytics, and autonomous optimization",
+    description=(
+        "A streamlined workflow automation platform with AI-driven "
+        "service orchestration, predictive analytics, and autonomous "
+        "optimization"
+    ),
     version="0.2.0",
     debug=DEBUG,
     docs_url="/docs" if DEBUG else None,  # Disable docs in production
@@ -78,7 +83,8 @@ app.add_middleware(
 
 # Add enhanced error handling middleware
 app.add_middleware(
-    EnhancedErrorHandlingMiddleware, enable_auto_recovery=ENVIRONMENT == "production"
+    EnhancedErrorHandlingMiddleware,
+    enable_auto_recovery=ENVIRONMENT == "production"
 )
 app.add_middleware(ErrorMetricsMiddleware)
 app.add_middleware(HealthCheckMiddleware)
@@ -118,6 +124,7 @@ app.include_router(templates.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 app.include_router(logs.router, prefix="/api")
 app.include_router(monitoring.router, prefix="/api")
+app.include_router(kafka.router, prefix="/api")
 app.include_router(error_correlation.router)
 app.include_router(error_management.router)
 
@@ -138,7 +145,10 @@ app.include_router(websockets.router)
 @app.get("/")
 async def root():
     return {
-        "message": "AutoMatrix AI Hub Workflow Engine MVP - Enhanced with AI Ecosystem",
+        "message": (
+            "AutoMatrix AI Hub Workflow Engine MVP - "
+            "Enhanced with AI Ecosystem"
+        ),
         "version": "0.2.0",
         "features": [
             "AI Service Orchestration",
@@ -158,28 +168,40 @@ async def health_check():
 
     return {
         "status": (
-            "healthy" if ecosystem_status.get("ready_for_production") else "starting"
+            (
+                "healthy"
+                if ecosystem_status.get("ready_for_production")
+                else "starting"
+            )
         ),
         "ecosystem": ecosystem_status,
         "components": {
             "ai_orchestrator": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get("ai_orchestrator")
+                if ecosystem_status.get("components_status", {}).get(
+                    "ai_orchestrator"
+                )
                 else "offline"
             ),
             "relay_core": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get("relay_core")
+                if ecosystem_status.get("components_status", {}).get(
+                    "relay_core"
+                )
                 else "offline"
             ),
             "neuro_weaver": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get("neuro_weaver")
+                if ecosystem_status.get("components_status", {}).get(
+                    "neuro_weaver"
+                )
                 else "offline"
             ),
             "service_registry": (
                 "healthy"
-                if ecosystem_status.get("components_status", {}).get("service_registry")
+                if ecosystem_status.get("components_status", {}).get(
+                    "service_registry"
+                )
                 else "offline"
             ),
         },

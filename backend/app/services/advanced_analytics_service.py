@@ -1,4 +1,5 @@
-"""Advanced Analytics & Business Intelligence Service - Predictive analytics and ROI analysis."""
+"""Advanced Analytics & Business Intelligence Service - Predictive analytics and \
+    ROI analysis."""
 
 import logging
 from dataclasses import dataclass, field
@@ -137,7 +138,8 @@ class BusinessIntelligenceReport:
 
 
 class AdvancedAnalyticsService:
-    """Advanced Analytics & Business Intelligence Service - Predictive analytics and ROI analysis."""
+    """Advanced Analytics & Business Intelligence Service - Predictive analytics and \
+        ROI analysis."""
 
     def __init__(self, db: Session):
         self.db = db
@@ -675,7 +677,10 @@ class AdvancedAnalyticsService:
         try:
             _ = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
 
-            # Simple churn risk factors (in a real system, this would be more sophisticated)
+            # Simple churn risk factors (
+                in a real system,
+                this would be more sophisticated
+            )
             risk_factors = []
 
             # Usage patterns
@@ -860,7 +865,8 @@ class AdvancedAnalyticsService:
         if predictions:
             summary += "\nForecasts:\n"
             for prediction in predictions[:2]:  # Show top 2 predictions
-                summary += f"- {prediction.metric.title()}: {prediction.predicted_value:.2f} (next {prediction.forecast_horizon} days)\n"
+            \
+                        summary += f"- {prediction.metric.title()}: {prediction.predicted_value:.2f} (next {prediction.forecast_horizon} days)\n"
 
         return summary
 

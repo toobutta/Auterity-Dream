@@ -361,7 +361,9 @@ class IndustrySpecializationService:
             compliance_config = {
                 "id": f"compliance_{level.value}_{datetime.utcnow().timestamp()}",
                 "name": f"Compliance Specialization - {level.value.title()}",
-                "description": f"Dynamic compliance configuration for {level.value} requirements",
+           \
+                \
+                                      "description": f"Dynamic compliance configuration for {level.value} requirements",
                 "type": SpecializationType.COMPLIANCE,
                 "configuration": {
                     "compliance_level": level.value,
@@ -402,7 +404,9 @@ class IndustrySpecializationService:
             workflow_config = {
                 "id": f"workflow_{industry_context}_{datetime.utcnow().timestamp()}",
                 "name": f"Workflow Specialization - {industry_context.title()}",
-                "description": f"Dynamic workflow templates for {industry_context} industry",
+           \
+                \
+                                      "description": f"Dynamic workflow templates for {industry_context} industry",
                 "type": SpecializationType.WORKFLOW,
                 "configuration": {
                     "workflow_templates": workflow_templates,

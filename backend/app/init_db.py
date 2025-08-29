@@ -5,11 +5,8 @@ import logging
 from passlib.context import CryptContext
 
 # Password hashing
-from app.database import check_database_connection
-from app.database import create_tables
-from app.database import get_db_session
-from app.models.template import Template
-from app.models.template import TemplateParameter
+from app.database import check_database_connection, create_tables, get_db_session
+from app.models.template import Template, TemplateParameter
 from app.models.user import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -64,7 +61,9 @@ def create_seed_templates():
     # Customer inquiry response template
     customer_inquiry_template = {
         "name": "Customer Inquiry Response",
-        "description": "Automated response to customer inquiries about vehicle availability and pricing",
+        "description": "Automated response to customer inquiries about vehicle availability and \
+            \
+            pricing",
         "category": "Sales",
         "definition": {
             "steps": [
@@ -72,7 +71,8 @@ def create_seed_templates():
                     "id": "extract_info",
                     "type": "ai_processing",
                     "name": "Extract Customer Information",
-                    "prompt": "Extract the customer's name, contact info, and vehicle interest from: {{customer_message}}",
+                    "prompt": "Extract the customer's name, contact info, and \
+                        vehicle interest from: {{customer_message}}",
                 },
                 {
                     "id": "check_inventory",
@@ -116,7 +116,8 @@ def create_seed_templates():
                     "id": "parse_request",
                     "type": "ai_processing",
                     "name": "Parse Service Request",
-                    "prompt": "Extract service type, preferred date/time, and customer details from: {{service_request}}",
+                    "prompt": "Extract service type, preferred date/time, and \
+                        customer details from: {{service_request}}",
                 },
                 {
                     "id": "check_availability",
@@ -178,7 +179,9 @@ def create_seed_templates():
                     "id": "generate_quote",
                     "type": "ai_processing",
                     "name": "Generate Parts Quote",
-                    "prompt": "Create a parts quote for {{customer_name}} including availability, pricing, and delivery time for: {{part_info}}",
+                    "prompt": "Create a parts quote for {{customer_name}} including availability, pricing, and \
+                        \
+                        delivery time for: {{part_info}}",
                 },
             ]
         },

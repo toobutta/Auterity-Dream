@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.tenant import Tenant
 from app.schemas.agent import AgentConfig
-from app.services.autonomous_agent_service import AutonomousAgentService
 from app.schemas.auterity_expansion import (
     AgentDeployRequest,
     AgentDeployResponse,
@@ -26,6 +25,7 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
+from app.services.autonomous_agent_service import AutonomousAgentService
 from app.services.smart_triage_service import SmartTriageService
 from app.services.vector_duplicate_service import VectorDuplicateService
 

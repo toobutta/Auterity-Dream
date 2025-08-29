@@ -1,6 +1,7 @@
 """
 AI Service Orchestrator - First-to-market AI service orchestration
-Revolutionary ecosystem-wide analysis with predictive analytics and autonomous optimization
+Revolutionary ecosystem-wide analysis with predictive analytics and \
+    autonomous optimization
 """
 
 import logging

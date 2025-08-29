@@ -255,7 +255,9 @@ class SSOConfiguration(Base):
     tenant = relationship("Tenant")
 
     def __repr__(self):
-        return f"<SSOConfiguration(id={self.id}, provider='{self.provider}', tenant_id={self.tenant_id})>"
+      \
+         \
+                       return f"<SSOConfiguration(id={self.id}, provider='{self.provider}', tenant_id={self.tenant_id})>"
 
 
 class AuditLog(Base):
@@ -296,7 +298,9 @@ class AuditLog(Base):
     user = relationship("User")
 
     def __repr__(self):
-        return f"<AuditLog(id={self.id}, event_type='{self.event_type}', action='{self.action}')>"
+      \
+         \
+                       return f"<AuditLog(id={self.id}, event_type='{self.event_type}', action='{self.action}')>"
 
 
 class BillingRecord(Base):
@@ -340,7 +344,9 @@ class BillingRecord(Base):
     tenant = relationship("Tenant", back_populates="billing_records")
 
     def __repr__(self):
-        return f"<BillingRecord(id={self.id}, tenant_id={self.tenant_id}, amount={self.amount})>"
+      \
+         \
+                       return f"<BillingRecord(id={self.id}, tenant_id={self.tenant_id}, amount={self.amount})>"
 
 
 class UsageLog(Base):
@@ -375,4 +381,6 @@ class UsageLog(Base):
     workflow = relationship("Workflow")
 
     def __repr__(self):
-        return f"<UsageLog(id={self.id}, tenant_id={self.tenant_id}, resource_type={self.resource_type})>"
+      \
+         \
+                       return f"<UsageLog(id={self.id}, tenant_id={self.tenant_id}, resource_type={self.resource_type})>"

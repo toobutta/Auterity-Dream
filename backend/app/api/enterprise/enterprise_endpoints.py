@@ -386,7 +386,8 @@ def generate_mock_sdk(language: str) -> bytes:
             )
             zip_file.writestr(
                 "src/client.ts",
-                "// TypeScript SDK client\nexport class AuterityClient {\n  // Implementation\n}",
+                "// TypeScript SDK client\nexport" \
+                    "class AuterityClient {\n // Implementation\n}",
             )
             zip_file.writestr(
                 "README.md", f"# {language} SDK\n\nSDK for Auterity Platform"
@@ -439,7 +440,8 @@ def generate_mock_white_label_bundle(bundle_id: str) -> bytes:
         )
         zip_file.writestr(
             "DEPLOYMENT.md",
-            "# Deployment Guide\n\nInstructions for deploying your white-label configuration.",
+            "# Deployment Guide\n\nInstructions for" \
+                "deploying your white-label configuration.",
         )
         zip_file.writestr(
             ".env.whitelabel",

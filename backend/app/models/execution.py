@@ -58,7 +58,9 @@ class WorkflowExecution(Base):
     )
 
     def __repr__(self):
-        return f"<WorkflowExecution(id={self.id}, workflow_id={self.workflow_id}, status={self.status})>"
+      \
+         \
+                       return f"<WorkflowExecution(id={self.id}, workflow_id={self.workflow_id}, status={self.status})>"
 
 
 class ExecutionLog(Base):
@@ -84,4 +86,6 @@ class ExecutionLog(Base):
     execution = relationship("WorkflowExecution", back_populates="logs")
 
     def __repr__(self):
-        return f"<ExecutionLog(id={self.id}, execution_id={self.execution_id}, step_name='{self.step_name}')>"
+      \
+         \
+                       return f"<ExecutionLog(id={self.id}, execution_id={self.execution_id}, step_name='{self.step_name}')>"

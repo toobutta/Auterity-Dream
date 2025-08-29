@@ -1,5 +1,7 @@
 """
-AgentRegistry service for agent registration, discovery, capability matching, health checks, and config validation.
+AgentRegistry service for agent registration, discovery, capability matching, health checks, and \
+    \
+    config validation.
 """
 
 from typing import Any, Dict, List, Optional

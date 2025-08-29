@@ -1,4 +1,5 @@
-"""Global Compliance & Localization Service - Multi-language support and regional compliance."""
+"""Global Compliance & Localization Service - Multi-language support and \
+    regional compliance."""
 
 import logging
 from dataclasses import dataclass, field
@@ -148,7 +149,8 @@ class TranslationJob:
 
 
 class GlobalComplianceService:
-    """Global Compliance & Localization Service - Multi-language support and regional compliance."""
+    """Global Compliance & Localization Service - Multi-language support and \
+        regional compliance."""
 
     def __init__(self, db_session):
         self.db = db_session
@@ -180,7 +182,8 @@ class GlobalComplianceService:
                 "region": Region.EUROPE,
                 "category": "data_protection",
                 "requirement": "Data Subject Rights",
-                "description": "Implement rights for data access, rectification, erasure, and portability",
+                "description": "Implement rights for data access, rectification, erasure, and \
+                    portability",
                 "severity": "high",
                 "controls": ["Access control", "Data export", "Right to be forgotten"],
                 "implementation_guide": "Implement API endpoints for data subject requests with proper authentication",
@@ -468,7 +471,10 @@ class GlobalComplianceService:
             recommendations = []
 
             for req in requirements:
-                # Simulate compliance check (in real implementation, this would check actual tenant configuration)
+                # Simulate compliance check (
+                    in real implementation,
+                    this would check actual tenant configuration
+                )
                 compliance_score = await self._check_compliance_requirement(tenant, req)
 
                 assessment_results[req.id] = {
@@ -726,7 +732,8 @@ class GlobalComplianceService:
     ) -> TranslationJob:
         """Create a translation job."""
         try:
-            job_id = f"translation_{source_language.value}_to_{target_language.value}_{datetime.utcnow().timestamp()}"
+       \
+                     job_id = f"translation_{source_language.value}_to_{target_language.value}_{datetime.utcnow().timestamp()}"
 
             job = TranslationJob(
                 id=job_id,

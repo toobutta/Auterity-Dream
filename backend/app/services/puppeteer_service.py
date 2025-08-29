@@ -126,7 +126,9 @@ class PuppeteerService:
             {f"await page.waitForSelector('{wait_for}');" if wait_for else ""}
 
             const title = await page.title();
-            const content = {f"await page.$eval('{selector}', el => el.textContent)" if selector else "await page.content()"};
+            \
+              \
+                      const content = {f"await page.$eval('{selector}', el => el.textContent)" if selector else "await page.content()"};
 
             await page.close();
 

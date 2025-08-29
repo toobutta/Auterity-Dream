@@ -1,6 +1,7 @@
 """
 Integration Controller Implementation
-Phase 1: Foundation Infrastructure for cross-stream integration and deployment coordination
+Phase 1: Foundation Infrastructure for cross-stream integration and \
+    deployment coordination
 """
 
 import asyncio
@@ -186,7 +187,8 @@ class ArtifactRepository:
                     ConflictResolution(
                         id=f"path_conflict_{datetime.now().timestamp()}",
                         conflict_type=ConflictType.CODE_CONFLICT,
-                        description=f"Multiple artifacts target same path: {artifact.path}",
+               \
+                                     description=f"Multiple artifacts target same path: {artifact.path}",
                         affected_artifacts=[paths[artifact.path], artifact.id],
                         resolution_strategy="manual_merge",
                     )
@@ -432,7 +434,8 @@ class IntegrationController:
 
             if not validation_result["valid"]:
                 logger.error(
-                    f"Artifact validation failed for {request_id}: {validation_result['errors']}"
+             \
+                               f"Artifact validation failed for {request_id}: {validation_result['errors']}"
                 )
                 return
 
@@ -457,7 +460,8 @@ class IntegrationController:
 
                 if unresolved_conflicts:
                     logger.error(
-                        f"Unresolved conflicts for {request_id}: {len(unresolved_conflicts)}"
+              \
+                                      f"Unresolved conflicts for {request_id}: {len(unresolved_conflicts)}"
                     )
                     return
 
@@ -481,7 +485,8 @@ class IntegrationController:
 
             if not quality_result["passed"]:
                 logger.error(
-                    f"Quality gates failed for {request_id}: {quality_result['failures']}"
+             \
+                               f"Quality gates failed for {request_id}: {quality_result['failures']}"
                 )
                 return
 
@@ -546,7 +551,8 @@ class IntegrationController:
 
             elif conflict.resolution_strategy == "validate_compatibility":
                 # Auto-validate API compatibility
-                # In real implementation, would check semantic versioning, breaking changes, etc.
+                # In real implementation, would check semantic versioning, \
+                    breaking changes, etc.
                 conflict.resolved_by = "auto_resolver"
                 conflict.resolved_at = datetime.now()
                 resolved.append(conflict.id)
@@ -595,7 +601,8 @@ class IntegrationController:
         """Deploy artifacts to a specific stage"""
         try:
             deployment = DeploymentRecord(
-                id=f"deploy_{integration_id}_{stage.value}_{datetime.now().timestamp()}",
+        \
+                            id=f"deploy_{integration_id}_{stage.value}_{datetime.now().timestamp()}",
                 integration_id=integration_id,
                 stage=stage,
                 artifacts=artifact_ids,

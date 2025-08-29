@@ -1,4 +1,5 @@
-"""AI Model Orchestration & Routing Service - Dynamic model selection and A/B testing."""
+"""AI Model Orchestration & Routing Service - Dynamic model selection and \
+    A/B testing."""
 
 import hashlib
 import logging
@@ -117,7 +118,8 @@ class OrchestrationMetrics:
 
 
 class AIModelOrchestrationService:
-    """AI Model Orchestration & Routing Service - Dynamic model selection and A/B testing."""
+    """AI Model Orchestration & Routing Service - Dynamic model selection and \
+        A/B testing."""
 
     def __init__(self, db_session):
         self.db = db_session

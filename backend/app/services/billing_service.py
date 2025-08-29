@@ -304,8 +304,10 @@ class BillingService:
             SubscriptionPlan.STARTER: settings.STRIPE_PRICE_ID_STARTER,
             SubscriptionPlan.PROFESSIONAL: settings.STRIPE_PRICE_ID_PROFESSIONAL,
             SubscriptionPlan.ENTERPRISE: settings.STRIPE_PRICE_ID_ENTERPRISE,
-            SubscriptionPlan.WHITE_LABEL_STARTER: settings.STRIPE_PRICE_ID_WHITE_LABEL_STARTER,
-            SubscriptionPlan.WHITE_LABEL_ENTERPRISE: settings.STRIPE_PRICE_ID_WHITE_LABEL_ENTERPRISE,
+            SubscriptionPlan.WHITE_LABEL_STARTER: \
+                settings.STRIPE_PRICE_ID_WHITE_LABEL_STARTER,
+            SubscriptionPlan.WHITE_LABEL_ENTERPRISE: \
+                settings.STRIPE_PRICE_ID_WHITE_LABEL_ENTERPRISE,
         }
         return price_ids.get(plan, settings.STRIPE_PRICE_ID_STARTER)
 

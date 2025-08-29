@@ -88,7 +88,9 @@ class AgentOrchestrator:
         self.conversation_memory: Dict[str, List[Dict[str, Any]]] = {}
 
         logger.info(
-            f"Agent Orchestrator initialized (LangChain available: {LANGCHAIN_AVAILABLE})"
+         \
+            \
+                              f"Agent Orchestrator initialized (LangChain available: {LANGCHAIN_AVAILABLE})"
         )
 
     def register_agent(self, agent_config: Dict[str, Any]) -> Dict[str, Any]:

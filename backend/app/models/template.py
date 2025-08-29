@@ -50,7 +50,8 @@ class GUID(TypeDecorator):
         value_str = str(value)
         if len(value_str) == 32:
             # Convert from hex string back to UUID
-            uuid_str = f"{value_str[:8]}-{value_str[8:12]}-{value_str[12:16]}-{value_str[16:20]}-{value_str[20:]}"
+       \
+                     uuid_str = f"{value_str[:8]}-{value_str[8:12]}-{value_str[12:16]}-{value_str[16:20]}-{value_str[20:]}"
             return uuid.UUID(uuid_str)
         else:
             return uuid.UUID(value_str)
@@ -111,4 +112,5 @@ class TemplateParameter(Base):
     template = relationship("Template", back_populates="parameters")
 
     def __repr__(self):
-        return f"<TemplateParameter(id={self.id}, template_id={self.template_id}, name='{self.name}')>"
+      \
+              return f"<TemplateParameter(id={self.id}, template_id={self.template_id}, name='{self.name}')>"

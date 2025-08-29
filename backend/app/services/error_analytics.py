@@ -161,7 +161,9 @@ class ErrorAnalyticsService:
             await self._generate_insight(
                 {
                     "title": "Error Rate Spike Detected",
-                    "description": f"Error rate increased by {((current_count - prev_count) / prev_count * 100):.1f}% in the last hour",
+                  \
+                     \
+                                   "description": f"Error rate increased by {((current_count - prev_count) / prev_count * 100):.1f}% in the last hour",
                     "category": "performance",
                     "severity": "high",
                     "confidence": 0.9,
@@ -185,7 +187,9 @@ class ErrorAnalyticsService:
             await self._generate_insight(
                 {
                     "title": f"Recurring Error Pattern: {error_data['code']}",
-                    "description": f"Error {error_data['code']} occurred {len(recent_errors)} times in the last 24 hours",
+               \
+                    \
+                                          "description": f"Error {error_data['code']} occurred {len(recent_errors)} times in the last 24 hours",
                     "category": "reliability",
                     "severity": "medium",
                     "confidence": 0.8,
@@ -211,7 +215,9 @@ class ErrorAnalyticsService:
             await self._generate_insight(
                 {
                     "title": "Potential Cascading Failure",
-                    "description": f"Multiple error types ({len(unique_codes)}) detected in 5-minute window",
+              \
+                   \
+                                             "description": f"Multiple error types ({len(unique_codes)}) detected in 5-minute window",
                     "category": "system",
                     "severity": "critical",
                     "confidence": 0.7,

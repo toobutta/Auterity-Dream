@@ -53,21 +53,33 @@ class BaseAppException(Exception):
     def _generate_user_message(self) -> str:
         """Generate user-friendly error message based on category."""
         user_messages = {
-            ErrorCategory.AUTHENTICATION: "Authentication failed. Please log in again.",
+            ErrorCategory.AUTHENTICATION: (
+                "Authentication failed. Please log in again."
+            ),
             ErrorCategory.AUTHORIZATION: (
                 "You don't have permission to perform this action."
             ),
             ErrorCategory.VALIDATION: "Please check your input and try again.",
-            ErrorCategory.WORKFLOW: "There was a problem with the workflow execution.",
+            ErrorCategory.WORKFLOW: (
+                "There was a problem with the workflow execution."
+            ),
             ErrorCategory.AI_SERVICE: (
                 "AI service is temporarily unavailable. Please try again."
             ),
-            ErrorCategory.DATABASE: "Database error occurred. Please try again later.",
-            ErrorCategory.EXTERNAL_API: "External service is temporarily unavailable.",
-            ErrorCategory.SYSTEM: "System error occurred. Our team has been notified.",
+            ErrorCategory.DATABASE: (
+                "Database error occurred. Please try again later."
+            ),
+            ErrorCategory.EXTERNAL_API: (
+                "External service is temporarily unavailable."
+            ),
+            ErrorCategory.SYSTEM: (
+                "System error occurred. Our team has been notified."
+            ),
             ErrorCategory.BUSINESS_LOGIC: "Business rule validation failed.",
         }
-        return user_messages.get(self.category, "An unexpected error occurred.")
+        return user_messages.get(
+            self.category, "An unexpected error occurred."
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert exception to dictionary for API responses."""
@@ -112,7 +124,10 @@ class ValidationError(BaseAppException):
     """Input validation errors."""
 
     def __init__(
-        self, message: str = "Validation failed", field: Optional[str] = None, **kwargs
+        self,
+        message: str = "Validation failed",
+        field: Optional[str] = None,
+        **kwargs
     ):
         details = kwargs.get("details", {})
         if field:
@@ -263,7 +278,9 @@ class WorkflowNotFoundError(WorkflowError):
 class WorkflowExecutionError(WorkflowError):
     """Workflow execution failure."""
 
-    def __init__(self, execution_id: str, step_name: Optional[str] = None, **kwargs):
+    def __init__(
+        self, execution_id: str, step_name: Optional[str] = None, **kwargs
+    ):
         message = f"Workflow execution {execution_id} failed"
         if step_name:
             message += f" at step '{step_name}'"

@@ -347,7 +347,9 @@ async def register_agent(
     """Register a new agent in the orchestration system"""
 
     logger.info(
-        f"Agent registration request from user {user_info.get('user_id')} for agent {request.agent_id}"
+        \
+          \
+                  f"Agent registration request from user {user_info.get('user_id')} for agent {request.agent_id}"
     )
 
     try:
@@ -400,7 +402,9 @@ async def execute_workflow(
 
     start_time = time.time()
     logger.info(
-        f"Workflow execution request from user {user_info.get('user_id')} for workflow {request.workflow_id}"
+        \
+          \
+                  f"Workflow execution request from user {user_info.get('user_id')} for workflow {request.workflow_id}"
     )
 
     try:
@@ -510,7 +514,9 @@ async def query_rag(
     """Query the RAG engine for information retrieval"""
 
     logger.info(
-        f"RAG query request from user {user_info.get('user_id')}: {request.query[:100]}..."
+       \
+          \
+                    f"RAG query request from user {user_info.get('user_id')}: {request.query[:100]}..."
     )
 
     try:
@@ -568,7 +574,9 @@ async def index_documents(
     """Index documents for RAG retrieval"""
 
     logger.info(
-        f"Document indexing request from user {user_info.get('user_id')}: {len(request.documents)} documents"
+        \
+          \
+                  f"Document indexing request from user {user_info.get('user_id')}: {len(request.documents)} documents"
     )
 
     try:
@@ -599,7 +607,9 @@ async def index_documents(
         }
 
         logger.info(
-            f"Successfully started document indexing for user {user_info.get('user_id')}"
+         \
+             \
+                             f"Successfully started document indexing for user {user_info.get('user_id')}"
         )
 
         return DocumentIndexResponse(
@@ -621,7 +631,9 @@ async def validate_compliance(
     """Validate operation against compliance requirements"""
 
     logger.info(
-        f"Compliance validation request from user {user_info.get('user_id')} for operation: {request.operation}"
+        \
+          \
+                  f"Compliance validation request from user {user_info.get('user_id')} for operation: {request.operation}"
     )
 
     try:

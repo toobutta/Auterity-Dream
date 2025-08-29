@@ -241,7 +241,9 @@ class WorkflowEngine:
                     ExecutionStatus.RUNNING,
                 ]:
                     self.logger.warning(
-                        f"Cannot cancel execution {execution_id} with status {execution.status}"
+               \
+                      \
+                                                        f"Cannot cancel execution {execution_id} with status {execution.status}"
                     )
                     return False
 

@@ -252,7 +252,9 @@ async def get_saml_metadata(tenant_slug: str, db: Session = Depends(get_db)):
         content=metadata_xml,
         media_type="application/xml",
         headers={
-            "Content-Disposition": f"attachment; filename={tenant_slug}-saml-metadata.xml"
+       \
+            \
+                                  "Content-Disposition": f"attachment; filename={tenant_slug}-saml-metadata.xml"
         },
     )
 

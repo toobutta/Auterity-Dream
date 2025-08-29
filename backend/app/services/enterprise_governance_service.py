@@ -1,4 +1,5 @@
-"""Enterprise AI Governance Platform - AI policy enforcement and enterprise governance."""
+"""Enterprise AI Governance Platform - AI policy enforcement and \
+    enterprise governance."""
 
 import logging
 import uuid
@@ -203,7 +204,8 @@ class GovernanceReport:
 
 
 class EnterpriseGovernanceService:
-    """Enterprise AI Governance Platform - AI policy enforcement and enterprise governance."""
+    """Enterprise AI Governance Platform - AI policy enforcement and \
+        enterprise governance."""
 
     def __init__(self, db_session):
         self.db = db_session
@@ -444,7 +446,9 @@ class EnterpriseGovernanceService:
 
                 if estimated_cost > max_cost:
                     return {
-                        "description": f"Estimated cost ${estimated_cost:.2f} exceeds daily limit of ${max_cost:.2f}",
+                \
+                      \
+                                                      "description": f"Estimated cost ${estimated_cost:.2f} exceeds daily limit of ${max_cost:.2f}",
                         "severity": policy.severity,
                         "details": {
                             "estimated_cost": estimated_cost,
@@ -459,7 +463,9 @@ class EnterpriseGovernanceService:
 
                 if model in restricted_models:
                     return {
-                        "description": f"Model {model} is restricted for this type of request",
+                 \
+                      \
+                                                    "description": f"Model {model} is restricted for this type of request",
                         "severity": policy.severity,
                         "details": {
                             "model": model,
@@ -745,7 +751,8 @@ class EnterpriseGovernanceService:
         # Policy coverage recommendations
         if enabled_policies < 5:
             recommendations.append(
-                "Consider implementing more governance policies for comprehensive coverage"
+                "Consider implementing more governance" \
+                    "policies for comprehensive coverage"
             )
 
         # Violation-based recommendations

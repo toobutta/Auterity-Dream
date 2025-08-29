@@ -3,9 +3,10 @@ from typing import Dict, List, Optional
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.models.workflow import WorkflowExecution
+
 from ..database import get_db
 from ..models import IndustryProfile, Template
-from app.models.workflow import WorkflowExecution
 
 
 class TemplateService:

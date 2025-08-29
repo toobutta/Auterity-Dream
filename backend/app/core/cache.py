@@ -9,10 +9,10 @@ import logging
 import time
 from functools import wraps
 from typing import Any, Dict, Optional
-from fastapi import Request
+
 import redis.asyncio as redis
 from cachetools import TTLCache
-
+from fastapi import Request
 
 logger = logging.getLogger(__name__)
 

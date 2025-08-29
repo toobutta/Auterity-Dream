@@ -471,7 +471,8 @@ class KiroOrchestrator:
             DevelopmentBlock(
                 id="foundation-1",
                 name="Orchestration Layer Foundation",
-                description="Create Kiro orchestrator core with development block planning capabilities",
+                description="Create Kiro orchestrator core" \
+                    "with development block planning capabilities",
                 assigned_tool=AITool.KIRO,
                 estimated_hours=8.0,
                 priority=Priority.CRITICAL,
@@ -488,7 +489,8 @@ class KiroOrchestrator:
             DevelopmentBlock(
                 id="amazon-q-security-1",
                 name="Security Analysis Framework",
-                description="Implement automated security scanning and vulnerability detection",
+                description="Implement automated security scanning and \
+                    vulnerability detection",
                 assigned_tool=AITool.AMAZON_Q,
                 dependencies=["foundation-1"],
                 estimated_hours=12.0,
@@ -530,7 +532,8 @@ class KiroOrchestrator:
             DevelopmentBlock(
                 id="cline-backend-1",
                 name="Backend API Framework",
-                description="Implement core backend API infrastructure and data processing",
+                description="Implement core backend API infrastructure and \
+                    data processing",
                 assigned_tool=AITool.CLINE,
                 dependencies=["foundation-1"],
                 estimated_hours=14.0,

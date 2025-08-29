@@ -424,7 +424,8 @@ class AICostOptimizationService:
                     expected_cost_savings=Decimal("0"),
                     expected_performance_impact=0.0,
                     confidence=0.5,
-                    reasoning="No models meet cost constraint, using cheapest available",
+                    reasoning="No models meet cost" \
+                        "constraint, using cheapest available",
                 )
 
             # Sort by overall score (descending)
@@ -555,13 +556,19 @@ class AICostOptimizationService:
         self.model_profiles[model_id]
 
         if strategy == OptimizationStrategy.AGGRESSIVE:
-            return f"Selected {model_id} for maximum cost savings. Performance score: {evaluation['performance_score']:.1f}/100"
+           \
+             \
+                         return f"Selected {model_id} for maximum cost savings. Performance score: {evaluation['performance_score']:.1f}/100"
         elif strategy == OptimizationStrategy.BALANCED:
-            return f"Selected {model_id} balancing cost and performance. Overall score: {evaluation['overall_score']:.1f}/100"
+            return f"Selected {model_id} balancing cost and \
+                performance. Overall score: {evaluation['overall_score']:.1f}/100"
         elif strategy == OptimizationStrategy.QUALITY_FIRST:
-            return f"Selected {model_id} prioritizing quality and capabilities. Performance score: {evaluation['performance_score']:.1f}/100"
+            return f"Selected {model_id} prioritizing quality and \
+                capabilities. Performance score: {evaluation['performance_score']:.1f}/100"
         else:
-            return f"Selected {model_id} for budget compliance. Cost efficiency: {evaluation['cost_efficiency']:.1f}/100"
+          \
+             \
+                           return f"Selected {model_id} for budget compliance. Cost efficiency: {evaluation['cost_efficiency']:.1f}/100"
 
     def _generate_implementation_steps(
         self, model_id: str, estimated_cost: Decimal, savings: Decimal
@@ -631,11 +638,13 @@ class AICostOptimizationService:
 
             if projected_spend > tenant.monthly_budget * Decimal("1.1"):
                 recommendations.append(
-                    "Projected spend exceeds budget by >10% - implement aggressive optimization"
+                    "Projected spend exceeds budget by" \
+                        ">10% - implement aggressive optimization"
                 )
             elif projected_spend > tenant.monthly_budget:
                 recommendations.append(
-                    "Projected spend exceeds budget - consider cost optimization measures"
+                    "Projected spend exceeds budget" \
+                        "- consider cost optimization measures"
                 )
 
             # Model usage analysis
@@ -646,7 +655,9 @@ class AICostOptimizationService:
                     model_usage.items(), key=lambda x: x[1]["total_cost"]
                 )
                 recommendations.append(
-                    f"Consider alternatives to {most_expensive[0]} (cost: ${most_expensive[1]['total_cost']:.2f})"
+             \
+                  \
+                                                f"Consider alternatives to {most_expensive[0]} (cost: ${most_expensive[1]['total_cost']:.2f})"
                 )
 
             return BudgetAnalysis(
@@ -760,7 +771,9 @@ class AICostOptimizationService:
                                 if optimization_level == CostOptimizationLevel.MODERATE
                                 else "high"
                             ),
-                            "description": f"Replace {model} with cheaper alternatives to save ~${potential_savings:.2f}",
+                  \
+                         \
+                                                               "description": f"Replace {model} with cheaper alternatives to save ~${potential_savings:.2f}",
                         }
                     )
 
@@ -778,7 +791,9 @@ class AICostOptimizationService:
                                 budget_analysis.budget_remaining * Decimal("0.5")
                             ),
                             "impact": "high",
-                            "description": f"Budget at {budget_analysis.budget_utilization:.1%} utilization - implement cost controls",
+                  \
+                         \
+                                                               "description": f"Budget at {budget_analysis.budget_utilization:.1%} utilization - implement cost controls",
                         }
                     )
 

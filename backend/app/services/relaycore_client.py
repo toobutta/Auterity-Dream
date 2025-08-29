@@ -237,7 +237,9 @@ class RelayCoreClient:
                     continue
 
         # All retries failed
-        error_msg = f"RelayCore request failed after {self.max_retries + 1} attempts: {last_error}"
+        error_msg \
+           \
+                 = f"RelayCore request failed after {self.max_retries + 1} attempts: {last_error}"
         self.logger.error(error_msg)
         raise AIServiceError(error_msg)
 
@@ -344,7 +346,9 @@ class RelayCoreAIService:
             )
 
             self.logger.info(
-                f"RelayCore request successful using {response.provider}/{response.model_used}"
+          \
+               \
+                                         f"RelayCore request successful using {response.provider}/{response.model_used}"
             )
 
             return {

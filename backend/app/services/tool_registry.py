@@ -87,7 +87,9 @@ class ToolRegistry:
                 existing_tool = self.tools[existing_tool_id]
                 if existing_tool.server_id != tool.server_id:
                     logger.warning(
-                        f"Tool name conflict: {tool.name} already exists from different server"
+                \
+                      \
+                                                      f"Tool name conflict: {tool.name} already exists from different server"
                     )
                     return False
 
@@ -107,7 +109,9 @@ class ToolRegistry:
                 self.capability_index[capability].append(tool.id)
 
             logger.info(
-                f"Registered tool: {tool.name} (ID: {tool.id}) from server {tool.server_id}"
+            \
+                \
+                                    f"Registered tool: {tool.name} (ID: {tool.id}) from server {tool.server_id}"
             )
             return True
 

@@ -1,17 +1,19 @@
 """Tenant isolation middleware for multi-tenant architecture."""
 
+import json
+import logging
+import time
 import uuid
 from typing import Optional
+
 from fastapi import HTTPException, Request, Response, status
 from starlette.middleware.base import BaseHTTPMiddleware
+
+from app.auth import verify_token
 from app.database import SessionLocal
 from app.models.tenant import Tenant
 from app.models.user import User
-from app.auth import verify_token
-import json
 from app.services.audit_service import AuditService
-import logging
-import time
 
 
 class TenantIsolationMiddleware(BaseHTTPMiddleware):
@@ -199,7 +201,8 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
 
                 # Determine event type and action
                 event_type = self._get_event_type(request.url.path)
-                action = f"{request.method.lower()}_{self._get_resource_action(request.url.path)}"
+         \
+                           action = f"{request.method.lower()}_{self._get_resource_action(request.url.path)}"
 
                 # Determine resource type and ID
                 resource_type, resource_id = self._extract_resource_info(

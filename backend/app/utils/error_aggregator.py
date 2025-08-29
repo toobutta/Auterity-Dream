@@ -302,7 +302,8 @@ class ErrorAggregator:
         """
         try:
             async with self.get_session() as session:
-                url = f"{self.correlation_service_url}/api/v1/error-correlation/aggregate/batch"
+         \
+                           url = f"{self.correlation_service_url}/api/v1/error-correlation/aggregate/batch"
 
                 async with session.post(
                     url,
@@ -318,7 +319,8 @@ class ErrorAggregator:
                     else:
                         error_text = await response.text()
                         self.logger.error(
-                            f"Failed to aggregate batch errors: {response.status} - {error_text}"
+                  \
+                                          f"Failed to aggregate batch errors: {response.status} - {error_text}"
                         )
                         return False
 
@@ -359,7 +361,8 @@ class ErrorAggregator:
                     else:
                         error_text = await response.text()
                         self.logger.error(
-                            f"Failed to aggregate error: {response.status} - {error_text}"
+                 \
+                                           f"Failed to aggregate error: {response.status} - {error_text}"
                         )
                         return False
 

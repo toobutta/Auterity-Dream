@@ -1,7 +1,8 @@
 """
 Enhanced Error Handling Middleware
 
-Automatically integrates error analytics, recovery, and notifications into the request pipeline.
+Automatically integrates error analytics, recovery, and \
+    notifications into the request pipeline.
 """
 
 import asyncio
@@ -137,7 +138,8 @@ class EnhancedErrorHandlingMiddleware(BaseHTTPMiddleware):
     ) -> None:
         """Trigger automatic recovery for retryable errors."""
         try:
-            # Only trigger recovery for high-severity errors or business-critical operations
+            # Only trigger recovery for high-severity errors or
+            # business-critical operations
             if error.severity.value in ["high", "critical"] or context.get(
                 "business_critical", False
             ):
