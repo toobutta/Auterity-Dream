@@ -190,7 +190,9 @@ def main():
     fix_missing_schemas()
 
     print("✅ Test infrastructure repair completed!")
-    print("🧪 Run 'python3 -m pytest --collect-only' to verify tests are discoverable")
+    print(
+        "🧪 Run 'python3 -m pytest --collect-only' to verify tests are discoverable"
+    )
 
 
 if __name__ == "__main__":

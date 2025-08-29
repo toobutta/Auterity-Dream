@@ -27,7 +27,10 @@ class TestPromptTemplate:
             variables=["name", "order_id"],
         )
 
-        assert template.template == "Hello {name}, your order {order_id} is ready."
+        assert (
+            template.template
+            == "Hello {name}, your order {order_id} is ready."
+        )
         assert template.variables == ["name", "order_id"]
 
     def test_template_formatting_success(self):
@@ -80,7 +83,9 @@ class TestAIService:
     def test_ai_service_initialization(self):
         """Test AI service initialization."""
         with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
-            service = AIService(model=AIModelType.GPT_4, max_retries=5, retry_delay=2.0)
+            service = AIService(
+                model=AIModelType.GPT_4, max_retries=5, retry_delay=2.0
+            )
 
             assert service.model == AIModelType.GPT_4
             assert service.max_retries == 5
@@ -89,7 +94,9 @@ class TestAIService:
     def test_ai_service_no_api_key(self):
         """Test AI service initialization without API key."""
         with patch.dict("os.environ", {}, clear=True):
-            with pytest.raises(AIServiceError, match="OpenAI API key not provided"):
+            with pytest.raises(
+                AIServiceError, match="OpenAI API key not provided"
+            ):
                 AIService()
 
     @pytest.mark.asyncio
@@ -122,7 +129,9 @@ class TestAIService:
         assert call_args[1]["temperature"] == 0.7
 
     @pytest.mark.asyncio
-    async def test_process_text_with_context(self, ai_service, mock_openai_client):
+    async def test_process_text_with_context(
+        self, ai_service, mock_openai_client
+    ):
         """Test text processing with context."""
         # Mock OpenAI response
         mock_response = MagicMock()
@@ -147,7 +156,9 @@ class TestAIService:
         assert "Additional context" in messages[2]["content"]
 
     @pytest.mark.asyncio
-    async def test_process_with_template_success(self, ai_service, mock_openai_client):
+    async def test_process_with_template_success(
+        self, ai_service, mock_openai_client
+    ):
         """Test processing with predefined template."""
         # Mock OpenAI response
         mock_response = MagicMock()
@@ -164,7 +175,9 @@ class TestAIService:
             "context": "Dealership information",
         }
 
-        result = await ai_service.process_with_template("customer_inquiry", variables)
+        result = await ai_service.process_with_template(
+            "customer_inquiry", variables
+        )
 
         assert result.content == "Template response"
         assert result.is_success
@@ -179,8 +192,12 @@ class TestAIService:
     @pytest.mark.asyncio
     async def test_process_with_template_not_found(self, ai_service):
         """Test processing with non-existent template."""
-        with pytest.raises(AIServiceError, match="Template 'nonexistent' not found"):
-            await ai_service.process_with_template("nonexistent", {"var": "value"})
+        with pytest.raises(
+            AIServiceError, match="Template 'nonexistent' not found"
+        ):
+            await ai_service.process_with_template(
+                "nonexistent", {"var": "value"}
+            )
 
     @pytest.mark.asyncio
     async def test_process_with_template_missing_variables(self, ai_service):
@@ -191,7 +208,9 @@ class TestAIService:
             )
 
     @pytest.mark.asyncio
-    async def test_api_call_rate_limit_retry(self, ai_service, mock_openai_client):
+    async def test_api_call_rate_limit_retry(
+        self, ai_service, mock_openai_client
+    ):
         """Test retry logic for rate limit errors."""
         # Mock rate limit error then success
         rate_limit_error = RateLimitError(
@@ -218,7 +237,9 @@ class TestAIService:
         assert mock_openai_client.chat.completions.create.call_count == 2
 
     @pytest.mark.asyncio
-    async def test_api_call_max_retries_exceeded(self, ai_service, mock_openai_client):
+    async def test_api_call_max_retries_exceeded(
+        self, ai_service, mock_openai_client
+    ):
         """Test behavior when max retries are exceeded."""
         # Mock persistent API error
         api_error = APIError(message="API error", request=MagicMock(), body={})
@@ -238,7 +259,9 @@ class TestAIService:
     @pytest.mark.asyncio
     async def test_validate_response_json_success(self, ai_service):
         """Test successful JSON response validation."""
-        json_response = json.dumps({"result": "success", "data": {"key": "value"}})
+        json_response = json.dumps(
+            {"result": "success", "data": {"key": "value"}}
+        )
 
         is_valid = await ai_service.validate_response(
             json_response, required_fields=["result", "data"]

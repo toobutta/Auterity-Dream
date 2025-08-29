@@ -74,7 +74,9 @@ class ErrorCorrelationMiddleware(BaseHTTPMiddleware):
                         "request_method": request.method,
                         "request_url": str(request.url),
                         "request_headers": dict(request.headers),
-                        "client_ip": request.client.host if request.client else None,
+                        "client_ip": request.client.host
+                        if request.client
+                        else None,
                         "user_agent": request.headers.get("user-agent"),
                     },
                     correlation_id=correlation_id,
@@ -92,7 +94,9 @@ class ErrorCorrelationMiddleware(BaseHTTPMiddleware):
                         "request_method": request.method,
                         "request_url": str(request.url),
                         "request_headers": dict(request.headers),
-                        "client_ip": request.client.host if request.client else None,
+                        "client_ip": request.client.host
+                        if request.client
+                        else None,
                         "user_agent": request.headers.get("user-agent"),
                         "error_type": type(error).__name__,
                     },
@@ -106,7 +110,9 @@ class ErrorCorrelationMiddleware(BaseHTTPMiddleware):
 
         except Exception as aggregation_error:
             # Don't let aggregation errors affect the main request
-            logger.error(f"Failed to aggregate request error: {aggregation_error}")
+            logger.error(
+                f"Failed to aggregate request error: {aggregation_error}"
+            )
 
     def _get_error_code(self, error: Exception) -> str:
         """Get error code from exception."""
@@ -152,7 +158,9 @@ class ErrorCorrelationMiddleware(BaseHTTPMiddleware):
 
         try:
             return "".join(
-                traceback.format_exception(type(error), error, error.__traceback__)
+                traceback.format_exception(
+                    type(error), error, error.__traceback__
+                )
             )
         except Exception:
             return None
@@ -179,14 +187,17 @@ class WorkflowErrorCorrelationMixin:
         try:
             await self.error_aggregator.aggregate_workflow_error(
                 workflow_id=workflow_id,
-                execution_id=execution_id or f"exec_{datetime.utcnow().timestamp()}",
+                execution_id=execution_id
+                or f"exec_{datetime.utcnow().timestamp()}",
                 step_name=step_name,
                 error=error,
                 user_id=user_id,
                 request_id=request_id,
             )
         except Exception as aggregation_error:
-            logger.error(f"Failed to aggregate workflow error: {aggregation_error}")
+            logger.error(
+                f"Failed to aggregate workflow error: {aggregation_error}"
+            )
 
 
 def auto_aggregate_workflow_errors(
@@ -259,11 +270,17 @@ class ExampleWorkflowService(WorkflowErrorCorrelationMixin):
         workflow_id_extractor=lambda *args, **kwargs: kwargs.get(
             "workflow_id", args[0] if args else "unknown"
         ),
-        execution_id_extractor=lambda *args, **kwargs: kwargs.get("execution_id"),
+        execution_id_extractor=lambda *args, **kwargs: kwargs.get(
+            "execution_id"
+        ),
         step_name_extractor=lambda *args, **kwargs: kwargs.get("step_name"),
     )
     async def execute_workflow_step(
-        self, workflow_id: str, execution_id: str, step_name: str, step_config: dict
+        self,
+        workflow_id: str,
+        execution_id: str,
+        step_name: str,
+        step_config: dict,
     ):
         """Execute a workflow step with automatic error aggregation."""
 
@@ -315,6 +332,8 @@ class ExampleWorkflowService(WorkflowErrorCorrelationMixin):
         except Exception as workflow_error:
             # Aggregate workflow-level error
             await self._aggregate_workflow_error(
-                error=workflow_error, workflow_id=workflow_id, execution_id=execution_id
+                error=workflow_error,
+                workflow_id=workflow_id,
+                execution_id=execution_id,
             )
             raise

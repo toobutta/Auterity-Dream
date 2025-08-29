@@ -109,10 +109,15 @@ class MockVectorDuplicateService:
         }
 
     async def create_similarity_cluster(
-        self, tenant_id: UUID, items: List[Dict[str, Any]], threshold: float = 0.7
+        self,
+        tenant_id: UUID,
+        items: List[Dict[str, Any]],
+        threshold: float = 0.7,
     ) -> List[Dict[str, Any]]:
         """Mock create similarity clusters."""
-        self.logger.info(f"Mock creating similarity clusters for tenant {tenant_id}")
+        self.logger.info(
+            f"Mock creating similarity clusters for tenant {tenant_id}"
+        )
 
         # Simple mock clustering
         clusters = []
@@ -124,7 +129,9 @@ class MockVectorDuplicateService:
                     "cluster_id": cluster_id,
                     "tenant_id": str(tenant_id),
                     "items_count": len(items),
-                    "centroid_embedding": items[0]["embedding"] if items else [],
+                    "centroid_embedding": items[0]["embedding"]
+                    if items
+                    else [],
                     "similarity_threshold": threshold,
                     "created_at": datetime.utcnow().isoformat(),
                 }

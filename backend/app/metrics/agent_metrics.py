@@ -59,7 +59,9 @@ agent_active_sessions = Gauge(
 )
 
 agent_registered_count = Gauge(
-    "agent_registered_count", "Number of registered agents", ["agent_type", "tenant_id"]
+    "agent_registered_count",
+    "Number of registered agents",
+    ["agent_type", "tenant_id"],
 )
 
 agent_errors_total = Counter(
@@ -70,7 +72,9 @@ agent_errors_total = Counter(
 
 # System performance metrics
 agent_memory_usage_bytes = Gauge(
-    "agent_memory_usage_bytes", "Memory usage by agent services", ["service_name"]
+    "agent_memory_usage_bytes",
+    "Memory usage by agent services",
+    ["service_name"],
 )
 
 agent_service_health = Gauge(
@@ -81,12 +85,16 @@ agent_service_health = Gauge(
 
 # Rate limiting metrics
 agent_rate_limit_hits_total = Counter(
-    "agent_rate_limit_hits_total", "Total rate limit hits", ["endpoint", "client_ip"]
+    "agent_rate_limit_hits_total",
+    "Total rate limit hits",
+    ["endpoint", "client_ip"],
 )
 
 # Document indexing metrics
 agent_documents_indexed_total = Counter(
-    "agent_documents_indexed_total", "Total documents indexed", ["domain", "tenant_id"]
+    "agent_documents_indexed_total",
+    "Total documents indexed",
+    ["domain", "tenant_id"],
 )
 
 agent_index_size_bytes = Gauge(
@@ -118,7 +126,9 @@ class AgentMetricsCollector:
         ).inc()
 
         agent_request_duration_seconds.labels(
-            endpoint=endpoint, method=method, agent_type=agent_type or "unknown"
+            endpoint=endpoint,
+            method=method,
+            agent_type=agent_type or "unknown",
         ).observe(duration)
 
     @staticmethod
@@ -144,7 +154,11 @@ class AgentMetricsCollector:
 
     @staticmethod
     def record_rag_query(
-        domain: str, use_qa: bool, status: str, duration: float, tenant_id: str = None
+        domain: str,
+        use_qa: bool,
+        status: str,
+        duration: float,
+        tenant_id: str = None,
     ):
         """Record RAG query metrics"""
         agent_rag_queries_total.labels(
@@ -164,14 +178,18 @@ class AgentMetricsCollector:
     ):
         """Record compliance validation metrics"""
         agent_compliance_validations_total.labels(
-            operation=operation, result=result, tenant_id=tenant_id or "unknown"
+            operation=operation,
+            result=result,
+            tenant_id=tenant_id or "unknown",
         ).inc()
 
     @staticmethod
     def record_error(error_type: str, endpoint: str, tenant_id: str = None):
         """Record error metrics"""
         agent_errors_total.labels(
-            error_type=error_type, endpoint=endpoint, tenant_id=tenant_id or "unknown"
+            error_type=error_type,
+            endpoint=endpoint,
+            tenant_id=tenant_id or "unknown",
         ).inc()
 
     @staticmethod
@@ -184,7 +202,9 @@ class AgentMetricsCollector:
     @staticmethod
     def record_rate_limit_hit(endpoint: str, client_ip: str):
         """Record rate limit hit"""
-        agent_rate_limit_hits_total.labels(endpoint=endpoint, client_ip=client_ip).inc()
+        agent_rate_limit_hits_total.labels(
+            endpoint=endpoint, client_ip=client_ip
+        ).inc()
 
     @staticmethod
     def record_document_indexing(

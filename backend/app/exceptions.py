@@ -127,7 +127,7 @@ class ValidationError(BaseAppException):
         self,
         message: str = "Validation failed",
         field: Optional[str] = None,
-        **kwargs
+        **kwargs,
     ):
         details = kwargs.get("details", {})
         if field:

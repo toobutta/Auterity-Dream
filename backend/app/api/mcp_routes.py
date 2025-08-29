@@ -36,7 +36,9 @@ protocol_manager = ProtocolManager()
 mcp_router = APIRouter(prefix="/mcp", tags=["mcp-servers"])
 
 
-@mcp_router.post("/servers", response_model=dict, status_code=status.HTTP_201_CREATED)
+@mcp_router.post(
+    "/servers", response_model=dict, status_code=status.HTTP_201_CREATED
+)
 async def create_mcp_server(
     server_data: MCPServerCreate,
     background_tasks: BackgroundTasks,
@@ -48,7 +50,9 @@ async def create_mcp_server(
 
         # Start the server in background
         server_id = server_data.id
-        background_tasks.add_task(manager.start_server, server_id, server_data.config)
+        background_tasks.add_task(
+            manager.start_server, server_id, server_data.config
+        )
 
         return {"server_id": str(server_id), "status": "starting"}
     except Exception as e:
@@ -100,7 +104,9 @@ async def stop_server(server_id: UUID, db: Session = Depends(get_db)):
 
 
 @mcp_router.get("/servers/{server_id}/tools")
-async def discover_server_tools(server_id: UUID, db: Session = Depends(get_db)):
+async def discover_server_tools(
+    server_id: UUID, db: Session = Depends(get_db)
+):
     """Discover tools available on an MCP server."""
     try:
         manager = MCPServerManager(db)
@@ -117,7 +123,9 @@ agent_router = APIRouter(prefix="/agents", tags=["agents"])
 @agent_router.post(
     "/register", response_model=Agent, status_code=status.HTTP_201_CREATED
 )
-async def register_agent(agent_data: AgentCreate, db: Session = Depends(get_db)):
+async def register_agent(
+    agent_data: AgentCreate, db: Session = Depends(get_db)
+):
     """Register a new agent."""
     try:
         registry = AgentRegistry(db)
@@ -196,7 +204,9 @@ async def register_tool(tool_data: dict):
         if success:
             return {"tool_id": str(tool.id), "status": "registered"}
         else:
-            raise HTTPException(status_code=400, detail="Failed to register tool")
+            raise HTTPException(
+                status_code=400, detail="Failed to register tool"
+            )
     except Exception as e:
         logger.error(f"Failed to register tool: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -280,7 +290,9 @@ async def start_execution(execution_data: dict):
             target_name=execution_data["target_name"],
             user_id=UUID(execution_data["user_id"]),
             input_data=execution_data.get("input_data"),
-            priority=ExecutionPriority(execution_data.get("priority", "normal")),
+            priority=ExecutionPriority(
+                execution_data.get("priority", "normal")
+            ),
             parent_execution_id=(
                 UUID(execution_data["parent_execution_id"])
                 if execution_data.get("parent_execution_id")
@@ -358,7 +370,8 @@ async def cancel_execution(execution_id: UUID):
         return {"execution_id": str(execution_id), "status": "cancelled"}
     else:
         raise HTTPException(
-            status_code=404, detail="Execution not found or cannot be cancelled"
+            status_code=404,
+            detail="Execution not found or cannot be cancelled",
         )
 
 
@@ -407,7 +420,9 @@ async def process_protocol_message(message_data: dict):
         connection_id = UUID(message_data["connection_id"])
         raw_message = message_data["message"]
 
-        response = await protocol_manager.process_message(raw_message, connection_id)
+        response = await protocol_manager.process_message(
+            raw_message, connection_id
+        )
 
         if response:
             return response.to_dict()
@@ -421,7 +436,9 @@ async def process_protocol_message(message_data: dict):
 @protocol_router.post("/connections/{connection_id}/register")
 async def register_connection(connection_id: UUID):
     """Register a new protocol connection."""
-    protocol_manager.register_connection(connection_id, None)  # Placeholder connection
+    protocol_manager.register_connection(
+        connection_id, None
+    )  # Placeholder connection
     return {"connection_id": str(connection_id), "status": "registered"}
 
 

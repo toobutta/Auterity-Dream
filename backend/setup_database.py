@@ -29,7 +29,8 @@ def test_database_connection():
 
     # Try to get settings from environment
     database_url = os.getenv(
-        "DATABASE_URL", "postgresql://postgres:password@localhost:5432/workflow_engine"
+        "DATABASE_URL",
+        "postgresql://postgres:password@localhost:5432/workflow_engine",
     )
 
     print(f"Attempting to connect to database: {database_url}")
@@ -53,7 +54,9 @@ def test_database_connection():
                 if result.fetchone():
                     print("✅ pgvector extension is available")
                 else:
-                    print("⚠️  pgvector extension not found - attempting to create...")
+                    print(
+                        "⚠️  pgvector extension not found - attempting to create..."
+                    )
                     conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
                     conn.commit()
                     print("✅ pgvector extension created successfully")

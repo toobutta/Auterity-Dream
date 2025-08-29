@@ -43,7 +43,9 @@ class PuppeteerService:
             payload = {"url": url, "options": pdf_options}
 
             response = requests.post(
-                f"{self.browserless_url}/pdf", json=payload, timeout=self.timeout / 1000
+                f"{self.browserless_url}/pdf",
+                json=payload,
+                timeout=self.timeout / 1000,
             )
 
             if response.status_code == 200:
@@ -115,7 +117,10 @@ class PuppeteerService:
             return {"error": str(e)}
 
     def scrape_content(
-        self, url: str, selector: Optional[str] = None, wait_for: Optional[str] = None
+        self,
+        url: str,
+        selector: Optional[str] = None,
+        wait_for: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Scrape content from webpage."""
         try:
@@ -257,7 +262,9 @@ class PuppeteerService:
             payload = {"html": html_content, "options": pdf_options}
 
             response = requests.post(
-                f"{self.browserless_url}/pdf", json=payload, timeout=self.timeout / 1000
+                f"{self.browserless_url}/pdf",
+                json=payload,
+                timeout=self.timeout / 1000,
             )
 
             if response.status_code == 200:

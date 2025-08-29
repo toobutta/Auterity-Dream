@@ -40,7 +40,9 @@ class TestCompleteWorkflowLifecycle:
         # Step 2: Execute the workflow with mock AI response
         execution_data = {"input": "I have a question about my recent bill"}
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Thank you for your billing inquiry. I'd be happy to help you with your recent bill.",
                 "usage": {"total_tokens": 75},
@@ -74,7 +76,8 @@ class TestCompleteWorkflowLifecycle:
 
         # Step 4: Get execution logs
         logs_response = client.get(
-            f"/api/executions/{execution_id}/logs", headers=authenticated_headers
+            f"/api/executions/{execution_id}/logs",
+            headers=authenticated_headers,
         )
         assert logs_response.status_code == 200
         logs = logs_response.json()
@@ -86,7 +89,9 @@ class TestCompleteWorkflowLifecycle:
             assert any(log.get("step_type") == "ai-process" for log in logs)
 
         # Step 5: List all workflows to verify it appears
-        list_response = client.get("/api/workflows", headers=authenticated_headers)
+        list_response = client.get(
+            "/api/workflows", headers=authenticated_headers
+        )
         assert list_response.status_code == 200
         workflows = list_response.json()
 
@@ -107,7 +112,9 @@ class TestCompleteWorkflowLifecycle:
         }
 
         response = client.post(
-            "/api/workflows", json=invalid_workflow, headers=authenticated_headers
+            "/api/workflows",
+            json=invalid_workflow,
+            headers=authenticated_headers,
         )
         assert response.status_code == 422  # Validation error
 
@@ -129,7 +136,9 @@ class TestCompleteWorkflowLifecycle:
         }
 
         response = client.post(
-            "/api/workflows", json=valid_workflow, headers=authenticated_headers
+            "/api/workflows",
+            json=valid_workflow,
+            headers=authenticated_headers,
         )
         assert response.status_code == 201
         workflow = response.json()
@@ -167,7 +176,9 @@ class TestCompleteWorkflowLifecycle:
         execution_ids = []
 
         # Start multiple executions concurrently
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Processed inquiry successfully",
                 "usage": {"total_tokens": 50},
@@ -190,7 +201,8 @@ class TestCompleteWorkflowLifecycle:
         # Check status of each execution
         for execution_id in execution_ids:
             response = client.get(
-                f"/api/executions/{execution_id}", headers=authenticated_headers
+                f"/api/executions/{execution_id}",
+                headers=authenticated_headers,
             )
             assert response.status_code == 200
             execution = response.json()
@@ -231,7 +243,10 @@ class TestTemplateIntegration:
         instantiation_data = {
             "name": "My Customer Service Workflow",
             "description": "Instantiated from template",
-            "parameters": {"inquiry_type": "billing", "response_tone": "friendly"},
+            "parameters": {
+                "inquiry_type": "billing",
+                "response_tone": "friendly",
+            },
         }
 
         response = client.post(
@@ -248,7 +263,9 @@ class TestTemplateIntegration:
         assert workflow["description"] == instantiation_data["description"]
 
         # Step 4: Execute the instantiated workflow
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Thank you for your billing inquiry! I'm happy to help you in a friendly manner.",
                 "usage": {"total_tokens": 60},
@@ -311,7 +328,10 @@ class TestTemplateIntegration:
         valid_data = {
             "name": "Valid Test Workflow",
             "description": "Test with valid parameters",
-            "parameters": {"inquiry_type": "billing", "response_tone": "professional"},
+            "parameters": {
+                "inquiry_type": "billing",
+                "response_tone": "professional",
+            },
         }
 
         response = client.post(
@@ -403,17 +423,23 @@ class TestAuthenticationIntegration:
             "definition": test_workflow_definition,
         }
 
-        response = client.post("/api/workflows", json=workflow_data, headers=headers1)
+        response = client.post(
+            "/api/workflows", json=workflow_data, headers=headers1
+        )
         assert response.status_code == 201
         workflow = response.json()
         workflow_id = workflow["id"]
 
         # User 1 can access their workflow
-        response = client.get(f"/api/workflows/{workflow_id}", headers=headers1)
+        response = client.get(
+            f"/api/workflows/{workflow_id}", headers=headers1
+        )
         assert response.status_code == 200
 
         # User 2 cannot access User 1's workflow
-        response = client.get(f"/api/workflows/{workflow_id}", headers=headers2)
+        response = client.get(
+            f"/api/workflows/{workflow_id}", headers=headers2
+        )
         assert response.status_code == 404
 
         # User 2 cannot execute User 1's workflow
@@ -443,7 +469,9 @@ class TestPerformanceAndLoad:
         workflow_id = str(sample_workflow.id)
         execution_times = []
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Quick response",
                 "usage": {"total_tokens": 25},
@@ -486,7 +514,9 @@ class TestPerformanceAndLoad:
 
         workflow_id = str(sample_workflow.id)
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Load test response",
                 "usage": {"total_tokens": 30},
@@ -508,8 +538,12 @@ class TestPerformanceAndLoad:
                     return False
 
             # Run 10 concurrent executions
-            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
-                futures = [executor.submit(execute_workflow, i) for i in range(10)]
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=10
+            ) as executor:
+                futures = [
+                    executor.submit(execute_workflow, i) for i in range(10)
+                ]
                 results = [
                     future.result()
                     for future in concurrent.futures.as_completed(futures)
@@ -545,7 +579,9 @@ class TestPerformanceAndLoad:
             }
 
             response = client.post(
-                "/api/workflows", json=workflow_data, headers=authenticated_headers
+                "/api/workflows",
+                json=workflow_data,
+                headers=authenticated_headers,
             )
             assert response.status_code == 201
             workflows.append(response.json())
@@ -569,7 +605,8 @@ class TestPerformanceAndLoad:
         for workflow in workflows[:5]:  # Test first 5
             start_time = time.time()
             response = client.get(
-                f"/api/workflows/{workflow['id']}", headers=authenticated_headers
+                f"/api/workflows/{workflow['id']}",
+                headers=authenticated_headers,
             )
             retrieval_time = time.time() - start_time
             retrieval_times.append(retrieval_time)

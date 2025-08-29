@@ -78,7 +78,9 @@ class AIOrchestrationEngine:
         self.event_bus = event_bus
         self.intelligence_models = {}
 
-    async def register_intelligence(self, model_id: str, capabilities: List[str]):
+    async def register_intelligence(
+        self, model_id: str, capabilities: List[str]
+    ):
         """Register AI models with their capabilities"""
         self.intelligence_models[model_id] = capabilities
         await self.event_bus.publish_event(
@@ -189,8 +191,12 @@ class CollaborativeSystemBuilder:
     async def initialize_system(self):
         """Initialize the collaborative system with all components"""
         # Register event handlers
-        await self.event_bus.subscribe("system.healing", self._handle_healing_event)
-        await self.event_bus.subscribe("request.routed", self._handle_routed_request)
+        await self.event_bus.subscribe(
+            "system.healing", self._handle_healing_event
+        )
+        await self.event_bus.subscribe(
+            "request.routed", self._handle_routed_request
+        )
 
         print("Strategic Collaborative System initialized with:")
         print("✓ Event-Driven Architecture")
@@ -233,7 +239,9 @@ if __name__ == "__main__":
 
         # Verify security
         is_trusted = await builder.security.verify_context(context)
-        print(f"Security verification: {'✓ PASSED' if is_trusted else '✗ FAILED'}")
+        print(
+            f"Security verification: {'✓ PASSED' if is_trusted else '✗ FAILED'}"
+        )
 
         # Route intelligent request
         request = {
@@ -242,12 +250,15 @@ if __name__ == "__main__":
             "payload": "Analyze customer feedback trends",
         }
 
-        routing_result = await builder.ai_engine.route_intelligent_request(request)
+        routing_result = await builder.ai_engine.route_intelligent_request(
+            request
+        )
         print(f"AI Routing: {routing_result}")
 
         # Simulate health monitoring
         await builder.healing.monitor_health(
-            "api-gateway", {"error_rate": 0.02, "response_time": 250, "cpu_usage": 0.65}
+            "api-gateway",
+            {"error_rate": 0.02, "response_time": 250, "cpu_usage": 0.65},
         )
 
     asyncio.run(demonstrate_strategic_approach())

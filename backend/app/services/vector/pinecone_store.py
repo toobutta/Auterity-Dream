@@ -62,10 +62,15 @@ class PineconeDocumentStore:
         Args:
             retriever: Optional retriever for generating embeddings
         """
-        logger.debug(f"Updated embeddings for {len(self._documents)} documents")
+        logger.debug(
+            f"Updated embeddings for {len(self._documents)} documents"
+        )
 
     def query(
-        self, query: str, top_k: int = 10, filters: Optional[Dict[str, Any]] = None
+        self,
+        query: str,
+        top_k: int = 10,
+        filters: Optional[Dict[str, Any]] = None,
     ) -> List[Dict[str, Any]]:
         """
         Query the document store for similar documents.

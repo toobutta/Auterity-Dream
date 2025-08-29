@@ -11,7 +11,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 # Configure structured logging
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
 logger = logging.getLogger(__name__)
@@ -20,7 +21,9 @@ logger = logging.getLogger(__name__)
 class StructuredLoggingMiddleware(BaseHTTPMiddleware):
     """Middleware for structured logging with correlation ID tracking."""
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: Callable
+    ) -> Response:
         # Generate correlation ID
         correlation_id = str(uuid.uuid4())
 
@@ -123,12 +126,16 @@ def log_structured(
 class WorkflowExecutionLogger:
     """Specialized logger for workflow execution events."""
 
-    def __init__(self, correlation_id: str, workflow_id: str, execution_id: str):
+    def __init__(
+        self, correlation_id: str, workflow_id: str, execution_id: str
+    ):
         self.correlation_id = correlation_id
         self.workflow_id = workflow_id
         self.execution_id = execution_id
 
-    def log_step_start(self, step_name: str, step_type: str, input_data: dict = None):
+    def log_step_start(
+        self, step_name: str, step_type: str, input_data: dict = None
+    ):
         """Log workflow step start."""
         log_structured(
             event="workflow_step_started",
@@ -160,7 +167,11 @@ class WorkflowExecutionLogger:
         )
 
     def log_step_error(
-        self, step_name: str, step_type: str, error: str, duration_ms: float = None
+        self,
+        step_name: str,
+        step_type: str,
+        error: str,
+        duration_ms: float = None,
     ):
         """Log workflow step error."""
         log_structured(

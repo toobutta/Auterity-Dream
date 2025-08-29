@@ -101,7 +101,9 @@ class AutonomousAgentService:
 
         try:
             # Validate tenant
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -159,7 +161,12 @@ class AutonomousAgentService:
             # Validate agent
             agent = (
                 self.db.query(Agent)
-                .filter(and_(Agent.id == agent_id, Agent.status == AgentStatus.ACTIVE))
+                .filter(
+                    and_(
+                        Agent.id == agent_id,
+                        Agent.status == AgentStatus.ACTIVE,
+                    )
+                )
                 .first()
             )
 
@@ -192,15 +199,22 @@ class AutonomousAgentService:
             return None
 
     async def get_agent_memory(
-        self, agent_id: UUID, context_key: Optional[str] = None, limit: int = 50
+        self,
+        agent_id: UUID,
+        context_key: Optional[str] = None,
+        limit: int = 50,
     ) -> List[Dict[str, Any]]:
         """Retrieve agent memory for context awareness."""
         try:
-            query = self.db.query(AgentMemory).filter(AgentMemory.agent_id == agent_id)
+            query = self.db.query(AgentMemory).filter(
+                AgentMemory.agent_id == agent_id
+            )
 
             if context_key:
                 # Filter by context if provided
-                query = query.filter(AgentMemory.context_hash.like(f"%{context_key}%"))
+                query = query.filter(
+                    AgentMemory.context_hash.like(f"%{context_key}%")
+                )
 
             memories = (
                 query.order_by(
@@ -225,7 +239,9 @@ class AutonomousAgentService:
                     "importance_score": float(memory.importance_score),
                     "created_at": memory.created_at.isoformat(),
                     "accessed_at": (
-                        memory.accessed_at.isoformat() if memory.accessed_at else None
+                        memory.accessed_at.isoformat()
+                        if memory.accessed_at
+                        else None
                     ),
                 }
                 for memory in memories
@@ -291,7 +307,10 @@ class AutonomousAgentService:
             return None
 
     async def coordinate_agents(
-        self, primary_agent_id: UUID, coordination_task: Dict[str, Any], tenant_id: UUID
+        self,
+        primary_agent_id: UUID,
+        coordination_task: Dict[str, Any],
+        tenant_id: UUID,
     ) -> Dict[str, Any]:
         """Coordinate multiple agents for complex tasks."""
         try:
@@ -300,7 +319,8 @@ class AutonomousAgentService:
                 self.db.query(Agent)
                 .filter(
                     and_(
-                        Agent.id == primary_agent_id, Agent.status == AgentStatus.ACTIVE
+                        Agent.id == primary_agent_id,
+                        Agent.status == AgentStatus.ACTIVE,
                     )
                 )
                 .first()
@@ -334,7 +354,9 @@ class AutonomousAgentService:
                 context_key="coordination",
                 memory_data={
                     "task": coordination_task,
-                    "agents_involved": [str(agent.id) for agent in coordination_agents],
+                    "agents_involved": [
+                        str(agent.id) for agent in coordination_agents
+                    ],
                     "result": coordination_result,
                     "timestamp": datetime.utcnow().isoformat(),
                 },
@@ -345,7 +367,10 @@ class AutonomousAgentService:
 
         except Exception as e:
             logger.error(f"Agent coordination failed: {str(e)}")
-            return {"status": "error", "message": f"Coordination failed: {str(e)}"}
+            return {
+                "status": "error",
+                "message": f"Coordination failed: {str(e)}",
+            }
 
     async def get_agent_performance(
         self, agent_id: UUID, days: int = 30
@@ -384,7 +409,8 @@ class AutonomousAgentService:
             completed_tasks = sum(
                 1
                 for memory in task_memories
-                if memory.memory_data.get("task", {}).get("status") == "completed"
+                if memory.memory_data.get("task", {}).get("status")
+                == "completed"
             )
 
             total_tasks = len(task_memories)
@@ -561,13 +587,18 @@ class AutonomousAgentService:
             )
 
     async def _find_coordination_agents(
-        self, primary_agent: Agent, coordination_task: Dict[str, Any], tenant_id: UUID
+        self,
+        primary_agent: Agent,
+        coordination_task: Dict[str, Any],
+        tenant_id: UUID,
     ) -> List[Agent]:
         """Find agents to coordinate with for a task."""
         try:
             # Get coordination rules
             primary_agent.config.get("coordination_rules", {})
-            required_capabilities = coordination_task.get("required_capabilities", [])
+            required_capabilities = coordination_task.get(
+                "required_capabilities", []
+            )
 
             # Find agents with required capabilities
             coordination_agents = []
@@ -586,7 +617,10 @@ class AutonomousAgentService:
 
                 for agent in agents:
                     agent_capabilities = agent.capabilities or []
-                    if any(cap in agent_capabilities for cap in required_capabilities):
+                    if any(
+                        cap in agent_capabilities
+                        for cap in required_capabilities
+                    ):
                         coordination_agents.append(agent)
 
             return coordination_agents
@@ -638,9 +672,7 @@ class AutonomousAgentService:
         """Build prompt for autonomous task execution."""
         context_summary = "\n".join(
             [
-          \
-               \
-                                         f"- {memory.get('memory_data', {}).get('description', 'No description')}"
+                f"- {memory.get('memory_data', {}).get('description', 'No description')}"
                 for memory in context_memories[:5]
             ]
         )

@@ -84,7 +84,7 @@ app.add_middleware(
 # Add enhanced error handling middleware
 app.add_middleware(
     EnhancedErrorHandlingMiddleware,
-    enable_auto_recovery=ENVIRONMENT == "production"
+    enable_auto_recovery=ENVIRONMENT == "production",
 )
 app.add_middleware(ErrorMetricsMiddleware)
 app.add_middleware(HealthCheckMiddleware)

@@ -141,11 +141,9 @@ class TemplateEngine:
         # String validation rules
         if isinstance(value, str):
             if "min_length" in rules and len(value) < rules["min_length"]:
-             \
-                       return f"Parameter '{param_name}' must be at least {rules['min_length']} characters long"
+                return f"Parameter '{param_name}' must be at least {rules['min_length']} characters long"
             if "max_length" in rules and len(value) > rules["max_length"]:
-             \
-                       return f"Parameter '{param_name}' must be at most {rules['max_length']} characters long"
+                return f"Parameter '{param_name}' must be at most {rules['max_length']} characters long"
             if "pattern" in rules and not re.match(rules["pattern"], value):
                 return f"Parameter '{param_name}' does not match required pattern"
 
@@ -159,11 +157,9 @@ class TemplateEngine:
         # Array validation rules
         if isinstance(value, list):
             if "min_items" in rules and len(value) < rules["min_items"]:
-            \
-                        return f"Parameter '{param_name}' must have at least {rules['min_items']} items"
+                return f"Parameter '{param_name}' must have at least {rules['min_items']} items"
             if "max_items" in rules and len(value) > rules["max_items"]:
-            \
-                        return f"Parameter '{param_name}' must have at most {rules['max_items']} items"
+                return f"Parameter '{param_name}' must have at most {rules['max_items']} items"
 
         return None
 

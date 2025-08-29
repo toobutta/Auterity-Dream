@@ -4,7 +4,7 @@ import json
 import logging
 import time
 import uuid
-from typing import Optional
+from typing import Optional, cast
 
 from fastapi import HTTPException, Request, Response, status
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -35,7 +35,9 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         """Process request with tenant isolation."""
         # Skip tenant isolation for excluded paths
-        if any(request.url.path.startswith(path) for path in self.exclude_paths):
+        if any(
+            request.url.path.startswith(path) for path in self.exclude_paths
+        ):
             return await call_next(request)
 
         # Extract tenant information
@@ -48,13 +50,16 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
             # Validate tenant is active
             if not await self._validate_tenant(tenant_id):
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN, detail="Tenant is not active"
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Tenant is not active",
                 )
 
         response = await call_next(request)
         return response
 
-    async def _extract_tenant_id(self, request: Request) -> Optional[uuid.UUID]:
+    async def _extract_tenant_id(
+        self, request: Request
+    ) -> Optional[uuid.UUID]:
         """Extract tenant ID from request."""
         # Try to get tenant from subdomain
         host = request.headers.get("host", "")
@@ -62,7 +67,7 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
             subdomain = host.split(".")[0]
             tenant = await self._get_tenant_by_slug(subdomain)
             if tenant:
-                return tenant.id
+                return cast(uuid.UUID, tenant.id)
 
         # Try to get tenant from custom header
         tenant_header = request.headers.get("x-tenant-id")
@@ -73,7 +78,7 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
                 # Try to get by slug
                 tenant = await self._get_tenant_by_slug(tenant_header)
                 if tenant:
-                    return tenant.id
+                    return cast(uuid.UUID, tenant.id)
 
         # Try to get tenant from user context (if authenticated)
         auth_header = request.headers.get("authorization")
@@ -81,7 +86,7 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
             token = auth_header.split(" ")[1]
             user = await self._get_user_from_token(token)
             if user:
-                return user.tenant_id
+                return cast(uuid.UUID, user.tenant_id)
 
         return None
 
@@ -138,11 +143,15 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         """Process request with audit logging."""
         # Skip audit logging for excluded paths
-        if any(request.url.path.startswith(path) for path in self.exclude_paths):
+        if any(
+            request.url.path.startswith(path) for path in self.exclude_paths
+        ):
             return await call_next(request)
 
         # Skip GET requests for read-only operations (optional)
-        if request.method == "GET" and not self._should_audit_read(request.url.path):
+        if request.method == "GET" and not self._should_audit_read(
+            request.url.path
+        ):
             return await call_next(request)
 
         # Capture request details
@@ -165,7 +174,8 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
         """Determine if read operations should be audited."""
         sensitive_paths = ["/api/tenants/", "/api/auth/", "/api/users/"]
         return any(
-            path.startswith(sensitive_path) for sensitive_path in sensitive_paths
+            path.startswith(sensitive_path)
+            for sensitive_path in sensitive_paths
         )
 
     async def _get_request_body(self, request: Request) -> Optional[dict]:
@@ -201,8 +211,10 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
 
                 # Determine event type and action
                 event_type = self._get_event_type(request.url.path)
-         \
-                           action = f"{request.method.lower()}_{self._get_resource_action(request.url.path)}"
+                action = (
+                    f"{request.method.lower()}_"
+                    f"{self._get_resource_action(request.url.path)}"
+                )
 
                 # Determine resource type and ID
                 resource_type, resource_id = self._extract_resource_info(
@@ -218,13 +230,19 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
                     action=action,
                     user=user,
                     request=request,
-                    status="success" if response.status_code < 400 else "failure",
+                    status=(
+                        "success"
+                        if response.status_code < 400
+                        else "failure"
+                    ),
                     metadata={
                         "method": request.method,
                         "path": str(request.url.path),
                         "status_code": response.status_code,
                         "duration_ms": duration_ms,
-                        "request_body": self._sanitize_request_body(request_body),
+                        "request_body": self._sanitize_request_body(
+                            request_body
+                        ),
                     },
                 )
             finally:

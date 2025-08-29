@@ -49,7 +49,10 @@ def sample_workflow_data():
                 {
                     "id": "process",
                     "type": "ai_process",
-                    "data": {"label": "AI Process", "prompt": "Process this input"},
+                    "data": {
+                        "label": "AI Process",
+                        "prompt": "Process this input",
+                    },
                 },
                 {"id": "end", "type": "end", "data": {"label": "End"}},
             ],
@@ -85,7 +88,9 @@ class TestWorkflowCreation:
         response = client.post("/api/workflows/", json=sample_workflow_data)
         assert response.status_code == 401
 
-    def test_create_workflow_duplicate_name(self, auth_headers, sample_workflow_data):
+    def test_create_workflow_duplicate_name(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test creating workflow with duplicate name."""
         # Create first workflow
         response1 = client.post(
@@ -100,7 +105,9 @@ class TestWorkflowCreation:
         assert response2.status_code == 400
         assert "already exists" in response2.json()["detail"]
 
-    def test_create_workflow_invalid_name(self, auth_headers, sample_workflow_data):
+    def test_create_workflow_invalid_name(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test workflow creation with invalid name."""
         # Empty name
         invalid_data = sample_workflow_data.copy()
@@ -130,7 +137,10 @@ class TestWorkflowCreation:
         assert response.status_code == 422
 
         # Invalid node structure
-        invalid_data["definition"] = {"nodes": [{"invalid": "node"}], "edges": []}
+        invalid_data["definition"] = {
+            "nodes": [{"invalid": "node"}],
+            "edges": [],
+        }
         response = client.post(
             "/api/workflows/", json=invalid_data, headers=auth_headers
         )
@@ -150,7 +160,9 @@ class TestWorkflowRetrieval:
         assert data["page"] == 1
         assert data["page_size"] == 10
 
-    def test_list_workflows_with_data(self, auth_headers, sample_workflow_data):
+    def test_list_workflows_with_data(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test listing workflows with existing data."""
         # Create a workflow first
         create_response = client.post(
@@ -166,7 +178,9 @@ class TestWorkflowRetrieval:
         assert data["total"] == 1
         assert data["workflows"][0]["name"] == sample_workflow_data["name"]
 
-    def test_list_workflows_pagination(self, auth_headers, sample_workflow_data):
+    def test_list_workflows_pagination(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test workflow list pagination."""
         # Create multiple workflows
         for i in range(5):
@@ -188,7 +202,9 @@ class TestWorkflowRetrieval:
         assert data["page"] == 1
         assert data["page_size"] == 2
 
-    def test_list_workflows_filtering(self, auth_headers, sample_workflow_data):
+    def test_list_workflows_filtering(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test workflow list filtering."""
         # Create workflows with different names
         workflow1 = sample_workflow_data.copy()
@@ -200,7 +216,9 @@ class TestWorkflowRetrieval:
         client.post("/api/workflows/", json=workflow2, headers=auth_headers)
 
         # Filter by name
-        response = client.get("/api/workflows/?name_filter=Sales", headers=auth_headers)
+        response = client.get(
+            "/api/workflows/?name_filter=Sales", headers=auth_headers
+        )
         assert response.status_code == 200
         data = response.json()
         assert len(data["workflows"]) == 1
@@ -215,7 +233,9 @@ class TestWorkflowRetrieval:
         workflow_id = create_response.json()["id"]
 
         # Get workflow by ID
-        response = client.get(f"/api/workflows/{workflow_id}", headers=auth_headers)
+        response = client.get(
+            f"/api/workflows/{workflow_id}", headers=auth_headers
+        )
         assert response.status_code == 200
         data = response.json()
         assert data["id"] == workflow_id
@@ -224,7 +244,9 @@ class TestWorkflowRetrieval:
     def test_get_workflow_not_found(self, auth_headers):
         """Test getting non-existent workflow."""
         fake_id = str(uuid.uuid4())
-        response = client.get(f"/api/workflows/{fake_id}", headers=auth_headers)
+        response = client.get(
+            f"/api/workflows/{fake_id}", headers=auth_headers
+        )
         assert response.status_code == 404
 
     def test_get_workflow_without_auth(self, sample_workflow_data):
@@ -246,9 +268,14 @@ class TestWorkflowUpdate:
         workflow_id = create_response.json()["id"]
 
         # Update workflow
-        update_data = {"name": "Updated Workflow", "description": "Updated description"}
+        update_data = {
+            "name": "Updated Workflow",
+            "description": "Updated description",
+        }
         response = client.put(
-            f"/api/workflows/{workflow_id}", json=update_data, headers=auth_headers
+            f"/api/workflows/{workflow_id}",
+            json=update_data,
+            headers=auth_headers,
         )
 
         assert response.status_code == 200
@@ -266,7 +293,9 @@ class TestWorkflowUpdate:
         )
         assert response.status_code == 404
 
-    def test_update_workflow_duplicate_name(self, auth_headers, sample_workflow_data):
+    def test_update_workflow_duplicate_name(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test updating workflow with duplicate name."""
         # Create two workflows
         workflow1_data = sample_workflow_data.copy()
@@ -274,7 +303,9 @@ class TestWorkflowUpdate:
         workflow2_data = sample_workflow_data.copy()
         workflow2_data["name"] = "Workflow 2"
 
-        _ = client.post("/api/workflows/", json=workflow1_data, headers=auth_headers)
+        _ = client.post(
+            "/api/workflows/", json=workflow1_data, headers=auth_headers
+        )
         response2 = client.post(
             "/api/workflows/", json=workflow2_data, headers=auth_headers
         )
@@ -284,7 +315,9 @@ class TestWorkflowUpdate:
         # Try to update workflow2 with workflow1's name
         update_data = {"name": "Workflow 1"}
         response = client.put(
-            f"/api/workflows/{workflow2_id}", json=update_data, headers=auth_headers
+            f"/api/workflows/{workflow2_id}",
+            json=update_data,
+            headers=auth_headers,
         )
         assert response.status_code == 400
         assert "already exists" in response.json()["detail"]
@@ -302,24 +335,32 @@ class TestWorkflowDeletion:
         workflow_id = create_response.json()["id"]
 
         # Delete workflow
-        response = client.delete(f"/api/workflows/{workflow_id}", headers=auth_headers)
+        response = client.delete(
+            f"/api/workflows/{workflow_id}", headers=auth_headers
+        )
         assert response.status_code == 204
 
         # Verify workflow is soft deleted (not accessible)
-        get_response = client.get(f"/api/workflows/{workflow_id}", headers=auth_headers)
+        get_response = client.get(
+            f"/api/workflows/{workflow_id}", headers=auth_headers
+        )
         assert get_response.status_code == 404
 
     def test_delete_workflow_not_found(self, auth_headers):
         """Test deleting non-existent workflow."""
         fake_id = str(uuid.uuid4())
-        response = client.delete(f"/api/workflows/{fake_id}", headers=auth_headers)
+        response = client.delete(
+            f"/api/workflows/{fake_id}", headers=auth_headers
+        )
         assert response.status_code == 404
 
 
 class TestWorkflowDuplication:
     """Test workflow duplication endpoint."""
 
-    def test_duplicate_workflow_success(self, auth_headers, sample_workflow_data):
+    def test_duplicate_workflow_success(
+        self, auth_headers, sample_workflow_data
+    ):
         """Test successful workflow duplication."""
         # Create original workflow
         create_response = client.post(
@@ -411,7 +452,9 @@ class TestWorkflowAccessControl:
         workflow_id = create_response.json()["id"]
 
         # User 2 should not be able to access User 1's workflow
-        response = client.get(f"/api/workflows/{workflow_id}", headers=headers2)
+        response = client.get(
+            f"/api/workflows/{workflow_id}", headers=headers2
+        )
         assert response.status_code == 404
 
         # User 2 should not see User 1's workflow in their list

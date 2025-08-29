@@ -67,7 +67,9 @@ class TestBillingService:
         # Mock Stripe subscription
         mock_subscription = Mock()
         mock_subscription.id = "sub_test123"
-        mock_subscription.current_period_start = int(datetime.utcnow().timestamp())
+        mock_subscription.current_period_start = int(
+            datetime.utcnow().timestamp()
+        )
         mock_subscription.current_period_end = int(
             (datetime.utcnow() + timedelta(days=30)).timestamp()
         )
@@ -81,14 +83,19 @@ class TestBillingService:
 
         with (
             patch("stripe.Customer.create", return_value=mock_customer),
-            patch("stripe.Subscription.create", return_value=mock_subscription),
+            patch(
+                "stripe.Subscription.create", return_value=mock_subscription
+            ),
         ):
             # Mock database queries
             mock_db.query.return_value.filter.return_value.first.return_value = (
                 mock_tenant
             )
 
-            result_tenant, client_secret = await billing_service.create_subscription(
+            (
+                result_tenant,
+                client_secret,
+            ) = await billing_service.create_subscription(
                 tenant_id=mock_tenant.id,
                 plan=SubscriptionPlan.PROFESSIONAL,
                 payment_method_id="pm_test123",
@@ -97,7 +104,9 @@ class TestBillingService:
 
             assert result_tenant == mock_tenant
             assert client_secret == "pi_test_secret"
-            assert mock_tenant.subscription_plan == SubscriptionPlan.PROFESSIONAL
+            assert (
+                mock_tenant.subscription_plan == SubscriptionPlan.PROFESSIONAL
+            )
             assert mock_tenant.stripe_customer_id == "cus_test123"
             assert mock_tenant.stripe_subscription_id == "sub_test123"
 
@@ -113,7 +122,9 @@ class TestBillingService:
         # Mock Stripe subscription with trial
         mock_subscription = Mock()
         mock_subscription.id = "sub_test123"
-        mock_subscription.current_period_start = int(datetime.utcnow().timestamp())
+        mock_subscription.current_period_start = int(
+            datetime.utcnow().timestamp()
+        )
         mock_subscription.current_period_end = int(
             (datetime.utcnow() + timedelta(days=30)).timestamp()
         )
@@ -129,14 +140,19 @@ class TestBillingService:
 
         with (
             patch("stripe.Customer.create", return_value=mock_customer),
-            patch("stripe.Subscription.create", return_value=mock_subscription),
+            patch(
+                "stripe.Subscription.create", return_value=mock_subscription
+            ),
         ):
             # Mock database queries
             mock_db.query.return_value.filter.return_value.first.return_value = (
                 mock_tenant
             )
 
-            result_tenant, client_secret = await billing_service.create_subscription(
+            (
+                result_tenant,
+                client_secret,
+            ) = await billing_service.create_subscription(
                 tenant_id=mock_tenant.id,
                 plan=SubscriptionPlan.STARTER,
                 payment_method_id="pm_test123",
@@ -157,7 +173,9 @@ class TestBillingService:
         mock_subscription["items"] = {"data": [Mock(id="si_test123")]}
 
         with (
-            patch("stripe.Subscription.retrieve", return_value=mock_subscription),
+            patch(
+                "stripe.Subscription.retrieve", return_value=mock_subscription
+            ),
             patch("stripe.Subscription.modify") as mock_modify,
         ):
             # Mock database queries
@@ -169,7 +187,9 @@ class TestBillingService:
                 tenant_id=mock_tenant.id, new_plan=SubscriptionPlan.ENTERPRISE
             )
 
-            assert result_tenant.subscription_plan == SubscriptionPlan.ENTERPRISE
+            assert (
+                result_tenant.subscription_plan == SubscriptionPlan.ENTERPRISE
+            )
             mock_modify.assert_called_once()
 
     @pytest.mark.asyncio
@@ -193,10 +213,14 @@ class TestBillingService:
             )
 
     @pytest.mark.asyncio
-    async def test_track_usage_success(self, billing_service, mock_tenant, mock_db):
+    async def test_track_usage_success(
+        self, billing_service, mock_tenant, mock_db
+    ):
         """Test successful usage tracking."""
         # Mock database queries
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
         usage_log = await billing_service.track_usage(
             tenant_id=mock_tenant.id,
@@ -212,12 +236,20 @@ class TestBillingService:
         assert mock_tenant.current_month_ai_requests == 1
 
     @pytest.mark.asyncio
-    async def test_get_usage_summary(self, billing_service, mock_tenant, mock_db):
+    async def test_get_usage_summary(
+        self, billing_service, mock_tenant, mock_db
+    ):
         """Test usage summary retrieval."""
         # Mock usage logs
         mock_usage_logs = [
-            Mock(resource_type="ai_request", quantity=10, cost=Decimal("0.02")),
-            Mock(resource_type="workflow_execution", quantity=5, cost=Decimal("0.25")),
+            Mock(
+                resource_type="ai_request", quantity=10, cost=Decimal("0.02")
+            ),
+            Mock(
+                resource_type="workflow_execution",
+                quantity=5,
+                cost=Decimal("0.25"),
+            ),
         ]
 
         # Mock database queries
@@ -225,7 +257,9 @@ class TestBillingService:
             mock_usage_logs
         )
 
-        summary = await billing_service.get_usage_summary(tenant_id=mock_tenant.id)
+        summary = await billing_service.get_usage_summary(
+            tenant_id=mock_tenant.id
+        )
 
         assert summary["total_cost"] == Decimal("0.27")
         assert summary["total_ai_requests"] == 10
@@ -259,7 +293,9 @@ class TestBillingService:
         mock_tenant.id = uuid4()
         mock_tenant.subscription_plan = "professional"
 
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
         success = await billing_service.handle_stripe_webhook(event_data)
 
@@ -298,10 +334,14 @@ class TestBrandingService:
         return BrandingService(mock_db)
 
     @pytest.mark.asyncio
-    async def test_get_tenant_theme(self, branding_service, mock_tenant, mock_db):
+    async def test_get_tenant_theme(
+        self, branding_service, mock_tenant, mock_db
+    ):
         """Test tenant theme retrieval."""
         # Mock database queries
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
         theme = await branding_service.get_tenant_theme(mock_tenant.id)
 
@@ -313,10 +353,14 @@ class TestBrandingService:
         assert "accent_color" in theme  # From industry theme
 
     @pytest.mark.asyncio
-    async def test_update_tenant_branding(self, branding_service, mock_tenant, mock_db):
+    async def test_update_tenant_branding(
+        self, branding_service, mock_tenant, mock_db
+    ):
         """Test tenant branding update."""
         # Mock database queries
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
         branding_data = {
             "primary_color": "#FF0000",
@@ -334,10 +378,14 @@ class TestBrandingService:
         mock_db.commit.assert_called()
 
     @pytest.mark.asyncio
-    async def test_generate_custom_css(self, branding_service, mock_tenant, mock_db):
+    async def test_generate_custom_css(
+        self, branding_service, mock_tenant, mock_db
+    ):
         """Test custom CSS generation."""
         # Mock database queries
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
         css = await branding_service.generate_custom_css(mock_tenant.id)
 
@@ -415,10 +463,12 @@ class TestBrandingService:
     ):
         """Test branding compliance validation."""
         # Mock database queries
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
-        compliance_report = await branding_service.validate_branding_compliance(
-            mock_tenant.id
+        compliance_report = (
+            await branding_service.validate_branding_compliance(mock_tenant.id)
         )
 
         assert "logo" in compliance_report
@@ -514,11 +564,18 @@ class TestSaaSIntegration:
         assert starter_price == Decimal("99.00")
 
         # Test plan validation
-        assert saas_config.validate_plan_upgrade("starter", "professional") is True
-        assert saas_config.validate_plan_upgrade("enterprise", "starter") is False
+        assert (
+            saas_config.validate_plan_upgrade("starter", "professional")
+            is True
+        )
+        assert (
+            saas_config.validate_plan_upgrade("enterprise", "starter") is False
+        )
 
         # Test available plans
-        available_plans = saas_config.get_available_plans_for_tenant("professional")
+        available_plans = saas_config.get_available_plans_for_tenant(
+            "professional"
+        )
         assert "professional" in available_plans
         assert "enterprise" in available_plans
         assert "starter" not in available_plans
@@ -543,17 +600,25 @@ class TestSaaSIntegration:
         """Test SaaS configuration compliance requirements."""
         # Test starter plan compliance
         starter_compliance = saas_config.get_compliance_requirements("starter")
-        assert starter_compliance["gdpr"] == saas_config.GDPR_COMPLIANCE_ENABLED
-        assert starter_compliance["soc2"] == saas_config.SOC2_COMPLIANCE_ENABLED
+        assert (
+            starter_compliance["gdpr"] == saas_config.GDPR_COMPLIANCE_ENABLED
+        )
+        assert (
+            starter_compliance["soc2"] == saas_config.SOC2_COMPLIANCE_ENABLED
+        )
 
         # Test enterprise plan compliance
-        enterprise_compliance = saas_config.get_compliance_requirements("enterprise")
+        enterprise_compliance = saas_config.get_compliance_requirements(
+            "enterprise"
+        )
         assert enterprise_compliance["iso27001"] is True
         assert enterprise_compliance["pci_dss"] is True
         assert enterprise_compliance["fedramp"] is False
 
     @pytest.mark.asyncio
-    async def test_end_to_end_subscription_flow(self, mock_db, mock_tenant, mock_user):
+    async def test_end_to_end_subscription_flow(
+        self, mock_db, mock_tenant, mock_user
+    ):
         """Test end-to-end subscription flow."""
         # Initialize services
         billing_service = BillingService(mock_db)
@@ -571,7 +636,9 @@ class TestSaaSIntegration:
 
             mock_subscription = Mock()
             mock_subscription.id = "sub_test123"
-            mock_subscription.current_period_start = int(datetime.utcnow().timestamp())
+            mock_subscription.current_period_start = int(
+                datetime.utcnow().timestamp()
+            )
             mock_subscription.current_period_end = int(
                 (datetime.utcnow() + timedelta(days=30)).timestamp()
             )
@@ -579,7 +646,9 @@ class TestSaaSIntegration:
 
             mock_payment_intent = Mock()
             mock_payment_intent.client_secret = "pi_test_secret"
-            mock_subscription.latest_invoice.payment_intent = mock_payment_intent
+            mock_subscription.latest_invoice.payment_intent = (
+                mock_payment_intent
+            )
 
             mock_subscription_create.return_value = mock_subscription
 
@@ -628,9 +697,13 @@ class TestSaaSIntegration:
             assert usage_log.cost == Decimal("0.002")
 
             # 4. Get billing info
-            billing_info = await billing_service.get_tenant_billing_info(mock_tenant.id)
+            billing_info = await billing_service.get_tenant_billing_info(
+                mock_tenant.id
+            )
 
-            assert billing_info["tenant"]["subscription_plan"] == "professional"
+            assert (
+                billing_info["tenant"]["subscription_plan"] == "professional"
+            )
             assert billing_info["tenant"]["status"] == "active"
             assert "usage" in billing_info
             assert "billing" in billing_info

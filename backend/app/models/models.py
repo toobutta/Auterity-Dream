@@ -1,9 +1,8 @@
 from sqlalchemy import JSON, TIMESTAMP, UUID, Boolean, Column, DateTime, String, Text
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-Base = declarative_base()
+from .base import Base
 
 
 class Template(Base):
@@ -13,7 +12,7 @@ class Template(Base):
     description = Column(Text())
     category = Column(String(100), nullable=False)
     definition = Column(JSON(), nullable=False)
-    is_active = Column(Boolean(), nullable=False)
+    is_active: Column[bool] = Column(Boolean(), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now())
 
@@ -36,5 +35,7 @@ class IndustryProfile(Base):
     created_at = Column(TIMESTAMP(), server_default=func.now())
 
     templates = relationship(
-        "Template", secondary="template_profile_associations", back_populates="profiles"
+        "Template",
+        secondary="template_profile_associations",
+        back_populates="profiles",
     )

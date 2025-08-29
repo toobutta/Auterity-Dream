@@ -7,10 +7,10 @@ Demonstrates all key features including parallel execution, dependency resolutio
 import asyncio
 import os
 import sys
-from datetime import datetime
-from app.services.workflow_execution_engine import WorkflowExecutionEngine
 import traceback
+from datetime import datetime
 
+from app.services.workflow_execution_engine import WorkflowExecutionEngine
 
 # Add the backend directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -88,7 +88,9 @@ async def example_complex_workflow():
             # AI analysis phase
             "ai_analysis": {
                 "type": "ai",
-                "input": {"prompt": "Analyze the user and system data for insights"},
+                "input": {
+                    "prompt": "Analyze the user and system data for insights"
+                },
                 "depends_on": ["process_user_data", "process_system_data"],
             },
             # Final output phase

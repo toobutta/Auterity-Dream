@@ -107,8 +107,16 @@ class TestProcessStepExecutor:
         input_data = {
             "data": {"name": "test", "description": "TEST DESCRIPTION"},
             "rules": [
-                {"type": "transform", "field": "name", "operation": "uppercase"},
-                {"type": "transform", "field": "description", "operation": "lowercase"},
+                {
+                    "type": "transform",
+                    "field": "name",
+                    "operation": "uppercase",
+                },
+                {
+                    "type": "transform",
+                    "field": "description",
+                    "operation": "lowercase",
+                },
             ],
         }
         context = {}

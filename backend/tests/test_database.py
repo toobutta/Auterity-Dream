@@ -2,6 +2,7 @@
 
 import os
 from unittest.mock import MagicMock, patch
+
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -15,7 +16,7 @@ from app.database import (
     get_db,
     get_db_session,
 )
-from app.init_db import init_database, hash_password
+from app.init_db import hash_password, init_database
 
 
 class TestDatabaseUtilities:
@@ -60,7 +61,9 @@ class TestDatabaseUtilities:
         create_tables()
 
         mock_create_all.assert_called_once()
-        mock_logger.info.assert_called_with("Database tables created successfully")
+        mock_logger.info.assert_called_with(
+            "Database tables created successfully"
+        )
 
     @patch("app.database.Base.metadata.create_all")
     @patch("app.database.logger")
@@ -80,11 +83,15 @@ class TestDatabaseUtilities:
         drop_tables()
 
         mock_drop_all.assert_called_once()
-        mock_logger.info.assert_called_with("Database tables dropped successfully")
+        mock_logger.info.assert_called_with(
+            "Database tables dropped successfully"
+        )
 
     @patch("app.database.engine.connect")
     @patch("app.database.logger")
-    def test_check_database_connection_success(self, mock_logger, mock_connect):
+    def test_check_database_connection_success(
+        self, mock_logger, mock_connect
+    ):
         """Test successful database connection check."""
         mock_connection = MagicMock()
         mock_connect.return_value.__enter__.return_value = mock_connection
@@ -97,7 +104,9 @@ class TestDatabaseUtilities:
 
     @patch("app.database.engine.connect")
     @patch("app.database.logger")
-    def test_check_database_connection_failure(self, mock_logger, mock_connect):
+    def test_check_database_connection_failure(
+        self, mock_logger, mock_connect
+    ):
         """Test failed database connection check."""
         mock_connect.side_effect = SQLAlchemyError("Connection failed")
 
@@ -139,7 +148,9 @@ class TestDatabaseInitialization:
 
     @patch("app.init_db.check_database_connection")
     @patch("app.init_db.logger")
-    def test_init_database_connection_failure(self, mock_logger, mock_check_conn):
+    def test_init_database_connection_failure(
+        self, mock_logger, mock_check_conn
+    ):
         """Test database initialization with connection failure."""
 
         mock_check_conn.return_value = False

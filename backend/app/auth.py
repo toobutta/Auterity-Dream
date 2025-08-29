@@ -192,12 +192,12 @@ def require_admin_access():
     """Dependency for requiring admin access."""
 
     def admin_checker(
-        current_user: User = Depends(get_current_active_user)
+        current_user: User = Depends(get_current_active_user),
     ) -> User:
         admin_permissions = [
             "autmatrix:admin",
             "relaycore:admin",
-            "neuroweaver:admin"
+            "neuroweaver:admin",
         ]
 
         has_admin = any(
@@ -294,7 +294,11 @@ class RoleManager:
         # Create permissions
         permissions = {}
         for (
-            perm_name, description, system, resource, action
+            perm_name,
+            description,
+            system,
+            resource,
+            action,
         ) in default_permissions:
             permission = (
                 self.db.query(Permission)

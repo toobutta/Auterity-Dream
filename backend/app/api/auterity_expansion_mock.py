@@ -66,7 +66,10 @@ async def triage_input(
             confidence_score=decision["confidence_score"],
             rule_applied=decision["rule_applied"],
             reasoning="Mock reasoning based on content analysis",
-            suggested_actions=["Route to appropriate team", "Escalate if urgent"],
+            suggested_actions=[
+                "Route to appropriate team",
+                "Escalate if urgent",
+            ],
             processing_time_ms=decision["processing_time_ms"],
         )
 
@@ -203,7 +206,9 @@ async def create_embedding(
     """Mock create a new vector embedding."""
     try:
         service = MockVectorDuplicateService()
-        embedding = await service.generate_embedding("Mock content for embedding")
+        embedding = await service.generate_embedding(
+            "Mock content for embedding"
+        )
 
         return VectorEmbeddingResponse(
             id=UUID("12345678-1234-5678-9abc-123456789abc"),
@@ -292,7 +297,9 @@ async def assign_task_to_agent(
     """Mock assign a task to an agent."""
     try:
         service = MockAutonomousAgentService()
-        task = await service.assign_task(agent_id=agent_id, task_data=task_data)
+        task = await service.assign_task(
+            agent_id=agent_id, task_data=task_data
+        )
 
         return task
 
@@ -335,7 +342,8 @@ async def coordinate_agents(
     try:
         service = MockAutonomousAgentService()
         coordination = await service.coordinate_agents(
-            tenant_id=UUID(str(tenant.id)), coordination_request=coordination_request
+            tenant_id=UUID(str(tenant.id)),
+            coordination_request=coordination_request,
         )
 
         return coordination

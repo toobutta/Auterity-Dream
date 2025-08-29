@@ -36,8 +36,10 @@ class WorkflowExecution(Base):
     __tablename__ = "workflow_executions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    workflow_id = Column(UUID(as_uuid=True), ForeignKey("workflows.id"), nullable=False)
-    status = Column(
+    workflow_id = Column(
+        UUID(as_uuid=True), ForeignKey("workflows.id"), nullable=False
+    )
+    status: Column[ExecutionStatus] = Column(
         Enum(ExecutionStatus), default=ExecutionStatus.PENDING, nullable=False
     )
     input_data = Column(JSON)
@@ -51,16 +53,18 @@ class WorkflowExecution(Base):
     # Relationships
     workflow = relationship("Workflow", back_populates="executions")
     logs = relationship(
-        "ExecutionLog", back_populates="execution", cascade="all, delete-orphan"
+        "ExecutionLog",
+        back_populates="execution",
+        cascade="all, delete-orphan",
     )
     metrics = relationship(
-        "ExecutionMetric", back_populates="execution", cascade="all, delete-orphan"
+        "ExecutionMetric",
+        back_populates="execution",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self):
-      \
-         \
-                       return f"<WorkflowExecution(id={self.id}, workflow_id={self.workflow_id}, status={self.status})>"
+        return f"<WorkflowExecution(id={self.id}, workflow_id={self.workflow_id}, status={self.status})>"
 
 
 class ExecutionLog(Base):
@@ -70,7 +74,9 @@ class ExecutionLog(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     execution_id = Column(
-        UUID(as_uuid=True), ForeignKey("workflow_executions.id"), nullable=False
+        UUID(as_uuid=True),
+        ForeignKey("workflow_executions.id"),
+        nullable=False,
     )
     step_name = Column(String(255), nullable=False)
     step_type = Column(String(100), nullable=False)
@@ -86,6 +92,4 @@ class ExecutionLog(Base):
     execution = relationship("WorkflowExecution", back_populates="logs")
 
     def __repr__(self):
-      \
-         \
-                       return f"<ExecutionLog(id={self.id}, execution_id={self.execution_id}, step_name='{self.step_name}')>"
+        return f"<ExecutionLog(id={self.id}, execution_id={self.execution_id}, step_name='{self.step_name}')>"

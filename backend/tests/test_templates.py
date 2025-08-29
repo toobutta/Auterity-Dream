@@ -143,11 +143,16 @@ class TestTemplateEngine:
         assert retrieved_template.name == template.name
 
         # Test with non-existent ID
-        non_existent_template = await template_engine.get_template(uuid.uuid4())
+        non_existent_template = await template_engine.get_template(
+            uuid.uuid4()
+        )
         assert non_existent_template is None
 
     async def test_instantiate_template(
-        self, template_engine: TemplateEngine, sample_template_data, test_user: User
+        self,
+        template_engine: TemplateEngine,
+        sample_template_data,
+        test_user: User,
     ):
         """Test instantiating a workflow from a template."""
         # Create a template first
@@ -184,7 +189,10 @@ class TestTemplateEngine:
         assert "{{input_text}}" not in definition_str
 
     async def test_instantiate_template_with_defaults(
-        self, template_engine: TemplateEngine, sample_template_data, test_user: User
+        self,
+        template_engine: TemplateEngine,
+        sample_template_data,
+        test_user: User,
     ):
         """Test instantiating a template using default parameter values."""
         # Create a template first
@@ -211,7 +219,10 @@ class TestTemplateEngine:
         assert "default_value" in definition_str
 
     async def test_instantiate_template_validation_errors(
-        self, template_engine: TemplateEngine, sample_template_data, test_user: User
+        self,
+        template_engine: TemplateEngine,
+        sample_template_data,
+        test_user: User,
     ):
         """Test template instantiation validation errors."""
         # Create a template first
@@ -235,7 +246,9 @@ class TestTemplateEngine:
             )
 
         # Test parameter type validation
-        with pytest.raises(ValueError, match="Parameter 'input_text' must be a string"):
+        with pytest.raises(
+            ValueError, match="Parameter 'input_text' must be a string"
+        ):
             await template_engine.instantiate_template(
                 template_id=template.id,
                 name="Test Workflow",
@@ -244,7 +257,9 @@ class TestTemplateEngine:
             )
 
         # Test parameter length validation
-        with pytest.raises(ValueError, match="must be at least 1 characters long"):
+        with pytest.raises(
+            ValueError, match="must be at least 1 characters long"
+        ):
             await template_engine.instantiate_template(
                 template_id=template.id,
                 name="Test Workflow",
@@ -252,13 +267,18 @@ class TestTemplateEngine:
                 user_id=test_user.id,
             )
 
-    async def test_parameter_type_validation(self, template_engine: TemplateEngine):
+    async def test_parameter_type_validation(
+        self, template_engine: TemplateEngine
+    ):
         """Test parameter type validation."""
         from app.models import TemplateParameter
 
         # Test string validation
         param = TemplateParameter(name="test", parameter_type="string")
-        assert template_engine._validate_parameter_type(param, "valid string") is None
+        assert (
+            template_engine._validate_parameter_type(param, "valid string")
+            is None
+        )
         assert template_engine._validate_parameter_type(param, 123) is not None
 
         # Test number validation
@@ -266,30 +286,42 @@ class TestTemplateEngine:
         assert template_engine._validate_parameter_type(param, 123) is None
         assert template_engine._validate_parameter_type(param, 123.45) is None
         assert (
-            template_engine._validate_parameter_type(param, "not a number") is not None
+            template_engine._validate_parameter_type(param, "not a number")
+            is not None
         )
 
         # Test boolean validation
         param = TemplateParameter(name="test", parameter_type="boolean")
         assert template_engine._validate_parameter_type(param, True) is None
         assert template_engine._validate_parameter_type(param, False) is None
-        assert template_engine._validate_parameter_type(param, "true") is not None
+        assert (
+            template_engine._validate_parameter_type(param, "true") is not None
+        )
 
         # Test array validation
         param = TemplateParameter(name="test", parameter_type="array")
-        assert template_engine._validate_parameter_type(param, [1, 2, 3]) is None
         assert (
-            template_engine._validate_parameter_type(param, "not an array") is not None
+            template_engine._validate_parameter_type(param, [1, 2, 3]) is None
+        )
+        assert (
+            template_engine._validate_parameter_type(param, "not an array")
+            is not None
         )
 
         # Test object validation
         param = TemplateParameter(name="test", parameter_type="object")
-        assert template_engine._validate_parameter_type(param, {"key": "value"}) is None
         assert (
-            template_engine._validate_parameter_type(param, "not an object") is not None
+            template_engine._validate_parameter_type(param, {"key": "value"})
+            is None
+        )
+        assert (
+            template_engine._validate_parameter_type(param, "not an object")
+            is not None
         )
 
-    async def test_parameter_rules_validation(self, template_engine: TemplateEngine):
+    async def test_parameter_rules_validation(
+        self, template_engine: TemplateEngine
+    ):
         """Test parameter validation rules."""
         from app.models import TemplateParameter
 
@@ -299,10 +331,16 @@ class TestTemplateEngine:
             parameter_type="string",
             validation_rules={"min_length": 5, "max_length": 10},
         )
-        assert template_engine._validate_parameter_rules(param, "valid") is None
-        assert template_engine._validate_parameter_rules(param, "too") is not None
         assert (
-            template_engine._validate_parameter_rules(param, "way too long string")
+            template_engine._validate_parameter_rules(param, "valid") is None
+        )
+        assert (
+            template_engine._validate_parameter_rules(param, "too") is not None
+        )
+        assert (
+            template_engine._validate_parameter_rules(
+                param, "way too long string"
+            )
             is not None
         )
 
@@ -314,7 +352,9 @@ class TestTemplateEngine:
         )
         assert template_engine._validate_parameter_rules(param, 50) is None
         assert template_engine._validate_parameter_rules(param, -1) is not None
-        assert template_engine._validate_parameter_rules(param, 101) is not None
+        assert (
+            template_engine._validate_parameter_rules(param, 101) is not None
+        )
 
         # Test array length rules
         param = TemplateParameter(
@@ -325,7 +365,8 @@ class TestTemplateEngine:
         assert template_engine._validate_parameter_rules(param, [1, 2]) is None
         assert template_engine._validate_parameter_rules(param, []) is not None
         assert (
-            template_engine._validate_parameter_rules(param, [1, 2, 3, 4]) is not None
+            template_engine._validate_parameter_rules(param, [1, 2, 3, 4])
+            is not None
         )
 
 
@@ -384,7 +425,9 @@ class TestTemplateAPI:
         db_session.commit()
 
         with patch("app.auth.get_current_user"):
-            response = client.get(f"/api/templates/{template.id}", headers=auth_headers)
+            response = client.get(
+                f"/api/templates/{template.id}", headers=auth_headers
+            )
 
         assert response.status_code == 200
         data = response.json()
@@ -397,7 +440,10 @@ class TestTemplateAPI:
             "name": "New Template",
             "description": "A new template",
             "category": "sales",
-            "definition": {"nodes": [{"id": "start", "type": "start"}], "edges": []},
+            "definition": {
+                "nodes": [{"id": "start", "type": "start"}],
+                "edges": [],
+            },
             "parameters": [
                 {
                     "name": "test_param",
@@ -419,7 +465,11 @@ class TestTemplateAPI:
         assert len(data["parameters"]) == 1
 
     async def test_instantiate_template(
-        self, client: TestClient, auth_headers, db_session: Session, test_user: User
+        self,
+        client: TestClient,
+        auth_headers,
+        db_session: Session,
+        test_user: User,
     ):
         """Test instantiating a workflow from a template."""
         # Create a test template with parameters

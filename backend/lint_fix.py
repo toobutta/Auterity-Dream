@@ -24,7 +24,15 @@ def install_dependencies():
     """Install required dependencies if not already installed."""
     try:
         subprocess.run(
-            [sys.executable, "-m", "pip", "install", "black", "isort", "flake8"],
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "black",
+                "isort",
+                "flake8",
+            ],
             check=True,
             capture_output=True,
         )
@@ -155,7 +163,9 @@ def main():
     if issues == 0:
         print("✅ All linting issues fixed!")
     else:
-        print(f"⚠️ {issues} linting issues remain. Manual fixes may be required.")
+        print(
+            f"⚠️ {issues} linting issues remain. Manual fixes may be required."
+        )
 
 
 if __name__ == "__main__":

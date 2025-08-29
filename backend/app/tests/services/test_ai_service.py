@@ -23,7 +23,11 @@ def mock_litellm_service():
     mock_service.make_completion.return_value = AIResponse(
         content="Test response",
         model="gpt-3.5-turbo",
-        usage={"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30},
+        usage={
+            "prompt_tokens": 10,
+            "completion_tokens": 20,
+            "total_tokens": 30,
+        },
         finish_reason="stop",
     )
     return mock_service

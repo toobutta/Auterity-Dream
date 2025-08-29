@@ -65,7 +65,11 @@ class ProtocolMessage:
                     data.get("id"),
                 )
             else:
-                return cls(MessageType.NOTIFICATION, data["method"], data.get("params"))
+                return cls(
+                    MessageType.NOTIFICATION,
+                    data["method"],
+                    data.get("params"),
+                )
         elif "result" in data or "error" in data:
             return cls(
                 MessageType.RESPONSE,
@@ -159,7 +163,9 @@ class ProtocolManager:
 
         except json.JSONDecodeError:
             return ProtocolMessage(
-                MessageType.ERROR, "", error={"code": -32700, "message": "Parse error"}
+                MessageType.ERROR,
+                "",
+                error={"code": -32700, "message": "Parse error"},
             )
         except Exception as e:
             logger.error(f"Error processing message: {str(e)}")
@@ -179,11 +185,16 @@ class ProtocolManager:
                 result = await handler(message)
                 if message.message_type == MessageType.REQUEST:
                     return ProtocolMessage(
-                        MessageType.RESPONSE, "", message_id=message.id, result=result
+                        MessageType.RESPONSE,
+                        "",
+                        message_id=message.id,
+                        result=result,
                     )
                 return None
             except Exception as e:
-                logger.error(f"Handler error for method {message.method}: {str(e)}")
+                logger.error(
+                    f"Handler error for method {message.method}: {str(e)}"
+                )
                 return ProtocolMessage(
                     MessageType.ERROR,
                     "",
@@ -209,7 +220,9 @@ class ProtocolManager:
             del self.active_connections[connection_id]
             logger.info(f"Unregistered connection: {connection_id}")
 
-    async def send_message(self, connection_id: UUID, message: ProtocolMessage) -> bool:
+    async def send_message(
+        self, connection_id: UUID, message: ProtocolMessage
+    ) -> bool:
         """Send a message to a specific connection."""
         if connection_id not in self.active_connections:
             logger.error(f"Connection {connection_id} not found")
@@ -221,5 +234,7 @@ class ProtocolManager:
             await connection.send_text(data)
             return True
         except Exception as e:
-            logger.error(f"Failed to send message to {connection_id}: {str(e)}")
+            logger.error(
+                f"Failed to send message to {connection_id}: {str(e)}"
+            )
             return False

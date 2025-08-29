@@ -221,8 +221,16 @@ def create_parts_inquiry_template() -> Dict[str, Any]:
             ],
             "edges": [
                 {"id": "e1", "source": "start", "target": "identify_part"},
-                {"id": "e2", "source": "identify_part", "target": "check_inventory"},
-                {"id": "e3", "source": "check_inventory", "target": "generate_quote"},
+                {
+                    "id": "e2",
+                    "source": "identify_part",
+                    "target": "check_inventory",
+                },
+                {
+                    "id": "e3",
+                    "source": "check_inventory",
+                    "target": "generate_quote",
+                },
                 {"id": "e4", "source": "generate_quote", "target": "end"},
             ],
         },
@@ -293,7 +301,11 @@ def create_lead_qualification_template() -> Dict[str, Any]:
             "edges": [
                 {"id": "e1", "source": "start", "target": "extract_info"},
                 {"id": "e2", "source": "extract_info", "target": "score_lead"},
-                {"id": "e3", "source": "score_lead", "target": "recommend_action"},
+                {
+                    "id": "e3",
+                    "source": "score_lead",
+                    "target": "recommend_action",
+                },
                 {"id": "e4", "source": "recommend_action", "target": "end"},
             ],
         },
@@ -331,7 +343,9 @@ async def seed_templates():
             )
 
             if existing:
-                print(f"Template '{template_data['name']}' already exists, skipping...")
+                print(
+                    f"Template '{template_data['name']}' already exists, skipping..."
+                )
                 continue
 
             template = await template_engine.create_template(

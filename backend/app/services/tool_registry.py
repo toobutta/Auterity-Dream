@@ -66,7 +66,9 @@ class Tool:
             "updated_at": self.updated_at.isoformat(),
             "execution_count": self.execution_count,
             "last_execution": (
-                self.last_execution.isoformat() if self.last_execution else None
+                self.last_execution.isoformat()
+                if self.last_execution
+                else None
             ),
         }
 
@@ -87,9 +89,7 @@ class ToolRegistry:
                 existing_tool = self.tools[existing_tool_id]
                 if existing_tool.server_id != tool.server_id:
                     logger.warning(
-                \
-                      \
-                                                      f"Tool name conflict: {tool.name} already exists from different server"
+                        f"Tool name conflict: {tool.name} already exists from different server"
                     )
                     return False
 
@@ -109,9 +109,7 @@ class ToolRegistry:
                 self.capability_index[capability].append(tool.id)
 
             logger.info(
-            \
-                \
-                                    f"Registered tool: {tool.name} (ID: {tool.id}) from server {tool.server_id}"
+                f"Registered tool: {tool.name} (ID: {tool.id}) from server {tool.server_id}"
             )
             return True
 
@@ -180,7 +178,9 @@ class ToolRegistry:
 
         if capabilities:
             tools = [
-                t for t in tools if any(cap in t.capabilities for cap in capabilities)
+                t
+                for t in tools
+                if any(cap in t.capabilities for cap in capabilities)
             ]
 
         if status:
@@ -191,7 +191,11 @@ class ToolRegistry:
     def discover_tools_by_capability(self, capability: str) -> List[Tool]:
         """Discover tools that provide a specific capability."""
         tool_ids = self.capability_index.get(capability, [])
-        return [self.tools[tool_id] for tool_id in tool_ids if tool_id in self.tools]
+        return [
+            self.tools[tool_id]
+            for tool_id in tool_ids
+            if tool_id in self.tools
+        ]
 
     def validate_tool_schema(self, tool: Tool) -> bool:
         """Validate a tool's schema."""
@@ -209,7 +213,9 @@ class ToolRegistry:
             return True
 
         except Exception as e:
-            logger.error(f"Schema validation failed for tool {tool.name}: {str(e)}")
+            logger.error(
+                f"Schema validation failed for tool {tool.name}: {str(e)}"
+            )
             return False
 
     def update_tool_execution(self, tool_id: UUID) -> bool:
@@ -251,7 +257,11 @@ class ToolRegistry:
     def get_server_tools(self, server_id: UUID) -> List[Tool]:
         """Get all tools for a specific server."""
         tool_ids = self.server_tools.get(server_id, [])
-        return [self.tools[tool_id] for tool_id in tool_ids if tool_id in self.tools]
+        return [
+            self.tools[tool_id]
+            for tool_id in tool_ids
+            if tool_id in self.tools
+        ]
 
     def unregister_server_tools(self, server_id: UUID) -> int:
         """Unregister all tools for a specific server."""
@@ -282,7 +292,11 @@ class ToolRegistry:
             "unique_capabilities": capability_count,
             "tools_by_type": {
                 tool_type.value: len(
-                    [t for t in self.tools.values() if t.tool_type == tool_type]
+                    [
+                        t
+                        for t in self.tools.values()
+                        if t.tool_type == tool_type
+                    ]
                 )
                 for tool_type in ToolType
             },

@@ -23,45 +23,70 @@ def upgrade():
         "tenants", sa.Column("subscription_plan", sa.String(50), nullable=True)
     )
     op.add_column(
-        "tenants", sa.Column("stripe_customer_id", sa.String(255), nullable=True)
-    )
-    op.add_column(
-        "tenants", sa.Column("stripe_subscription_id", sa.String(255), nullable=True)
+        "tenants",
+        sa.Column("stripe_customer_id", sa.String(255), nullable=True),
     )
     op.add_column(
         "tenants",
-        sa.Column("current_period_start", sa.DateTime(timezone=True), nullable=True),
+        sa.Column("stripe_subscription_id", sa.String(255), nullable=True),
     )
     op.add_column(
         "tenants",
-        sa.Column("current_period_end", sa.DateTime(timezone=True), nullable=True),
+        sa.Column(
+            "current_period_start", sa.DateTime(timezone=True), nullable=True
+        ),
     )
     op.add_column(
-        "tenants", sa.Column("trial_end", sa.DateTime(timezone=True), nullable=True)
+        "tenants",
+        sa.Column(
+            "current_period_end", sa.DateTime(timezone=True), nullable=True
+        ),
+    )
+    op.add_column(
+        "tenants",
+        sa.Column("trial_end", sa.DateTime(timezone=True), nullable=True),
     )
 
     # Add usage limits
-    op.add_column("tenants", sa.Column("max_users", sa.Integer(), nullable=True))
-    op.add_column("tenants", sa.Column("max_workflows", sa.Integer(), nullable=True))
     op.add_column(
-        "tenants", sa.Column("max_ai_requests_per_month", sa.Integer(), nullable=True)
+        "tenants", sa.Column("max_users", sa.Integer(), nullable=True)
     )
     op.add_column(
-        "tenants", sa.Column("current_month_ai_requests", sa.Integer(), nullable=True)
+        "tenants", sa.Column("max_workflows", sa.Integer(), nullable=True)
     )
     op.add_column(
-        "tenants", sa.Column("monthly_budget", sa.Numeric(10, 2), nullable=True)
+        "tenants",
+        sa.Column("max_ai_requests_per_month", sa.Integer(), nullable=True),
+    )
+    op.add_column(
+        "tenants",
+        sa.Column("current_month_ai_requests", sa.Integer(), nullable=True),
+    )
+    op.add_column(
+        "tenants",
+        sa.Column("monthly_budget", sa.Numeric(10, 2), nullable=True),
     )
 
     # Add white-label branding fields
-    op.add_column("tenants", sa.Column("custom_domain", sa.String(255), nullable=True))
-    op.add_column("tenants", sa.Column("logo_url", sa.String(500), nullable=True))
-    op.add_column("tenants", sa.Column("primary_color", sa.String(7), nullable=True))
-    op.add_column("tenants", sa.Column("secondary_color", sa.String(7), nullable=True))
-    op.add_column("tenants", sa.Column("company_name", sa.String(255), nullable=True))
+    op.add_column(
+        "tenants", sa.Column("custom_domain", sa.String(255), nullable=True)
+    )
+    op.add_column(
+        "tenants", sa.Column("logo_url", sa.String(500), nullable=True)
+    )
+    op.add_column(
+        "tenants", sa.Column("primary_color", sa.String(7), nullable=True)
+    )
+    op.add_column(
+        "tenants", sa.Column("secondary_color", sa.String(7), nullable=True)
+    )
+    op.add_column(
+        "tenants", sa.Column("company_name", sa.String(255), nullable=True)
+    )
     op.add_column("tenants", sa.Column("custom_css", sa.Text(), nullable=True))
     op.add_column(
-        "tenants", sa.Column("remove_auterity_branding", sa.Boolean(), nullable=True)
+        "tenants",
+        sa.Column("remove_auterity_branding", sa.Boolean(), nullable=True),
     )
 
     # Add industry profile fields
@@ -71,7 +96,9 @@ def upgrade():
     op.add_column(
         "tenants",
         sa.Column(
-            "industry_settings", postgresql.JSON(astext_type=sa.Text()), nullable=True
+            "industry_settings",
+            postgresql.JSON(astext_type=sa.Text()),
+            nullable=True,
         ),
     )
 
@@ -107,11 +134,17 @@ def upgrade():
         sa.Column("amount", sa.Numeric(10, 2), nullable=False),
         sa.Column("currency", sa.String(3), nullable=False),
         sa.Column("description", sa.String(500), nullable=False),
-        sa.Column("billing_period_start", sa.DateTime(timezone=True), nullable=False),
-        sa.Column("billing_period_end", sa.DateTime(timezone=True), nullable=False),
+        sa.Column(
+            "billing_period_start", sa.DateTime(timezone=True), nullable=False
+        ),
+        sa.Column(
+            "billing_period_end", sa.DateTime(timezone=True), nullable=False
+        ),
         sa.Column("status", sa.String(20), nullable=False),
         sa.Column("paid_at", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("metadata", postgresql.JSON(astext_type=sa.Text()), nullable=True),
+        sa.Column(
+            "metadata", postgresql.JSON(astext_type=sa.Text()), nullable=True
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -137,7 +170,10 @@ def upgrade():
         unique=False,
     )
     op.create_index(
-        op.f("ix_billing_records_status"), "billing_records", ["status"], unique=False
+        op.f("ix_billing_records_status"),
+        "billing_records",
+        ["status"],
+        unique=False,
     )
 
     # Create usage_logs table
@@ -151,7 +187,9 @@ def upgrade():
         sa.Column("cost", sa.Numeric(10, 4), nullable=False),
         sa.Column("user_id", postgresql.UUID(as_uuid=True), nullable=True),
         sa.Column("workflow_id", postgresql.UUID(as_uuid=True), nullable=True),
-        sa.Column("metadata", postgresql.JSON(astext_type=sa.Text()), nullable=True),
+        sa.Column(
+            "metadata", postgresql.JSON(astext_type=sa.Text()), nullable=True
+        ),
         sa.Column(
             "timestamp",
             sa.DateTime(timezone=True),
@@ -179,7 +217,10 @@ def upgrade():
         unique=False,
     )
     op.create_index(
-        op.f("ix_usage_logs_timestamp"), "usage_logs", ["timestamp"], unique=False
+        op.f("ix_usage_logs_timestamp"),
+        "usage_logs",
+        ["timestamp"],
+        unique=False,
     )
 
     # Add indexes for new tenant fields
@@ -202,7 +243,10 @@ def upgrade():
         unique=False,
     )
     op.create_index(
-        op.f("ix_tenants_custom_domain"), "tenants", ["custom_domain"], unique=False
+        op.f("ix_tenants_custom_domain"),
+        "tenants",
+        ["custom_domain"],
+        unique=False,
     )
 
 

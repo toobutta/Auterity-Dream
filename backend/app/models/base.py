@@ -7,7 +7,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Database configuration
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://postgres:password@localhost:5432/workflow_engine"
+    "DATABASE_URL",
+    "postgresql://postgres:password@localhost:5432/workflow_engine",
 )
 
 # SQLAlchemy setup - only create engine if not in test mode

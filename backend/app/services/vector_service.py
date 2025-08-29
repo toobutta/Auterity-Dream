@@ -20,7 +20,9 @@ class VectorService:
         self.port = port or getattr(settings, "QDRANT_PORT", 6333)
 
         self.client = QdrantClient(host=self.host, port=self.port)
-        self.encoder = SentenceTransformer("all-MiniLM-L6-v2")  # Lightweight model
+        self.encoder = SentenceTransformer(
+            "all-MiniLM-L6-v2"
+        )  # Lightweight model
 
         # Default collection for workflow contexts
         self.default_collection = "workflow_contexts"
@@ -33,7 +35,9 @@ class VectorService:
             if not any(c.name == collection_name for c in collections):
                 self.client.create_collection(
                     collection_name=collection_name,
-                    vectors_config=VectorParams(size=384, distance=Distance.COSINE),
+                    vectors_config=VectorParams(
+                        size=384, distance=Distance.COSINE
+                    ),
                 )
         except Exception:
             pass  # Collection might already exist
@@ -84,7 +88,9 @@ class VectorService:
                 "id": result.id,
                 "score": result.score,
                 "text": result.payload.get("text"),
-                "metadata": {k: v for k, v in result.payload.items() if k != "text"},
+                "metadata": {
+                    k: v for k, v in result.payload.items() if k != "text"
+                },
             }
             for result in results
         ]

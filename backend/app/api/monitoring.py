@@ -46,7 +46,9 @@ async def health_check(db: Session = Depends(get_db)) -> Dict[str, Any]:
 
 
 @router.get("/health/detailed")
-async def detailed_health_check(db: Session = Depends(get_db)) -> Dict[str, Any]:
+async def detailed_health_check(
+    db: Session = Depends(get_db),
+) -> Dict[str, Any]:
     """Detailed health check with comprehensive system metrics."""
     start_time = time.time()
     health_data = {
@@ -65,7 +67,10 @@ async def detailed_health_check(db: Session = Depends(get_db)) -> Dict[str, Any]
             "response_time_ms": round((time.time() - db_start) * 1000, 2),
         }
     except Exception as e:
-        health_data["checks"]["database"] = {"status": "unhealthy", "error": str(e)}
+        health_data["checks"]["database"] = {
+            "status": "unhealthy",
+            "error": str(e),
+        }
         health_data["status"] = "unhealthy"
 
     # Database table checks
@@ -88,14 +93,18 @@ async def detailed_health_check(db: Session = Depends(get_db)) -> Dict[str, Any]
         health_data["status"] = "degraded"
 
     # Overall response time
-    health_data["total_response_time_ms"] = round((time.time() - start_time) * 1000, 2)
+    health_data["total_response_time_ms"] = round(
+        (time.time() - start_time) * 1000, 2
+    )
 
     return health_data
 
 
 @router.get("/metrics/performance")
 async def get_performance_metrics(
-    hours: int = Query(24, ge=1, le=168, description="Hours of data to analyze"),
+    hours: int = Query(
+        24, ge=1, le=168, description="Hours of data to analyze"
+    ),
     db: Session = Depends(get_db),
 ) -> Dict[str, Any]:
     """Get performance metrics for workflow executions."""
@@ -135,7 +144,8 @@ async def get_performance_metrics(
             func.avg(
                 func.extract(
                     "epoch",
-                    WorkflowExecution.completed_at - WorkflowExecution.started_at,
+                    WorkflowExecution.completed_at
+                    - WorkflowExecution.started_at,
                 )
                 * 1000
             )
@@ -154,7 +164,8 @@ async def get_performance_metrics(
     status_breakdown = {}
     status_results = (
         db.query(
-            WorkflowExecution.status, func.count(WorkflowExecution.id).label("count")
+            WorkflowExecution.status,
+            func.count(WorkflowExecution.id).label("count"),
         )
         .filter(WorkflowExecution.started_at >= start_time)
         .group_by(WorkflowExecution.status)
@@ -283,14 +294,19 @@ async def get_workflow_metrics(
                 func.count(WorkflowExecution.id).label("total_executions"),
                 func.sum(
                     func.case(
-                        (WorkflowExecution.status == ExecutionStatus.COMPLETED, 1),
+                        (
+                            WorkflowExecution.status
+                            == ExecutionStatus.COMPLETED,
+                            1,
+                        ),
                         else_=0,
                     )
                 ).label("successful_executions"),
                 func.avg(
                     func.extract(
                         "epoch",
-                        WorkflowExecution.completed_at - WorkflowExecution.started_at,
+                        WorkflowExecution.completed_at
+                        - WorkflowExecution.started_at,
                     )
                     * 1000
                 ).label("avg_duration_ms"),
@@ -307,7 +323,9 @@ async def get_workflow_metrics(
         for stat in workflow_stats:
             total_exec = stat.total_executions or 0
             successful_exec = stat.successful_executions or 0
-            success_rate = (successful_exec / total_exec * 100) if total_exec > 0 else 0
+            success_rate = (
+                (successful_exec / total_exec * 100) if total_exec > 0 else 0
+            )
             avg_duration = stat.avg_duration_ms or 0
 
             workflow_metrics.append(

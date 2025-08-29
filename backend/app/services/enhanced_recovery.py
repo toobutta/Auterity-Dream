@@ -597,10 +597,8 @@ class EnhancedRecoveryService:
         """Execute immediate retry strategy."""
         config = self.strategy_configs[RecoveryStrategy.IMMEDIATE_RETRY]
 
-        # Simulate retry logic (
-            in real implementation,
-            this would retry the actual operation
-        )
+        # Simulate retry logic
+        # (in real implementation, this would retry the actual operation)
         for attempt in range(config["max_attempts"]):
             await asyncio.sleep(0.1)  # Small delay
 

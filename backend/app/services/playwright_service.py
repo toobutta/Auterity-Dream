@@ -26,11 +26,17 @@ class PlaywrightService:
         if not self.browser:
             playwright = await async_playwright().start()
             if browser_type == "chromium":
-                self.browser = await playwright.chromium.launch(headless=self.headless)
+                self.browser = await playwright.chromium.launch(
+                    headless=self.headless
+                )
             elif browser_type == "firefox":
-                self.browser = await playwright.firefox.launch(headless=self.headless)
+                self.browser = await playwright.firefox.launch(
+                    headless=self.headless
+                )
             elif browser_type == "webkit":
-                self.browser = await playwright.webkit.launch(headless=self.headless)
+                self.browser = await playwright.webkit.launch(
+                    headless=self.headless
+                )
         return self.browser
 
     async def close_browser(self):
@@ -65,7 +71,9 @@ class PlaywrightService:
                     try:
                         elements = await page.query_selector_all(selector)
                         if len(elements) == 1:
-                            scraped_data[key] = await elements[0].text_content()
+                            scraped_data[key] = await elements[
+                                0
+                            ].text_content()
                         else:
                             scraped_data[key] = [
                                 await elem.text_content() for elem in elements
@@ -169,7 +177,11 @@ class PlaywrightService:
             return {"error": str(e), "url": url}
 
     async def monitor_page_changes(
-        self, url: str, selector: str, check_interval: int = 60, max_checks: int = 10
+        self,
+        url: str,
+        selector: str,
+        check_interval: int = 60,
+        max_checks: int = 10,
     ) -> Dict[str, Any]:
         """Monitor page for changes."""
         try:
@@ -184,7 +196,9 @@ class PlaywrightService:
             for check in range(max_checks):
                 try:
                     element = await page.query_selector(selector)
-                    current_content = await element.text_content() if element else None
+                    current_content = (
+                        await element.text_content() if element else None
+                    )
 
                     if (
                         previous_content is not None
@@ -253,7 +267,9 @@ class PlaywrightService:
 
             # Filter by domain if specified
             if filter_domain:
-                links = [link for link in links if filter_domain in link["href"]]
+                links = [
+                    link for link in links if filter_domain in link["href"]
+                ]
 
             await page.close()
 

@@ -141,7 +141,9 @@ class AdaptiveLoadBalancer:
         if service not in self.endpoints:
             return None
 
-        available_endpoints = [ep for ep in self.endpoints[service] if ep.is_healthy]
+        available_endpoints = [
+            ep for ep in self.endpoints[service] if ep.is_healthy
+        ]
         if not available_endpoints:
             return None
 
@@ -233,11 +235,16 @@ class AIRoutingEngine:
         content_analysis = await self._analyze_message_content(message)
 
         # Get historical performance for similar messages
-        historical_performance = await self._get_historical_performance(message)
+        historical_performance = await self._get_historical_performance(
+            message
+        )
 
         # Calculate optimal route
         optimal_service = await self._calculate_optimal_route(
-            message, available_services, content_analysis, historical_performance
+            message,
+            available_services,
+            content_analysis,
+            historical_performance,
         )
 
         # Record decision for learning
@@ -246,15 +253,20 @@ class AIRoutingEngine:
 
         return optimal_service
 
-    async def _analyze_message_content(self, message: RelayMessage) -> Dict[str, Any]:
+    async def _analyze_message_content(
+        self, message: RelayMessage
+    ) -> Dict[str, Any]:
         """Analyze message content for routing hints"""
         payload = message.payload
 
         analysis = {
-            "complexity_score": len(str(payload)) / 1000,  # Normalize by payload size
+            "complexity_score": len(str(payload))
+            / 1000,  # Normalize by payload size
             "urgency_score": message.priority / 4.0,
             "data_type": self._detect_data_type(payload),
-            "processing_requirements": self._estimate_processing_requirements(payload),
+            "processing_requirements": self._estimate_processing_requirements(
+                payload
+            ),
         }
 
         return analysis
@@ -313,7 +325,10 @@ class AIRoutingEngine:
             # Adjust based on content analysis
             if content_analysis["data_type"] == "media" and "media" in service:
                 base_score += 0.2
-            elif content_analysis["data_type"] == "search" and "search" in service:
+            elif (
+                content_analysis["data_type"] == "search"
+                and "search" in service
+            ):
                 base_score += 0.2
 
             # Adjust for urgency
@@ -374,7 +389,9 @@ class RelayCore:
     async def start(self):
         """Start RelayCore processing"""
         self._running = True
-        self._processing_task = asyncio.create_task(self._process_message_queue())
+        self._processing_task = asyncio.create_task(
+            self._process_message_queue()
+        )
         await self._load_initial_routing_table()
         print("🚀 RelayCore started with AI optimization")
 
@@ -389,10 +406,14 @@ class RelayCore:
         """Enhanced message routing with AI optimization"""
         try:
             # Add AI optimization hints
-            message.ai_optimization_hints = await self._generate_ai_hints(message)
+            message.ai_optimization_hints = await self._generate_ai_hints(
+                message
+            )
 
             # Check circuit breaker
-            if not await self.circuit_breaker.should_allow_request(message.destination):
+            if not await self.circuit_breaker.should_allow_request(
+                message.destination
+            ):
                 await self._handle_circuit_breaker_open(message)
                 return False
 
@@ -432,7 +453,9 @@ class RelayCore:
             print(f"Routing error for message {message.id}: {e}")
             return await self._handle_routing_error(message, e)
 
-    async def _generate_ai_hints(self, message: RelayMessage) -> Dict[str, Any]:
+    async def _generate_ai_hints(
+        self, message: RelayMessage
+    ) -> Dict[str, Any]:
         """Generate AI optimization hints for message"""
         payload_size = len(str(message.payload))
 
@@ -443,8 +466,12 @@ class RelayCore:
             "throughput_requirement": min(
                 1.0, payload_size / 10000
             ),  # Normalize by size
-            "processing_complexity": await self._estimate_complexity(message.payload),
-            "resource_requirements": await self._estimate_resources(message.payload),
+            "processing_complexity": await self._estimate_complexity(
+                message.payload
+            ),
+            "resource_requirements": await self._estimate_resources(
+                message.payload
+            ),
         }
 
         return hints
@@ -462,7 +489,9 @@ class RelayCore:
 
         return min(complexity, 1.0)
 
-    async def _estimate_resources(self, payload: Dict[str, Any]) -> Dict[str, float]:
+    async def _estimate_resources(
+        self, payload: Dict[str, Any]
+    ) -> Dict[str, float]:
         """Estimate resource requirements"""
         return {
             "cpu": 0.5,
@@ -508,7 +537,9 @@ class RelayCore:
             print(f"Delivery error: {e}")
             return False
 
-    async def _handle_circuit_breaker_open(self, message: RelayMessage) -> bool:
+    async def _handle_circuit_breaker_open(
+        self, message: RelayMessage
+    ) -> bool:
         """Handle circuit breaker open state"""
         # Try to find alternative route
         alternative_services = [
@@ -527,7 +558,9 @@ class RelayCore:
         self.message_queue.append(message)
         return False
 
-    async def _handle_no_available_endpoint(self, message: RelayMessage) -> bool:
+    async def _handle_no_available_endpoint(
+        self, message: RelayMessage
+    ) -> bool:
         """Handle no available endpoints"""
         message.status = MessageStatus.FAILED
         print(f"No available endpoints for {message.destination}")
@@ -550,7 +583,9 @@ class RelayCore:
             try:
                 if self.message_queue:
                     # Process high priority messages first
-                    self.message_queue.sort(key=lambda m: m.priority, reverse=True)
+                    self.message_queue.sort(
+                        key=lambda m: m.priority, reverse=True
+                    )
 
                     message = self.message_queue.pop(0)
                     await self.route_message(message)
@@ -629,7 +664,9 @@ class RelayCore:
         else:
             self.load_balancer.current_algorithm = "ai_optimized"
 
-        print(f"🧠 RelayCore optimization complete. Failure rate: {failure_rate:.2%}")
+        print(
+            f"🧠 RelayCore optimization complete. Failure rate: {failure_rate:.2%}"
+        )
 
 
 # Global RelayCore instance
@@ -645,7 +682,11 @@ async def get_relay_status():
 async def add_route(source: str, destination: str):
     """Add new routing rule"""
     relay_core.add_route(source, destination)
-    return {"status": "route_added", "source": source, "destination": destination}
+    return {
+        "status": "route_added",
+        "source": source,
+        "destination": destination,
+    }
 
 
 async def remove_route(source: str):

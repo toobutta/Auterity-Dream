@@ -84,7 +84,10 @@ class TenantService:
         return self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
 
     def list_tenants(
-        self, status: Optional[TenantStatus] = None, limit: int = 100, offset: int = 0
+        self,
+        status: Optional[TenantStatus] = None,
+        limit: int = 100,
+        offset: int = 0,
     ) -> List[Tenant]:
         """List tenants with optional filtering."""
         query = self.db.query(Tenant)
@@ -108,7 +111,8 @@ class TenantService:
         tenant = self.get_tenant_by_id(tenant_id)
         if not tenant:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Tenant not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Tenant not found",
             )
 
         # Store old values for audit
@@ -162,7 +166,8 @@ class TenantService:
         tenant = self.get_tenant_by_id(tenant_id)
         if not tenant:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Tenant not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Tenant not found",
             )
 
         # Check if SSO config already exists
@@ -191,7 +196,9 @@ class TenantService:
             elif provider == "oidc":
                 existing_config.oidc_issuer = config.get("issuer")
                 existing_config.oidc_client_id = config.get("client_id")
-                existing_config.oidc_client_secret = config.get("client_secret")
+                existing_config.oidc_client_secret = config.get(
+                    "client_secret"
+                )
                 existing_config.oidc_redirect_uri = config.get("redirect_uri")
 
             existing_config.auto_provision_users = config.get(
@@ -278,7 +285,9 @@ class TenantService:
 
         return query.first()
 
-    def disable_sso(self, tenant_id: UUID, admin_user: User, provider: str) -> bool:
+    def disable_sso(
+        self, tenant_id: UUID, admin_user: User, provider: str
+    ) -> bool:
         """Disable SSO for a tenant."""
         sso_config = (
             self.db.query(SSOConfiguration)
@@ -340,11 +349,14 @@ class TenantService:
         tenant = self.get_tenant_by_id(tenant_id)
         if not tenant:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Tenant not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Tenant not found",
             )
 
         # Count users
-        total_users = self.db.query(User).filter(User.tenant_id == tenant_id).count()
+        total_users = (
+            self.db.query(User).filter(User.tenant_id == tenant_id).count()
+        )
         active_users = (
             self.db.query(User)
             .filter(User.tenant_id == tenant_id, User.is_active)

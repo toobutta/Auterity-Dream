@@ -29,7 +29,11 @@ class MCPServerManager:
         """Start an external MCP server process."""
         try:
             # Get server config from database
-            server = self.db.query(MCPServer).filter(MCPServer.id == server_id).first()
+            server = (
+                self.db.query(MCPServer)
+                .filter(MCPServer.id == server_id)
+                .first()
+            )
             if not server:
                 logger.error(f"MCP server {server_id} not found in database")
                 return False
@@ -37,7 +41,9 @@ class MCPServerManager:
             # Construct command from config
             command = config.get("command", [])
             if not command:
-                logger.error(f"No command specified for MCP server {server_id}")
+                logger.error(
+                    f"No command specified for MCP server {server_id}"
+                )
                 return False
 
             # Start the process
@@ -55,7 +61,9 @@ class MCPServerManager:
             server.updated_at = datetime.utcnow()
             self.db.commit()
 
-            logger.info(f"Started MCP server {server_id} with PID {process.pid}")
+            logger.info(
+                f"Started MCP server {server_id} with PID {process.pid}"
+            )
             return True
 
         except Exception as e:
@@ -100,5 +108,7 @@ class MCPServerManager:
     async def register_tool(self, server_id: UUID, tool_info: dict) -> bool:
         """Register a discovered tool in the tool registry."""
         # TODO: Implement tool registry integration
-        logger.info(f"Registering tool for MCP server {server_id}: {tool_info}")
+        logger.info(
+            f"Registering tool for MCP server {server_id}: {tool_info}"
+        )
         return True

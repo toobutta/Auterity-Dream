@@ -24,7 +24,10 @@ def upgrade():
     op.create_table(
         "triage_rules",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column(
@@ -34,7 +37,10 @@ def upgrade():
         sa.Column("conditions", postgresql.JSONB, nullable=False),
         sa.Column("routing_logic", postgresql.JSONB, nullable=False),
         sa.Column(
-            "confidence_threshold", sa.Numeric(3, 2), nullable=False, default=0.8
+            "confidence_threshold",
+            sa.Numeric(3, 2),
+            nullable=False,
+            default=0.8,
         ),
         sa.Column("priority", sa.Integer, nullable=False, default=1),
         sa.Column("is_active", sa.Boolean, nullable=False, default=True),
@@ -51,14 +57,19 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["tenant_id"], ["tenants.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["tenant_id"], ["tenants.id"], ondelete="CASCADE"
+        ),
     )
 
     # Create vector_embeddings table
     op.create_table(
         "vector_embeddings",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column(
@@ -77,15 +88,22 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["tenant_id"], ["tenants.id"], ondelete="CASCADE"),
-        sa.UniqueConstraint("tenant_id", "item_type", "item_id", "content_hash"),
+        sa.ForeignKeyConstraint(
+            ["tenant_id"], ["tenants.id"], ondelete="CASCADE"
+        ),
+        sa.UniqueConstraint(
+            "tenant_id", "item_type", "item_id", "content_hash"
+        ),
     )
 
     # Create integrations table
     op.create_table(
         "integrations",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column(
@@ -109,16 +127,23 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["tenant_id"], ["tenants.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["tenant_id"], ["tenants.id"], ondelete="CASCADE"
+        ),
     )
 
     # Create integration_webhooks table
     op.create_table(
         "integration_webhooks",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
-        sa.Column("integration_id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column(
+            "integration_id", postgresql.UUID(as_uuid=True), nullable=False
+        ),
         sa.Column("webhook_url", sa.Text, nullable=False),
         sa.Column("events", postgresql.JSONB, nullable=False),
         sa.Column("status", sa.String(20), nullable=False, default="active"),
@@ -139,7 +164,10 @@ def upgrade():
     op.create_table(
         "channel_triggers",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column(
@@ -162,14 +190,19 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["tenant_id"], ["tenants.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["tenant_id"], ["tenants.id"], ondelete="CASCADE"
+        ),
     )
 
     # Create custom_models table
     op.create_table(
         "custom_models",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("model_name", sa.String(255), nullable=False),
@@ -180,7 +213,9 @@ def upgrade():
         sa.Column("config", postgresql.JSONB, nullable=False),
         sa.Column("version", sa.String(20), nullable=False, default="1.0.0"),
         sa.Column("status", sa.String(20), nullable=False, default="inactive"),
-        sa.Column("last_health_check", sa.DateTime(timezone=True), nullable=True),
+        sa.Column(
+            "last_health_check", sa.DateTime(timezone=True), nullable=True
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -194,19 +229,26 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["tenant_id"], ["tenants.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["tenant_id"], ["tenants.id"], ondelete="CASCADE"
+        ),
     )
 
     # Create agent_memories table
     op.create_table(
         "agent_memories",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("agent_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("context_hash", sa.String(64), nullable=False),
         sa.Column("memory_data", postgresql.JSONB, nullable=False),
-        sa.Column("importance_score", sa.Numeric(3, 2), nullable=False, default=0.5),
+        sa.Column(
+            "importance_score", sa.Numeric(3, 2), nullable=False, default=0.5
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -215,16 +257,23 @@ def upgrade():
         ),
         sa.Column("accessed_at", sa.DateTime(timezone=True), nullable=True),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["agent_id"], ["agents.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["agent_id"], ["agents.id"], ondelete="CASCADE"
+        ),
     )
 
     # Create execution_metrics table
     op.create_table(
         "execution_metrics",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
-        sa.Column("execution_id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column(
+            "execution_id", postgresql.UUID(as_uuid=True), nullable=False
+        ),
         sa.Column("step_name", sa.String(255), nullable=False),
         sa.Column("duration_ms", sa.Integer, nullable=False),
         sa.Column("status", sa.String(20), nullable=False),
@@ -246,7 +295,10 @@ def upgrade():
     op.create_table(
         "triage_results",
         sa.Column(
-            "id", postgresql.UUID(as_uuid=True), nullable=False, default=uuid.uuid4
+            "id",
+            postgresql.UUID(as_uuid=True),
+            nullable=False,
+            default=uuid.uuid4,
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("input_content", sa.Text, nullable=False),
@@ -261,12 +313,16 @@ def upgrade():
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("id"),
-        sa.ForeignKeyConstraint(["tenant_id"], ["tenants.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(
+            ["tenant_id"], ["tenants.id"], ondelete="CASCADE"
+        ),
     )
 
     # Create indexes for performance
     op.create_index(
-        "idx_triage_rules_tenant_active", "triage_rules", ["tenant_id", "is_active"]
+        "idx_triage_rules_tenant_active",
+        "triage_rules",
+        ["tenant_id", "is_active"],
     )
     op.create_index(
         "idx_vector_embeddings_tenant_type",
@@ -274,7 +330,9 @@ def upgrade():
         ["tenant_id", "item_type"],
     )
     op.create_index(
-        "idx_integrations_tenant_provider", "integrations", ["tenant_id", "provider"]
+        "idx_integrations_tenant_provider",
+        "integrations",
+        ["tenant_id", "provider"],
     )
     op.create_index(
         "idx_channel_triggers_tenant_type",
@@ -282,13 +340,19 @@ def upgrade():
         ["tenant_id", "channel_type"],
     )
     op.create_index(
-        "idx_custom_models_tenant_status", "custom_models", ["tenant_id", "status"]
+        "idx_custom_models_tenant_status",
+        "custom_models",
+        ["tenant_id", "status"],
     )
     op.create_index(
-        "idx_agent_memories_agent_hash", "agent_memories", ["agent_id", "context_hash"]
+        "idx_agent_memories_agent_hash",
+        "agent_memories",
+        ["agent_id", "context_hash"],
     )
     op.create_index(
-        "idx_execution_metrics_execution", "execution_metrics", ["execution_id"]
+        "idx_execution_metrics_execution",
+        "execution_metrics",
+        ["execution_id"],
     )
     op.create_index(
         "idx_triage_results_tenant_created",

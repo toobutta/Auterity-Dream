@@ -19,7 +19,9 @@ class TestWorkflowPerformance:
         workflow_id = str(sample_workflow.id)
         execution_times = []
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Performance test response",
                 "usage": {"total_tokens": 50},
@@ -48,7 +50,11 @@ class TestWorkflowPerformance:
         median_time = statistics.median(execution_times)
         max_time = max(execution_times)
         min_time = min(execution_times)
-        std_dev = statistics.stdev(execution_times) if len(execution_times) > 1 else 0
+        std_dev = (
+            statistics.stdev(execution_times)
+            if len(execution_times) > 1
+            else 0
+        )
 
         # Performance assertions (adjust based on requirements)
         assert (
@@ -77,7 +83,9 @@ class TestWorkflowPerformance:
         workflow_id = str(sample_workflow.id)
         num_concurrent = 20
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Concurrent load test response",
                 "usage": {"total_tokens": 40},
@@ -118,7 +126,8 @@ class TestWorkflowPerformance:
 
             with ThreadPoolExecutor(max_workers=num_concurrent) as executor:
                 futures = [
-                    executor.submit(execute_workflow, i) for i in range(num_concurrent)
+                    executor.submit(execute_workflow, i)
+                    for i in range(num_concurrent)
                 ]
                 results = [future.result() for future in as_completed(futures)]
 
@@ -181,7 +190,9 @@ class TestWorkflowPerformance:
             }
 
             response = client.post(
-                "/api/workflows", json=workflow_data, headers=authenticated_headers
+                "/api/workflows",
+                json=workflow_data,
+                headers=authenticated_headers,
             )
             assert response.status_code == 201
             workflow_ids.append(response.json()["id"])
@@ -236,7 +247,9 @@ class TestWorkflowPerformance:
 
         workflow_id = str(sample_workflow.id)
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Memory test response",
                 "usage": {"total_tokens": 30},
@@ -253,7 +266,9 @@ class TestWorkflowPerformance:
 
                 # Check memory every 10 executions
                 if i % 10 == 0:
-                    current_memory = process.memory_info().rss / 1024 / 1024  # MB
+                    current_memory = (
+                        process.memory_info().rss / 1024 / 1024
+                    )  # MB
                     memory_increase = current_memory - initial_memory
 
                     # Memory should not increase excessively
@@ -297,7 +312,9 @@ class TestWorkflowPerformance:
                 start_time = time.perf_counter()
 
                 if method == "GET":
-                    response = client.get(endpoint, headers=authenticated_headers)
+                    response = client.get(
+                        endpoint, headers=authenticated_headers
+                    )
                 elif method == "POST":
                     response = client.post(
                         endpoint, json=data, headers=authenticated_headers
@@ -312,7 +329,11 @@ class TestWorkflowPerformance:
             # Calculate statistics for this endpoint
             avg_time = statistics.mean(response_times)
             median_time = statistics.median(response_times)
-            std_dev = statistics.stdev(response_times) if len(response_times) > 1 else 0
+            std_dev = (
+                statistics.stdev(response_times)
+                if len(response_times) > 1
+                else 0
+            )
 
             endpoint_performance[endpoint] = {
                 "average": avg_time,
@@ -337,7 +358,9 @@ class TestWorkflowPerformance:
             print(f"    Average: {metrics['average']:.3f}s")
             print(f"    Median:  {metrics['median']:.3f}s")
             print(f"    Std Dev: {metrics['std_dev']:.3f}s")
-            print(f"    Range:   {metrics['min']:.3f}s - {metrics['max']:.3f}s")
+            print(
+                f"    Range:   {metrics['min']:.3f}s - {metrics['max']:.3f}s"
+            )
 
 
 class TestScalabilityLimits:
@@ -351,7 +374,9 @@ class TestScalabilityLimits:
         workflow_id = str(sample_workflow.id)
         max_concurrent = 50  # Adjust based on system capabilities
 
-        with patch("app.services.ai_service.AIService.process_text") as mock_ai:
+        with patch(
+            "app.services.ai_service.AIService.process_text"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "content": "Max concurrency test",
                 "usage": {"total_tokens": 25},
@@ -376,7 +401,8 @@ class TestScalabilityLimits:
             # Execute maximum concurrent workflows
             with ThreadPoolExecutor(max_workers=max_concurrent) as executor:
                 futures = [
-                    executor.submit(execute_workflow, i) for i in range(max_concurrent)
+                    executor.submit(execute_workflow, i)
+                    for i in range(max_concurrent)
                 ]
                 results = [future.result() for future in as_completed(futures)]
 
@@ -425,7 +451,11 @@ class TestScalabilityLimits:
         # Add edges to connect nodes
         for i in range(99):
             large_definition["edges"].append(
-                {"id": f"edge-{i}", "source": f"node-{i}", "target": f"node-{i+1}"}
+                {
+                    "id": f"edge-{i}",
+                    "source": f"node-{i}",
+                    "target": f"node-{i+1}",
+                }
             )
 
         # Test creating workflow with large definition

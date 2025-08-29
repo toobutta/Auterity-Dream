@@ -1,11 +1,15 @@
 import os
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 # Set test environment before importing models
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
 from sqlalchemy.pool import StaticPool
+
+from app.database import Base
 from app.models import (
     ExecutionLog,
     ExecutionStatus,
@@ -15,7 +19,6 @@ from app.models import (
     Workflow,
     WorkflowExecution,
 )
-from app.database import Base
 
 # Test database setup
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
@@ -25,7 +28,9 @@ engine = create_engine(
     connect_args={"check_same_thread": False},
     poolclass=StaticPool,
 )
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
 
 
 @pytest.fixture
@@ -64,10 +69,14 @@ class TestUserModel:
     def test_user_email_unique(self, db_session):
         """Test that user email must be unique."""
         user1 = User(
-            email="test@example.com", name="Test User 1", hashed_password="password1"
+            email="test@example.com",
+            name="Test User 1",
+            hashed_password="password1",
         )
         user2 = User(
-            email="test@example.com", name="Test User 2", hashed_password="password2"
+            email="test@example.com",
+            name="Test User 2",
+            hashed_password="password2",
         )
 
         db_session.add(user1)
@@ -80,7 +89,9 @@ class TestUserModel:
     def test_user_repr(self, db_session):
         """Test user string representation."""
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
@@ -98,14 +109,22 @@ class TestWorkflowModel:
         """Test creating a workflow."""
         # Create user first
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
 
         # Create workflow
         workflow_definition = {
-            "steps": [{"id": "step1", "type": "ai_processing", "name": "Process Input"}]
+            "steps": [
+                {
+                    "id": "step1",
+                    "type": "ai_processing",
+                    "name": "Process Input",
+                }
+            ]
         }
 
         workflow = Workflow(
@@ -129,7 +148,9 @@ class TestWorkflowModel:
     def test_workflow_user_relationship(self, db_session):
         """Test workflow-user relationship."""
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
@@ -152,7 +173,9 @@ class TestWorkflowExecutionModel:
         """Test creating a workflow execution."""
         # Create user and workflow
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
@@ -183,7 +206,9 @@ class TestWorkflowExecutionModel:
     def test_execution_status_enum(self, db_session):
         """Test execution status enumeration."""
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
@@ -209,7 +234,9 @@ class TestExecutionLogModel:
         """Test creating an execution log."""
         # Create user, workflow, and execution
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
@@ -246,7 +273,9 @@ class TestExecutionLogModel:
     def test_execution_log_relationship(self, db_session):
         """Test execution log relationship with execution."""
         user = User(
-            email="test@example.com", name="Test User", hashed_password="password"
+            email="test@example.com",
+            name="Test User",
+            hashed_password="password",
         )
         db_session.add(user)
         db_session.commit()
@@ -278,7 +307,9 @@ class TestTemplateModel:
     def test_create_template(self, db_session):
         """Test creating a template."""
         template_definition = {
-            "steps": [{"id": "step1", "type": "ai_processing", "name": "Process"}]
+            "steps": [
+                {"id": "step1", "type": "ai_processing", "name": "Process"}
+            ]
         }
 
         template = Template(

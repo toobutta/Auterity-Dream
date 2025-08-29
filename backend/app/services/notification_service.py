@@ -204,10 +204,10 @@ class NotificationService:
                     if success
                     else NotificationPriority.HIGH
                 ),
-           \
-                \
-                                      title=f"Recovery {'Successful' if success else 'Failed'}: {recovery_type}",
-                message=self._format_recovery_message(recovery_type, success, details),
+                title=f"Recovery {'Successful' if success else 'Failed'}: {recovery_type}",
+                message=self._format_recovery_message(
+                    recovery_type, success, details
+                ),
                 data=details,
                 channels=rule.channels,
                 recipients=rule.recipients,
@@ -230,7 +230,9 @@ class NotificationService:
 
             # Check if correlation meets rule conditions
             confidence = correlation_data.get("confidence", 0)
-            affected_systems = len(correlation_data.get("affected_systems", []))
+            affected_systems = len(
+                correlation_data.get("affected_systems", [])
+            )
 
             if confidence < rule.conditions.get(
                 "correlation_confidence", 0.7
@@ -241,9 +243,7 @@ class NotificationService:
                 id=f"correlation_{datetime.utcnow().timestamp()}",
                 type=NotificationType.CORRELATION_DETECTED,
                 priority=NotificationPriority.HIGH,
-          \
-               \
-                                         title=f"Error Correlation Detected: {correlation_data.get('pattern', 'Unknown')}",
+                title=f"Error Correlation Detected: {correlation_data.get('pattern', 'Unknown')}",
                 message=self._format_correlation_message(correlation_data),
                 data=correlation_data,
                 channels=rule.channels,
@@ -277,7 +277,10 @@ class NotificationService:
                 title=f"System Health Alert: {health_status.title()}",
                 message=self._format_health_message(health_status, metrics),
                 data={"health_status": health_status, "metrics": metrics},
-                channels=[NotificationChannel.SLACK, NotificationChannel.EMAIL],
+                channels=[
+                    NotificationChannel.SLACK,
+                    NotificationChannel.EMAIL,
+                ],
                 recipients=["admin@company.com", "#alerts"],
                 created_at=datetime.utcnow(),
             )
@@ -314,7 +317,10 @@ class NotificationService:
         return applicable_rules
 
     async def _check_custom_conditions(
-        self, rule: NotificationRule, error: BaseAppException, context: Dict[str, Any]
+        self,
+        rule: NotificationRule,
+        error: BaseAppException,
+        context: Dict[str, Any],
     ) -> bool:
         """Check custom rule conditions."""
         # For error spike detection
@@ -323,7 +329,9 @@ class NotificationService:
 
         return True
 
-    async def _check_error_spike_condition(self, conditions: Dict[str, Any]) -> bool:
+    async def _check_error_spike_condition(
+        self, conditions: Dict[str, Any]
+    ) -> bool:
         """Check if error rate spike condition is met."""
         try:
             # Get current and previous hour error counts
@@ -336,7 +344,9 @@ class NotificationService:
             current_count = (
                 await self.redis.get(f"metrics_hour:{current_hour}:total") or 0
             )
-            prev_count = await self.redis.get(f"metrics_hour:{prev_hour}:total") or 0
+            prev_count = (
+                await self.redis.get(f"metrics_hour:{prev_hour}:total") or 0
+            )
 
             current_count = int(current_count)
             prev_count = int(prev_count)
@@ -344,8 +354,12 @@ class NotificationService:
             if prev_count == 0:
                 return current_count > 10  # Spike if >10 errors from 0
 
-            increase_percentage = ((current_count - prev_count) / prev_count) * 100
-            return increase_percentage >= conditions.get("error_rate_increase", 200)
+            increase_percentage = (
+                (current_count - prev_count) / prev_count
+            ) * 100
+            return increase_percentage >= conditions.get(
+                "error_rate_increase", 200
+            )
 
         except Exception as e:
             self.logger.error(f"Failed to check error spike condition: {e}")
@@ -356,15 +370,22 @@ class NotificationService:
         throttle_key = f"throttle:{rule_id}:{error_code}"
         return await self.redis.exists(throttle_key)
 
-    async def _update_throttle_cache(self, rule_id: str, error_code: str) -> None:
+    async def _update_throttle_cache(
+        self, rule_id: str, error_code: str
+    ) -> None:
         """Update throttle cache for rule and error code."""
         rule = self.notification_rules.get(rule_id)
         if rule and rule.throttle_minutes > 0:
             throttle_key = f"throttle:{rule_id}:{error_code}"
-            await self.redis.setex(throttle_key, rule.throttle_minutes * 60, "1")
+            await self.redis.setex(
+                throttle_key, rule.throttle_minutes * 60, "1"
+            )
 
     async def _create_error_notification(
-        self, error: BaseAppException, rule: NotificationRule, context: Dict[str, Any]
+        self,
+        error: BaseAppException,
+        rule: NotificationRule,
+        context: Dict[str, Any],
     ) -> Notification:
         """Create notification for an error."""
         priority_map = {
@@ -377,7 +398,9 @@ class NotificationService:
         return Notification(
             id=f"error_{datetime.utcnow().timestamp()}",
             type=NotificationType.ERROR_ALERT,
-            priority=priority_map.get(error.severity, NotificationPriority.MEDIUM),
+            priority=priority_map.get(
+                error.severity, NotificationPriority.MEDIUM
+            ),
             title=f"Error Alert: {error.code}",
             message=self._format_error_message(error, context),
             data={
@@ -409,9 +432,13 @@ class NotificationService:
 
         if context:
             if "workflow_id" in context:
-                message_parts.append(f"**Workflow ID:** {context['workflow_id']}")
+                message_parts.append(
+                    f"**Workflow ID:** {context['workflow_id']}"
+                )
             if "execution_id" in context:
-                message_parts.append(f"**Execution ID:** {context['execution_id']}")
+                message_parts.append(
+                    f"**Execution ID:** {context['execution_id']}"
+                )
             if "user_id" in context:
                 message_parts.append(f"**User ID:** {context['user_id']}")
 
@@ -431,7 +458,9 @@ class NotificationService:
         ]
 
         if "correlation_id" in details:
-            message_parts.append(f"**Correlation ID:** {details['correlation_id']}")
+            message_parts.append(
+                f"**Correlation ID:** {details['correlation_id']}"
+            )
 
         if "affected_systems" in details:
             systems = ", ".join(details["affected_systems"])
@@ -447,7 +476,9 @@ class NotificationService:
 
         return "\n".join(message_parts)
 
-    def _format_correlation_message(self, correlation_data: Dict[str, Any]) -> str:
+    def _format_correlation_message(
+        self, correlation_data: Dict[str, Any]
+    ) -> str:
         """Format correlation notification message."""
         message_parts = [
             f"**Pattern:** {correlation_data.get('pattern', 'Unknown')}",
@@ -457,14 +488,18 @@ class NotificationService:
 
         affected_systems = correlation_data.get("affected_systems", [])
         if affected_systems:
-            message_parts.append(f"**Affected Systems:** {', '.join(affected_systems)}")
+            message_parts.append(
+                f"**Affected Systems:** {', '.join(affected_systems)}"
+            )
 
         error_count = len(correlation_data.get("error_ids", []))
         message_parts.append(f"**Related Errors:** {error_count}")
 
         recovery_actions = correlation_data.get("recovery_actions", [])
         if recovery_actions:
-            message_parts.append(f"**Recovery Actions:** {', '.join(recovery_actions)}")
+            message_parts.append(
+                f"**Recovery Actions:** {', '.join(recovery_actions)}"
+            )
 
         message_parts.append(f"**Timestamp:** {datetime.utcnow().isoformat()}")
 
@@ -521,7 +556,9 @@ class NotificationService:
                         await self._send_webhook_notification(notification)
 
                 except Exception as e:
-                    self.logger.error(f"Failed to send notification via {channel}: {e}")
+                    self.logger.error(
+                        f"Failed to send notification via {channel}: {e}"
+                    )
 
             # Update notification status
             notification.sent_at = datetime.utcnow()
@@ -529,7 +566,9 @@ class NotificationService:
             await self._update_notification_status(notification)
 
         except Exception as e:
-            self.logger.error(f"Failed to send notification {notification.id}: {e}")
+            self.logger.error(
+                f"Failed to send notification {notification.id}: {e}"
+            )
             notification.status = "failed"
             notification.error_message = str(e)
             await self._update_notification_status(notification)
@@ -542,13 +581,17 @@ class NotificationService:
         if notification.sent_at:
             data["sent_at"] = notification.sent_at.isoformat()
 
-        await self.redis.setex(key, 86400 * 7, json.dumps(data, default=str))  # 7 days
+        await self.redis.setex(
+            key, 86400 * 7, json.dumps(data, default=str)
+        )  # 7 days
 
         # Add to notifications list
         await self.redis.lpush("notifications", notification.id)
         await self.redis.ltrim("notifications", 0, 999)  # Keep last 1000
 
-    async def _update_notification_status(self, notification: Notification) -> None:
+    async def _update_notification_status(
+        self, notification: Notification
+    ) -> None:
         """Update notification status."""
         key = f"notification:{notification.id}"
         data = asdict(notification)
@@ -558,7 +601,9 @@ class NotificationService:
 
         await self.redis.setex(key, 86400 * 7, json.dumps(data, default=str))
 
-    async def _send_in_app_notification(self, notification: Notification) -> None:
+    async def _send_in_app_notification(
+        self, notification: Notification
+    ) -> None:
         """Send in-app notification."""
         # Store for real-time delivery via WebSocket
         in_app_data = {
@@ -573,12 +618,18 @@ class NotificationService:
         await self.redis.lpush("in_app_notifications", json.dumps(in_app_data))
         await self.redis.ltrim("in_app_notifications", 0, 99)  # Keep last 100
 
-    async def _send_email_notification(self, notification: Notification) -> None:
+    async def _send_email_notification(
+        self, notification: Notification
+    ) -> None:
         """Send email notification (placeholder)."""
         # In a real implementation, this would integrate with an email service
-        self.logger.info(f"EMAIL: {notification.title} to {notification.recipients}")
+        self.logger.info(
+            f"EMAIL: {notification.title} to {notification.recipients}"
+        )
 
-    async def _send_slack_notification(self, notification: Notification) -> None:
+    async def _send_slack_notification(
+        self, notification: Notification
+    ) -> None:
         """Send Slack notification using real Slack service."""
         try:
             # Import here to avoid circular imports
@@ -622,7 +673,9 @@ class NotificationService:
                 )
 
             if result.get("error"):
-                self.logger.error(f"Slack notification failed: {result['error']}")
+                self.logger.error(
+                    f"Slack notification failed: {result['error']}"
+                )
             else:
                 self.logger.info(
                     f"Slack notification sent successfully: {notification.title}"
@@ -635,15 +688,21 @@ class NotificationService:
                 f"SLACK: {notification.title} to {notification.recipients}"
             )
 
-    async def _send_webhook_notification(self, notification: Notification) -> None:
+    async def _send_webhook_notification(
+        self, notification: Notification
+    ) -> None:
         """Send webhook notification (placeholder)."""
         # In a real implementation, this would send HTTP POST to webhook URLs
         self.logger.info(f"WEBHOOK: {notification.title}")
 
-    async def get_recent_notifications(self, limit: int = 50) -> List[Dict[str, Any]]:
+    async def get_recent_notifications(
+        self, limit: int = 50
+    ) -> List[Dict[str, Any]]:
         """Get recent notifications."""
         try:
-            notification_ids = await self.redis.lrange("notifications", 0, limit - 1)
+            notification_ids = await self.redis.lrange(
+                "notifications", 0, limit - 1
+            )
             notifications = []
 
             for notification_id in notification_ids:
@@ -701,7 +760,9 @@ async def get_notification_service() -> NotificationService:
     global _notification_service
 
     if _notification_service is None:
-        redis_client = redis.from_url("redis://localhost:6379", decode_responses=False)
+        redis_client = redis.from_url(
+            "redis://localhost:6379", decode_responses=False
+        )
         _notification_service = NotificationService(redis_client)
 
     return _notification_service

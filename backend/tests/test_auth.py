@@ -136,7 +136,9 @@ class TestUserAuthentication:
         test_db.commit()
 
         # Test with wrong password
-        authenticated_user = authenticate_user(test_db, "test@example.com", "wrongpass")
+        authenticated_user = authenticate_user(
+            test_db, "test@example.com", "wrongpass"
+        )
         assert authenticated_user is None
 
 
@@ -223,7 +225,10 @@ class TestAuthEndpoints:
 
     def test_login_invalid_credentials(self):
         """Test login with invalid credentials."""
-        login_data = {"email": "nonexistent@example.com", "password": "wrongpassword"}
+        login_data = {
+            "email": "nonexistent@example.com",
+            "password": "wrongpassword",
+        }
 
         response = client.post("/api/auth/login", json=login_data)
         assert response.status_code == 401
@@ -243,7 +248,10 @@ class TestAuthEndpoints:
         test_db.commit()
 
         # Test login
-        login_data = {"email": "inactive@example.com", "password": "testpass123"}
+        login_data = {
+            "email": "inactive@example.com",
+            "password": "testpass123",
+        }
 
         response = client.post("/api/auth/login", json=login_data)
         assert response.status_code == 400
@@ -263,7 +271,10 @@ class TestAuthEndpoints:
         test_db.commit()
 
         # Login to get token
-        login_data = {"email": "current@example.com", "password": "testpass123"}
+        login_data = {
+            "email": "current@example.com",
+            "password": "testpass123",
+        }
 
         login_response = client.post("/api/auth/login", json=login_data)
         token = login_response.json()["access_token"]
@@ -305,7 +316,10 @@ class TestAuthEndpoints:
         test_db.commit()
 
         # Login to get token
-        login_data = {"email": "refresh@example.com", "password": "testpass123"}
+        login_data = {
+            "email": "refresh@example.com",
+            "password": "testpass123",
+        }
 
         login_response = client.post("/api/auth/login", json=login_data)
         old_token = login_response.json()["access_token"]

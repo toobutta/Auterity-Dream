@@ -136,7 +136,10 @@ class ToolSpecializationMatrix:
                     "testing_infrastructure",
                     "performance_analysis",
                 ],
-                support_capabilities=["backend_implementation", "database_operations"],
+                support_capabilities=[
+                    "backend_implementation",
+                    "database_operations",
+                ],
                 restrictions=["frontend_components", "ui_ux_implementation"],
                 max_concurrent_blocks=5,
                 average_velocity=1.2,
@@ -198,7 +201,9 @@ class ToolSpecializationMatrix:
             ),
         }
 
-    def get_best_tool_for_capability(self, capability: str) -> Optional[AITool]:
+    def get_best_tool_for_capability(
+        self, capability: str
+    ) -> Optional[AITool]:
         """Find the best tool for a specific capability"""
         primary_tools = []
         support_tools = []
@@ -217,7 +222,9 @@ class ToolSpecializationMatrix:
 
         return None
 
-    def can_tool_handle_block(self, tool: AITool, block: DevelopmentBlock) -> bool:
+    def can_tool_handle_block(
+        self, tool: AITool, block: DevelopmentBlock
+    ) -> bool:
         """Check if a tool can handle a specific development block"""
         spec = self.specializations.get(tool)
         if not spec:
@@ -242,7 +249,9 @@ class QualityGateFramework:
     def __init__(self):
         self.gate_definitions = self._initialize_quality_gates()
 
-    def _initialize_quality_gates(self) -> Dict[QualityGateType, Dict[str, Any]]:
+    def _initialize_quality_gates(
+        self,
+    ) -> Dict[QualityGateType, Dict[str, Any]]:
         """Initialize quality gate definitions"""
         return {
             QualityGateType.SECURITY: {
@@ -261,7 +270,11 @@ class QualityGateFramework:
                         "success_criteria": "no known security vulnerabilities",
                     },
                 ],
-                "threshold": {"max_errors": 0, "max_warnings": 5, "min_score": 90},
+                "threshold": {
+                    "max_errors": 0,
+                    "max_warnings": 5,
+                    "min_score": 90,
+                },
             },
             QualityGateType.TYPESCRIPT_COMPLIANCE: {
                 "name": "TypeScript Compliance",
@@ -279,7 +292,11 @@ class QualityGateFramework:
                         "success_criteria": "0 linting errors",
                     },
                 ],
-                "threshold": {"max_errors": 0, "max_warnings": 0, "min_score": 100},
+                "threshold": {
+                    "max_errors": 0,
+                    "max_warnings": 0,
+                    "min_score": 100,
+                },
             },
             QualityGateType.INTEGRATION: {
                 "name": "Integration Testing",
@@ -297,7 +314,11 @@ class QualityGateFramework:
                         "success_criteria": "all tests pass",
                     },
                 ],
-                "threshold": {"max_errors": 0, "max_warnings": 2, "min_score": 95},
+                "threshold": {
+                    "max_errors": 0,
+                    "max_warnings": 2,
+                    "min_score": 95,
+                },
             },
             QualityGateType.PERFORMANCE: {
                 "name": "Performance Validation",
@@ -309,7 +330,11 @@ class QualityGateFramework:
                         "success_criteria": "p95 < 2000ms",
                     }
                 ],
-                "threshold": {"max_errors": 0, "max_warnings": 1, "min_score": 85},
+                "threshold": {
+                    "max_errors": 0,
+                    "max_warnings": 1,
+                    "min_score": 85,
+                },
             },
             QualityGateType.CODE_QUALITY: {
                 "name": "Code Quality",
@@ -327,7 +352,11 @@ class QualityGateFramework:
                         "success_criteria": "average complexity < 10",
                     },
                 ],
-                "threshold": {"max_errors": 0, "max_warnings": 5, "min_score": 85},
+                "threshold": {
+                    "max_errors": 0,
+                    "max_warnings": 5,
+                    "min_score": 85,
+                },
             },
         }
 
@@ -363,13 +392,20 @@ class QualityGateFramework:
 
         # Tool-specific gates
         if block.assigned_tool == AITool.AMAZON_Q:
-            gates.extend([QualityGateType.SECURITY, QualityGateType.INTEGRATION])
+            gates.extend(
+                [QualityGateType.SECURITY, QualityGateType.INTEGRATION]
+            )
         elif block.assigned_tool == AITool.CURSOR_IDE:
             gates.extend(
-                [QualityGateType.TYPESCRIPT_COMPLIANCE, QualityGateType.ACCESSIBILITY]
+                [
+                    QualityGateType.TYPESCRIPT_COMPLIANCE,
+                    QualityGateType.ACCESSIBILITY,
+                ]
             )
         elif block.assigned_tool == AITool.CLINE:
-            gates.extend([QualityGateType.INTEGRATION, QualityGateType.PERFORMANCE])
+            gates.extend(
+                [QualityGateType.INTEGRATION, QualityGateType.PERFORMANCE]
+            )
 
         # Context-specific gates
         capabilities = block.context.get("required_capabilities", [])
@@ -471,13 +507,16 @@ class KiroOrchestrator:
             DevelopmentBlock(
                 id="foundation-1",
                 name="Orchestration Layer Foundation",
-                description="Create Kiro orchestrator core" \
-                    "with development block planning capabilities",
+                description="Create Kiro orchestrator core"
+                "with development block planning capabilities",
                 assigned_tool=AITool.KIRO,
                 estimated_hours=8.0,
                 priority=Priority.CRITICAL,
                 context={
-                    "required_capabilities": ["orchestration", "strategic_planning"],
+                    "required_capabilities": [
+                        "orchestration",
+                        "strategic_planning",
+                    ],
                     "phase": "foundation",
                     "deliverables": [
                         "orchestrator_core",
@@ -555,8 +594,10 @@ class KiroOrchestrator:
 
         # Create quality gates for each block
         for block in phase_1_blocks:
-            quality_gates = await self.quality_framework.create_quality_gates_for_block(
-                block
+            quality_gates = (
+                await self.quality_framework.create_quality_gates_for_block(
+                    block
+                )
             )
             block.quality_gates = [gate.__dict__ for gate in quality_gates]
 
@@ -577,7 +618,9 @@ class KiroOrchestrator:
     ) -> Dict[str, Any]:
         """Assign a development block to a specific tool"""
         if not self.specialization_matrix.can_tool_handle_block(tool, block):
-            raise ValueError(f"Tool {tool.value} cannot handle block {block.id}")
+            raise ValueError(
+                f"Tool {tool.value} cannot handle block {block.id}"
+            )
 
         block.assigned_tool = tool
         block.status = BlockStatus.IN_PROGRESS
@@ -614,10 +657,14 @@ class KiroOrchestrator:
         stream_progress = []
         for tool in AITool:
             tool_blocks = [
-                b for b in self.active_blocks.values() if b.assigned_tool == tool
+                b
+                for b in self.active_blocks.values()
+                if b.assigned_tool == tool
             ]
             tool_completed = [
-                b for b in self.completed_blocks.values() if b.assigned_tool == tool
+                b
+                for b in self.completed_blocks.values()
+                if b.assigned_tool == tool
             ]
 
             total_tool_blocks = len(tool_blocks) + len(tool_completed)
@@ -626,7 +673,11 @@ class KiroOrchestrator:
             if total_tool_blocks > 0:
                 progress = completed_tool_blocks / total_tool_blocks * 100
                 current_block = next(
-                    (b for b in tool_blocks if b.status == BlockStatus.IN_PROGRESS),
+                    (
+                        b
+                        for b in tool_blocks
+                        if b.status == BlockStatus.IN_PROGRESS
+                    ),
                     None,
                 )
 
@@ -635,7 +686,9 @@ class KiroOrchestrator:
                         "tool": tool.value,
                         "completed_blocks": completed_tool_blocks,
                         "total_blocks": total_tool_blocks,
-                        "current_block": current_block.name if current_block else None,
+                        "current_block": current_block.name
+                        if current_block
+                        else None,
                         "progress": progress,
                         "velocity": self.specialization_matrix.specializations[
                             tool
@@ -704,7 +757,9 @@ class KiroOrchestrator:
         for gate_data in block.quality_gates:
             gate = self.quality_gates.get(gate_data["id"])
             if gate:
-                result = await self.quality_framework.validate_quality_gate(gate)
+                result = await self.quality_framework.validate_quality_gate(
+                    gate
+                )
                 quality_results.append(
                     {
                         "gate_id": gate.id,
@@ -730,7 +785,9 @@ class KiroOrchestrator:
         else:
             block.status = BlockStatus.BLOCKED
             block.updated_at = datetime.now()
-            logger.warning(f"Block {block_id} blocked by quality gate failures")
+            logger.warning(
+                f"Block {block_id} blocked by quality gate failures"
+            )
 
         return {
             "block_id": block_id,

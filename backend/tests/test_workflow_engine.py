@@ -25,7 +25,9 @@ def workflow_engine():
 def sample_user(db_session):
     """Create a sample user for testing."""
     user = User(
-        email="test@example.com", name="Test User", hashed_password="hashed_password"
+        email="test@example.com",
+        name="Test User",
+        hashed_password="hashed_password",
     )
     db_session.add(user)
     db_session.commit()
@@ -115,11 +117,15 @@ class TestWorkflowEngine:
     """Test cases for WorkflowEngine class."""
 
     @pytest.mark.asyncio
-    async def test_execute_workflow_success(self, workflow_engine, sample_workflow):
+    async def test_execute_workflow_success(
+        self, workflow_engine, sample_workflow
+    ):
         """Test successful workflow execution."""
         input_data = {"message": "hello world"}
 
-        result = await workflow_engine.execute_workflow(sample_workflow.id, input_data)
+        result = await workflow_engine.execute_workflow(
+            sample_workflow.id, input_data
+        )
 
         assert isinstance(result, ExecutionResult)
         assert result.status == ExecutionStatus.COMPLETED
@@ -174,15 +180,21 @@ class TestWorkflowEngine:
         assert "no nodes to execute" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_get_execution_status_success(self, workflow_engine, sample_workflow):
+    async def test_get_execution_status_success(
+        self, workflow_engine, sample_workflow
+    ):
         """Test getting execution status for existing execution."""
         input_data = {"message": "test"}
 
         # Execute workflow first
-        result = await workflow_engine.execute_workflow(sample_workflow.id, input_data)
+        result = await workflow_engine.execute_workflow(
+            sample_workflow.id, input_data
+        )
 
         # Get status
-        status = await workflow_engine.get_execution_status(result.execution_id)
+        status = await workflow_engine.get_execution_status(
+            result.execution_id
+        )
 
         assert status is not None
         assert status["id"] == result.execution_id
@@ -261,7 +273,9 @@ class TestWorkflowEngine:
         input_data = {"message": "test logging"}
 
         # Execute workflow to generate logs
-        result = await workflow_engine.execute_workflow(sample_workflow.id, input_data)
+        result = await workflow_engine.execute_workflow(
+            sample_workflow.id, input_data
+        )
 
         # Get logs
         logs = await workflow_engine.get_execution_logs(result.execution_id)
@@ -287,10 +301,14 @@ class TestWorkflowEngine:
         input_data = {"message": "test logging"}
 
         # Execute workflow to generate logs
-        result = await workflow_engine.execute_workflow(sample_workflow.id, input_data)
+        result = await workflow_engine.execute_workflow(
+            sample_workflow.id, input_data
+        )
 
         # Get logs with limit
-        logs = await workflow_engine.get_execution_logs(result.execution_id, limit=1)
+        logs = await workflow_engine.get_execution_logs(
+            result.execution_id, limit=1
+        )
 
         assert isinstance(logs, list)
         assert len(logs) <= 1
@@ -399,7 +417,11 @@ class TestWorkflowEngine:
     @pytest.mark.asyncio
     async def test_execute_default_step(self, workflow_engine):
         """Test executing a default step for unknown types."""
-        node = {"id": "unknown-1", "type": "unknown", "data": {"label": "Unknown"}}
+        node = {
+            "id": "unknown-1",
+            "type": "unknown",
+            "data": {"label": "Unknown"},
+        }
         input_data = {"message": "hello world"}
 
         result = await workflow_engine._execute_default_step(node, input_data)

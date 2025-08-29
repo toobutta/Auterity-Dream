@@ -120,7 +120,9 @@ class TestWorkflowExecutionAPI:
                 workflow_id=test_workflow.id, input_data=None
             )
 
-    def test_execute_workflow_not_found(self, client: TestClient, auth_headers: dict):
+    def test_execute_workflow_not_found(
+        self, client: TestClient, auth_headers: dict
+    ):
         """Test executing non-existent workflow."""
         fake_workflow_id = uuid4()
         execution_data = {"input_data": {"message": "test"}}
@@ -143,7 +145,9 @@ class TestWorkflowExecutionAPI:
         with patch.object(WorkflowEngine, "execute_workflow") as mock_execute:
             from app.services.workflow_engine import WorkflowExecutionError
 
-            mock_execute.side_effect = WorkflowExecutionError("Execution failed")
+            mock_execute.side_effect = WorkflowExecutionError(
+                "Execution failed"
+            )
 
             response = client.post(
                 f"/api/workflows/{test_workflow.id}/execute",
@@ -416,7 +420,9 @@ class TestWorkflowExecutionAPI:
             assert response.status_code == 400
             assert "cannot be cancelled" in response.json()["detail"]
 
-    def test_cancel_execution_not_found(self, client: TestClient, auth_headers: dict):
+    def test_cancel_execution_not_found(
+        self, client: TestClient, auth_headers: dict
+    ):
         """Test cancelling non-existent execution."""
         fake_execution_id = uuid4()
 
@@ -517,7 +523,9 @@ class TestWorkflowExecutionAPI:
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 2
-        assert all(exec["workflow_id"] == str(test_workflow.id) for exec in data)
+        assert all(
+            exec["workflow_id"] == str(test_workflow.id) for exec in data
+        )
 
         # Test filter by status
         response = client.get(

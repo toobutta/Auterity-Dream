@@ -64,7 +64,11 @@ class WorkflowDefinition:
     ):
         """Add dynamic adaptation rule"""
         self.adaptation_rules.append(
-            {"condition": condition, "action": action, "parameters": parameters}
+            {
+                "condition": condition,
+                "action": action,
+                "parameters": parameters,
+            }
         )
 
 
@@ -201,7 +205,9 @@ class WorkflowCoordinationEngine:
                     ready_steps.append(step)
 
             if not ready_steps:
-                raise Exception("Circular dependency or missing dependencies detected")
+                raise Exception(
+                    "Circular dependency or missing dependencies detected"
+                )
 
             # Execute ready steps in parallel
             tasks = []
@@ -257,12 +263,16 @@ class WorkflowCoordinationEngine:
         except Exception:
             return True
 
-    async def _execute_step(self, step: WorkflowStep, context: WorkflowContext):
+    async def _execute_step(
+        self, step: WorkflowStep, context: WorkflowContext
+    ):
         """Execute individual workflow step with resilience"""
         context.current_step = step.step_id
 
         if step.system_target not in self.system_connectors:
-            raise ValueError(f"System connector for {step.system_target} not found")
+            raise ValueError(
+                f"System connector for {step.system_target} not found"
+            )
 
         connector = self.system_connectors[step.system_target]
         circuit_breaker = self.circuit_breakers[step.system_target]
@@ -274,7 +284,11 @@ class WorkflowCoordinationEngine:
             )
 
             context.execution_trace.append(
-                {"step_id": step.step_id, "status": "completed", "result": result}
+                {
+                    "step_id": step.step_id,
+                    "status": "completed",
+                    "result": result,
+                }
             )
 
             return result
@@ -307,14 +321,19 @@ class WorkflowCoordinationEngine:
 
         raise error
 
-    async def _execute_compensation(self, step: WorkflowStep, context: WorkflowContext):
+    async def _execute_compensation(
+        self, step: WorkflowStep, context: WorkflowContext
+    ):
         """Execute compensation action for failed step"""
         print(
             f"Executing compensation for step {step.step_id}: {step.compensation_action}"
         )
 
     async def _handle_workflow_failure(
-        self, definition: WorkflowDefinition, context: WorkflowContext, error: Exception
+        self,
+        definition: WorkflowDefinition,
+        context: WorkflowContext,
+        error: Exception,
     ):
         """Handle overall workflow failure"""
         error_type = type(error).__name__
@@ -347,7 +366,9 @@ async def demonstrate_advanced_workflow():
     )
 
     # Define advanced workflow
-    workflow = WorkflowDefinition("user_onboarding", "Advanced User Onboarding")
+    workflow = WorkflowDefinition(
+        "user_onboarding", "Advanced User Onboarding"
+    )
 
     # Add steps with dependencies and conditions
     workflow.add_step(

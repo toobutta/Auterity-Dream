@@ -96,7 +96,9 @@ class ErrorAnalyticsService:
         """Store individual error record."""
         key = f"error_record:{error_data['id']}"
         await self.redis.setex(
-            key, int(self.metrics_retention.total_seconds()), json.dumps(error_data)
+            key,
+            int(self.metrics_retention.total_seconds()),
+            json.dumps(error_data),
         )
 
         # Add to time-based indices
@@ -105,10 +107,14 @@ class ErrorAnalyticsService:
         day_key = f"errors_by_day:{timestamp.strftime('%Y-%m-%d')}"
 
         await self.redis.lpush(hour_key, error_data["id"])
-        await self.redis.expire(hour_key, int(self.metrics_retention.total_seconds()))
+        await self.redis.expire(
+            hour_key, int(self.metrics_retention.total_seconds())
+        )
 
         await self.redis.lpush(day_key, error_data["id"])
-        await self.redis.expire(day_key, int(self.metrics_retention.total_seconds()))
+        await self.redis.expire(
+            day_key, int(self.metrics_retention.total_seconds())
+        )
 
     async def _update_error_metrics(self, error_data: Dict[str, Any]) -> None:
         """Update aggregated error metrics."""
@@ -116,22 +122,34 @@ class ErrorAnalyticsService:
 
         # Update counters
         await self._increment_counter("total_errors")
-        await self._increment_counter(f"errors_by_category:{error_data['category']}")
-        await self._increment_counter(f"errors_by_severity:{error_data['severity']}")
+        await self._increment_counter(
+            f"errors_by_category:{error_data['category']}"
+        )
+        await self._increment_counter(
+            f"errors_by_severity:{error_data['severity']}"
+        )
         await self._increment_counter(f"errors_by_code:{error_data['code']}")
 
         # Update hourly metrics
         hour_key = f"metrics_hour:{timestamp.strftime('%Y-%m-%d-%H')}"
         await self._increment_counter(f"{hour_key}:total")
-        await self._increment_counter(f"{hour_key}:category:{error_data['category']}")
-        await self._increment_counter(f"{hour_key}:severity:{error_data['severity']}")
+        await self._increment_counter(
+            f"{hour_key}:category:{error_data['category']}"
+        )
+        await self._increment_counter(
+            f"{hour_key}:severity:{error_data['severity']}"
+        )
 
     async def _increment_counter(self, key: str) -> None:
         """Increment a counter with expiration."""
         await self.redis.incr(key)
-        await self.redis.expire(key, int(self.metrics_retention.total_seconds()))
+        await self.redis.expire(
+            key, int(self.metrics_retention.total_seconds())
+        )
 
-    async def _analyze_error_patterns(self, error_data: Dict[str, Any]) -> None:
+    async def _analyze_error_patterns(
+        self, error_data: Dict[str, Any]
+    ) -> None:
         """Analyze error patterns and generate insights."""
         # Check for error spikes
         await self._check_error_spike(error_data)
@@ -148,12 +166,16 @@ class ErrorAnalyticsService:
         current_hour = timestamp.strftime("%Y-%m-%d-%H")
 
         # Get current hour error count
-        current_count = await self.redis.get(f"metrics_hour:{current_hour}:total") or 0
+        current_count = (
+            await self.redis.get(f"metrics_hour:{current_hour}:total") or 0
+        )
         current_count = int(current_count)
 
         # Get previous hour for comparison
         prev_hour = (timestamp - timedelta(hours=1)).strftime("%Y-%m-%d-%H")
-        prev_count = await self.redis.get(f"metrics_hour:{prev_hour}:total") or 0
+        prev_count = (
+            await self.redis.get(f"metrics_hour:{prev_hour}:total") or 0
+        )
         prev_count = int(prev_count)
 
         # Check for spike (>200% increase)
@@ -161,9 +183,7 @@ class ErrorAnalyticsService:
             await self._generate_insight(
                 {
                     "title": "Error Rate Spike Detected",
-                  \
-                     \
-                                   "description": f"Error rate increased by {((current_count - prev_count) / prev_count * 100):.1f}% in the last hour",
+                    "description": f"Error rate increased by {((current_count - prev_count) / prev_count * 100):.1f}% in the last hour",
                     "category": "performance",
                     "severity": "high",
                     "confidence": 0.9,
@@ -176,7 +196,9 @@ class ErrorAnalyticsService:
                 }
             )
 
-    async def _check_recurring_patterns(self, error_data: Dict[str, Any]) -> None:
+    async def _check_recurring_patterns(
+        self, error_data: Dict[str, Any]
+    ) -> None:
         """Check for recurring error patterns."""
         # Get recent errors of same type
         recent_errors = await self._get_recent_errors_by_code(
@@ -187,9 +209,7 @@ class ErrorAnalyticsService:
             await self._generate_insight(
                 {
                     "title": f"Recurring Error Pattern: {error_data['code']}",
-               \
-                    \
-                                          "description": f"Error {error_data['code']} occurred {len(recent_errors)} times in the last 24 hours",
+                    "description": f"Error {error_data['code']} occurred {len(recent_errors)} times in the last 24 hours",
                     "category": "reliability",
                     "severity": "medium",
                     "confidence": 0.8,
@@ -202,22 +222,24 @@ class ErrorAnalyticsService:
                 }
             )
 
-    async def _check_cascading_failures(self, error_data: Dict[str, Any]) -> None:
+    async def _check_cascading_failures(
+        self, error_data: Dict[str, Any]
+    ) -> None:
         """Check for cascading failure patterns."""
         # Look for multiple different errors in short time window
         timestamp = datetime.fromisoformat(error_data["timestamp"])
         window_start = timestamp - timedelta(minutes=5)
 
-        recent_errors = await self._get_errors_in_window(window_start, timestamp)
+        recent_errors = await self._get_errors_in_window(
+            window_start, timestamp
+        )
         unique_codes = set(error["code"] for error in recent_errors)
 
         if len(unique_codes) >= 3:  # 3+ different error types in 5 minutes
             await self._generate_insight(
                 {
                     "title": "Potential Cascading Failure",
-              \
-                   \
-                                             "description": f"Multiple error types ({len(unique_codes)}) detected in 5-minute window",
+                    "description": f"Multiple error types ({len(unique_codes)}) detected in 5-minute window",
                     "category": "system",
                     "severity": "critical",
                     "confidence": 0.7,
@@ -245,7 +267,10 @@ class ErrorAnalyticsService:
                 error_data = json.loads(data)
                 error_time = datetime.fromisoformat(error_data["timestamp"])
 
-                if error_time >= cutoff_time and error_data["code"] == error_code:
+                if (
+                    error_time >= cutoff_time
+                    and error_data["code"] == error_code
+                ):
                     errors.append(error_data)
 
         return errors
@@ -290,7 +315,9 @@ class ErrorAnalyticsService:
 
         # Add to insights list
         await self.redis.lpush("error_insights", insight.id)
-        await self.redis.ltrim("error_insights", 0, 99)  # Keep last 100 insights
+        await self.redis.ltrim(
+            "error_insights", 0, 99
+        )  # Keep last 100 insights
 
     async def get_error_metrics(self, period_hours: int = 24) -> ErrorMetrics:
         """Get error metrics for specified period."""
@@ -353,13 +380,19 @@ class ErrorAnalyticsService:
             current_errors = await self._get_errors_in_window(
                 current_start, current_end
             )
-            prev_errors = await self._get_errors_in_window(prev_start, current_start)
+            prev_errors = await self._get_errors_in_window(
+                prev_start, current_start
+            )
 
             current_count = len(current_errors)
             prev_count = len(prev_errors)
 
             if prev_count == 0:
-                return ErrorTrend.STABLE if current_count == 0 else ErrorTrend.SPIKE
+                return (
+                    ErrorTrend.STABLE
+                    if current_count == 0
+                    else ErrorTrend.SPIKE
+                )
 
             change_ratio = (current_count - prev_count) / prev_count
 
@@ -379,7 +412,9 @@ class ErrorAnalyticsService:
     async def get_error_insights(self, limit: int = 10) -> List[ErrorInsight]:
         """Get recent error insights."""
         try:
-            insight_ids = await self.redis.lrange("error_insights", 0, limit - 1)
+            insight_ids = await self.redis.lrange(
+                "error_insights", 0, limit - 1
+            )
             insights = []
 
             for insight_id in insight_ids:
@@ -474,7 +509,9 @@ async def get_error_analytics_service() -> ErrorAnalyticsService:
     global _analytics_service
 
     if _analytics_service is None:
-        redis_client = redis.from_url("redis://localhost:6379", decode_responses=False)
+        redis_client = redis.from_url(
+            "redis://localhost:6379", decode_responses=False
+        )
         _analytics_service = ErrorAnalyticsService(redis_client)
 
     return _analytics_service

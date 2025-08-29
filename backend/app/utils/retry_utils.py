@@ -177,9 +177,7 @@ async def retry_async(
                 e, config.retry_exceptions, config.stop_exceptions
             ):
                 logger.warning(
-             \
-                   \
-                                               f"Exception {type(e).__name__} is not retryable, failing immediately",
+                    f"Exception {type(e).__name__} is not retryable, failing immediately",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -192,9 +190,7 @@ async def retry_async(
             # If this was the last attempt, don't retry
             if attempt == config.max_attempts:
                 logger.error(
-             \
-                  \
-                                                f"Function {func.__name__} failed after {config.max_attempts} attempts",
+                    f"Function {func.__name__} failed after {config.max_attempts} attempts",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -215,9 +211,7 @@ async def retry_async(
             )
 
             logger.warning(
-            \
-                \
-                                    f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
+                f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
                 extra={
                     "function": func.__name__,
                     "exception": str(e),
@@ -274,9 +268,7 @@ def retry_sync(
                 e, config.retry_exceptions, config.stop_exceptions
             ):
                 logger.warning(
-             \
-                   \
-                                               f"Exception {type(e).__name__} is not retryable, failing immediately",
+                    f"Exception {type(e).__name__} is not retryable, failing immediately",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -289,9 +281,7 @@ def retry_sync(
             # If this was the last attempt, don't retry
             if attempt == config.max_attempts:
                 logger.error(
-             \
-                  \
-                                                f"Function {func.__name__} failed after {config.max_attempts} attempts",
+                    f"Function {func.__name__} failed after {config.max_attempts} attempts",
                     extra={
                         "function": func.__name__,
                         "exception": str(e),
@@ -312,9 +302,7 @@ def retry_sync(
             )
 
             logger.warning(
-            \
-                \
-                                    f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
+                f"Function {func.__name__} failed on attempt {attempt}, retrying in {delay:.2f}s",
                 extra={
                     "function": func.__name__,
                     "exception": str(e),
@@ -332,7 +320,8 @@ def retry_sync(
 
 
 def with_retry(
-    config: Optional[RetryConfig] = None, context: Optional[Dict[str, Any]] = None
+    config: Optional[RetryConfig] = None,
+    context: Optional[Dict[str, Any]] = None,
 ):
     """Decorator for adding retry logic to functions."""
 
@@ -341,7 +330,9 @@ def with_retry(
 
             @wraps(func)
             async def async_wrapper(*args, **kwargs):
-                return await retry_async(func, config, context, *args, **kwargs)
+                return await retry_async(
+                    func, config, context, *args, **kwargs
+                )
 
             return async_wrapper
         else:
@@ -392,7 +383,9 @@ class CircuitBreaker:
             if self.success_count >= 3:  # Require 3 successes to fully close
                 self.state = CircuitBreakerState.CLOSED
                 self.success_count = 0
-                logger.info(f"Circuit breaker {self.name} transitioned to CLOSED")
+                logger.info(
+                    f"Circuit breaker {self.name} transitioned to CLOSED"
+                )
 
     def _on_failure(self, exception: Exception) -> None:
         """Handle failed operation."""
@@ -411,9 +404,7 @@ class CircuitBreaker:
         elif self.failure_count >= self.failure_threshold:
             self.state = CircuitBreakerState.OPEN
             logger.warning(
-             \
-                \
-                                  f"Circuit breaker {self.name} transitioned to OPEN - failure threshold reached"
+                f"Circuit breaker {self.name} transitioned to OPEN - failure threshold reached"
             )
 
     async def call_async(self, func: Callable, *args, **kwargs) -> Any:
@@ -422,7 +413,9 @@ class CircuitBreaker:
         if self.state == CircuitBreakerState.OPEN:
             if self._should_attempt_reset():
                 self.state = CircuitBreakerState.HALF_OPEN
-                logger.info(f"Circuit breaker {self.name} transitioned to HALF_OPEN")
+                logger.info(
+                    f"Circuit breaker {self.name} transitioned to HALF_OPEN"
+                )
             else:
                 raise Exception(f"Circuit breaker {self.name} is OPEN")
 
@@ -440,7 +433,9 @@ class CircuitBreaker:
         if self.state == CircuitBreakerState.OPEN:
             if self._should_attempt_reset():
                 self.state = CircuitBreakerState.HALF_OPEN
-                logger.info(f"Circuit breaker {self.name} transitioned to HALF_OPEN")
+                logger.info(
+                    f"Circuit breaker {self.name} transitioned to HALF_OPEN"
+                )
             else:
                 raise Exception(f"Circuit breaker {self.name} is OPEN")
 
@@ -464,7 +459,9 @@ class CircuitBreaker:
             "failure_count": self.failure_count,
             "success_count": self.success_count,
             "last_failure_time": (
-                self.last_failure_time.isoformat() if self.last_failure_time else None
+                self.last_failure_time.isoformat()
+                if self.last_failure_time
+                else None
             ),
             "failure_threshold": self.failure_threshold,
             "reset_timeout": self.reset_timeout,

@@ -1,22 +1,24 @@
 """Pydantic schemas package."""
 
-from .auterity_expansion import (  # Triage schemas; Vector and \
-    similarity schemas; Integration schemas; Channel trigger schemas; Custom model schemas; Agent and \
-    execution schemas
+from .auterity_expansion import (  # Triage, Vector, Agent, etc.
+    Agent,
     AgentDeployRequest,
     AgentDeployResponse,
     AgentMemoryCreate,
     AgentMemoryResponse,
+    Channel,
     ChannelTriggerCreate,
     ChannelTriggerRequest,
     ChannelTriggerResponse,
     ChannelTriggerUpdate,
+    Custom,
     CustomModelCreate,
     CustomModelHealthCheck,
     CustomModelResponse,
     CustomModelUpdate,
     ExecutionMetricCreate,
     ExecutionMetricResponse,
+    Integration,
     IntegrationCreate,
     IntegrationResponse,
     IntegrationSyncRequest,

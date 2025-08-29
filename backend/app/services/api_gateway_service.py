@@ -16,12 +16,20 @@ class APIGatewayService:
     def __init__(self):
         """Initialize API Gateway service."""
         settings = get_settings()
-        self.kong_admin_url = getattr(settings, "KONG_ADMIN_URL", "http://kong:8001")
-        self.kong_proxy_url = getattr(settings, "KONG_PROXY_URL", "http://kong:8000")
+        self.kong_admin_url = getattr(
+            settings, "KONG_ADMIN_URL", "http://kong:8001"
+        )
+        self.kong_proxy_url = getattr(
+            settings, "KONG_PROXY_URL", "http://kong:8000"
+        )
         self.default_timeout = 30
 
     def create_service(
-        self, name: str, url: str, protocol: str = "http", path: Optional[str] = None
+        self,
+        name: str,
+        url: str,
+        protocol: str = "http",
+        path: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Create a new service in Kong."""
         try:
@@ -51,7 +59,10 @@ class APIGatewayService:
             return {"error": str(e)}
 
     def create_route(
-        self, service_name: str, paths: List[str], methods: Optional[List[str]] = None
+        self,
+        service_name: str,
+        paths: List[str],
+        methods: Optional[List[str]] = None,
     ) -> Dict[str, Any]:
         """Create a route for a service."""
         try:
@@ -88,7 +99,10 @@ class APIGatewayService:
     ) -> Dict[str, Any]:
         """Add authentication plugin to service."""
         try:
-            plugin_data = {"name": auth_type, "service": {"name": service_name}}
+            plugin_data = {
+                "name": auth_type,
+                "service": {"name": service_name},
+            }
 
             if config:
                 plugin_data["config"] = config
@@ -184,7 +198,10 @@ class APIGatewayService:
             return {"error": str(e)}
 
     def setup_webhook_endpoint(
-        self, webhook_name: str, target_url: str, secret_key: Optional[str] = None
+        self,
+        webhook_name: str,
+        target_url: str,
+        secret_key: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Setup webhook endpoint with optional signature verification."""
         try:
@@ -210,7 +227,9 @@ class APIGatewayService:
             if secret_key:
                 _ = self.add_request_transformer(
                     service_name=f"webhook-{webhook_name}",
-                    config={"add": {"headers": [f"X-Webhook-Secret:{secret_key}"]}},
+                    config={
+                        "add": {"headers": [f"X-Webhook-Secret:{secret_key}"]}
+                    },
                 )
 
             return {
@@ -310,7 +329,11 @@ class APIGatewayService:
             return {"error": str(e)}
 
     def verify_webhook_signature(
-        self, payload: str, signature: str, secret: str, algorithm: str = "sha256"
+        self,
+        payload: str,
+        signature: str,
+        secret: str,
+        algorithm: str = "sha256",
     ) -> bool:
         """Verify webhook signature."""
         try:

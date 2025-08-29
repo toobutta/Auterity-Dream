@@ -100,11 +100,15 @@ class TestRetryManager:
         )
 
         # Should retry on first failure
-        assert await retry_manager.should_retry(context, Exception("test error"))
+        assert await retry_manager.should_retry(
+            context, Exception("test error")
+        )
 
         # Should not retry after max retries
         context.retry_count = 3
-        assert not await retry_manager.should_retry(context, Exception("test error"))
+        assert not await retry_manager.should_retry(
+            context, Exception("test error")
+        )
 
         # Should not retry validation errors
         context.retry_count = 0

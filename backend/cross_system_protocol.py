@@ -208,7 +208,9 @@ class SystemConnector:
                 return None
 
         response_handler = ResponseHandler()
-        await self.broker.subscribe(f"{self.system_id}.response", response_handler)
+        await self.broker.subscribe(
+            f"{self.system_id}.response", response_handler
+        )
 
         await self.broker.publish(message)
 
@@ -233,11 +235,17 @@ class DistributedTracing:
         """Start a new trace"""
         trace_id = f"trace-{int(time.time() * 1000000)}"
         self.traces[trace_id] = [
-            {"operation": operation, "start_time": time.time(), "system": "coordinator"}
+            {
+                "operation": operation,
+                "start_time": time.time(),
+                "system": "coordinator",
+            }
         ]
         return trace_id
 
-    def add_span(self, trace_id: str, system: str, operation: str, duration: float):
+    def add_span(
+        self, trace_id: str, system: str, operation: str, duration: float
+    ):
         """Add span to existing trace"""
         if trace_id in self.traces:
             self.traces[trace_id].append(
@@ -336,7 +344,9 @@ async def demonstrate_cross_system_communication():
 
     # Simulate processing time
     await asyncio.sleep(0.1)
-    tracing.add_span(trace_id, "api_gateway", "send_command", time.time() - start_time)
+    tracing.add_span(
+        trace_id, "api_gateway", "send_command", time.time() - start_time
+    )
 
     # Query order status
     start_time = time.time()
@@ -344,14 +354,17 @@ async def demonstrate_cross_system_communication():
         "order_service", "get_order_status", {"order_id": "order-123"}
     )
 
-    tracing.add_span(trace_id, "api_gateway", "query_status", time.time() - start_time)
+    tracing.add_span(
+        trace_id, "api_gateway", "query_status", time.time() - start_time
+    )
 
     if response:
         print(f"Query response: {response.payload}")
 
     # Publish event
     await order_service.publish_event(
-        "order_status_changed", {"order_id": "order-123", "new_status": "shipped"}
+        "order_status_changed",
+        {"order_id": "order-123", "new_status": "shipped"},
     )
 
     # Show trace

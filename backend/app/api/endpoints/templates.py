@@ -34,12 +34,16 @@ def get_template_by_id(template_id: str, db: Session = Depends(get_db)):
 def create_template(template_data: Dict, db: Session = Depends(get_db)):
     """Create a new template with profile categorization"""
     if not template_data.get("category"):
-        raise HTTPException(status_code=400, detail="Template must have a category")
+        raise HTTPException(
+            status_code=400, detail="Template must have a category"
+        )
     return template_service.create_template(template_data)
 
 
 @router.put("/{template_id}", response_model=TemplateResponse)
-def update_template(template_id: str, updates: Dict, db: Session = Depends(get_db)):
+def update_template(
+    template_id: str, updates: Dict, db: Session = Depends(get_db)
+):
     """Update an existing template"""
     updated = template_service.update_template(template_id, updates)
     if not updated:
@@ -52,5 +56,7 @@ def delete_template(template_id: str, db: Session = Depends(get_db)):
     """Delete a template"""
     success = template_service.delete_template(template_id)
     if not success:
-        raise HTTPException(status_code=400, detail="Failed to delete template")
+        raise HTTPException(
+            status_code=400, detail="Failed to delete template"
+        )
     return success

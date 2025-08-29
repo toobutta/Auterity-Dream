@@ -21,7 +21,9 @@ class SlackService:
         settings = get_settings()
         self.webhook_url = getattr(settings, "SLACK_WEBHOOK_URL", "")
         self.bot_token = getattr(settings, "SLACK_BOT_TOKEN", "")
-        self.default_channel = getattr(settings, "SLACK_DEFAULT_CHANNEL", "#alerts")
+        self.default_channel = getattr(
+            settings, "SLACK_DEFAULT_CHANNEL", "#alerts"
+        )
         self.logger = logging.getLogger(__name__)
 
         # Initialize HTTP client
@@ -61,7 +63,9 @@ class SlackService:
 
             # Use webhook if available (simpler)
             if self.webhook_url:
-                response = await self.client.post(self.webhook_url, json=payload)
+                response = await self.client.post(
+                    self.webhook_url, json=payload
+                )
 
                 if response.status_code == 200:
                     return {
@@ -124,12 +128,22 @@ class SlackService:
             {
                 "color": color,
                 "fields": [
-                    {"title": "Error Code", "value": error_code, "short": True},
-                    {"title": "Severity", "value": severity.upper(), "short": True},
+                    {
+                        "title": "Error Code",
+                        "value": error_code,
+                        "short": True,
+                    },
+                    {
+                        "title": "Severity",
+                        "value": severity.upper(),
+                        "short": True,
+                    },
                     {"title": "Message", "value": message, "short": False},
                     {
                         "title": "Timestamp",
-                        "value": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+                        "value": datetime.utcnow().strftime(
+                            "%Y-%m-%d %H:%M:%S UTC"
+                        ),
                         "short": True,
                     },
                 ],
@@ -155,7 +169,11 @@ class SlackService:
                 "color": color,
                 "fields": [
                     {"title": "Service", "value": service, "short": True},
-                    {"title": "Status", "value": status.upper(), "short": True},
+                    {
+                        "title": "Status",
+                        "value": status.upper(),
+                        "short": True,
+                    },
                     {
                         "title": "Recovery Time",
                         "value": f"{details.get('duration', 'N/A')} seconds",
@@ -242,11 +260,21 @@ class SlackService:
                 "color": color,
                 "fields": [
                     {"title": "Version", "value": version, "short": True},
-                    {"title": "Environment", "value": environment, "short": True},
-                    {"title": "Status", "value": status.upper(), "short": True},
+                    {
+                        "title": "Environment",
+                        "value": environment,
+                        "short": True,
+                    },
+                    {
+                        "title": "Status",
+                        "value": status.upper(),
+                        "short": True,
+                    },
                     {
                         "title": "Deployed At",
-                        "value": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+                        "value": datetime.utcnow().strftime(
+                            "%Y-%m-%d %H:%M:%S UTC"
+                        ),
                         "short": True,
                     },
                 ],

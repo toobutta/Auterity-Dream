@@ -16,7 +16,9 @@ def setup_opentelemetry(app):
 
     # Configure OTLP exporter
     otlp_exporter = OTLPSpanExporter(
-        endpoint=os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://otel-collector:4317"),
+        endpoint=os.getenv(
+            "OTEL_EXPORTER_OTLP_ENDPOINT", "http://otel-collector:4317"
+        ),
         insecure=True,
     )
 

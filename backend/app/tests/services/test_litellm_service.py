@@ -57,7 +57,9 @@ def litellm_service():
             ]
         }
 
-        with patch("app.services.litellm_service.Path.exists", return_value=True):
+        with patch(
+            "app.services.litellm_service.Path.exists", return_value=True
+        ):
             with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}):
                 service = LiteLLMService(config_path="dummy_path")
                 yield service
@@ -92,7 +94,9 @@ async def test_make_completion(litellm_service, mock_acompletion):
 
 
 @pytest.mark.asyncio
-async def test_make_completion_with_fallback(litellm_service, mock_acompletion):
+async def test_make_completion_with_fallback(
+    litellm_service, mock_acompletion
+):
     """Test completion with fallback when primary model fails."""
     # Arrange
     messages = [{"role": "user", "content": "Hello"}]
@@ -103,7 +107,8 @@ async def test_make_completion_with_fallback(litellm_service, mock_acompletion):
         MagicMock(  # Second call succeeds with fallback model
             choices=[
                 MagicMock(
-                    message=MagicMock(content="Fallback response"), finish_reason="stop"
+                    message=MagicMock(content="Fallback response"),
+                    finish_reason="stop",
                 )
             ],
             usage=MagicMock(model_dump=lambda: {"total_tokens": 15}),

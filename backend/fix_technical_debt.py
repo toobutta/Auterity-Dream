@@ -4,8 +4,8 @@ Comprehensive Technical Debt Resolution Script
 Automatically fixes linting, formatting, and type issues.
 """
 
-import subprocess
 import os
+import subprocess
 from pathlib import Path
 
 
@@ -33,65 +33,54 @@ def main():
     """Main function to run all fixes."""
     backend_dir = Path(__file__).parent
     os.chdir(backend_dir)
-    
+
     print("🚀 Starting Comprehensive Technical Debt Resolution")
     print(f"📁 Working directory: {backend_dir}")
-    
+
     fixes = [
         # Fix whitespace issues
         (
             "python -m autopep8 --in-place --select=W293 app/",
-            "Fix whitespace issues"
+            "Fix whitespace issues",
         ),
-        
         # Fix line length issues (but respect our 88 char limit)
         (
             "python -m autopep8 --in-place --select=E501 "
             "--max-line-length=88 app/",
-            "Fix line length issues"
+            "Fix line length issues",
         ),
-        
         # Format code with black
-        (
-            "python -m black app/ --line-length=88",
-            "Format code with Black"
-        ),
-        
+        ("python -m black app/ --line-length=88", "Format code with Black"),
         # Sort imports
-        (
-            "python -m isort app/",
-            "Sort imports with isort"
-        ),
-        
+        ("python -m isort app/", "Sort imports with isort"),
         # Run flake8 check with proper config
         (
             "python -m flake8 app/ --max-line-length=88 "
             "--extend-ignore=E203,W503",
-            "Run flake8 validation"
+            "Run flake8 validation",
         ),
-        
         # Type check with mypy (basic)
         (
             "python -m mypy app/main.py --ignore-missing-imports",
-            "Basic type checking"
+            "Basic type checking",
         ),
     ]
-    
+
     success_count = 0
     for cmd, desc in fixes:
         if run_command(cmd, desc):
             success_count += 1
-    
+
     print(
         f"\n📊 Results: {success_count}/{len(fixes)} "
         f"fixes completed successfully"
     )
-    
+
     if success_count == len(fixes):
         print("🎉 All technical debt fixes completed successfully!")
     else:
         print("⚠️  Some fixes failed. Manual intervention may be required.")
-        
+
     # Final validation
     print("\n🔍 Running final validation...")
     run_command("python -m flake8 app/ --statistics", "Final flake8 check")

@@ -12,11 +12,15 @@ class SaaSConfig(BaseSettings):
 
     # Stripe Configuration
     STRIPE_SECRET_KEY: str = Field(default="", env="STRIPE_SECRET_KEY")
-    STRIPE_PUBLISHABLE_KEY: str = Field(default="", env="STRIPE_PUBLISHABLE_KEY")
+    STRIPE_PUBLISHABLE_KEY: str = Field(
+        default="", env="STRIPE_PUBLISHABLE_KEY"
+    )
     STRIPE_WEBHOOK_SECRET: str = Field(default="", env="STRIPE_WEBHOOK_SECRET")
 
     # Stripe Price IDs for different plans
-    STRIPE_PRICE_ID_STARTER: str = Field(default="", env="STRIPE_PRICE_ID_STARTER")
+    STRIPE_PRICE_ID_STARTER: str = Field(
+        default="", env="STRIPE_PRICE_ID_STARTER"
+    )
     STRIPE_PRICE_ID_PROFESSIONAL: str = Field(
         default="", env="STRIPE_PRICE_ID_PROFESSIONAL"
     )
@@ -197,40 +201,62 @@ class SaaSConfig(BaseSettings):
     ]
 
     # Compliance Configuration
-    COMPLIANCE_CHECKS_ENABLED: bool = Field(True, env="COMPLIANCE_CHECKS_ENABLED")
+    COMPLIANCE_CHECKS_ENABLED: bool = Field(
+        True, env="COMPLIANCE_CHECKS_ENABLED"
+    )
     GDPR_COMPLIANCE_ENABLED: bool = Field(True, env="GDPR_COMPLIANCE_ENABLED")
     SOC2_COMPLIANCE_ENABLED: bool = Field(True, env="SOC2_COMPLIANCE_ENABLED")
-    HIPAA_COMPLIANCE_ENABLED: bool = Field(False, env="HIPAA_COMPLIANCE_ENABLED")
+    HIPAA_COMPLIANCE_ENABLED: bool = Field(
+        False, env="HIPAA_COMPLIANCE_ENABLED"
+    )
 
     # Security Configuration
-    API_RATE_LIMITING_ENABLED: bool = Field(True, env="API_RATE_LIMITING_ENABLED")
-    DEFAULT_RATE_LIMIT: int = Field(1000, env="DEFAULT_RATE_LIMIT")  # requests per hour
+    API_RATE_LIMITING_ENABLED: bool = Field(
+        True, env="API_RATE_LIMITING_ENABLED"
+    )
+    DEFAULT_RATE_LIMIT: int = Field(
+        1000, env="DEFAULT_RATE_LIMIT"
+    )  # requests per hour
     MAX_RATE_LIMIT: int = Field(
         10000, env="MAX_RATE_LIMIT"
     )  # maximum requests per hour
 
     # Monitoring Configuration
-    USAGE_MONITORING_ENABLED: bool = Field(True, env="USAGE_MONITORING_ENABLED")
-    BILLING_MONITORING_ENABLED: bool = Field(True, env="BILLING_MONITORING_ENABLED")
+    USAGE_MONITORING_ENABLED: bool = Field(
+        True, env="USAGE_MONITORING_ENABLED"
+    )
+    BILLING_MONITORING_ENABLED: bool = Field(
+        True, env="BILLING_MONITORING_ENABLED"
+    )
     PERFORMANCE_MONITORING_ENABLED: bool = Field(
         True, env="PERFORMANCE_MONITORING_ENABLED"
     )
 
     # Notification Configuration
-    EMAIL_NOTIFICATIONS_ENABLED: bool = Field(True, env="EMAIL_NOTIFICATIONS_ENABLED")
-    SLACK_NOTIFICATIONS_ENABLED: bool = Field(False, env="SLACK_NOTIFICATIONS_ENABLED")
+    EMAIL_NOTIFICATIONS_ENABLED: bool = Field(
+        True, env="EMAIL_NOTIFICATIONS_ENABLED"
+    )
+    SLACK_NOTIFICATIONS_ENABLED: bool = Field(
+        False, env="SLACK_NOTIFICATIONS_ENABLED"
+    )
     WEBHOOK_NOTIFICATIONS_ENABLED: bool = Field(
         True, env="WEBHOOK_NOTIFICATIONS_ENABLED"
     )
 
     # Analytics Configuration
     USAGE_ANALYTICS_ENABLED: bool = Field(True, env="USAGE_ANALYTICS_ENABLED")
-    BILLING_ANALYTICS_ENABLED: bool = Field(True, env="BILLING_ANALYTICS_ENABLED")
+    BILLING_ANALYTICS_ENABLED: bool = Field(
+        True, env="BILLING_ANALYTICS_ENABLED"
+    )
     USER_ANALYTICS_ENABLED: bool = Field(True, env="USER_ANALYTICS_ENABLED")
 
     # Integration Configuration
-    STRIPE_INTEGRATION_ENABLED: bool = Field(True, env="STRIPE_INTEGRATION_ENABLED")
-    PAYPAL_INTEGRATION_ENABLED: bool = Field(False, env="PAYPAL_INTEGRATION_ENABLED")
+    STRIPE_INTEGRATION_ENABLED: bool = Field(
+        True, env="STRIPE_INTEGRATION_ENABLED"
+    )
+    PAYPAL_INTEGRATION_ENABLED: bool = Field(
+        False, env="PAYPAL_INTEGRATION_ENABLED"
+    )
     QUICKBOOKS_INTEGRATION_ENABLED: bool = Field(
         False, env="QUICKBOOKS_INTEGRATION_ENABLED"
     )

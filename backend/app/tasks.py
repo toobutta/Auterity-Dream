@@ -7,19 +7,17 @@ from app.services.workflow_execution_engine import WorkflowExecutionEngine
 def execute_workflow_async(workflow_id: str, input_data: dict):
     from app.database import SessionLocal
     from app.models.workflow import Workflow
+
     engine = WorkflowExecutionEngine()
     db = SessionLocal()
-    workflow = (
-        db.query(Workflow)
-        .filter(Workflow.id == workflow_id)
-        .first()
-    )
+    workflow = db.query(Workflow).filter(Workflow.id == workflow_id).first()
     try:
         if not workflow:
             raise ValueError(f"Workflow {workflow_id} not found")
         workflow_def = getattr(workflow, "definition", None)
         if not isinstance(workflow_def, dict):
             import json
+
             workflow_def = json.loads(workflow_def) if workflow_def else {}
         # Optionally merge input_data into workflow_def if needed
         result = engine.execute_workflow(workflow_def)

@@ -71,7 +71,9 @@ class MockSmartTriageService:
         self, tenant_id: UUID, days: int = 30
     ) -> Dict[str, Any]:
         """Mock get triage accuracy metrics."""
-        self.logger.info(f"Mock getting triage accuracy for tenant {tenant_id}")
+        self.logger.info(
+            f"Mock getting triage accuracy for tenant {tenant_id}"
+        )
 
         return {
             "tenant_id": str(tenant_id),
@@ -94,11 +96,21 @@ class MockSmartTriageService:
 
         # Simple keyword-based sentiment
         positive_words = ["good", "great", "excellent", "amazing", "wonderful"]
-        negative_words = ["bad", "terrible", "awful", "horrible", "disappointing"]
+        negative_words = [
+            "bad",
+            "terrible",
+            "awful",
+            "horrible",
+            "disappointing",
+        ]
 
         text_lower = text.lower()
-        positive_count = sum(1 for word in positive_words if word in text_lower)
-        negative_count = sum(1 for word in negative_words if word in text_lower)
+        positive_count = sum(
+            1 for word in positive_words if word in text_lower
+        )
+        negative_count = sum(
+            1 for word in negative_words if word in text_lower
+        )
 
         if positive_count > negative_count:
             sentiment = "positive"

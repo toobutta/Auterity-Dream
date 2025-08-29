@@ -26,24 +26,33 @@ class OutputStepExecutor(BaseStepExecutor):
             destination = input_data.get("destination", "default")
 
             # Process output delivery
-            delivery_result = await self._deliver_output(output_data, destination)
+            delivery_result = await self._deliver_output(
+                output_data, destination
+            )
 
             return ExecutionResult(
                 success=True,
-                data={"delivery_status": delivery_result, "destination": destination},
+                data={
+                    "delivery_status": delivery_result,
+                    "destination": destination,
+                },
                 metadata={"output_size": len(str(output_data))},
             )
 
         except Exception as e:
             return ExecutionResult(
-                success=False, data={}, error=f"Output execution failed: {str(e)}"
+                success=False,
+                data={},
+                error=f"Output execution failed: {str(e)}",
             )
 
     def validate_input(self, input_data: Dict[str, Any]) -> bool:
         """Validate output data"""
         return isinstance(input_data, dict) and "data" in input_data
 
-    async def _deliver_output(self, data: Dict[str, Any], destination: str) -> str:
+    async def _deliver_output(
+        self, data: Dict[str, Any], destination: str
+    ) -> str:
         """Deliver output to specified destination"""
         # Placeholder for actual output delivery logic
         return f"Delivered to {destination}"

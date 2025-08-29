@@ -58,7 +58,9 @@ async def triage_input(
     try:
         service = SmartTriageService(db)
         decision = await service.triage_input(
-            content=request.content, context=request.context, tenant_id=tenant.id
+            content=request.content,
+            context=request.context,
+            tenant_id=tenant.id,
         )
 
         return TriageResponse(
@@ -128,7 +130,11 @@ async def get_triage_rules(
             # Get all rules if not filtering by active
             from app.models.auterity_expansion import TriageRule
 
-            rules = db.query(TriageRule).filter(TriageRule.tenant_id == tenant.id).all()
+            rules = (
+                db.query(TriageRule)
+                .filter(TriageRule.tenant_id == tenant.id)
+                .all()
+            )
 
         return [
             TriageRuleResponse(
@@ -157,7 +163,9 @@ async def get_triage_rules(
 
 @router.get("/triage/accuracy")
 async def get_triage_accuracy(
-    days: int = Query(30, ge=1, le=365, description="Number of days to analyze"),
+    days: int = Query(
+        30, ge=1, le=365, description="Number of days to analyze"
+    ),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
@@ -269,7 +277,9 @@ async def get_similarity_clusters(
     min_similarity: float = Query(
         0.7, ge=0.0, le=1.0, description="Minimum similarity threshold"
     ),
-    min_cluster_size: int = Query(2, ge=2, le=100, description="Minimum cluster size"),
+    min_cluster_size: int = Query(
+        2, ge=2, le=100, description="Minimum cluster size"
+    ),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
@@ -295,7 +305,9 @@ async def get_similarity_clusters(
 @router.get("/embeddings/duplicate-analysis")
 async def get_duplicate_analysis(
     item_type: str = Query(..., description="Type of items to analyze"),
-    days: int = Query(30, ge=1, le=365, description="Number of days to analyze"),
+    days: int = Query(
+        30, ge=1, le=365, description="Number of days to analyze"
+    ),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
@@ -368,7 +380,8 @@ async def assign_task(
 
         if not task:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to assign task"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to assign task",
             )
 
         return {
@@ -389,7 +402,9 @@ async def assign_task(
 @router.get("/agents/{agent_id}/memory")
 async def get_agent_memory(
     agent_id: UUID,
-    context_key: Optional[str] = Query(None, description="Context key to filter by"),
+    context_key: Optional[str] = Query(
+        None, description="Context key to filter by"
+    ),
     limit: int = Query(
         50, ge=1, le=100, description="Maximum number of memories to return"
     ),
@@ -478,7 +493,9 @@ async def coordinate_agents(
 @router.get("/agents/{agent_id}/performance")
 async def get_agent_performance(
     agent_id: UUID,
-    days: int = Query(30, ge=1, le=365, description="Number of days to analyze"),
+    days: int = Query(
+        30, ge=1, le=365, description="Number of days to analyze"
+    ),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):

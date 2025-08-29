@@ -6,13 +6,14 @@ Tests the core functionality of all major components.
 import os
 import sys
 from unittest.mock import AsyncMock, patch
+
 import pytest
+
+from app.api.agents import router
 from app.services.agents.compliance_layer import ComplianceLayer
 from app.services.agents.orchestrator import AgentOrchestrator
 from app.services.agents.rag_engine import RAGEngine
 from app.services.agents.security_manager import SecurityManager
-from app.api.agents import router
-
 
 # Add the backend directory to Python path
 backend_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -118,7 +119,9 @@ class TestAgentFrameworkIntegration:
         compliance_rules = ["GDPR", "HIPAA"]
 
         # Validate compliance
-        result = compliance_layer.validate_compliance(test_data, compliance_rules)
+        result = compliance_layer.validate_compliance(
+            test_data, compliance_rules
+        )
 
         assert "compliance_status" in result
         assert "audit_id" in result
@@ -195,7 +198,10 @@ class TestAgentFrameworkIntegration:
         with patch.object(
             orchestrator, "_execute_agent_step", new_callable=AsyncMock
         ) as mock_execute:
-            mock_execute.return_value = {"success": True, "result": "processed data"}
+            mock_execute.return_value = {
+                "success": True,
+                "result": "processed data",
+            }
 
             result = await orchestrator.execute_workflow(workflow)
 
@@ -223,7 +229,9 @@ class TestAgentFrameworkIntegration:
 
         # 2. Compliance validates data
         test_data = {"content": "test data", "classification": "internal"}
-        compliance_result = compliance_layer.validate_compliance(test_data, ["GDPR"])
+        compliance_result = compliance_layer.validate_compliance(
+            test_data, ["GDPR"]
+        )
         assert "compliance_status" in compliance_result
 
         # 3. Agent registration works
@@ -262,7 +270,9 @@ class TestAgentFrameworkIntegration:
             compliance_layer = ComplianceLayer()
             security_manager = SecurityManager()
 
-            assert all([orchestrator, rag_engine, compliance_layer, security_manager])
+            assert all(
+                [orchestrator, rag_engine, compliance_layer, security_manager]
+            )
             print("✅ Configuration loading test passed")
 
         except ImportError as e:

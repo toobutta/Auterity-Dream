@@ -22,7 +22,11 @@ def hash_password(password: str) -> str:
 def create_seed_users():
     """Create seed users for development."""
     seed_users = [
-        {"email": "admin@autodealer.com", "name": "Admin User", "password": "admin123"},
+        {
+            "email": "admin@autodealer.com",
+            "name": "Admin User",
+            "password": "admin123",
+        },
         {
             "email": "manager@autodealer.com",
             "name": "Dealership Manager",
@@ -42,7 +46,9 @@ def create_seed_users():
                 db.query(User).filter(User.email == user_data["email"]).first()
             )
             if existing_user:
-                logger.info(f"User {user_data['email']} already exists, skipping")
+                logger.info(
+                    f"User {user_data['email']} already exists, skipping"
+                )
                 continue
 
             user = User(

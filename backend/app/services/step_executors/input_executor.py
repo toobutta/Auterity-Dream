@@ -40,7 +40,9 @@ class InputStepExecutor(BaseStepExecutor):
 
         except Exception as e:
             return ExecutionResult(
-                success=False, data={}, error=f"Input execution failed: {str(e)}"
+                success=False,
+                data={},
+                error=f"Input execution failed: {str(e)}",
             )
 
     def validate_input(self, input_data: Dict[str, Any]) -> bool:

@@ -254,7 +254,11 @@ class AgentMarketplaceService:
                 "name": "Marketing Content Creator",
                 "description": "Generates marketing content and social media posts",
                 "category": AgentCategory.MARKETING,
-                "capabilities": ["content_generation", "social_media", "brand_voice"],
+                "capabilities": [
+                    "content_generation",
+                    "social_media",
+                    "brand_voice",
+                ],
                 "base_model": "gpt-4",
                 "pricing_tiers": {
                     "basic": {"price": 179.00, "max_requests": 6000},
@@ -307,7 +311,9 @@ class AgentMarketplaceService:
                 ),
             }
 
-            sort_func = sort_functions.get(sort_by, sort_functions["downloads"])
+            sort_func = sort_functions.get(
+                sort_by, sort_functions["downloads"]
+            )
             templates.sort(key=sort_func, reverse=(sort_by != "newest"))
 
             return templates[:limit]
@@ -352,7 +358,9 @@ class AgentMarketplaceService:
             # Update template statistics
             template.total_deployments += 1
 
-            logger.info(f"Deployed agent: {agent_id} from template: {template_id}")
+            logger.info(
+                f"Deployed agent: {agent_id} from template: {template_id}"
+            )
             return deployed_agent
 
         except Exception as e:
@@ -384,7 +392,9 @@ class AgentMarketplaceService:
 
                 if field_type == "string" and not isinstance(value, str):
                     raise ValueError(f"Field {field} must be a string")
-                elif field_type == "number" and not isinstance(value, (int, float)):
+                elif field_type == "number" and not isinstance(
+                    value, (int, float)
+                ):
                     raise ValueError(f"Field {field} must be a number")
                 elif field_type == "array" and not isinstance(value, list):
                     raise ValueError(f"Field {field} must be an array")
@@ -402,7 +412,9 @@ class AgentMarketplaceService:
             agent = self.deployed_agents[agent_id]
 
             if agent.tenant_id != tenant_id:
-                raise ValueError("Agent does not belong to the specified tenant")
+                raise ValueError(
+                    "Agent does not belong to the specified tenant"
+                )
 
             # Update configuration
             agent.configuration.update(customizations)
@@ -430,7 +442,9 @@ class AgentMarketplaceService:
             agent = self.deployed_agents[agent_id]
 
             if agent.tenant_id != tenant_id:
-                raise ValueError("Agent does not belong to the specified tenant")
+                raise ValueError(
+                    "Agent does not belong to the specified tenant"
+                )
 
             job_id = f"training_{uuid.uuid4().hex}"
 
@@ -492,7 +506,9 @@ class AgentMarketplaceService:
             agent = self.deployed_agents[agent_id]
 
             if agent.tenant_id != tenant_id:
-                return {"error": "Agent does not belong to the specified tenant"}
+                return {
+                    "error": "Agent does not belong to the specified tenant"
+                }
 
             period_start = datetime.utcnow() - timedelta(days=days)
 
@@ -503,7 +519,9 @@ class AgentMarketplaceService:
                     and_(
                         UsageLog.tenant_id == tenant_id,
                         UsageLog.created_at >= period_start,
-                        UsageLog.metadata_json.contains({"agent_id": agent_id}),
+                        UsageLog.metadata_json.contains(
+                            {"agent_id": agent_id}
+                        ),
                     )
                 )
                 .all()
@@ -514,7 +532,9 @@ class AgentMarketplaceService:
             successful_requests = len(
                 [log for log in usage_logs if log.status == "success"]
             )
-            total_cost = sum(log.cost_amount or Decimal("0") for log in usage_logs)
+            total_cost = sum(
+                log.cost_amount or Decimal("0") for log in usage_logs
+            )
 
             success_rate = (
                 (successful_requests / total_requests * 100)
@@ -527,10 +547,14 @@ class AgentMarketplaceService:
 
             # Calculate response times if available
             response_times = [
-                log.execution_time_ms for log in usage_logs if log.execution_time_ms
+                log.execution_time_ms
+                for log in usage_logs
+                if log.execution_time_ms
             ]
             avg_response_time = (
-                sum(response_times) / len(response_times) if response_times else 0
+                sum(response_times) / len(response_times)
+                if response_times
+                else 0
             )
 
             analytics = {
@@ -551,9 +575,13 @@ class AgentMarketplaceService:
                 "performance": {
                     "status": agent.status,
                     "last_used": (
-                        agent.last_used.isoformat() if agent.last_used else None
+                        agent.last_used.isoformat()
+                        if agent.last_used
+                        else None
                     ),
-                    "total_uptime": (datetime.utcnow() - agent.deployed_at).days,
+                    "total_uptime": (
+                        datetime.utcnow() - agent.deployed_at
+                    ).days,
                 },
             }
 
@@ -601,7 +629,9 @@ class AgentMarketplaceService:
             # Update template rating
             await self._update_template_rating(template_id)
 
-            logger.info(f"Submitted review: {review_id} for template: {template_id}")
+            logger.info(
+                f"Submitted review: {review_id} for template: {template_id}"
+            )
             return review
 
         except Exception as e:
@@ -618,7 +648,9 @@ class AgentMarketplaceService:
 
             # Get all reviews for this template
             template_reviews = [
-                r for r in self.reviews.values() if r.template_id == template_id
+                r
+                for r in self.reviews.values()
+                if r.template_id == template_id
             ]
 
             if not template_reviews:
@@ -642,7 +674,11 @@ class AgentMarketplaceService:
             if template_id not in self.templates:
                 return []
 
-            reviews = [r for r in self.reviews.values() if r.template_id == template_id]
+            reviews = [
+                r
+                for r in self.reviews.values()
+                if r.template_id == template_id
+            ]
 
             # Sort reviews
             if sort_by == "newest":
@@ -680,13 +716,17 @@ class AgentMarketplaceService:
                         UsageLog.tenant_id == agent.tenant_id,
                         UsageLog.created_at >= period_start,
                         UsageLog.created_at < period_end,
-                        UsageLog.metadata_json.contains({"agent_id": agent_id}),
+                        UsageLog.metadata_json.contains(
+                            {"agent_id": agent_id}
+                        ),
                     )
                 )
                 .all()
             )
 
-            total_revenue = sum(log.cost_amount or Decimal("0") for log in usage_logs)
+            total_revenue = sum(
+                log.cost_amount or Decimal("0") for log in usage_logs
+            )
 
             if total_revenue > 0 and template.revenue_share_percentage > 0:
                 creator_revenue = total_revenue * Decimal(
@@ -716,7 +756,9 @@ class AgentMarketplaceService:
             logger.error(f"Revenue share calculation failed: {str(e)}")
             return []
 
-    async def get_marketplace_analytics(self, days: int = 30) -> Dict[str, Any]:
+    async def get_marketplace_analytics(
+        self, days: int = 30
+    ) -> Dict[str, Any]:
         """Get marketplace-wide analytics."""
         try:
             _ = datetime.utcnow() - timedelta(days=days)
@@ -749,10 +791,14 @@ class AgentMarketplaceService:
                         a.total_requests for a in self.deployed_agents.values()
                     ),
                     "total_revenue": sum(
-                        float(a.total_cost) for a in self.deployed_agents.values()
+                        float(a.total_cost)
+                        for a in self.deployed_agents.values()
                     ),
                 },
-                "reviews": {"total_reviews": len(self.reviews), "average_rating": 0.0},
+                "reviews": {
+                    "total_reviews": len(self.reviews),
+                    "average_rating": 0.0,
+                },
             }
 
             # Category breakdown
@@ -777,7 +823,9 @@ class AgentMarketplaceService:
 
             # Overall average rating
             if analytics["reviews"]["total_reviews"] > 0:
-                total_rating = sum(review.rating for review in self.reviews.values())
+                total_rating = sum(
+                    review.rating for review in self.reviews.values()
+                )
                 analytics["reviews"]["average_rating"] = (
                     total_rating / analytics["reviews"]["total_reviews"]
                 )
@@ -836,7 +884,11 @@ class AgentMarketplaceService:
                 ),
                 "deployed_agents_count": len(self.deployed_agents),
                 "active_agents": len(
-                    [a for a in self.deployed_agents.values() if a.status == "active"]
+                    [
+                        a
+                        for a in self.deployed_agents.values()
+                        if a.status == "active"
+                    ]
                 ),
                 "reviews_count": len(self.reviews),
                 "training_jobs_count": len(self.training_jobs),

@@ -29,7 +29,9 @@ def upgrade():
         sa.Column("sso_provider", sa.String(length=20), nullable=True),
         sa.Column("sso_config", sa.JSON(), nullable=True),
         sa.Column("audit_enabled", sa.Boolean(), nullable=False),
-        sa.Column("audit_retention_days", sa.String(length=10), nullable=False),
+        sa.Column(
+            "audit_retention_days", sa.String(length=10), nullable=False
+        ),
         sa.Column("metadata", sa.JSON(), nullable=True),
         sa.Column(
             "created_at",
@@ -47,7 +49,9 @@ def upgrade():
     )
     op.create_index(op.f("ix_tenants_name"), "tenants", ["name"], unique=False)
     op.create_index(op.f("ix_tenants_slug"), "tenants", ["slug"], unique=True)
-    op.create_index(op.f("ix_tenants_domain"), "tenants", ["domain"], unique=True)
+    op.create_index(
+        op.f("ix_tenants_domain"), "tenants", ["domain"], unique=True
+    )
 
     # Create sso_configurations table
     op.create_table(
@@ -120,7 +124,10 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
-        op.f("ix_audit_logs_event_type"), "audit_logs", ["event_type"], unique=False
+        op.f("ix_audit_logs_event_type"),
+        "audit_logs",
+        ["event_type"],
+        unique=False,
     )
     op.create_index(
         op.f("ix_audit_logs_resource_type"),
@@ -129,27 +136,36 @@ def upgrade():
         unique=False,
     )
     op.create_index(
-        op.f("ix_audit_logs_resource_id"), "audit_logs", ["resource_id"], unique=False
+        op.f("ix_audit_logs_resource_id"),
+        "audit_logs",
+        ["resource_id"],
+        unique=False,
     )
     op.create_index(
         op.f("ix_audit_logs_action"), "audit_logs", ["action"], unique=False
     )
     op.create_index(
-        op.f("ix_audit_logs_timestamp"), "audit_logs", ["timestamp"], unique=False
+        op.f("ix_audit_logs_timestamp"),
+        "audit_logs",
+        ["timestamp"],
+        unique=False,
     )
 
     # Add tenant_id to users table
     op.add_column(
-        "users", sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=True)
+        "users",
+        sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=True),
     )
     op.add_column(
         "users", sa.Column("sso_provider", sa.String(length=20), nullable=True)
     )
     op.add_column(
-        "users", sa.Column("sso_subject_id", sa.String(length=255), nullable=True)
+        "users",
+        sa.Column("sso_subject_id", sa.String(length=255), nullable=True),
     )
     op.add_column(
-        "users", sa.Column("last_login", sa.DateTime(timezone=True), nullable=True)
+        "users",
+        sa.Column("last_login", sa.DateTime(timezone=True), nullable=True),
     )
 
     # Make hashed_password nullable for SSO users

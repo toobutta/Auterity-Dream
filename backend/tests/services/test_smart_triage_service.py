@@ -48,7 +48,9 @@ class TestSmartTriageService:
         rule_based.id = uuid4()
         rule_based.name = "High Priority Keywords"
         rule_based.rule_type = TriageRuleType.RULE_BASED
-        rule_based.conditions = {"keywords": ["urgent", "critical", "emergency"]}
+        rule_based.conditions = {
+            "keywords": ["urgent", "critical", "emergency"]
+        }
         rule_based.routing_logic = {"default_decision": "high_priority"}
         rule_based.confidence_threshold = 0.7
         rule_based.priority = 2
@@ -62,7 +64,9 @@ class TestSmartTriageService:
         """Create service instance with mocked dependencies."""
         with (
             patch("app.services.smart_triage_service.AIService") as mock_ai,
-            patch("app.services.smart_triage_service.VectorService") as mock_vector,
+            patch(
+                "app.services.smart_triage_service.VectorService"
+            ) as mock_vector,
         ):
             mock_ai_instance = Mock()
             mock_ai_instance.generate_completion = AsyncMock(
@@ -70,7 +74,9 @@ class TestSmartTriageService:
             )
 
             mock_vector_instance = Mock()
-            mock_vector_instance.find_similar_items = AsyncMock(return_value=[])
+            mock_vector_instance.find_similar_items = AsyncMock(
+                return_value=[]
+            )
 
             mock_ai.return_value = mock_ai_instance
             mock_vector.return_value = mock_vector_instance
@@ -82,7 +88,9 @@ class TestSmartTriageService:
     async def test_triage_input_success(self, service, mock_db, mock_tenant):
         """Test successful triage input processing."""
         # Mock tenant query
-        mock_db.query.return_value.filter.return_value.first.return_value = mock_tenant
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            mock_tenant
+        )
 
         # Mock triage rules query
         mock_db.query.return_value.filter.return_value.order_by.return_value.all.return_value = (
@@ -109,7 +117,9 @@ class TestSmartTriageService:
     async def test_triage_input_tenant_not_found(self, service, mock_db):
         """Test triage with non-existent tenant."""
         # Mock tenant query to return None
-        mock_db.query.return_value.filter.return_value.first.return_value = None
+        mock_db.query.return_value.filter.return_value.first.return_value = (
+            None
+        )
 
         with pytest.raises(ValueError, match="Tenant .* not found"):
             await service.triage_input(
@@ -155,7 +165,9 @@ class TestSmartTriageService:
         content = "Urgent issue with the system"
         context = {"user_type": "admin"}
 
-        result = await service._rule_based_triage(content, context, mock_triage_rules)
+        result = await service._rule_based_triage(
+            content, context, mock_triage_rules
+        )
 
         assert isinstance(result, TriageDecision)
         assert result.routing_decision == "high_priority"
@@ -163,12 +175,16 @@ class TestSmartTriageService:
         assert "High Priority Keywords" in result.reasoning
 
     @pytest.mark.asyncio
-    async def test_rule_based_triage_no_match(self, service, mock_triage_rules):
+    async def test_rule_based_triage_no_match(
+        self, service, mock_triage_rules
+    ):
         """Test rule-based triage with no matching rules."""
         content = "General question about features"
         context = {}
 
-        result = await service._rule_based_triage(content, context, mock_triage_rules)
+        result = await service._rule_based_triage(
+            content, context, mock_triage_rules
+        )
 
         assert isinstance(result, TriageDecision)
         assert result.routing_decision == "general_queue"
@@ -276,7 +292,9 @@ class TestSmartTriageService:
         assert "Failed to parse AI response" in result.reasoning
 
     @pytest.mark.asyncio
-    async def test_get_active_triage_rules(self, service, mock_db, mock_triage_rules):
+    async def test_get_active_triage_rules(
+        self, service, mock_db, mock_triage_rules
+    ):
         """Test getting active triage rules."""
         # Mock database query
         mock_db.query.return_value.filter.return_value.order_by.return_value.all.return_value = (

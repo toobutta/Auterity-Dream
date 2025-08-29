@@ -27,7 +27,9 @@ class EnhancedErrorHandlingMiddleware(BaseHTTPMiddleware):
         self.enable_auto_recovery = enable_auto_recovery
         self.logger = logging.getLogger(__name__)
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: Callable
+    ) -> Response:
         """Process request with enhanced error handling."""
         start_time = time.time()
 
@@ -91,7 +93,9 @@ class EnhancedErrorHandlingMiddleware(BaseHTTPMiddleware):
             )
 
             # Handle as application error
-            await self._handle_application_error(app_error, request, start_time)
+            await self._handle_application_error(
+                app_error, request, start_time
+            )
 
         except Exception as e:
             self.logger.error(f"Failed to handle unexpected error: {e}")
@@ -126,7 +130,11 @@ class EnhancedErrorHandlingMiddleware(BaseHTTPMiddleware):
         context["user_facing"] = request.url.path.startswith("/api/")
 
         # Mark as business critical for certain endpoints
-        critical_paths = ["/api/workflows/execute", "/api/auth/", "/api/templates/"]
+        critical_paths = [
+            "/api/workflows/execute",
+            "/api/auth/",
+            "/api/templates/",
+        ]
         context["business_critical"] = any(
             request.url.path.startswith(path) for path in critical_paths
         )
@@ -146,11 +154,15 @@ class EnhancedErrorHandlingMiddleware(BaseHTTPMiddleware):
                 recovery_service = await get_enhanced_recovery_service()
 
                 # Create recovery plan
-                plan = await recovery_service.create_recovery_plan(error, context)
+                plan = await recovery_service.create_recovery_plan(
+                    error, context
+                )
 
                 # Execute recovery plan asynchronously (don't block the response)
                 asyncio.create_task(
-                    recovery_service.execute_recovery_plan(plan, error, context)
+                    recovery_service.execute_recovery_plan(
+                        plan, error, context
+                    )
                 )
 
                 self.logger.info(
@@ -169,7 +181,9 @@ class ErrorMetricsMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.logger = logging.getLogger(__name__)
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: Callable
+    ) -> Response:
         """Collect error metrics from requests."""
         try:
             response = await call_next(request)
@@ -187,24 +201,32 @@ class ErrorMetricsMiddleware(BaseHTTPMiddleware):
             await self._track_exception_metric(request, e)
             raise
 
-    async def _track_success_metric(self, request: Request, response: Response) -> None:
+    async def _track_success_metric(
+        self, request: Request, response: Response
+    ) -> None:
         """Track successful request metrics."""
         try:
             # Update success counters in Redis
             analytics_service = await get_error_analytics_service()
             await analytics_service.redis.incr("request_success_count")
-            await analytics_service.redis.expire("request_success_count", 86400)
+            await analytics_service.redis.expire(
+                "request_success_count", 86400
+            )
 
         except Exception as e:
             self.logger.error(f"Failed to track success metric: {e}")
 
-    async def _track_error_metric(self, request: Request, response: Response) -> None:
+    async def _track_error_metric(
+        self, request: Request, response: Response
+    ) -> None:
         """Track HTTP error metrics."""
         try:
             analytics_service = await get_error_analytics_service()
 
             # Track by status code
-            await analytics_service.redis.incr(f"http_error_{response.status_code}")
+            await analytics_service.redis.incr(
+                f"http_error_{response.status_code}"
+            )
             await analytics_service.redis.expire(
                 f"http_error_{response.status_code}", 86400
             )
@@ -226,11 +248,15 @@ class ErrorMetricsMiddleware(BaseHTTPMiddleware):
             # Track by exception type
             exception_type = type(exception).__name__
             await analytics_service.redis.incr(f"exception_{exception_type}")
-            await analytics_service.redis.expire(f"exception_{exception_type}", 86400)
+            await analytics_service.redis.expire(
+                f"exception_{exception_type}", 86400
+            )
 
             # Track overall exception count
             await analytics_service.redis.incr("request_exception_count")
-            await analytics_service.redis.expire("request_exception_count", 86400)
+            await analytics_service.redis.expire(
+                "request_exception_count", 86400
+            )
 
         except Exception as e:
             self.logger.error(f"Failed to track exception metric: {e}")
@@ -245,7 +271,9 @@ class HealthCheckMiddleware(BaseHTTPMiddleware):
         self.last_health_check = 0
         self.logger = logging.getLogger(__name__)
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: Callable
+    ) -> Response:
         """Monitor system health during request processing."""
         # Perform periodic health checks
         current_time = time.time()
@@ -282,7 +310,9 @@ class HealthCheckMiddleware(BaseHTTPMiddleware):
 
             # Store health status
             await analytics_service.redis.setex(
-                "system_health_status", self.health_check_interval * 2, health_status
+                "system_health_status",
+                self.health_check_interval * 2,
+                health_status,
             )
 
             # Send health notification if status changed
@@ -297,7 +327,9 @@ class HealthCheckMiddleware(BaseHTTPMiddleware):
 
             # Update previous status
             await analytics_service.redis.setex(
-                "previous_health_status", self.health_check_interval * 2, health_status
+                "previous_health_status",
+                self.health_check_interval * 2,
+                health_status,
             )
 
         except Exception as e:

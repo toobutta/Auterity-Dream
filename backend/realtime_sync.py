@@ -42,7 +42,9 @@ class EventStream:
             for subscriber in self.subscribers[stream_id]:
                 await subscriber(event)
 
-    async def subscribe_to_stream(self, stream_id: str, handler, from_offset: int = 0):
+    async def subscribe_to_stream(
+        self, stream_id: str, handler, from_offset: int = 0
+    ):
         """Subscribe to event stream with replay capability"""
         if stream_id not in self.subscribers:
             self.subscribers[stream_id] = []
@@ -69,14 +71,18 @@ class ConflictResolver:
         self, events: List[SyncEvent], strategy: str = "last_write_wins"
     ):
         """Resolve conflicts between concurrent updates"""
-        resolver = self.resolution_strategies.get(strategy, self._last_write_wins)
+        resolver = self.resolution_strategies.get(
+            strategy, self._last_write_wins
+        )
         return await resolver(events)
 
     async def _last_write_wins(self, events: List[SyncEvent]) -> SyncEvent:
         """Simple last-write-wins resolution"""
         return max(events, key=lambda e: e.timestamp)
 
-    async def _vector_clock_resolve(self, events: List[SyncEvent]) -> SyncEvent:
+    async def _vector_clock_resolve(
+        self, events: List[SyncEvent]
+    ) -> SyncEvent:
         """Vector clock based resolution"""
         # Simplified vector clock logic
         return max(events, key=lambda e: e.version)
@@ -95,11 +101,15 @@ class RealTimeSyncEngine:
         self.conflict_resolver = ConflictResolver()
         self.sync_graph = {}  # System dependency graph
 
-    async def register_system(self, system_id: str, dependencies: List[str] = None):
+    async def register_system(
+        self, system_id: str, dependencies: List[str] = None
+    ):
         """Register a system in the sync topology"""
         self.sync_graph[system_id] = dependencies or []
 
-    async def propagate_change(self, source_system: str, change_data: Dict[str, Any]):
+    async def propagate_change(
+        self, source_system: str, change_data: Dict[str, Any]
+    ):
         """Propagate changes through the system topology"""
         # Create sync event
         event = SyncEvent(
@@ -147,10 +157,14 @@ async def demonstrate_real_time_sync():
 
     # Set up event handlers
     async def handle_user_change(event: SyncEvent):
-        print(f"User service received: {event.event_type} from {event.source_system}")
+        print(
+            f"User service received: {event.event_type} from {event.source_system}"
+        )
 
     async def handle_order_change(event: SyncEvent):
-        print(f"Order service received: {event.event_type} from {event.source_system}")
+        print(
+            f"Order service received: {event.event_type} from {event.source_system}"
+        )
 
     # Subscribe to relevant streams
     await sync_engine.event_stream.subscribe_to_stream(

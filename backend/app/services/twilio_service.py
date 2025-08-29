@@ -33,7 +33,9 @@ class TwilioService:
 
         try:
             message_obj = self.client.messages.create(
-                body=message, from_=from_number or self.phone_number, to=to_number
+                body=message,
+                from_=from_number or self.phone_number,
+                to=to_number,
             )
 
             return {
@@ -73,7 +75,9 @@ class TwilioService:
 
         try:
             call = self.client.calls.create(
-                url=twiml_url, to=to_number, from_=from_number or self.phone_number
+                url=twiml_url,
+                to=to_number,
+                from_=from_number or self.phone_number,
             )
 
             return {
@@ -100,12 +104,17 @@ class TwilioService:
         """Create interactive voice response with menu."""
         response = VoiceResponse()
 
-        gather = response.gather(num_digits=1, action=action_url, method="POST")
+        gather = response.gather(
+            num_digits=1, action=action_url, method="POST"
+        )
         gather.say(message)
 
         # Add menu options
         menu_text = " ".join(
-            [f"Press {key} for {value}." for key, value in menu_options.items()]
+            [
+                f"Press {key} for {value}."
+                for key, value in menu_options.items()
+            ]
         )
         gather.say(menu_text)
 
@@ -126,8 +135,12 @@ class TwilioService:
                 "sid": call.sid,
                 "status": call.status,
                 "duration": call.duration,
-                "start_time": call.start_time.isoformat() if call.start_time else None,
-                "end_time": call.end_time.isoformat() if call.end_time else None,
+                "start_time": call.start_time.isoformat()
+                if call.start_time
+                else None,
+                "end_time": call.end_time.isoformat()
+                if call.end_time
+                else None,
                 "price": call.price,
                 "direction": call.direction,
             }
@@ -148,7 +161,9 @@ class TwilioService:
                 "from": message.from_,
                 "body": message.body,
                 "date_sent": (
-                    message.date_sent.isoformat() if message.date_sent else None
+                    message.date_sent.isoformat()
+                    if message.date_sent
+                    else None
                 ),
                 "price": message.price,
                 "error_code": message.error_code,
@@ -157,7 +172,9 @@ class TwilioService:
         except Exception as e:
             return {"error": str(e)}
 
-    def schedule_sms_campaign(self, campaign_data: Dict[str, Any]) -> Dict[str, Any]:
+    def schedule_sms_campaign(
+        self, campaign_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Schedule SMS campaign for later execution."""
         # This would integrate with the message queue service
         from app.services.message_queue import get_message_queue
@@ -165,8 +182,12 @@ class TwilioService:
         mq = get_message_queue()
 
         # Calculate delay in seconds
-        scheduled_time = datetime.fromisoformat(campaign_data["scheduled_time"])
-        delay_seconds = int((scheduled_time - datetime.utcnow()).total_seconds())
+        scheduled_time = datetime.fromisoformat(
+            campaign_data["scheduled_time"]
+        )
+        delay_seconds = int(
+            (scheduled_time - datetime.utcnow()).total_seconds()
+        )
 
         if delay_seconds < 0:
             return {"error": "Scheduled time must be in the future"}

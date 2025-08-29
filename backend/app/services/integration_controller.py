@@ -551,8 +551,8 @@ class IntegrationController:
 
             elif conflict.resolution_strategy == "validate_compatibility":
                 # Auto-validate API compatibility
-                # In real implementation, would check semantic versioning, \
-                    breaking changes, etc.
+                # In real implementation, would check semantic versioning,
+                # breaking changes, etc.
                 conflict.resolved_by = "auto_resolver"
                 conflict.resolved_at = datetime.now()
                 resolved.append(conflict.id)

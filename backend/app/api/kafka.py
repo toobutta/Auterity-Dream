@@ -75,7 +75,8 @@ async def list_kafka_topics(
 
 @router.post("/topics", response_model=Dict[str, Any])
 async def create_kafka_topic(
-    topic_config: TopicConfig, current_user: User = Depends(get_current_active_user)
+    topic_config: TopicConfig,
+    current_user: User = Depends(get_current_active_user),
 ) -> Dict[str, Any]:
     """Create a new Kafka topic."""
     try:
@@ -117,7 +118,8 @@ async def get_topic_configuration(
 
 @router.post("/events", response_model=Dict[str, Any])
 async def produce_kafka_event(
-    event: KafkaEventModel, current_user: User = Depends(get_current_active_user)
+    event: KafkaEventModel,
+    current_user: User = Depends(get_current_active_user),
 ) -> Dict[str, Any]:
     """Produce an event to a Kafka topic."""
     try:
@@ -167,7 +169,9 @@ async def publish_workflow_event(
 ) -> Dict[str, str]:
     """Publish a workflow-specific event (legacy endpoint)."""
     try:
-        await kafka_service.publish_workflow_event(workflow_id, event_type, data)
+        await kafka_service.publish_workflow_event(
+            workflow_id, event_type, data
+        )
         return {"message": "Workflow event published successfully"}
     except Exception as e:
         raise HTTPException(

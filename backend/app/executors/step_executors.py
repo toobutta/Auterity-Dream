@@ -19,7 +19,9 @@ class InputStepExecutor(StepExecutor):
         self, node: WorkflowNode, input_data: Dict[str, Any]
     ) -> StepExecutionResult:
         field_name = node.data.get("field", "input")
-        return StepExecutionResult(success=True, output_data={field_name: input_data})
+        return StepExecutionResult(
+            success=True, output_data={field_name: input_data}
+        )
 
 
 class ProcessStepExecutor(StepExecutor):
@@ -135,7 +137,8 @@ class DataValidationStepExecutor(StepExecutor):
             validator = Draft7Validator(validation_schema)
             if not validator.is_valid(input_data):
                 errors = sorted(
-                    validator.iter_errors(input_data), key=lambda e: e.absolute_path
+                    validator.iter_errors(input_data),
+                    key=lambda e: e.absolute_path,
                 )
                 error_messages = [
                     f"Field {list(error.absolute_path)}: {error.message}"
@@ -144,9 +147,7 @@ class DataValidationStepExecutor(StepExecutor):
                 return StepExecutionResult(
                     success=False,
                     output_data={},
-            \
-                  \
-                                                  error_message=f"Data validation failed: {'; '.join(error_messages)}",
+                    error_message=f"Data validation failed: {'; '.join(error_messages)}",
                 )
 
             return StepExecutionResult(

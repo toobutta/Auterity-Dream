@@ -19,14 +19,18 @@ logger = logging.getLogger(__name__)
 class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
     """Global error handling middleware that catches and processes all exceptions."""
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: Callable
+    ) -> Response:
         try:
             response = await call_next(request)
             return response
         except Exception as exc:
             return await self._handle_exception(request, exc)
 
-    async def _handle_exception(self, request: Request, exc: Exception) -> JSONResponse:
+    async def _handle_exception(
+        self, request: Request, exc: Exception
+    ) -> JSONResponse:
         """Handle different types of exceptions and return appropriate responses."""
         correlation_id = getattr(request.state, "correlation_id", None)
 
@@ -43,7 +47,9 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
         else:
             return self._handle_unexpected_error(exc, correlation_id)
 
-    def _log_exception(self, exc: Exception, request: Request, correlation_id: str):
+    def _log_exception(
+        self, exc: Exception, request: Request, correlation_id: str
+    ):
         """Log exception with structured information."""
         error_log = {
             "event": "exception_occurred",
@@ -90,7 +96,9 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
         return JSONResponse(
             status_code=status_code,
             content=error_response,
-            headers={"X-Correlation-ID": correlation_id} if correlation_id else {},
+            headers={"X-Correlation-ID": correlation_id}
+            if correlation_id
+            else {},
         )
 
     def _handle_pydantic_validation_error(
@@ -117,7 +125,9 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content=error_response,
-            headers={"X-Correlation-ID": correlation_id} if correlation_id else {},
+            headers={"X-Correlation-ID": correlation_id}
+            if correlation_id
+            else {},
         )
 
     def _handle_database_error(
@@ -125,7 +135,8 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
     ) -> JSONResponse:
         """Handle database errors."""
         db_error = DatabaseError(
-            message="Database operation failed", details={"original_error": str(exc)}
+            message="Database operation failed",
+            details={"original_error": str(exc)},
         )
 
         error_response = db_error.to_dict()
@@ -134,7 +145,9 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=error_response,
-            headers={"X-Correlation-ID": correlation_id} if correlation_id else {},
+            headers={"X-Correlation-ID": correlation_id}
+            if correlation_id
+            else {},
         )
 
     def _handle_unexpected_error(
@@ -155,7 +168,9 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=error_response,
-            headers={"X-Correlation-ID": correlation_id} if correlation_id else {},
+            headers={"X-Correlation-ID": correlation_id}
+            if correlation_id
+            else {},
         )
 
     def _get_status_code_for_category(self, category: str) -> int:
@@ -172,7 +187,9 @@ class GlobalErrorHandlerMiddleware(BaseHTTPMiddleware):
             "business_logic": status.HTTP_400_BAD_REQUEST,
         }
 
-        return category_status_map.get(category, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return category_status_map.get(
+            category, status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 class ErrorReportingMiddleware(BaseHTTPMiddleware):
@@ -183,7 +200,9 @@ class ErrorReportingMiddleware(BaseHTTPMiddleware):
         self.enable_reporting = enable_reporting
         self.error_counts = {}
 
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
+    async def dispatch(
+        self, request: Request, call_next: Callable
+    ) -> Response:
         try:
             response = await call_next(request)
             return response
@@ -197,7 +216,9 @@ class ErrorReportingMiddleware(BaseHTTPMiddleware):
         error_type = type(exc).__name__
 
         # Update error counts
-        self.error_counts[error_type] = self.error_counts.get(error_type, 0) + 1
+        self.error_counts[error_type] = (
+            self.error_counts.get(error_type, 0) + 1
+        )
 
         # In a production environment, this would send to an error reporting service
         # like Sentry, Rollbar, or a custom monitoring system

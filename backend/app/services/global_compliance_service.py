@@ -471,10 +471,9 @@ class GlobalComplianceService:
             recommendations = []
 
             for req in requirements:
-                # Simulate compliance check (
-                    in real implementation,
-                    this would check actual tenant configuration
-                )
+                # Simulate compliance check
+                # (in real implementation, this would check actual tenant
+                # configuration)
                 compliance_score = await self._check_compliance_requirement(tenant, req)
 
                 assessment_results[req.id] = {
@@ -732,8 +731,7 @@ class GlobalComplianceService:
     ) -> TranslationJob:
         """Create a translation job."""
         try:
-       \
-                     job_id = f"translation_{source_language.value}_to_{target_language.value}_{datetime.utcnow().timestamp()}"
+            job_id = f"translation_{source_language.value}_to_{target_language.value}_{datetime.utcnow().timestamp()}"
 
             job = TranslationJob(
                 id=job_id,

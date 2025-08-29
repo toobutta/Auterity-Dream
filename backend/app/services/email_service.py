@@ -121,7 +121,9 @@ class EmailService:
                             (
                                 attachment_data["filename"],
                                 attachment_data["content"],
-                                attachment_data.get("type", "application/octet-stream"),
+                                attachment_data.get(
+                                    "type", "application/octet-stream"
+                                ),
                             ),
                         )
                     )
@@ -166,11 +168,21 @@ class EmailService:
         """Send email using specified provider."""
         if provider == "sendgrid":
             return self.send_email_sendgrid(
-                to_email, subject, html_content, plain_content, from_email, attachments
+                to_email,
+                subject,
+                html_content,
+                plain_content,
+                from_email,
+                attachments,
             )
         elif provider == "mailgun":
             return self.send_email_mailgun(
-                to_email, subject, html_content, plain_content, from_email, attachments
+                to_email,
+                subject,
+                html_content,
+                plain_content,
+                from_email,
+                attachments,
             )
         else:
             return {"error": f"Unknown provider: {provider}"}
@@ -225,17 +237,27 @@ class EmailService:
         }
 
         # Store template (would integrate with database)
-        return {"template_id": template_name, "status": "created", "template": template}
+        return {
+            "template_id": template_name,
+            "status": "created",
+            "template": template,
+        }
 
-    def schedule_email_campaign(self, campaign_data: Dict[str, Any]) -> Dict[str, Any]:
+    def schedule_email_campaign(
+        self, campaign_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Schedule email campaign for later execution."""
         from app.services.message_queue import get_message_queue
 
         mq = get_message_queue()
 
         # Calculate delay
-        scheduled_time = datetime.fromisoformat(campaign_data["scheduled_time"])
-        delay_seconds = int((scheduled_time - datetime.utcnow()).total_seconds())
+        scheduled_time = datetime.fromisoformat(
+            campaign_data["scheduled_time"]
+        )
+        delay_seconds = int(
+            (scheduled_time - datetime.utcnow()).total_seconds()
+        )
 
         if delay_seconds < 0:
             return {"error": "Scheduled time must be in the future"}

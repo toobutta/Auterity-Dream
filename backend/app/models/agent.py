@@ -30,10 +30,12 @@ class Agent(Base):
     __tablename__ = "agents"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(255), nullable=False)
-    type = Column(Enum(AgentType), nullable=False)
+    type: Column[AgentType] = Column(Enum(AgentType), nullable=False)
     capabilities = Column(JSON, nullable=False)
     config = Column(JSON, nullable=False)
-    status = Column(Enum(AgentStatus), nullable=False, default=AgentStatus.INACTIVE)
+    status: Column[AgentStatus] = Column(
+        Enum(AgentStatus), nullable=False, default=AgentStatus.INACTIVE
+    )
     health_url = Column(String(512))
     mcp_server_id = Column(UUID(as_uuid=True), ForeignKey("mcp_servers.id"))
     user_id = Column(UUID(as_uuid=True), nullable=False)
@@ -50,7 +52,9 @@ class Agent(Base):
 class AgentCapability(Base):
     __tablename__ = "agent_capabilities"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(
+        UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False
+    )
     capability_name = Column(String(255), nullable=False)
     capability_data = Column(JSON, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)

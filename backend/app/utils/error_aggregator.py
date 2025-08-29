@@ -302,8 +302,7 @@ class ErrorAggregator:
         """
         try:
             async with self.get_session() as session:
-         \
-                           url = f"{self.correlation_service_url}/api/v1/error-correlation/aggregate/batch"
+                url = f"{self.correlation_service_url}/api/v1/error-correlation/aggregate/batch"
 
                 async with session.post(
                     url,

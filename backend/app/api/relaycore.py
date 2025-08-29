@@ -15,9 +15,13 @@ router = APIRouter(prefix="/relaycore", tags=["relaycore"])
 class ChatCompletionRequest(BaseModel):
     """Request model for chat completions via RelayCore."""
 
-    messages: List[Dict[str, str]] = Field(..., description="List of chat messages")
+    messages: List[Dict[str, str]] = Field(
+        ..., description="List of chat messages"
+    )
     model: Optional[str] = Field(None, description="Preferred AI model")
-    temperature: float = Field(0.7, ge=0.0, le=2.0, description="Sampling temperature")
+    temperature: float = Field(
+        0.7, ge=0.0, le=2.0, description="Sampling temperature"
+    )
     max_tokens: Optional[int] = Field(
         None, gt=0, description="Maximum tokens in response"
     )
@@ -43,7 +47,9 @@ class TemplateProcessingRequest(BaseModel):
     variables: Dict[str, Any] = Field(
         ..., description="Variables for template substitution"
     )
-    context: Optional[Dict[str, Any]] = Field(None, description="Additional context")
+    context: Optional[Dict[str, Any]] = Field(
+        None, description="Additional context"
+    )
     model: Optional[str] = Field(None, description="Preferred AI model")
 
 
@@ -194,7 +200,10 @@ async def health_check(
         health_status = await ai_service.health_check()
 
         overall_status = "healthy"
-        if not health_status["relaycore"] and not health_status["openai_direct"]:
+        if (
+            not health_status["relaycore"]
+            and not health_status["openai_direct"]
+        ):
             overall_status = "unhealthy"
         elif not health_status["relaycore"]:
             overall_status = "degraded"
@@ -224,12 +233,16 @@ async def get_usage_metrics(
     made through RelayCore.
     """
     try:
-        metrics = await ai_service.get_usage_metrics(user_id=str(current_user.id))
+        metrics = await ai_service.get_usage_metrics(
+            user_id=str(current_user.id)
+        )
 
         return UsageMetricsResponse(
             total_requests=metrics.get("total_requests", 0),
             total_cost=metrics.get("total_cost", 0.0),
-            average_cost_per_request=metrics.get("average_cost_per_request", 0.0),
+            average_cost_per_request=metrics.get(
+                "average_cost_per_request", 0.0
+            ),
             models_used=metrics.get("models_used", {}),
             providers_used=metrics.get("providers_used", {}),
         )

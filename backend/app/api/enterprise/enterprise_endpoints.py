@@ -78,7 +78,8 @@ class WhiteLabelConfig(BaseModel):
 # API Gateway Endpoints
 @router.get("/gateway/metrics", response_model=GatewayMetrics)
 async def get_gateway_metrics(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """Get API Gateway metrics and performance data."""
     # Mock metrics - in production, fetch from monitoring system
@@ -92,7 +93,8 @@ async def get_gateway_metrics(
 
 @router.get("/gateway/services")
 async def get_service_status(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """Get status of all upstream services."""
     # Mock service status - in production, check actual service health
@@ -122,11 +124,15 @@ async def get_service_status(
 
 @router.get("/gateway/rate-limits", response_model=RateLimitConfig)
 async def get_rate_limits(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """Get current rate limiting configuration."""
     return RateLimitConfig(
-        global_limit={"windowMs": 900000, "max": 1000},  # 15 minutes, 1000 requests
+        global_limit={
+            "windowMs": 900000,
+            "max": 1000,
+        },  # 15 minutes, 1000 requests
         api_limit={"windowMs": 900000, "max": 100},  # 15 minutes, 100 requests
         auth_limit={"windowMs": 900000, "max": 5},  # 15 minutes, 5 requests
     )
@@ -135,7 +141,8 @@ async def get_rate_limits(
 # Developer Platform Endpoints
 @router.get("/sdks")
 async def list_available_sdks(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """List all available SDKs with their metadata."""
     sdks = [
@@ -179,7 +186,9 @@ async def generate_sdk(
 ):
     """Generate a new SDK for the specified language."""
     # Start SDK generation in background
-    background_tasks.add_task(generate_sdk_task, request.language, request.version)
+    background_tasks.add_task(
+        generate_sdk_task, request.language, request.version
+    )
 
     return {
         "message": f"SDK generation started for {request.language}",
@@ -202,13 +211,16 @@ async def download_sdk(
     return StreamingResponse(
         io.BytesIO(sdk_content),
         media_type="application/zip",
-        headers={"Content-Disposition": f"attachment; filename={language}-sdk.zip"},
+        headers={
+            "Content-Disposition": f"attachment; filename={language}-sdk.zip"
+        },
     )
 
 
 @router.get("/documentation/endpoints")
 async def get_api_endpoints(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """Get list of all API endpoints for documentation."""
     endpoints = [
@@ -254,7 +266,8 @@ async def get_api_endpoints(
 # White-Label Endpoints
 @router.get("/themes")
 async def list_themes(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     """List all available themes."""
     themes = [
@@ -318,7 +331,9 @@ async def generate_white_label_bundle(
 ):
     """Generate a complete white-label configuration bundle."""
     # Start bundle generation in background
-    background_tasks.add_task(generate_white_label_bundle_task, config, current_user.id)
+    background_tasks.add_task(
+        generate_white_label_bundle_task, config, current_user.id
+    )
 
     return {
         "message": "White-label bundle generation started",
@@ -356,13 +371,17 @@ async def generate_sdk_task(language: str, version: str):
     print(f"SDK generation completed for {language} v{version}")
 
 
-async def generate_white_label_bundle_task(config: WhiteLabelConfig, user_id: int):
+async def generate_white_label_bundle_task(
+    config: WhiteLabelConfig, user_id: int
+):
     """Background task to generate white-label bundle."""
     # Simulate bundle generation
     import asyncio
 
     await asyncio.sleep(15)  # Simulate processing time
-    print(f"White-label bundle generated for theme {config.theme.id} by user {user_id}")
+    print(
+        f"White-label bundle generated for theme {config.theme.id} by user {user_id}"
+    )
 
 
 # Utility Functions
@@ -386,8 +405,8 @@ def generate_mock_sdk(language: str) -> bytes:
             )
             zip_file.writestr(
                 "src/client.ts",
-                "// TypeScript SDK client\nexport" \
-                    "class AuterityClient {\n // Implementation\n}",
+                "// TypeScript SDK client\nexport"
+                "class AuterityClient {\n // Implementation\n}",
             )
             zip_file.writestr(
                 "README.md", f"# {language} SDK\n\nSDK for Auterity Platform"
@@ -434,14 +453,17 @@ def generate_mock_white_label_bundle(bundle_id: str) -> bytes:
         zip_file.writestr(
             "assets/config.json",
             json.dumps(
-                {"logo": {"light": "", "dark": ""}, "companyName": "Custom Company"},
+                {
+                    "logo": {"light": "", "dark": ""},
+                    "companyName": "Custom Company",
+                },
                 indent=2,
             ),
         )
         zip_file.writestr(
             "DEPLOYMENT.md",
-            "# Deployment Guide\n\nInstructions for" \
-                "deploying your white-label configuration.",
+            "# Deployment Guide\n\nInstructions for"
+            "deploying your white-label configuration.",
         )
         zip_file.writestr(
             ".env.whitelabel",

@@ -30,7 +30,9 @@ class WorkflowCreate(BaseModel):
         required_fields = ["nodes", "edges"]
         for field in required_fields:
             if field not in v:
-                raise ValueError(f'Workflow definition must contain "{field}" field')
+                raise ValueError(
+                    f'Workflow definition must contain "{field}" field'
+                )
 
         if not isinstance(v["nodes"], list):
             raise ValueError("Workflow nodes must be a list")
@@ -78,7 +80,9 @@ class WorkflowUpdate(BaseModel):
     def validate_definition(cls, v):
         if v is not None:
             if not isinstance(v, dict):
-                raise ValueError("Workflow definition must be a valid JSON object")
+                raise ValueError(
+                    "Workflow definition must be a valid JSON object"
+                )
 
             required_fields = ["nodes", "edges"]
             for field in required_fields:

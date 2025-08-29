@@ -75,7 +75,9 @@ def upgrade() -> None:
     op.create_table(
         "workflow_executions",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column("workflow_id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column(
+            "workflow_id", postgresql.UUID(as_uuid=True), nullable=False
+        ),
         sa.Column(
             "status",
             sa.Enum(
@@ -110,7 +112,9 @@ def upgrade() -> None:
     op.create_table(
         "execution_logs",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column("execution_id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column(
+            "execution_id", postgresql.UUID(as_uuid=True), nullable=False
+        ),
         sa.Column("step_name", sa.String(length=255), nullable=False),
         sa.Column("step_type", sa.String(length=100), nullable=False),
         sa.Column("input_data", sa.JSON(), nullable=True),
@@ -159,7 +163,9 @@ def upgrade() -> None:
     op.create_table(
         "template_parameters",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column("template_id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column(
+            "template_id", postgresql.UUID(as_uuid=True), nullable=False
+        ),
         sa.Column("name", sa.String(length=255), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("parameter_type", sa.String(length=50), nullable=False),

@@ -251,7 +251,10 @@ class PartnerEcosystemService:
                 "website": "https://workspace.google.com",
                 "category": "business_tools",
                 "revenue_share_percentage": 0.0,
-                "supported_integrations": [IntegrationType.OAUTH, IntegrationType.API],
+                "supported_integrations": [
+                    IntegrationType.OAUTH,
+                    IntegrationType.API,
+                ],
             },
             {
                 "id": "salesforce",
@@ -301,7 +304,9 @@ class PartnerEcosystemService:
     ) -> Partner:
         """Register a new partner in the ecosystem."""
         try:
-            partner_id = partner_data.get("id", f"partner_{uuid.uuid4().hex[:8]}")
+            partner_id = partner_data.get(
+                "id", f"partner_{uuid.uuid4().hex[:8]}"
+            )
 
             # Generate API credentials
             api_key = f"pk_{uuid.uuid4().hex}"
@@ -316,12 +321,16 @@ class PartnerEcosystemService:
                 industry=partner_data.get("industry"),
                 company_size=partner_data.get("company_size"),
                 headquarters=partner_data.get("headquarters"),
-                supported_integrations=partner_data.get("supported_integrations", []),
+                supported_integrations=partner_data.get(
+                    "supported_integrations", []
+                ),
                 api_endpoints=partner_data.get("api_endpoints", []),
                 revenue_share_percentage=partner_data.get(
                     "revenue_share_percentage", 0.0
                 ),
-                monthly_fee=Decimal(str(partner_data.get("monthly_fee", 0.00))),
+                monthly_fee=Decimal(
+                    str(partner_data.get("monthly_fee", 0.00))
+                ),
                 api_key=api_key,
                 webhook_secret=webhook_secret,
                 metadata=partner_data.get("metadata", {}),
@@ -332,7 +341,9 @@ class PartnerEcosystemService:
             # Create marketplace listings if provided
             if "marketplace_listings" in partner_data:
                 for listing_data in partner_data["marketplace_listings"]:
-                    await self.create_marketplace_listing(partner_id, listing_data)
+                    await self.create_marketplace_listing(
+                        partner_id, listing_data
+                    )
 
             logger.info(f"Registered partner: {partner_id}")
             return partner
@@ -373,7 +384,9 @@ class PartnerEcosystemService:
 
             self.integrations[integration_id] = integration
 
-            logger.info(f"Created integration: {integration_id} for tenant {tenant_id}")
+            logger.info(
+                f"Created integration: {integration_id} for tenant {tenant_id}"
+            )
             return integration
 
         except Exception as e:
@@ -416,7 +429,9 @@ class PartnerEcosystemService:
                     integration, action, data, credentials
                 )
             else:
-                raise ValueError(f"Integration type {integration.type} not supported")
+                raise ValueError(
+                    f"Integration type {integration.type} not supported"
+                )
 
             # Update usage statistics
             integration.total_requests += 1
@@ -426,7 +441,9 @@ class PartnerEcosystemService:
             if result.get("success"):
                 integration.successful_requests += 1
                 # Calculate cost based on partner pricing
-                cost = await self._calculate_integration_cost(integration, result)
+                cost = await self._calculate_integration_cost(
+                    integration, result
+                )
                 integration.total_cost += cost
             else:
                 integration.error_count += 1
@@ -475,7 +492,9 @@ class PartnerEcosystemService:
             if credentials:
                 if "api_key" in credentials:
                     if endpoint_config.get("auth_type") == "header":
-                        headers["Authorization"] = f"Bearer {credentials['api_key']}"
+                        headers[
+                            "Authorization"
+                        ] = f"Bearer {credentials['api_key']}"
                     elif endpoint_config.get("auth_type") == "query":
                         url += f"?api_key={credentials['api_key']}"
 
@@ -552,7 +571,9 @@ class PartnerEcosystemService:
             async with self.http_client.post(
                 webhook_url, json=payload, headers=headers
             ) as response:
-                event.status = "delivered" if response.status < 400 else "failed"
+                event.status = (
+                    "delivered" if response.status < 400 else "failed"
+                )
                 event.delivered_at = datetime.utcnow()
                 event.response_status = response.status
 
@@ -582,7 +603,9 @@ class PartnerEcosystemService:
                 description=listing_data["description"],
                 category=MarketplaceCategory(listing_data["category"]),
                 price_per_call=Decimal(str(listing_data["price_per_call"])),
-                monthly_fee=Decimal(str(listing_data.get("monthly_fee", 0.00))),
+                monthly_fee=Decimal(
+                    str(listing_data.get("monthly_fee", 0.00))
+                ),
                 free_tier_limit=listing_data.get("free_tier_limit", 100),
                 endpoint_url=listing_data["endpoint_url"],
                 documentation_url=listing_data.get("documentation_url"),
@@ -625,7 +648,9 @@ class PartnerEcosystemService:
                     for list_item in listings
                     if search_lower in list_item.name.lower()
                     or search_lower in list_item.description.lower()
-                    or any(search_lower in tag.lower() for tag in list_item.tags)
+                    or any(
+                        search_lower in tag.lower() for tag in list_item.tags
+                    )
                 ]
 
             # Sort by popularity and limit
@@ -664,7 +689,9 @@ class PartnerEcosystemService:
 
             # Update listing popularity
             listing.total_subscribers += 1
-            listing.popularity_score = min(100.0, listing.popularity_score + 1.0)
+            listing.popularity_score = min(
+                100.0, listing.popularity_score + 1.0
+            )
 
             return {
                 "integration_id": integration.id,
@@ -723,7 +750,9 @@ class PartnerEcosystemService:
                 "cost": {
                     "total_cost": float(integration.total_cost),
                     "avg_cost_per_request": (
-                        float(integration.total_cost / integration.total_requests)
+                        float(
+                            integration.total_cost / integration.total_requests
+                        )
                         if integration.total_requests > 0
                         else 0
                     ),
@@ -738,7 +767,9 @@ class PartnerEcosystemService:
                     ),
                 },
                 "last_used": (
-                    integration.last_used.isoformat() if integration.last_used else None
+                    integration.last_used.isoformat()
+                    if integration.last_used
+                    else None
                 ),
             }
 
@@ -800,13 +831,19 @@ class PartnerEcosystemService:
         if not encrypted_data.get("encrypted"):
             return encrypted_data
 
-        decrypted_data = self.encryption_key.decrypt(encrypted_data["data"].encode())
+        decrypted_data = self.encryption_key.decrypt(
+            encrypted_data["data"].encode()
+        )
         return json.loads(decrypted_data.decode())
 
-    def _generate_webhook_signature(self, payload: Dict[str, Any], secret: str) -> str:
+    def _generate_webhook_signature(
+        self, payload: Dict[str, Any], secret: str
+    ) -> str:
         """Generate webhook signature."""
         payload_str = json.dumps(payload, sort_keys=True)
-        signature = jwt.encode({"data": payload_str}, secret, algorithm="HS256")
+        signature = jwt.encode(
+            {"data": payload_str}, secret, algorithm="HS256"
+        )
         return signature
 
     async def _calculate_integration_cost(
@@ -856,14 +893,22 @@ class PartnerEcosystemService:
                     if i.status == IntegrationStatus.ACTIVE
                 ]
             )
-            total_requests = sum(i.total_requests for i in partner_integrations)
-            total_revenue = sum(float(i.total_cost) for i in partner_integrations)
+            total_requests = sum(
+                i.total_requests for i in partner_integrations
+            )
+            total_revenue = sum(
+                float(i.total_cost) for i in partner_integrations
+            )
 
             # Revenue sharing analytics
             revenue_shares = [
-                rs for rs in self.revenue_shares.values() if rs.partner_id == partner_id
+                rs
+                for rs in self.revenue_shares.values()
+                if rs.partner_id == partner_id
             ]
-            total_shared_revenue = sum(float(rs.amount) for rs in revenue_shares)
+            total_shared_revenue = sum(
+                float(rs.amount) for rs in revenue_shares
+            )
 
             analytics = {
                 "partner_id": partner_id,
@@ -894,10 +939,14 @@ class PartnerEcosystemService:
                 "marketplace": {
                     "total_listings": len(partner_listings),
                     "total_subscribers": sum(
-                        list_item.total_subscribers for list_item in partner_listings
+                        list_item.total_subscribers
+                        for list_item in partner_listings
                     ),
                     "avg_rating": (
-                        sum(list_item.average_rating for list_item in partner_listings)
+                        sum(
+                            list_item.average_rating
+                            for list_item in partner_listings
+                        )
                         / len(partner_listings)
                         if partner_listings
                         else 0
@@ -934,7 +983,11 @@ class PartnerEcosystemService:
                 ),
                 "marketplace_listings": len(self.marketplace_listings),
                 "pending_webhook_events": len(
-                    [e for e in self.webhook_events.values() if e.status == "pending"]
+                    [
+                        e
+                        for e in self.webhook_events.values()
+                        if e.status == "pending"
+                    ]
                 ),
                 "http_client_status": (
                     "connected" if self.http_client else "disconnected"

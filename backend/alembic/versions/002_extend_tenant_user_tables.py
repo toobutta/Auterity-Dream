@@ -8,7 +8,9 @@ def upgrade():
     op.add_column(
         "tenants",
         sa.Column(
-            "industry_profile", sa.String(50), sa.ForeignKey("industry_profiles.id")
+            "industry_profile",
+            sa.String(50),
+            sa.ForeignKey("industry_profiles.id"),
         ),
     )
     op.add_column("tenants", sa.Column("profile_settings", sa.JSON()))
@@ -17,7 +19,9 @@ def upgrade():
     op.add_column(
         "users",
         sa.Column(
-            "preferred_profile", sa.String(50), sa.ForeignKey("industry_profiles.id")
+            "preferred_profile",
+            sa.String(50),
+            sa.ForeignKey("industry_profiles.id"),
         ),
     )
     op.add_column("users", sa.Column("profile_customizations", sa.JSON()))

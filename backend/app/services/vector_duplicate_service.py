@@ -80,11 +80,16 @@ class VectorDuplicateService:
 
                 if similarity >= threshold:
                     similarities.append(
-                        {"embedding": embedding, "similarity_score": similarity}
+                        {
+                            "embedding": embedding,
+                            "similarity_score": similarity,
+                        }
                     )
 
             # Sort by similarity and limit results
-            similarities.sort(key=lambda x: x["similarity_score"], reverse=True)
+            similarities.sort(
+                key=lambda x: x["similarity_score"], reverse=True
+            )
             similarities = similarities[:limit]
 
             # Convert to SimilarityResult objects
@@ -201,7 +206,9 @@ class VectorDuplicateService:
 
             # Update embedding
             embedding.embedding_vector = new_embedding_vector
-            embedding.content_hash = hashlib.sha256(content.encode()).hexdigest()
+            embedding.content_hash = hashlib.sha256(
+                content.encode()
+            ).hexdigest()
             if metadata:
                 embedding.metadata = metadata
 
@@ -215,7 +222,9 @@ class VectorDuplicateService:
             self.db.rollback()
             return None
 
-    async def delete_embedding(self, embedding_id: UUID, tenant_id: UUID) -> bool:
+    async def delete_embedding(
+        self, embedding_id: UUID, tenant_id: UUID
+    ) -> bool:
         """Delete a vector embedding."""
         try:
             embedding = (
@@ -307,7 +316,8 @@ class VectorDuplicateService:
                         continue
 
                     similarity = self._calculate_cosine_similarity(
-                        embedding.embedding_vector, other_embedding.embedding_vector
+                        embedding.embedding_vector,
+                        other_embedding.embedding_vector,
                     )
 
                     if similarity >= min_similarity:
@@ -381,7 +391,8 @@ class VectorDuplicateService:
                         continue
 
                     similarity = self._calculate_cosine_similarity(
-                        embedding.embedding_vector, other_embedding.embedding_vector
+                        embedding.embedding_vector,
+                        other_embedding.embedding_vector,
                     )
 
                     if similarity >= 0.8:  # High similarity threshold
@@ -391,7 +402,9 @@ class VectorDuplicateService:
                     similarity_count += 1
 
             avg_similarity = (
-                total_similarities / similarity_count if similarity_count > 0 else 0.0
+                total_similarities / similarity_count
+                if similarity_count > 0
+                else 0.0
             )
             duplicate_percentage = (
                 (potential_duplicates / len(recent_embeddings)) * 100
@@ -506,7 +519,9 @@ class VectorDuplicateService:
             logger.error(f"Failed to get content preview: {str(e)}")
             return "Content preview unavailable"
 
-    def _get_cluster_representative(self, cluster: List[VectorEmbedding]) -> str:
+    def _get_cluster_representative(
+        self, cluster: List[VectorEmbedding]
+    ) -> str:
         """Get representative content for a cluster."""
         try:
             if not cluster:
