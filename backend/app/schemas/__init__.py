@@ -1,24 +1,23 @@
 """Pydantic schemas package."""
 
-from .auterity_expansion import (  # Triage, Vector, Agent, etc.
-    Agent,
+"""Pydantic schemas package."""
+
+from .agent import Agent  # Import Agent from correct module
+from .auterity_expansion import (  # Triage, Vector, etc.
     AgentDeployRequest,
     AgentDeployResponse,
     AgentMemoryCreate,
     AgentMemoryResponse,
-    Channel,
     ChannelTriggerCreate,
     ChannelTriggerRequest,
     ChannelTriggerResponse,
     ChannelTriggerUpdate,
-    Custom,
     CustomModelCreate,
     CustomModelHealthCheck,
     CustomModelResponse,
     CustomModelUpdate,
     ExecutionMetricCreate,
     ExecutionMetricResponse,
-    Integration,
     IntegrationCreate,
     IntegrationResponse,
     IntegrationSyncRequest,
