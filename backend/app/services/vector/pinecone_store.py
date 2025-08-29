@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class PineconeDocumentStore:
     """
     Pinecone-based document store for vector embeddings and retrieval.
-    
+
     This is a placeholder implementation that provides the interface
     expected by the RAG engine but doesn't require actual Pinecone API keys.
     """
@@ -24,7 +24,7 @@ class PineconeDocumentStore:
     ):
         """
         Initialize Pinecone document store.
-        
+
         Args:
             api_key: Pinecone API key (optional for testing)
             environment: Pinecone environment (optional for testing)
@@ -36,7 +36,7 @@ class PineconeDocumentStore:
         self.index_name = index_name
         self.config = kwargs
         self._documents: Dict[str, Dict[str, Any]] = {}
-        
+
         if not api_key:
             logger.warning(
                 "PineconeDocumentStore initialized without API key - "
@@ -46,7 +46,7 @@ class PineconeDocumentStore:
     def write_documents(self, documents: List[Dict[str, Any]]) -> None:
         """
         Write documents to the store.
-        
+
         Args:
             documents: List of document dictionaries to store
         """
@@ -58,7 +58,7 @@ class PineconeDocumentStore:
     def update_embeddings(self, retriever: Any = None) -> None:
         """
         Update embeddings for stored documents.
-        
+
         Args:
             retriever: Optional retriever for generating embeddings
         """
@@ -72,12 +72,12 @@ class PineconeDocumentStore:
     ) -> List[Dict[str, Any]]:
         """
         Query the document store for similar documents.
-        
+
         Args:
             query: Query string
             top_k: Number of results to return
             filters: Optional filters to apply
-            
+
         Returns:
             List of matching documents
         """
@@ -89,7 +89,7 @@ class PineconeDocumentStore:
     def delete_documents(self, document_ids: List[str]) -> None:
         """
         Delete documents from the store.
-        
+
         Args:
             document_ids: List of document IDs to delete
         """
@@ -101,7 +101,7 @@ class PineconeDocumentStore:
     def get_document_count(self) -> int:
         """
         Get the total number of documents in the store.
-        
+
         Returns:
             Number of documents
         """
@@ -110,7 +110,7 @@ class PineconeDocumentStore:
     def get_all_documents(self) -> List[Dict[str, Any]]:
         """
         Get all documents from the store.
-        
+
         Returns:
             List of all documents
         """
