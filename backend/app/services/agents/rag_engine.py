@@ -1,5 +1,4 @@
 """
-from app.services.vector.pinecone_store import PineconeDocumentStore
 RAG Engine using Haystack and LlamaIndex for enterprise-grade retrieval
 
 This module provides advanced RAG capabilities for Auterity's knowledge base,
@@ -8,6 +7,8 @@ document processing, and intelligent information retrieval across all systems.
 
 import logging
 from typing import Any, Dict, List, Optional
+
+from app.services.vector.pinecone_store import PineconeDocumentStore
 
 # Optional imports with fallbacks for better error handling
 try:

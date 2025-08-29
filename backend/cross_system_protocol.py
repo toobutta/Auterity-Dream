@@ -115,7 +115,7 @@ class MessageBroker:
                 for handler in handlers:
                     await handler.handle(message)
                 return True
-            except Exception as e:
+            except Exception:
                 if attempt == max_retries - 1:
                     self.dead_letter_queue.append(message)
                     return False

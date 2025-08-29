@@ -12,10 +12,9 @@ This script systematically resolves:
 """
 
 import subprocess
-import sys
 import re
 from pathlib import Path
-from typing import Dict, Set, List
+from typing import List
 
 
 def run_command(cmd: List[str], cwd: str = None) -> subprocess.CompletedProcess:

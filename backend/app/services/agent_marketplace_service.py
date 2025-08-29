@@ -368,14 +368,14 @@ class AgentMarketplaceService:
         schema = template.configuration_schema
         required_fields = schema.get("required", [])
 
-        for field in required_fields:
-            if field not in configuration:
-                raise ValueError(f"Required configuration field missing: {field}")
+        for field_item in required_fields:
+            if field_item not in configuration:
+                raise ValueError(f"Required configuration field_item missing: {field_item}")
 
-        # Validate field types and constraints
-        for field, constraints in schema.get("properties", {}).items():
-            if field in configuration:
-                value = configuration[field]
+        # Validate field_item types and constraints
+        for field_name, constraints in schema.get("properties", {}).items():
+            if field_name in configuration:
+                value = configuration[field_name]
                 field_type = constraints.get("type")
 
                 if field_type == "string" and not isinstance(value, str):

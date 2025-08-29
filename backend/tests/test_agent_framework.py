@@ -11,13 +11,7 @@ from app.services.agents.compliance_layer import ComplianceLayer
 from app.services.agents.orchestrator import AgentOrchestrator
 from app.services.agents.rag_engine import RAGEngine
 from app.services.agents.security_manager import SecurityManager
-            from app.services.agents.compliance_layer import ComplianceLayer
-            from app.services.agents.orchestrator import AgentOrchestrator
-            from app.services.agents.rag_engine import RAGEngine
-            from app.services.agents.security_manager import SecurityManager
-        from app.api.agents import router
-
-
+from app.api.agents import router
 
 
 # Add the backend directory to Python path
@@ -262,7 +256,6 @@ class TestAgentFrameworkIntegration:
         """Test that configuration is loaded correctly."""
         # Test that our modules can import without errors
         try:
-
             # Test instantiation
             orchestrator = AgentOrchestrator()
             rag_engine = RAGEngine()
@@ -279,7 +272,6 @@ class TestAgentFrameworkIntegration:
 def test_api_endpoints_structure():
     """Test that API endpoints are properly structured."""
     try:
-
         assert router is not None
         print("✅ API endpoints structure test passed")
     except ImportError as e:

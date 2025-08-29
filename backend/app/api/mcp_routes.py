@@ -63,7 +63,7 @@ async def check_server_health(server_id: UUID, db: Session = Depends(get_db)):
         manager = MCPServerManager(db)
         health_status = await manager.health_check(server_id)
         return health_status
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=404, detail="Server not found")
 
 

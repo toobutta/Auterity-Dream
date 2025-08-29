@@ -13,7 +13,6 @@ from app.models.auterity_expansion import TriageResult, TriageRule, TriageRuleTy
 from app.models.tenant import Tenant
 from app.services.ai_service import AIService
 from app.services.vector_service import VectorService
-from collections import Counter
 
 logger = logging.getLogger(__name__)
 
@@ -302,7 +301,7 @@ class SmartTriageService:
         content_lower = content.lower()
         positive_count = sum(1 for word in positive_words if word in content_lower)
         negative_count = sum(
-            1 for word in word in negative_words if word in content_lower
+            1 for word in negative_words if word in content_lower
         )
 
         if positive_count == 0 and negative_count == 0:

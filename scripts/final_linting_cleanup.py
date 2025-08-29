@@ -387,7 +387,7 @@ def main():
         print("🎉 All linting issues resolved!")
     else:
         error_count = len(
-            [l for l in stdout.split("\n") if l.strip() and not l.isdigit()]
+            [line for line in stdout.split("\n") if line.strip() and not line.isdigit()]
         )
         print(f"📊 Remaining issues: {error_count}")
         if error_count < 50:  # Show details if manageable

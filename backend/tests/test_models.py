@@ -1,19 +1,12 @@
-"""Unit tests for data models."""
-
 import os
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
-from app.models import (
-
-
-
-
 # Set test environment before importing models
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
-    Base,
+from sqlalchemy.pool import StaticPool
+from app.models import (
     ExecutionLog,
     ExecutionStatus,
     Template,
@@ -22,6 +15,7 @@ os.environ["DATABASE_URL"] = "sqlite:///:memory:"
     Workflow,
     WorkflowExecution,
 )
+from app.database import Base
 
 # Test database setup
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

@@ -609,17 +609,21 @@ class PartnerEcosystemService:
 
             # Filter by category
             if category:
-                listings = [l for l in listings if l.category == category]
+                listings = [
+                    list_item
+                    for list_item in listings
+                    if list_item.category == category
+                ]
 
             # Filter by search query
             if search_query:
                 search_lower = search_query.lower()
                 listings = [
-                    l
-                    for l in listings
-                    if search_lower in l.name.lower()
-                    or search_lower in l.description.lower()
-                    or any(search_lower in tag.lower() for tag in l.tags)
+                    list_item
+                    for list_item in listings
+                    if search_lower in list_item.name.lower()
+                    or search_lower in list_item.description.lower()
+                    or any(search_lower in tag.lower() for tag in list_item.tags)
                 ]
 
             # Sort by popularity and limit
@@ -888,10 +892,10 @@ class PartnerEcosystemService:
                 "marketplace": {
                     "total_listings": len(partner_listings),
                     "total_subscribers": sum(
-                        l.total_subscribers for l in partner_listings
+                        list_item.total_subscribers for list_item in partner_listings
                     ),
                     "avg_rating": (
-                        sum(l.average_rating for l in partner_listings)
+                        sum(list_item.average_rating for list_item in partner_listings)
                         / len(partner_listings)
                         if partner_listings
                         else 0

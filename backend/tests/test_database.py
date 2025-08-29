@@ -4,25 +4,18 @@ import os
 from unittest.mock import MagicMock, patch
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
-from app.database import (
-        from app.init_db import init_database
-        from app.init_db import init_database
-        from app.init_db import init_database
-        from app.init_db import hash_password
-        from app.init_db import hash_password
-
-
-
 
 # Set test environment before importing models
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
+from app.database import (
     check_database_connection,
     create_tables,
     drop_tables,
     get_db,
     get_db_session,
 )
+from app.init_db import init_database, hash_password
 
 
 class TestDatabaseUtilities:
@@ -41,8 +34,8 @@ class TestDatabaseUtilities:
         mock_session = MagicMock()
         mock_session_local.return_value = mock_session
 
-        with get_db_session() as db:
-            assert db == mock_session
+        with get_db_session() as session:
+            assert session == mock_session
 
         mock_session.commit.assert_called_once()
         mock_session.close.assert_called_once()
@@ -54,7 +47,7 @@ class TestDatabaseUtilities:
         mock_session_local.return_value = mock_session
 
         with pytest.raises(Exception):
-            with get_db_session() as db:
+            with get_db_session() as _:
                 raise Exception("Test exception")
 
         mock_session.rollback.assert_called_once()
