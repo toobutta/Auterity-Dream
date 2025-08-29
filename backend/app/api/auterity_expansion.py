@@ -1,20 +1,18 @@
-"""Auterity AI Platform Expansion API endpoints."""
+"""Auterity AI Platform Expansion API endpoints - Fixed Version."""
 
 import logging
-import time
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 from uuid import UUID
+from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.tenant import Tenant
-from app.schemas.agent import AgentConfig
 from app.schemas.auterity_expansion import (
     AgentDeployRequest,
     AgentDeployResponse,
-    AgentMemoryCreate,
     SimilarityResult,
     SimilaritySearchRequest,
     SimilaritySearchResponse,
@@ -25,7 +23,10 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service import AutonomousAgentService
+from app.services.autonomous_agent_service import (
+    AutonomousAgentService,
+    AgentConfig as ServiceAgentConfig,
+)
 from app.services.smart_triage_service import SmartTriageService
 from app.services.vector_duplicate_service import VectorDuplicateService
 
@@ -47,6 +48,45 @@ async def get_current_tenant(db: Session = Depends(get_db)) -> Tenant:
     return tenant
 
 
+def convert_db_rule_to_response(rule: Any) -> TriageRuleResponse:
+    """Convert database TriageRule object to response schema."""
+    return TriageRuleResponse(
+        id=UUID(str(rule.id)),
+        tenant_id=UUID(str(rule.tenant_id)),
+        name=str(rule.name),
+        rule_type=str(
+            rule.rule_type.value if hasattr(rule.rule_type, "value") else rule.rule_type
+        ),
+        conditions=dict(rule.conditions) if rule.conditions else {},
+        routing_logic=dict(rule.routing_logic) if rule.routing_logic else {},
+        confidence_threshold=Decimal(str(rule.confidence_threshold)),
+        priority=int(rule.priority),
+        is_active=bool(rule.is_active),
+        created_at=rule.created_at,
+        updated_at=rule.updated_at,
+    )
+
+
+def convert_db_embedding_to_response(
+    embedding: Any,
+) -> VectorEmbeddingResponse:
+    """Convert database VectorEmbedding object to response schema."""
+    return VectorEmbeddingResponse(
+        id=UUID(str(embedding.id)),
+        tenant_id=UUID(str(embedding.tenant_id)),
+        item_type=str(embedding.item_type),
+        item_id=UUID(str(embedding.item_id)),
+        content_hash=str(embedding.content_hash),
+        embedding_vector=list(embedding.embedding_vector)
+        if embedding.embedding_vector
+        else [],
+        metadata=dict(embedding.metadata)
+        if hasattr(embedding, "metadata") and embedding.metadata
+        else {},
+        created_at=embedding.created_at,
+    )
+
+
 # Smart Triage Endpoints
 @router.post("/triage", response_model=TriageResponse)
 async def triage_input(
@@ -54,29 +94,29 @@ async def triage_input(
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
-    """Triage input content using AI-powered routing."""
+    """Process input through smart triage system."""
     try:
         service = SmartTriageService(db)
-        decision = await service.triage_input(
+        result = await service.triage_input(
             content=request.content,
             context=request.context,
-            tenant_id=tenant.id,
+            tenant_id=UUID(str(tenant.id)),
         )
 
         return TriageResponse(
-            routing_decision=decision.routing_decision,
-            confidence_score=decision.confidence_score,
-            rule_applied=decision.rule_applied,
-            reasoning=decision.reasoning,
-            suggested_actions=decision.suggested_actions,
-            processing_time_ms=decision.processing_time_ms,
+            routing_decision=result.routing_decision,
+            confidence_score=result.confidence_score,
+            rule_applied=result.rule_applied,
+            reasoning=result.reasoning,
+            processing_time_ms=result.processing_time_ms,
+            suggested_actions=result.suggested_actions,
         )
 
     except Exception as e:
-        logger.error(f"Triage failed: {str(e)}")
+        logger.error(f"Failed to process triage: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Triage failed: {str(e)}",
+            detail=f"Failed to process triage: {str(e)}",
         )
 
 
@@ -90,22 +130,10 @@ async def create_triage_rule(
     try:
         service = SmartTriageService(db)
         rule = await service.create_triage_rule(
-            tenant_id=tenant.id, rule_data=rule_data.dict()
+            tenant_id=UUID(str(tenant.id)), rule_data=rule_data.dict()
         )
 
-        return TriageRuleResponse(
-            id=rule.id,
-            tenant_id=rule.tenant_id,
-            name=rule.name,
-            rule_type=rule.rule_type.value,
-            conditions=rule.conditions,
-            routing_logic=rule.routing_logic,
-            confidence_threshold=rule.confidence_threshold,
-            priority=rule.priority,
-            is_active=rule.is_active,
-            created_at=rule.created_at,
-            updated_at=rule.updated_at,
-        )
+        return convert_db_rule_to_response(rule)
 
     except Exception as e:
         logger.error(f"Failed to create triage rule: {str(e)}")
@@ -124,34 +152,15 @@ async def get_triage_rules(
     """Get triage rules for the current tenant."""
     try:
         service = SmartTriageService(db)
-        rules = await service._get_active_triage_rules(tenant.id)
+        rules = await service._get_active_triage_rules(UUID(str(tenant.id)))
 
         if not active_only:
             # Get all rules if not filtering by active
             from app.models.auterity_expansion import TriageRule
 
-            rules = (
-                db.query(TriageRule)
-                .filter(TriageRule.tenant_id == tenant.id)
-                .all()
-            )
+            rules = db.query(TriageRule).filter(TriageRule.tenant_id == tenant.id).all()
 
-        return [
-            TriageRuleResponse(
-                id=rule.id,
-                tenant_id=rule.tenant_id,
-                name=rule.name,
-                rule_type=rule.rule_type.value,
-                conditions=rule.conditions,
-                routing_logic=rule.routing_logic,
-                confidence_threshold=rule.confidence_threshold,
-                priority=rule.priority,
-                is_active=rule.is_active,
-                created_at=rule.created_at,
-                updated_at=rule.updated_at,
-            )
-            for rule in rules
-        ]
+        return [convert_db_rule_to_response(rule) for rule in rules]
 
     except Exception as e:
         logger.error(f"Failed to get triage rules: {str(e)}")
@@ -163,75 +172,78 @@ async def get_triage_rules(
 
 @router.get("/triage/accuracy")
 async def get_triage_accuracy(
-    days: int = Query(
-        30, ge=1, le=365, description="Number of days to analyze"
-    ),
+    days: int = Query(30, description="Number of days to analyze"),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
     """Get triage accuracy metrics."""
     try:
         service = SmartTriageService(db)
-        accuracy = await service.get_triage_accuracy(tenant.id, days)
-        return accuracy
+        accuracy = await service.get_triage_accuracy(UUID(str(tenant.id)), days)
+        return {"accuracy": accuracy, "period_days": days}
 
     except Exception as e:
         logger.error(f"Failed to get triage accuracy: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get triage accuracy: {str(e)}",
+            detail=f"Failed to get accuracy metrics: {str(e)}",
         )
 
 
-# Vector Duplicate Detection Endpoints
+# Vector Similarity Endpoints
 @router.post("/similarity/search", response_model=SimilaritySearchResponse)
 async def search_similar_items(
     request: SimilaritySearchRequest,
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
-    """Search for similar items using vector similarity."""
+    """Search for similar items using vector embeddings."""
+    import time
+
+    start_time = time.time()
     try:
         service = VectorDuplicateService(db)
-        start_time = time.time()
-
         results = await service.find_similar_items(
             content=request.content,
             item_type=request.item_type,
-            tenant_id=tenant.id,
+            tenant_id=UUID(str(tenant.id)),
             threshold=request.threshold,
             limit=request.limit,
         )
+
+        # Convert SimilarityResult objects to schema-compatible format
+        similarity_results = [
+            SimilarityResult(
+                item_id=result.item_id,
+                item_type=result.item_type,
+                similarity_score=result.similarity_score,
+                content_preview=result.content_preview,
+                metadata=result.metadata,
+            )
+            for result in results
+        ]
 
         search_time_ms = int((time.time() - start_time) * 1000)
 
         return SimilaritySearchResponse(
             query_content=request.content,
-            results=[
-                SimilarityResult(
-                    item_id=result.item_id,
-                    item_type=result.item_type,
-                    similarity_score=result.similarity_score,
-                    content_preview=result.content_preview,
-                    metadata=result.metadata,
-                )
-                for result in results
-            ],
-            total_found=len(results),
+            results=similarity_results,
+            total_found=len(similarity_results),
             search_time_ms=search_time_ms,
         )
 
     except Exception as e:
-        logger.error(f"Similarity search failed: {str(e)}")
+        logger.error(f"Failed to search similar items: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Similarity search failed: {str(e)}",
+            detail=f"Failed to search similar items: {str(e)}",
         )
 
 
 @router.post("/embeddings", response_model=VectorEmbeddingResponse)
 async def create_embedding(
     embedding_data: VectorEmbeddingCreate,
+    content: str,
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
@@ -239,29 +251,20 @@ async def create_embedding(
     try:
         service = VectorDuplicateService(db)
         embedding = await service.create_embedding(
-            tenant_id=tenant.id,
+            tenant_id=UUID(str(tenant.id)),
             item_type=embedding_data.item_type,
             item_id=embedding_data.item_id,
-            content="",  # TODO: Get content from item
+            content=content,
             metadata=embedding_data.metadata,
         )
 
         if not embedding:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to create embedding",
+                detail="Failed to generate embedding",
             )
 
-        return VectorEmbeddingResponse(
-            id=embedding.id,
-            tenant_id=embedding.tenant_id,
-            item_type=embedding.item_type,
-            item_id=embedding.item_id,
-            content_hash=embedding.content_hash,
-            embedding_vector=embedding.embedding_vector,
-            metadata=embedding.metadata,
-            created_at=embedding.created_at,
-        )
+        return convert_db_embedding_to_response(embedding)
 
     except Exception as e:
         logger.error(f"Failed to create embedding: {str(e)}")
@@ -273,57 +276,74 @@ async def create_embedding(
 
 @router.get("/embeddings/clusters")
 async def get_similarity_clusters(
-    item_type: str = Query(..., description="Type of items to cluster"),
-    min_similarity: float = Query(
-        0.7, ge=0.0, le=1.0, description="Minimum similarity threshold"
-    ),
-    min_cluster_size: int = Query(
-        2, ge=2, le=100, description="Minimum cluster size"
-    ),
+    item_type: Optional[str] = Query(None),
+    min_cluster_size: int = Query(3),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
-    """Get clusters of similar items."""
+    """Get similarity clusters for duplicate detection."""
     try:
+        if not item_type:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="item_type parameter is required",
+            )
+
         service = VectorDuplicateService(db)
         clusters = await service.get_similarity_clusters(
-            tenant_id=tenant.id,
+            tenant_id=UUID(str(tenant.id)),
             item_type=item_type,
-            min_similarity=min_similarity,
             min_cluster_size=min_cluster_size,
         )
-        return clusters
+
+        return {
+            "clusters": clusters,
+            "total_clusters": len(clusters),
+            "parameters": {
+                "item_type": item_type,
+                "min_cluster_size": min_cluster_size,
+            },
+        }
 
     except Exception as e:
         logger.error(f"Failed to get similarity clusters: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get similarity clusters: {str(e)}",
+            detail=f"Failed to get clusters: {str(e)}",
         )
 
 
-@router.get("/embeddings/duplicate-analysis")
+@router.get("/duplicates/analysis")
 async def get_duplicate_analysis(
-    item_type: str = Query(..., description="Type of items to analyze"),
-    days: int = Query(
-        30, ge=1, le=365, description="Number of days to analyze"
-    ),
+    item_type: Optional[str] = Query(None),
+    days: int = Query(30),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
-    """Get duplicate analysis metrics."""
+    """Get duplicate analysis report."""
     try:
+        if not item_type:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="item_type parameter is required",
+            )
+
         service = VectorDuplicateService(db)
         analysis = await service.get_duplicate_analysis(
-            tenant_id=tenant.id, item_type=item_type, days=days
+            tenant_id=UUID(str(tenant.id)), item_type=item_type, days=days
         )
-        return analysis
+
+        return {
+            "analysis": analysis,
+            "period_days": days,
+            "item_type": item_type,
+        }
 
     except Exception as e:
         logger.error(f"Failed to get duplicate analysis: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get duplicate analysis: {str(e)}",
+            detail=f"Failed to get analysis: {str(e)}",
         )
 
 
@@ -338,17 +358,19 @@ async def deploy_agent(
     try:
         service = AutonomousAgentService(db)
 
-        # Convert request to AgentConfig
-        agent_config = AgentConfig(
-            name=request.agent_config.get("name", "Autonomous Agent"),
-            agent_type=request.agent_config.get("type", "general"),
+        # Convert request AgentConfig to service AgentConfig
+        service_config = ServiceAgentConfig(
+            name=request.agent_config.get("name", "Unnamed Agent"),
+            agent_type=request.agent_config.get("agent_type", "custom"),
             capabilities=request.agent_config.get("capabilities", []),
             memory_config=request.memory_config,
             coordination_rules=request.coordination_rules,
             escalation_policy=request.escalation_policy,
         )
 
-        agent_instance = await service.deploy_agent(agent_config, tenant.id)
+        agent_instance = await service.deploy_agent(
+            service_config, UUID(str(tenant.id))
+        )
 
         return AgentDeployResponse(
             agent_id=agent_instance.agent_id,
@@ -359,170 +381,79 @@ async def deploy_agent(
         )
 
     except Exception as e:
-        logger.error(f"Agent deployment failed: {str(e)}")
+        logger.error(f"Failed to deploy agent: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Agent deployment failed: {str(e)}",
+            detail=f"Failed to deploy agent: {str(e)}",
         )
 
 
 @router.post("/agents/{agent_id}/tasks")
-async def assign_task(
+async def assign_task_to_agent(
     agent_id: UUID,
-    task_data: dict,
+    task_data: Dict[str, Any],
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
     """Assign a task to an autonomous agent."""
     try:
         service = AutonomousAgentService(db)
-        task = await service.assign_task(agent_id, task_data, tenant.id)
+        task = await service.assign_task(agent_id, task_data, UUID(str(tenant.id)))
 
         if not task:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Failed to assign task",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to create task assignment",
             )
 
         return {
             "task_id": task.task_id,
+            "agent_id": str(agent_id),
             "status": task.status,
-            "assigned_agent": str(task.assigned_agent),
+            "task_type": task.task_type,
+            "description": task.description,
+            "priority": task.priority,
             "created_at": task.created_at.isoformat(),
         }
 
     except Exception as e:
-        logger.error(f"Task assignment failed: {str(e)}")
+        logger.error(f"Failed to assign task: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Task assignment failed: {str(e)}",
+            detail=f"Failed to assign task: {str(e)}",
         )
 
 
-@router.get("/agents/{agent_id}/memory")
+@router.get("/agents/memory")
 async def get_agent_memory(
-    agent_id: UUID,
-    context_key: Optional[str] = Query(
-        None, description="Context key to filter by"
-    ),
-    limit: int = Query(
-        50, ge=1, le=100, description="Maximum number of memories to return"
-    ),
+    agent_id: UUID = Query(..., description="Agent ID to get memory for"),
+    context_key: Optional[str] = Query(None, description="Filter by context key"),
+    limit: int = Query(50, description="Maximum memories to return"),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
 ):
-    """Get agent memory for context awareness."""
+    """Get agent memory entries."""
     try:
         service = AutonomousAgentService(db)
         memories = await service.get_agent_memory(
-            agent_id=agent_id, context_key=context_key, limit=limit
+            agent_id=agent_id,
+            context_key=context_key,
+            limit=limit,
         )
-        return memories
+
+        return {
+            "memories": memories,
+            "total": len(memories),
+            "filters": {
+                "agent_id": str(agent_id),
+                "context_key": context_key,
+                "limit": limit,
+            },
+        }
 
     except Exception as e:
         logger.error(f"Failed to get agent memory: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get agent memory: {str(e)}",
+            detail=f"Failed to get memory: {str(e)}",
         )
-
-
-@router.post("/agents/{agent_id}/memory")
-async def store_agent_memory(
-    agent_id: UUID,
-    memory_data: AgentMemoryCreate,
-    db: Session = Depends(get_db),
-    tenant: Tenant = Depends(get_current_tenant),
-):
-    """Store new memory for an agent."""
-    try:
-        service = AutonomousAgentService(db)
-        memory = await service.store_memory(
-            agent_id=agent_id,
-            context_key=memory_data.context_hash,
-            memory_data=memory_data.memory_data,
-            importance_score=float(memory_data.importance_score),
-        )
-
-        if not memory:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to store memory",
-            )
-
-        return {
-            "id": str(memory.id),
-            "context_hash": memory.context_hash,
-            "importance_score": float(memory.importance_score),
-            "created_at": memory.created_at.isoformat(),
-        }
-
-    except Exception as e:
-        logger.error(f"Failed to store agent memory: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to store agent memory: {str(e)}",
-        )
-
-
-@router.post("/agents/{agent_id}/coordinate")
-async def coordinate_agents(
-    agent_id: UUID,
-    coordination_task: dict,
-    db: Session = Depends(get_db),
-    tenant: Tenant = Depends(get_current_tenant),
-):
-    """Coordinate multiple agents for complex tasks."""
-    try:
-        service = AutonomousAgentService(db)
-        result = await service.coordinate_agents(
-            primary_agent_id=agent_id,
-            coordination_task=coordination_task,
-            tenant_id=tenant.id,
-        )
-        return result
-
-    except Exception as e:
-        logger.error(f"Agent coordination failed: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Agent coordination failed: {str(e)}",
-        )
-
-
-@router.get("/agents/{agent_id}/performance")
-async def get_agent_performance(
-    agent_id: UUID,
-    days: int = Query(
-        30, ge=1, le=365, description="Number of days to analyze"
-    ),
-    db: Session = Depends(get_db),
-    tenant: Tenant = Depends(get_current_tenant),
-):
-    """Get performance metrics for an agent."""
-    try:
-        service = AutonomousAgentService(db)
-        performance = await service.get_agent_performance(agent_id, days)
-        return performance
-
-    except Exception as e:
-        logger.error(f"Failed to get agent performance: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get agent performance: {str(e)}",
-        )
-
-
-# Health Check Endpoint
-@router.get("/health")
-async def health_check():
-    """Health check for Auterity expansion services."""
-    return {
-        "status": "healthy",
-        "services": {
-            "smart_triage": "operational",
-            "vector_duplicate": "operational",
-            "autonomous_agents": "operational",
-        },
-        "timestamp": "2025-08-23T10:00:00Z",
-    }

@@ -1,8 +1,5 @@
 """Pydantic schemas package."""
 
-"""Pydantic schemas package."""
-
-from .agent import Agent  # Import Agent from correct module
 from .auterity_expansion import (  # Triage, Vector, etc.
     AgentDeployRequest,
     AgentDeployResponse,
@@ -139,7 +136,6 @@ __all__ = [
     "ChannelTriggerUpdate",
     "ChannelTriggerResponse",
     "ChannelTriggerRequest",
-    "ChannelTriggerResponse",
     "CustomModelCreate",
     "CustomModelUpdate",
     "CustomModelResponse",
