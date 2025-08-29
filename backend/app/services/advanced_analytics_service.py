@@ -17,9 +17,9 @@ from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
 from app.core.saas_config import SaaSConfig
+from app.models.execution import ExecutionStatus, WorkflowExecution
 from app.models.tenant import BillingRecord, Tenant, UsageLog
 from app.models.user import User
-from app.models.workflow import WorkflowExecution
 
 logger = logging.getLogger(__name__)
 
@@ -272,10 +272,14 @@ class AdvancedAnalyticsService:
         # Workflow efficiency
         total_executions = len(workflow_executions)
         successful_executions = len(
-            [exec for exec in workflow_executions if exec.status == "completed"]
+            [
+                execution
+                for execution in workflow_executions
+                if execution.status == ExecutionStatus.COMPLETED
+            ]
         )
         avg_execution_time = (
-            np.mean([exec.duration_ms for exec in workflow_executions])
+            np.mean([execution.duration_ms for execution in workflow_executions])
             if workflow_executions
             else 0
         )
