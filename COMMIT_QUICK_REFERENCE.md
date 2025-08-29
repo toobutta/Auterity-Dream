@@ -1,7 +1,8 @@
 # 🤖 AI Commit Message Quick Reference
 
 ## Format Template
-```
+
+```text
 <type>(<scope>): <description>
 
 - What: <what changed>
@@ -13,6 +14,7 @@ Tested: <evidence>
 ```
 
 ## Types 🏷️
+
 - `feat` - New feature
 - `fix` - Bug fix  
 - `docs` - Documentation
@@ -25,6 +27,7 @@ Tested: <evidence>
 - `chore` - Maintenance
 
 ## Scopes 📁
+
 - `backend` - Python/FastAPI
 - `frontend` - React/TypeScript  
 - `api` - Endpoints
@@ -39,12 +42,14 @@ Tested: <evidence>
 ## Examples 💡
 
 ### Simple Fix
-```
+
+```text
 fix(auth): handle expired token edge case
 ```
 
 ### Full Feature
-```
+
+```text
 feat(workflow): add parallel execution engine
 
 - What: Implemented concurrent step processing with dependency resolution
@@ -56,6 +61,7 @@ Tested: Unit tests, integration tests, performance benchmarks
 ```
 
 ## Rules ✅
+
 - Subject ≤ 50 chars
 - Lowercase, imperative
 - No ending period
@@ -64,10 +70,12 @@ Tested: Unit tests, integration tests, performance benchmarks
 - Reference issues for bugs
 
 ## AI Context 🧠
+
 ✅ Include: Changed files, diff stats, test changes
 ❌ Exclude: Temp files, logs, cache, node_modules
 
 ## Quality Gates 🚪
+
 - Conventional format enforced
 - Scope validation required
 - Breaking changes flagged

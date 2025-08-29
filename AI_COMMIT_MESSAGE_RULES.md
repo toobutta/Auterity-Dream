@@ -73,7 +73,7 @@ This document defines the exact format and rules for AI-generated commit message
 
 Use structured format with bullet points:
 
-```
+```text
 - What: <clear description of what changed>
 - Why: <business reason or problem being solved>
 - How: <brief technical implementation detail>
@@ -88,7 +88,7 @@ Use structured format with bullet points:
 
 ### Footer (Optional)
 
-```
+```text
 Refs: #<issue_number>
 Tested: <testing evidence>
 Breaking Change: <if applicable>
@@ -99,13 +99,13 @@ Co-authored-by: <if applicable>
 
 ### Simple Bug Fix
 
-```
+```text
 fix(auth): handle expired token edge case
 ```
 
 ### Feature with Full Structure
 
-```
+```text
 feat(workflow): add parallel execution engine
 
 - What: Implemented concurrent step processing with dependency resolution
@@ -118,7 +118,7 @@ Tested: Unit tests, integration tests, performance benchmarks
 
 ### Refactoring Example
 
-```
+```text
 refactor(backend): standardize error handling patterns
 
 - What: Unified exception hierarchy and response formatting
@@ -130,7 +130,7 @@ Tested: All existing tests pass, error scenarios covered
 
 ### Breaking Change Example
 
-```
+```text
 feat(api): implement new authentication flow
 
 - What: Replaced JWT with OAuth2 + PKCE for enhanced security
