@@ -302,7 +302,7 @@ class ServiceArchitectureVerifier:
 
         # Summary
         summary = result["summary"]
-        print(f"\n📊 Summary:")
+        print("\n📊 Summary:")
         print(f"   Expected Services: {summary['expected_services']}")
         print(f"   Defined Services:  {summary['defined_services']}")
         print(f"   Running Services:  {summary['running_services']}")
@@ -312,7 +312,7 @@ class ServiceArchitectureVerifier:
         # Detailed Checks
         checks = result["checks"]
 
-        print(f"\n🔍 Detailed Check Results:")
+        print("\n🔍 Detailed Check Results:")
 
         # Compose Services
         compose = checks["compose_services"]
@@ -346,7 +346,7 @@ class ServiceArchitectureVerifier:
 
     def print_recommendations(self, result: Dict):
         """Print recommendations based on verification results."""
-        print(f"\n💡 Recommendations:")
+        print("\n💡 Recommendations:")
 
         checks = result["checks"]
 
@@ -399,7 +399,7 @@ async def main():
         with open("service_architecture_verification.json", "w") as f:
             json.dump(result, f, indent=2)
 
-        print(f"📄 Full results saved to: service_architecture_verification.json")
+        print("📄 Full results saved to: service_architecture_verification.json")
 
         # Exit with appropriate code
         if result["overall_status"] == "error":

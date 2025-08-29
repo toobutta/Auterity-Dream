@@ -2,14 +2,21 @@
 
 import os
 from unittest.mock import MagicMock, patch
-
 import pytest
 from sqlalchemy.exc import SQLAlchemyError
+from app.database import (
+        from app.init_db import init_database
+        from app.init_db import init_database
+        from app.init_db import init_database
+        from app.init_db import hash_password
+        from app.init_db import hash_password
+
+
+
 
 # Set test environment before importing models
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
-from app.database import (
     check_database_connection,
     create_tables,
     drop_tables,
@@ -124,7 +131,6 @@ class TestDatabaseInitialization:
         mock_seed_templates,
     ):
         """Test successful database initialization."""
-        from app.init_db import init_database
 
         mock_check_conn.return_value = True
 
@@ -142,7 +148,6 @@ class TestDatabaseInitialization:
     @patch("app.init_db.logger")
     def test_init_database_connection_failure(self, mock_logger, mock_check_conn):
         """Test database initialization with connection failure."""
-        from app.init_db import init_database
 
         mock_check_conn.return_value = False
 
@@ -160,7 +165,6 @@ class TestDatabaseInitialization:
         self, mock_logger, mock_check_conn, mock_create_tables
     ):
         """Test database initialization with exception."""
-        from app.init_db import init_database
 
         mock_check_conn.return_value = True
         mock_create_tables.side_effect = Exception("Database error")
@@ -176,7 +180,6 @@ class TestPasswordHashing:
 
     def test_hash_password(self):
         """Test password hashing function."""
-        from app.init_db import hash_password
 
         password = "test_password_123"
         hashed = hash_password(password)
@@ -187,7 +190,6 @@ class TestPasswordHashing:
 
     def test_hash_password_different_results(self):
         """Test that same password produces different hashes (due to salt)."""
-        from app.init_db import hash_password
 
         password = "test_password"
         hash1 = hash_password(password)

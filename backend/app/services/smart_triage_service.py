@@ -13,6 +13,7 @@ from app.models.auterity_expansion import TriageResult, TriageRule, TriageRuleTy
 from app.models.tenant import Tenant
 from app.services.ai_service import AIService
 from app.services.vector_service import VectorService
+from collections import Counter
 
 logger = logging.getLogger(__name__)
 

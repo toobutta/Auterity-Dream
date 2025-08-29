@@ -1,4 +1,5 @@
 """
+from app.services.vector.pinecone_store import PineconeDocumentStore
 RAG Engine using Haystack and LlamaIndex for enterprise-grade retrieval
 
 This module provides advanced RAG capabilities for Auterity's knowledge base,

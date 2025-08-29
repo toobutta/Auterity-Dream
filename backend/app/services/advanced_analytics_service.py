@@ -584,7 +584,7 @@ class AdvancedAnalyticsService:
     ) -> ROIAnalysis:
         """Calculate ROI analysis for the tenant."""
         try:
-            _tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            _ = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             period_start = datetime.utcnow() - timedelta(days=time_period_days)
 
             # Calculate total investment (subscription costs)
@@ -673,7 +673,7 @@ class AdvancedAnalyticsService:
     async def _analyze_churn_risk(self, tenant_id: UUID) -> ChurnAnalysis:
         """Analyze churn risk for the tenant."""
         try:
-            _tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            _ = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
 
             # Simple churn risk factors (in a real system, this would be more sophisticated)
             risk_factors = []

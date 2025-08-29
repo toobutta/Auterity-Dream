@@ -9,19 +9,17 @@ import logging
 import time
 from functools import wraps
 from typing import Any, Dict, Optional
-
 from fastapi import Request
+import redis.asyncio as redis
+from cachetools import TTLCache
+
 
 logger = logging.getLogger(__name__)
 
 try:
-    import redis.asyncio as redis
-
     REDIS_AVAILABLE = True
 except ImportError:
     REDIS_AVAILABLE = False
-
-from cachetools import TTLCache
 
 
 class CacheConfig:

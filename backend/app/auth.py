@@ -14,6 +14,10 @@ from sqlalchemy.orm import Session, joinedload
 from app.database import get_db
 
 # Configuration
+from app.models.user import Permission
+from app.models.user import Role
+from app.models.user import User
+
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))

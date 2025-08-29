@@ -382,8 +382,7 @@ class ChannelTriggerRequest(BaseModel):
     input_data: Dict[str, Any]
     tenant_id: UUID
 
-
-class ChannelTriggerResponse(BaseModel):
+    # class ChannelTriggerResponse(BaseModel):
     """Schema for channel trigger responses."""
 
     triggered: bool

@@ -2,7 +2,6 @@
 
 import os
 from typing import AsyncGenerator, Generator
-
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
@@ -10,10 +9,6 @@ from httpx import AsyncClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-
-# Set test environment before importing models
-os.environ["PYTEST_CURRENT_TEST"] = "true"
-
 from app.auth import create_access_token, get_password_hash
 from app.database import get_db
 from app.main import app
@@ -21,6 +16,11 @@ from app.models.base import Base
 from app.models.template import Template
 from app.models.user import User
 from app.models.workflow import Workflow
+
+
+# Set test environment before importing models
+os.environ["PYTEST_CURRENT_TEST"] = "true"
+
 
 # Create in-memory SQLite database for integration testing
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

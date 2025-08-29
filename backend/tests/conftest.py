@@ -1,18 +1,18 @@
 """Test configuration and fixtures."""
 
 import os
-
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from app.database import get_db
+from app.main import app
+from app.models.base import Base
+
 
 # Set test environment before importing models
 os.environ["PYTEST_CURRENT_TEST"] = "true"
 
-from app.database import get_db
-from app.main import app
-from app.models.base import Base
 
 # Create in-memory SQLite database for testing
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

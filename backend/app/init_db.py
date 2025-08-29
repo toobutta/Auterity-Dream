@@ -5,6 +5,13 @@ import logging
 from passlib.context import CryptContext
 
 # Password hashing
+from app.database import check_database_connection
+from app.database import create_tables
+from app.database import get_db_session
+from app.models.template import Template
+from app.models.template import TemplateParameter
+from app.models.user import User
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 logger = logging.getLogger(__name__)

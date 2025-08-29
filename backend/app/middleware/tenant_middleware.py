@@ -2,13 +2,16 @@
 
 import uuid
 from typing import Optional
-
 from fastapi import HTTPException, Request, Response, status
 from starlette.middleware.base import BaseHTTPMiddleware
-
 from app.database import SessionLocal
 from app.models.tenant import Tenant
 from app.models.user import User
+from app.auth import verify_token
+import json
+from app.services.audit_service import AuditService
+import logging
+import time
 
 
 class TenantIsolationMiddleware(BaseHTTPMiddleware):
@@ -100,8 +103,6 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
     async def _get_user_from_token(self, token: str) -> Optional[User]:
         """Get user from JWT token."""
         try:
-            from app.auth import verify_token
-
             payload = verify_token(token)
             if not payload:
                 return None
@@ -171,8 +172,6 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
             if request.method in ["POST", "PUT", "PATCH"]:
                 body = await request.body()
                 if body:
-                    import json
-
                     return json.loads(body.decode())
         except Exception:
             pass
@@ -187,8 +186,6 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
     ):
         """Log the request to audit system."""
         try:
-            from app.services.audit_service import AuditService
-
             # Get tenant and user context
             tenant_id = getattr(request.state, "tenant_id", None)
             user = getattr(request.state, "user", None)
@@ -232,7 +229,6 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
 
         except Exception as e:
             # Log audit failure but don't break the request
-            import logging
 
             logger = logging.getLogger(__name__)
             logger.error(f"Audit logging failed: {str(e)}")
@@ -307,6 +303,3 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
                 sanitized[key] = value
 
         return sanitized
-
-
-import time

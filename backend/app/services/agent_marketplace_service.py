@@ -715,7 +715,7 @@ class AgentMarketplaceService:
     async def get_marketplace_analytics(self, days: int = 30) -> Dict[str, Any]:
         """Get marketplace-wide analytics."""
         try:
-            _period_start = datetime.utcnow() - timedelta(days=days)
+            _ = datetime.utcnow() - timedelta(days=days)
 
             analytics = {
                 "period_days": days,

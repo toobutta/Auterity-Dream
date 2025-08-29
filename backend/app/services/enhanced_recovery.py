@@ -615,7 +615,7 @@ class EnhancedRecoveryService:
         """Execute exponential backoff retry strategy."""
         config = self.strategy_configs[RecoveryStrategy.EXPONENTIAL_BACKOFF]
 
-        _retry_config = RetryConfig(
+        _ = RetryConfig(
             max_attempts=config["max_attempts"],
             base_delay=config["base_delay"],
             max_delay=config["max_delay"],

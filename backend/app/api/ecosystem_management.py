@@ -280,7 +280,7 @@ async def train_neuroweaver(
         TrainingConfig(**(training_request.config or {}))
 
         # Start training in background
-        _training_task = asyncio.create_task(
+        _ = asyncio.create_task(
             neuro_weaver.train(
                 training_request.data, model_type, training_request.target_key
             )

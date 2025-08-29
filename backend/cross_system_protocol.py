@@ -325,7 +325,7 @@ async def demonstrate_cross_system_communication():
 
     # Send command
     start_time = time.time()
-    _command_msg = await api_gateway.send_command(
+    _ = await api_gateway.send_command(
         "order_service",
         "create_order",
         {

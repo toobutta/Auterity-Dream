@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import IndustryProfile, Template
+from app.models.workflow import WorkflowExecution
 
 
 class TemplateService:

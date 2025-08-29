@@ -1,4 +1,6 @@
 """
+from app.schemas.agent import Agent
+from app.schemas.agent import AgentCreate
 FastAPI router for AgentRegistry endpoints.
 """
 

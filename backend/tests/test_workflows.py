@@ -274,9 +274,7 @@ class TestWorkflowUpdate:
         workflow2_data = sample_workflow_data.copy()
         workflow2_data["name"] = "Workflow 2"
 
-        _response1 = client.post(
-            "/api/workflows/", json=workflow1_data, headers=auth_headers
-        )
+        _ = client.post("/api/workflows/", json=workflow1_data, headers=auth_headers)
         response2 = client.post(
             "/api/workflows/", json=workflow2_data, headers=auth_headers
         )

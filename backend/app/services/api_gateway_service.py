@@ -208,7 +208,7 @@ class APIGatewayService:
 
             # Add signature verification if secret provided
             if secret_key:
-                _plugin_result = self.add_request_transformer(
+                _ = self.add_request_transformer(
                     service_name=f"webhook-{webhook_name}",
                     config={"add": {"headers": [f"X-Webhook-Secret:{secret_key}"]}},
                 )

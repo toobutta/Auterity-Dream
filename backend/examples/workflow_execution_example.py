@@ -1,18 +1,21 @@
-#!/usr/bin/env python3
 """
 Comprehensive example of the Workflow Execution Engine
 Demonstrates all key features including parallel execution, dependency resolution, and error recovery
 """
 
+#!/usr/bin/env python3
 import asyncio
 import os
 import sys
 from datetime import datetime
+from app.services.workflow_execution_engine import WorkflowExecutionEngine
+        import traceback
+
+
 
 # Add the backend directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.services.workflow_execution_engine import WorkflowExecutionEngine
 
 
 async def example_complex_workflow():
@@ -149,7 +152,6 @@ async def main():
 
     except Exception as e:
         print(f"\n❌ Example failed: {str(e)}")
-        import traceback
 
         traceback.print_exc()
         return 1
