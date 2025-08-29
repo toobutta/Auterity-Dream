@@ -12,7 +12,10 @@ import openai
 from openai import AsyncOpenAI
 
 from app.exceptions import AIServiceError
-from app.services.relaycore_client import RelayCoreChatClient, get_relaycore_client
+from app.services.relaycore_client import (
+    RelayCoreChatClient,
+    get_relaycore_client,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +60,9 @@ class PromptTemplate:
         try:
             missing_vars = [var for var in self.variables if var not in kwargs]
             if missing_vars:
-                raise AIServiceError(f"Missing required variables: {missing_vars}")
+                raise AIServiceError(
+                    f"Missing required variables: {missing_vars}"
+                )
             return self.template.format(**kwargs)
         except KeyError as e:
             raise AIServiceError(f"Template formatting error: {e}")
@@ -180,7 +185,9 @@ class EnhancedAIService:
 
         # Add context if provided
         if context:
-            context_str = f"Additional context: {json.dumps(context, indent=2)}"
+            context_str = (
+                f"Additional context: {json.dumps(context, indent=2)}"
+            )
             messages.append({"role": "system", "content": context_str})
 
         # Choose processing method
@@ -251,7 +258,9 @@ class EnhancedAIService:
             )
 
             if response.is_success:
-                self.logger.info(f"RelayCore request successful, cost: {response.cost}")
+                self.logger.info(
+                    f"RelayCore request successful, cost: {response.cost}"
+                )
                 return AIResponse(
                     content=response.content,
                     model=response.model,
@@ -262,7 +271,9 @@ class EnhancedAIService:
                     source="relaycore",
                 )
             else:
-                self.logger.warning(f"RelayCore request failed: {response.error}")
+                self.logger.warning(
+                    f"RelayCore request failed: {response.error}"
+                )
                 # Fallback to direct OpenAI
                 return await self._process_with_openai_direct(
                     messages=messages,
@@ -318,28 +329,36 @@ class EnhancedAIService:
                 return AIResponse(
                     content=content,
                     model=model,
-                    usage=response.usage.model_dump() if response.usage else None,
+                    usage=response.usage.model_dump()
+                    if response.usage
+                    else None,
                     finish_reason=choice.finish_reason,
                     source="direct",
                 )
 
             except openai.RateLimitError as e:
                 last_error = e
-                self.logger.warning(f"Rate limit error on attempt {attempt + 1}: {e}")
+                self.logger.warning(
+                    f"Rate limit error on attempt {attempt + 1}: {e}"
+                )
                 if attempt < self.max_retries:
                     await asyncio.sleep(self.retry_delay * (2**attempt))
                     continue
 
             except openai.APIError as e:
                 last_error = e
-                self.logger.error(f"OpenAI API error on attempt {attempt + 1}: {e}")
+                self.logger.error(
+                    f"OpenAI API error on attempt {attempt + 1}: {e}"
+                )
                 if attempt < self.max_retries:
                     await asyncio.sleep(self.retry_delay)
                     continue
 
             except Exception as e:
                 last_error = e
-                self.logger.error(f"Unexpected error on attempt {attempt + 1}: {e}")
+                self.logger.error(
+                    f"Unexpected error on attempt {attempt + 1}: {e}"
+                )
                 if attempt < self.max_retries:
                     await asyncio.sleep(self.retry_delay)
                     continue
@@ -350,12 +369,18 @@ class EnhancedAIService:
         )
         self.logger.error(error_msg)
 
-        return AIResponse(content="", model=model, error=error_msg, source="direct")
+        return AIResponse(
+            content="", model=model, error=error_msg, source="direct"
+        )
 
-    async def get_usage_metrics(self, user_id: Optional[str] = None) -> Dict[str, Any]:
+    async def get_usage_metrics(
+        self, user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
         """Get usage metrics from RelayCore."""
         try:
-            return await self.relaycore_client.get_usage_metrics(user_id=user_id)
+            return await self.relaycore_client.get_usage_metrics(
+                user_id=user_id
+            )
         except Exception as e:
             self.logger.error(f"Error getting usage metrics: {e}")
             return {}
@@ -374,7 +399,9 @@ class EnhancedAIService:
 
         # Check RelayCore
         try:
-            health_status["relaycore"] = await self.relaycore_client.health_check()
+            health_status[
+                "relaycore"
+            ] = await self.relaycore_client.health_check()
         except Exception as e:
             self.logger.error(f"RelayCore health check error: {e}")
 

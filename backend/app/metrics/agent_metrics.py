@@ -202,7 +202,9 @@ class AgentMetricsCollector:
     @staticmethod
     def record_rate_limit_hit(endpoint: str, client_ip: str):
         """Record rate limit hit"""
-        agent_rate_limit_hits_total.labels(endpoint=endpoint, client_ip=client_ip).inc()
+        agent_rate_limit_hits_total.labels(
+            endpoint=endpoint, client_ip=client_ip
+        ).inc()
 
     @staticmethod
     def record_document_indexing(

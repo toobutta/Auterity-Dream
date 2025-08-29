@@ -262,7 +262,9 @@ class AdaptiveNeuralNetwork(nn.Module):
 
         return layers
 
-    def _build_batch_norm_layers(self, hidden_dims: List[int]) -> nn.ModuleList:
+    def _build_batch_norm_layers(
+        self, hidden_dims: List[int]
+    ) -> nn.ModuleList:
         """Build batch normalization layers"""
         return nn.ModuleList([nn.BatchNorm1d(dim) for dim in hidden_dims])
 
@@ -283,12 +285,16 @@ class AdaptiveNeuralNetwork(nn.Module):
     def get_architecture_info(self) -> Dict[str, Any]:
         """Get architecture information"""
         total_params = sum(p.numel() for p in self.parameters())
-        trainable_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
+        trainable_params = sum(
+            p.numel() for p in self.parameters() if p.requires_grad
+        )
 
         return {
             "total_parameters": total_params,
             "trainable_parameters": trainable_params,
-            "model_size_mb": total_params * 4 / (1024 * 1024),  # Assuming float32
+            "model_size_mb": total_params
+            * 4
+            / (1024 * 1024),  # Assuming float32
             "architecture": [
                 layer.out_features
                 for layer in self.layers
@@ -365,14 +371,18 @@ class AutomaticHyperparameterTuner:
         """Create trial configuration with sampled parameters"""
         trial_config = TrainingConfig(
             batch_size=params.get("batch_size", base_config.batch_size),
-            learning_rate=params.get("learning_rate", base_config.learning_rate),
+            learning_rate=params.get(
+                "learning_rate", base_config.learning_rate
+            ),
             epochs=20,  # Reduced for quick evaluation
             validation_split=base_config.validation_split,
             early_stopping_patience=5,
         )
         return trial_config
 
-    async def _evaluate_config(self, config: TrainingConfig, dataset: Dataset) -> float:
+    async def _evaluate_config(
+        self, config: TrainingConfig, dataset: Dataset
+    ) -> float:
         """Quick evaluation of configuration"""
         # Mock evaluation - would train actual model
         # Score based on configuration parameters
@@ -433,11 +443,15 @@ class RealTimeMonitor:
             current.get("accuracy", 0)
             < previous.get("accuracy", 0) - self.thresholds["accuracy_drop"]
         ):
-            self._create_alert("accuracy_drop", f"Accuracy dropped at epoch {epoch}")
+            self._create_alert(
+                "accuracy_drop", f"Accuracy dropped at epoch {epoch}"
+            )
 
         # Plateau detection
         if self._detect_plateau(epoch):
-            self._create_alert("plateau", f"Training plateaued at epoch {epoch}")
+            self._create_alert(
+                "plateau", f"Training plateaued at epoch {epoch}"
+            )
 
     def _detect_plateau(self, current_epoch: int) -> bool:
         """Detect if training has plateaued"""
@@ -446,7 +460,9 @@ class RealTimeMonitor:
 
         recent_losses = [
             entry.get("loss", float("inf"))
-            for entry in self.metrics_history[-self.thresholds["plateau_patience"] :]
+            for entry in self.metrics_history[
+                -self.thresholds["plateau_patience"] :
+            ]
         ]
 
         # Check if loss hasn't improved significantly
@@ -590,14 +606,20 @@ class NeuroWeaver:
                 num_workers=2,
                 pin_memory=True,
             )
-            val_loader = DataLoader(val_dataset, batch_size=self.config.batch_size)
-            test_loader = DataLoader(test_dataset, batch_size=self.config.batch_size)
+            val_loader = DataLoader(
+                val_dataset, batch_size=self.config.batch_size
+            )
+            test_loader = DataLoader(
+                test_dataset, batch_size=self.config.batch_size
+            )
 
             # 2. Hyperparameter Optimization (if enabled)
             if self.config.hyperparameter_tuning:
                 print("🔧 Optimizing hyperparameters...")
-                self.config = await self.hyperparameter_tuner.optimize_hyperparameters(
-                    self.config, dataset
+                self.config = (
+                    await self.hyperparameter_tuner.optimize_hyperparameters(
+                        self.config, dataset
+                    )
                 )
                 print(
                     f"✅ Best hyperparameters found: {self.hyperparameter_tuner.best_params}"
@@ -609,7 +631,9 @@ class NeuroWeaver:
             output_dim = (
                 1
                 if model_type == ModelType.REGRESSION
-                else len(set(sample.get(target_key) for sample in training_data))
+                else len(
+                    set(sample.get(target_key) for sample in training_data)
+                )
             )
 
             self.model = AdaptiveNeuralNetwork(
@@ -645,7 +669,9 @@ class NeuroWeaver:
 
             for epoch in range(self.config.epochs):
                 # Training phase
-                train_metrics = await self._train_epoch(train_loader, criterion)
+                train_metrics = await self._train_epoch(
+                    train_loader, criterion
+                )
 
                 # Validation phase
                 self.current_phase = TrainingPhase.VALIDATING
@@ -706,7 +732,9 @@ class NeuroWeaver:
             self.current_phase = TrainingPhase.COMPLETED
             self.is_trained = True
 
-            training_time = (datetime.now() - self.training_start_time).total_seconds()
+            training_time = (
+                datetime.now() - self.training_start_time
+            ).total_seconds()
 
             print(f"✅ Training completed in {training_time:.2f} seconds")
 
@@ -794,7 +822,9 @@ class NeuroWeaver:
                 and self.model.model_type == ModelType.CLASSIFICATION
             ):
                 _, predicted = torch.max(predictions.data, 1)
-                correct_predictions += (predicted == batch_targets).sum().item()
+                correct_predictions += (
+                    (predicted == batch_targets).sum().item()
+                )
 
         metrics = {
             "loss": total_loss / len(dataloader),
@@ -829,7 +859,9 @@ class NeuroWeaver:
                     and self.model.model_type == ModelType.CLASSIFICATION
                 ):
                     _, predicted = torch.max(predictions.data, 1)
-                    correct_predictions += (predicted == batch_targets).sum().item()
+                    correct_predictions += (
+                        (predicted == batch_targets).sum().item()
+                    )
 
         metrics = {
             "val_loss": total_loss / len(dataloader),
@@ -869,7 +901,9 @@ class NeuroWeaver:
                     and self.model.model_type == ModelType.CLASSIFICATION
                 ):
                     _, predicted = torch.max(predictions.data, 1)
-                    correct_predictions += (predicted == batch_targets).sum().item()
+                    correct_predictions += (
+                        (predicted == batch_targets).sum().item()
+                    )
 
         # Calculate comprehensive metrics
         metrics = {
@@ -882,7 +916,9 @@ class NeuroWeaver:
 
         # Additional metrics (simplified)
         if len(all_predictions) > 0:
-            mse = np.mean([(p - t) ** 2 for p, t in zip(all_predictions, all_targets)])
+            mse = np.mean(
+                [(p - t) ** 2 for p, t in zip(all_predictions, all_targets)]
+            )
             metrics["test_mse"] = mse
             metrics["test_rmse"] = np.sqrt(mse)
 
@@ -915,7 +951,9 @@ class NeuroWeaver:
     async def _finalize_model(self, test_metrics: Dict[str, float]):
         """Finalize trained model"""
         # Save final model
-        final_model_path = Path(self.config.model_save_path) / "neuroweaver_final.pth"
+        final_model_path = (
+            Path(self.config.model_save_path) / "neuroweaver_final.pth"
+        )
         torch.save(
             {
                 "model_state_dict": self.model.state_dict(),
@@ -931,7 +969,9 @@ class NeuroWeaver:
         self.model_metrics = ModelMetrics(
             accuracy=test_metrics.get("test_accuracy", 0.0),
             loss=test_metrics.get("test_loss", 0.0),
-            training_time=(datetime.now() - self.training_start_time).total_seconds(),
+            training_time=(
+                datetime.now() - self.training_start_time
+            ).total_seconds(),
             model_size_mb=self.model.get_architecture_info()["model_size_mb"],
         )
 
@@ -968,7 +1008,9 @@ class NeuroWeaver:
 
         return {
             "prediction": (
-                prediction.item() if prediction.numel() == 1 else prediction.tolist()
+                prediction.item()
+                if prediction.numel() == 1
+                else prediction.tolist()
             ),
             "confidence": 0.85,  # Would calculate actual confidence
             "inference_time_ms": inference_time * 1000,
@@ -992,7 +1034,9 @@ class NeuroWeaver:
             "hyperparameter_tuning_results": {
                 "best_score": self.hyperparameter_tuner.best_score,
                 "best_params": self.hyperparameter_tuner.best_params,
-                "trials_completed": len(self.hyperparameter_tuner.search_history),
+                "trials_completed": len(
+                    self.hyperparameter_tuner.search_history
+                ),
             },
         }
 
@@ -1003,7 +1047,9 @@ class NeuroWeaver:
                 model_path = self.model_versions[version_id]["path"]
             else:
                 # Load latest model
-                model_path = Path(self.config.model_save_path) / "neuroweaver_final.pth"
+                model_path = (
+                    Path(self.config.model_save_path) / "neuroweaver_final.pth"
+                )
 
             if not Path(model_path).exists():
                 return False

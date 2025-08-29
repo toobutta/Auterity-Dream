@@ -262,11 +262,11 @@ class ErrorCorrelationService:
             correlation_id=data.get("correlation_id"),
         )
 
-    def _generate_error_id(self, error_data: Dict[str, Any], system: SystemType) -> str:
+    def _generate_error_id(
+        self, error_data: Dict[str, Any], system: SystemType
+    ) -> str:
         """Generate unique error ID based on content and system."""
-        content = (
-            f"{system}:{error_data.get('message', '')}:{error_data.get('code', '')}"
-        )
+        content = f"{system}:{error_data.get('message', '')}:{error_data.get('code', '')}"
         return hashlib.md5(content.encode()).hexdigest()[:16]
 
     async def _store_error_in_redis(self, error: SystemError) -> None:
@@ -283,14 +283,18 @@ class ErrorCorrelationService:
         await self.redis.lpush(f"errors:{error.system}", error.id)
         await self.redis.expire(f"errors:{error.system}", 3600)
 
-    async def _trigger_correlation_analysis(self, new_error: SystemError) -> None:
+    async def _trigger_correlation_analysis(
+        self, new_error: SystemError
+    ) -> None:
         """Trigger correlation analysis for new error."""
         try:
             # Get recent errors from all systems
             recent_errors = await self._get_recent_errors()
 
             # Run correlation analysis
-            correlations = await self._analyze_correlations(new_error, recent_errors)
+            correlations = await self._analyze_correlations(
+                new_error, recent_errors
+            )
 
             # Process any new correlations
             for correlation in correlations:
@@ -313,7 +317,9 @@ class ErrorCorrelationService:
 
                 if error_data:
                     error_dict = json.loads(error_data)
-                    error_time = datetime.fromisoformat(error_dict["timestamp"])
+                    error_time = datetime.fromisoformat(
+                        error_dict["timestamp"]
+                    )
 
                     if error_time >= cutoff_time:
                         # Reconstruct SystemError object
@@ -360,7 +366,9 @@ class ErrorCorrelationService:
                 # Sort by timestamp
                 system_errors[system].sort(key=lambda x: x.timestamp)
                 if system_errors[system]:
-                    cascade_errors.extend(system_errors[system][:1])  # Take first error
+                    cascade_errors.extend(
+                        system_errors[system][:1]
+                    )  # Take first error
 
         # If we have errors from multiple systems in sequence, it's likely cascading
         if len(cascade_errors) >= 2:
@@ -376,7 +384,10 @@ class ErrorCorrelationService:
                 error_ids=[error.id for error in cascade_errors],
                 confidence=0.8,
                 created_at=datetime.utcnow(),
-                recovery_actions=["restart_upstream_service", "retry_failed_requests"],
+                recovery_actions=[
+                    "restart_upstream_service",
+                    "retry_failed_requests",
+                ],
             )
 
         return None
@@ -434,12 +445,16 @@ class ErrorCorrelationService:
             "service",
         ]
 
-        if any(keyword in new_error.message.lower() for keyword in dependency_keywords):
+        if any(
+            keyword in new_error.message.lower()
+            for keyword in dependency_keywords
+        ):
             related_errors = []
 
             for error in recent_errors:
                 if any(
-                    keyword in error.message.lower() for keyword in dependency_keywords
+                    keyword in error.message.lower()
+                    for keyword in dependency_keywords
                 ):
                     related_errors.append(error)
 
@@ -477,12 +492,16 @@ class ErrorCorrelationService:
             "full",
         ]
 
-        if any(keyword in new_error.message.lower() for keyword in resource_keywords):
+        if any(
+            keyword in new_error.message.lower()
+            for keyword in resource_keywords
+        ):
             related_errors = []
 
             for error in recent_errors:
                 if any(
-                    keyword in error.message.lower() for keyword in resource_keywords
+                    keyword in error.message.lower()
+                    for keyword in resource_keywords
                 ):
                     related_errors.append(error)
 
@@ -521,7 +540,8 @@ class ErrorCorrelationService:
                 if (
                     error.category == "authentication"
                     or "auth" in error.message.lower()
-                    or error.code in ["AUTHENTICATION_ERROR", "AUTHORIZATION_ERROR"]
+                    or error.code
+                    in ["AUTHENTICATION_ERROR", "AUTHORIZATION_ERROR"]
                 ):
                     auth_errors.append(error)
 
@@ -559,12 +579,16 @@ class ErrorCorrelationService:
             "resolve",
         ]
 
-        if any(keyword in new_error.message.lower() for keyword in network_keywords):
+        if any(
+            keyword in new_error.message.lower()
+            for keyword in network_keywords
+        ):
             network_errors = []
 
             for error in recent_errors:
                 if any(
-                    keyword in error.message.lower() for keyword in network_keywords
+                    keyword in error.message.lower()
+                    for keyword in network_keywords
                 ):
                     network_errors.append(error)
 
@@ -603,7 +627,9 @@ class ErrorCorrelationService:
 
         return len(intersection) / len(union) if union else 0.0
 
-    async def _process_correlation(self, correlation: ErrorCorrelation) -> None:
+    async def _process_correlation(
+        self, correlation: ErrorCorrelation
+    ) -> None:
         """Process a detected error correlation."""
         try:
             # Store correlation
@@ -621,7 +647,9 @@ class ErrorCorrelationService:
             )
 
         except Exception as e:
-            self.logger.error(f"Failed to process correlation {correlation.id}: {e}")
+            self.logger.error(
+                f"Failed to process correlation {correlation.id}: {e}"
+            )
 
     async def _store_correlation(self, correlation: ErrorCorrelation) -> None:
         """Store correlation in Redis."""
@@ -634,9 +662,13 @@ class ErrorCorrelationService:
         if correlation.resolved_at:
             data["resolved_at"] = correlation.resolved_at.isoformat()
 
-        await self.redis.setex(key, 86400, json.dumps(data, default=str))  # 24 hour TTL
+        await self.redis.setex(
+            key, 86400, json.dumps(data, default=str)
+        )  # 24 hour TTL
 
-    async def _trigger_automated_recovery(self, correlation: ErrorCorrelation) -> None:
+    async def _trigger_automated_recovery(
+        self, correlation: ErrorCorrelation
+    ) -> None:
         """Trigger automated recovery actions for correlation."""
         if not correlation.recovery_actions:
             return
@@ -644,9 +676,13 @@ class ErrorCorrelationService:
         for action_name in correlation.recovery_actions:
             recovery_action = self._get_recovery_action(action_name)
             if recovery_action:
-                await self._execute_recovery_action(recovery_action, correlation)
+                await self._execute_recovery_action(
+                    recovery_action, correlation
+                )
 
-    def _get_recovery_action(self, action_name: str) -> Optional[RecoveryAction]:
+    def _get_recovery_action(
+        self, action_name: str
+    ) -> Optional[RecoveryAction]:
         """Get recovery action by name."""
         return self.recovery_actions.get(action_name)
 
@@ -665,18 +701,24 @@ class ErrorCorrelationService:
             elif action.action_type == "retry":
                 await self._retry_failed_operations(correlation)
             elif action.action_type == "fallback":
-                await self._activate_fallback_systems(correlation.affected_systems)
+                await self._activate_fallback_systems(
+                    correlation.affected_systems
+                )
             elif action.action_type == "scale":
                 await self._scale_resources(correlation.affected_systems)
             elif action.action_type == "notify":
                 await self._send_recovery_notification(correlation, action)
 
-            self.logger.info(f"Recovery action {action.name} completed successfully")
+            self.logger.info(
+                f"Recovery action {action.name} completed successfully"
+            )
 
         except Exception as e:
             self.logger.error(f"Recovery action {action.name} failed: {e}")
 
-    async def _restart_services(self, affected_systems: Set[SystemType]) -> None:
+    async def _restart_services(
+        self, affected_systems: Set[SystemType]
+    ) -> None:
         """Restart affected services."""
         # This would integrate with container orchestration or service management
         for system in affected_systems:
@@ -684,7 +726,9 @@ class ErrorCorrelationService:
             # Implementation would depend on deployment architecture
             # Could use Docker API, Kubernetes API, or service management tools
 
-    async def _retry_failed_operations(self, correlation: ErrorCorrelation) -> None:
+    async def _retry_failed_operations(
+        self, correlation: ErrorCorrelation
+    ) -> None:
         """Retry failed operations based on correlation context."""
         # Extract operation context from error details
         for error_id in correlation.error_ids:
@@ -714,7 +758,9 @@ class ErrorCorrelationService:
         await self.redis.setex("fallback:neuroweaver", 3600, "active")
         self.logger.info("Activated standard model fallback")
 
-    async def _scale_resources(self, affected_systems: Set[SystemType]) -> None:
+    async def _scale_resources(
+        self, affected_systems: Set[SystemType]
+    ) -> None:
         """Scale resources for affected systems."""
         # This would integrate with auto-scaling systems
         for system in affected_systems:
@@ -733,10 +779,14 @@ class ErrorCorrelationService:
         }
 
         # Store notification for dashboard
-        await self.redis.lpush("notifications:recovery", json.dumps(notification))
+        await self.redis.lpush(
+            "notifications:recovery", json.dumps(notification)
+        )
         await self.redis.expire("notifications:recovery", 86400)
 
-    async def _send_correlation_alert(self, correlation: ErrorCorrelation) -> None:
+    async def _send_correlation_alert(
+        self, correlation: ErrorCorrelation
+    ) -> None:
         """Send alert for detected correlation."""
         alert = {
             "correlation_id": correlation.id,
@@ -806,7 +856,9 @@ class ErrorCorrelationService:
             id="refresh_tokens",
             name="Refresh Authentication Tokens",
             description="Refresh expired or invalid authentication tokens",
-            applicable_patterns=[CorrelationPattern.AUTHENTICATION_PROPAGATION],
+            applicable_patterns=[
+                CorrelationPattern.AUTHENTICATION_PROPAGATION
+            ],
             applicable_categories=["authentication", "authorization"],
             retry_count=3,
             retry_delay=5,
@@ -858,7 +910,9 @@ class ErrorCorrelationService:
 
     async def _get_recovery_action_count(self) -> int:
         """Get count of executed recovery actions."""
-        notifications = await self.redis.lrange("notifications:recovery", 0, -1)
+        notifications = await self.redis.lrange(
+            "notifications:recovery", 0, -1
+        )
         return len(notifications)
 
 
@@ -872,7 +926,9 @@ async def get_correlation_service() -> ErrorCorrelationService:
 
     if _correlation_service is None:
         # Initialize Redis connection
-        redis_client = redis.from_url("redis://localhost:6379", decode_responses=False)
+        redis_client = redis.from_url(
+            "redis://localhost:6379", decode_responses=False
+        )
         _correlation_service = ErrorCorrelationService(redis_client)
 
     return _correlation_service

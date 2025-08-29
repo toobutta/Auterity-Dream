@@ -82,7 +82,9 @@ class MLMonitoringService:
         return {
             "report_html": report.get_html(),
             "report_json": report.as_dict(),
-            "performance_metrics": self._extract_performance_metrics(report.as_dict()),
+            "performance_metrics": self._extract_performance_metrics(
+                report.as_dict()
+            ),
             "timestamp": datetime.utcnow().isoformat(),
         }
 
@@ -142,7 +144,9 @@ class MLMonitoringService:
             metrics = report_dict.get("metrics", [])
             for metric in metrics:
                 if metric.get("metric") == "DataDriftMetric":
-                    return metric.get("result", {}).get("drift_detected", False)
+                    return metric.get("result", {}).get(
+                        "drift_detected", False
+                    )
             return False
         except Exception:
             return False
@@ -158,7 +162,9 @@ class MLMonitoringService:
                     result = metric.get("result", {})
                     return {
                         "mae": result.get("current", {}).get("mean_abs_error"),
-                        "mse": result.get("current", {}).get("mean_squared_error"),
+                        "mse": result.get("current", {}).get(
+                            "mean_squared_error"
+                        ),
                         "r2": result.get("current", {}).get("r2_score"),
                     }
             return {}

@@ -16,8 +16,12 @@ class APIGatewayService:
     def __init__(self):
         """Initialize API Gateway service."""
         settings = get_settings()
-        self.kong_admin_url = getattr(settings, "KONG_ADMIN_URL", "http://kong:8001")
-        self.kong_proxy_url = getattr(settings, "KONG_PROXY_URL", "http://kong:8000")
+        self.kong_admin_url = getattr(
+            settings, "KONG_ADMIN_URL", "http://kong:8001"
+        )
+        self.kong_proxy_url = getattr(
+            settings, "KONG_PROXY_URL", "http://kong:8000"
+        )
         self.default_timeout = 30
 
     def create_service(
@@ -223,7 +227,9 @@ class APIGatewayService:
             if secret_key:
                 _ = self.add_request_transformer(
                     service_name=f"webhook-{webhook_name}",
-                    config={"add": {"headers": [f"X-Webhook-Secret:{secret_key}"]}},
+                    config={
+                        "add": {"headers": [f"X-Webhook-Secret:{secret_key}"]}
+                    },
                 )
 
             return {

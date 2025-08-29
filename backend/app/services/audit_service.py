@@ -283,7 +283,10 @@ class AuditService:
             query = query.filter(AuditLog.timestamp <= end_date)
 
         return (
-            query.order_by(AuditLog.timestamp.desc()).offset(offset).limit(limit).all()
+            query.order_by(AuditLog.timestamp.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
         )
 
     def get_audit_summary(

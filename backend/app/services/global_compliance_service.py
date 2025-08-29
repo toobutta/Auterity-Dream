@@ -111,7 +111,9 @@ class RegionalConfiguration:
     currency: str
     date_format: str
     number_format: str
-    compliance_frameworks: List[ComplianceFramework] = field(default_factory=list)
+    compliance_frameworks: List[ComplianceFramework] = field(
+        default_factory=list
+    )
     business_hours: Dict[str, List[int]] = field(default_factory=dict)
     holidays: List[str] = field(default_factory=list)
     legal_requirements: Dict[str, Any] = field(default_factory=dict)
@@ -185,7 +187,11 @@ class GlobalComplianceService:
                 "description": "Implement rights for data access, rectification, erasure, and \
                     portability",
                 "severity": "high",
-                "controls": ["Access control", "Data export", "Right to be forgotten"],
+                "controls": [
+                    "Access control",
+                    "Data export",
+                    "Right to be forgotten",
+                ],
                 "implementation_guide": "Implement API endpoints for data subject requests with proper authentication",
             },
             {
@@ -437,13 +443,17 @@ class GlobalComplianceService:
             requirements = list(self.compliance_requirements.values())
 
             if framework:
-                requirements = [r for r in requirements if r.framework == framework]
+                requirements = [
+                    r for r in requirements if r.framework == framework
+                ]
 
             if region:
                 requirements = [r for r in requirements if r.region == region]
 
             if category:
-                requirements = [r for r in requirements if r.category == category]
+                requirements = [
+                    r for r in requirements if r.category == category
+                ]
 
             return requirements
 
@@ -456,7 +466,9 @@ class GlobalComplianceService:
     ) -> ComplianceAssessment:
         """Perform compliance assessment for a tenant."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -474,14 +486,18 @@ class GlobalComplianceService:
                 # Simulate compliance check
                 # (in real implementation, this would check actual tenant
                 # configuration)
-                compliance_score = await self._check_compliance_requirement(tenant, req)
+                compliance_score = await self._check_compliance_requirement(
+                    tenant, req
+                )
 
                 assessment_results[req.id] = {
                     "requirement": req.requirement,
                     "description": req.description,
                     "score": compliance_score,
                     "status": (
-                        "compliant" if compliance_score >= 80 else "non_compliant"
+                        "compliant"
+                        if compliance_score >= 80
+                        else "non_compliant"
                     ),
                     "controls": req.controls,
                 }
@@ -492,7 +508,9 @@ class GlobalComplianceService:
                     gaps.append(f"{req.requirement}: {req.description}")
                     recommendations.extend(req.controls)
 
-            overall_score = total_score / len(requirements) if requirements else 100
+            overall_score = (
+                total_score / len(requirements) if requirements else 100
+            )
 
             # Calculate next audit date (typically annually)
             next_audit_date = datetime.utcnow() + timedelta(days=365)
@@ -505,7 +523,9 @@ class GlobalComplianceService:
                 overall_score=overall_score,
                 requirements=assessment_results,
                 gaps=gaps,
-                recommendations=list(set(recommendations)),  # Remove duplicates
+                recommendations=list(
+                    set(recommendations)
+                ),  # Remove duplicates
                 next_audit_date=next_audit_date,
             )
 
@@ -527,10 +547,14 @@ class GlobalComplianceService:
         # In practice, this would check tenant's actual configuration against requirements
 
         checks = {
-            "data_protection": await self._check_data_protection_compliance(tenant),
+            "data_protection": await self._check_data_protection_compliance(
+                tenant
+            ),
             "privacy": await self._check_privacy_compliance(tenant),
             "security": await self._check_security_compliance(tenant),
-            "incident_response": await self._check_incident_response_compliance(tenant),
+            "incident_response": await self._check_incident_response_compliance(
+                tenant
+            ),
         }
 
         return checks.get(requirement.category, 50.0)  # Default score
@@ -581,7 +605,9 @@ class GlobalComplianceService:
 
         return min(score, 100.0)
 
-    async def _check_incident_response_compliance(self, tenant: Tenant) -> float:
+    async def _check_incident_response_compliance(
+        self, tenant: Tenant
+    ) -> float:
         """Check incident response compliance."""
         # Simplified check - in practice would check for incident response plans
         return 70.0  # Assume basic compliance
@@ -593,7 +619,10 @@ class GlobalComplianceService:
         return self.regional_configs.get(region)
 
     async def format_datetime(
-        self, dt: datetime, region: Region, language: Language = Language.ENGLISH
+        self,
+        dt: datetime,
+        region: Region,
+        language: Language = Language.ENGLISH,
     ) -> str:
         """Format datetime according to regional settings."""
         try:
@@ -620,7 +649,10 @@ class GlobalComplianceService:
             return dt.isoformat()
 
     async def format_currency(
-        self, amount: Decimal, region: Region, language: Language = Language.ENGLISH
+        self,
+        amount: Decimal,
+        region: Region,
+        language: Language = Language.ENGLISH,
     ) -> str:
         """Format currency according to regional settings."""
         try:
@@ -628,9 +660,12 @@ class GlobalComplianceService:
             if not config:
                 return f"${amount}"
 
-            currency_symbol = {"USD": "$", "EUR": "€", "JPY": "¥", "GBP": "£"}.get(
-                config.currency, "$"
-            )
+            currency_symbol = {
+                "USD": "$",
+                "EUR": "€",
+                "JPY": "¥",
+                "GBP": "£",
+            }.get(config.currency, "$")
 
             # Format number according to regional settings
             if config.number_format == "1.234,56":
@@ -651,13 +686,18 @@ class GlobalComplianceService:
     ) -> Dict[str, Any]:
         """Validate data residency compliance for a tenant."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
             config = self.regional_configs.get(region)
             if not config:
-                return {"compliant": False, "issues": ["Region not configured"]}
+                return {
+                    "compliant": False,
+                    "issues": ["Region not configured"],
+                }
 
             validation_results = {
                 "compliant": True,
@@ -667,7 +707,9 @@ class GlobalComplianceService:
             }
 
             for data_type in data_types:
-                compliance = await self._check_data_type_compliance(data_type, region)
+                compliance = await self._check_data_type_compliance(
+                    data_type, region
+                )
                 validation_results["data_types"][data_type] = compliance
 
                 if not compliance["compliant"]:
@@ -751,7 +793,9 @@ class GlobalComplianceService:
             logger.error(f"Translation job creation failed: {str(e)}")
             raise
 
-    def _interpolate_variables(self, text: str, variables: Dict[str, Any]) -> str:
+    def _interpolate_variables(
+        self, text: str, variables: Dict[str, Any]
+    ) -> str:
         """Interpolate variables in localized text."""
         try:
             for key, value in variables.items():
@@ -762,10 +806,14 @@ class GlobalComplianceService:
             logger.error(f"Variable interpolation failed: {str(e)}")
             return text
 
-    async def get_compliance_dashboard(self, tenant_id: UUID) -> Dict[str, Any]:
+    async def get_compliance_dashboard(
+        self, tenant_id: UUID
+    ) -> Dict[str, Any]:
         """Get compliance dashboard data for a tenant."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -777,7 +825,9 @@ class GlobalComplianceService:
                 "tenant_id": str(tenant_id),
                 "region": region.value,
                 "compliance_frameworks": (
-                    [f.value for f in config.compliance_frameworks] if config else []
+                    [f.value for f in config.compliance_frameworks]
+                    if config
+                    else []
                 ),
                 "assessments": {},
                 "overall_compliance_score": 0.0,
@@ -788,7 +838,9 @@ class GlobalComplianceService:
             if config:
                 # Get assessments for each framework
                 for framework in config.compliance_frameworks:
-                    assessment_key = f"{tenant_id}_{framework.value}_{region.value}"
+                    assessment_key = (
+                        f"{tenant_id}_{framework.value}_{region.value}"
+                    )
                     assessment = self.assessments.get(assessment_key)
 
                     if assessment:
@@ -813,7 +865,8 @@ class GlobalComplianceService:
                                     "framework": framework.value,
                                     "date": assessment.next_audit_date.isoformat(),
                                     "days_until": (
-                                        assessment.next_audit_date - datetime.utcnow()
+                                        assessment.next_audit_date
+                                        - datetime.utcnow()
                                     ).days,
                                 }
                             )
@@ -849,7 +902,9 @@ class GlobalComplianceService:
             health_status = {
                 "status": "healthy",
                 "translations_count": len(self.translations),
-                "compliance_requirements_count": len(self.compliance_requirements),
+                "compliance_requirements_count": len(
+                    self.compliance_requirements
+                ),
                 "regional_configs_count": len(self.regional_configs),
                 "assessments_count": len(self.assessments),
                 "translation_jobs_count": len(self.translation_jobs),

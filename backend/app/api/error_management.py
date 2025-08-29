@@ -28,7 +28,9 @@ def handle_error_details(
         "timestamp": datetime.datetime.now().isoformat(),
         "context": context,
         "traceback": (
-            traceback.format_exc() if include_traceback else "Traceback suppressed."
+            traceback.format_exc()
+            if include_traceback
+            else "Traceback suppressed."
         ),
         "additional_info": additional_info,
     }

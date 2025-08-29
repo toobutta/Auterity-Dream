@@ -28,7 +28,9 @@ from app.services.workflow_engine import WorkflowExecutionError
 router = APIRouter(prefix="/workflows", tags=["workflows"])
 
 
-@router.post("/", response_model=WorkflowResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=WorkflowResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_workflow(
     workflow_data: WorkflowCreate,
     current_user: User = Depends(get_current_active_user),
@@ -75,8 +77,12 @@ async def list_workflows(
     page_size: int = Query(
         10, ge=1, le=100, description="Number of workflows per page"
     ),
-    name_filter: Optional[str] = Query(None, description="Filter workflows by name"),
-    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    name_filter: Optional[str] = Query(
+        None, description="Filter workflows by name"
+    ),
+    is_active: Optional[bool] = Query(
+        None, description="Filter by active status"
+    ),
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
@@ -116,7 +122,11 @@ async def get_workflow(
     """Get a specific workflow by ID."""
     workflow = (
         db.query(Workflow)
-        .filter(and_(Workflow.id == workflow_id, Workflow.user_id == current_user.id))
+        .filter(
+            and_(
+                Workflow.id == workflow_id, Workflow.user_id == current_user.id
+            )
+        )
         .first()
     )
 
@@ -139,7 +149,11 @@ async def update_workflow(
     # Get existing workflow
     workflow = (
         db.query(Workflow)
-        .filter(and_(Workflow.id == workflow_id, Workflow.user_id == current_user.id))
+        .filter(
+            and_(
+                Workflow.id == workflow_id, Workflow.user_id == current_user.id
+            )
+        )
         .first()
     )
 
@@ -189,7 +203,11 @@ async def delete_workflow(
     """Delete a specific workflow (soft delete by setting is_active to False)."""
     workflow = (
         db.query(Workflow)
-        .filter(and_(Workflow.id == workflow_id, Workflow.user_id == current_user.id))
+        .filter(
+            and_(
+                Workflow.id == workflow_id, Workflow.user_id == current_user.id
+            )
+        )
         .first()
     )
 
@@ -219,7 +237,11 @@ async def duplicate_workflow(
     # Get original workflow
     original_workflow = (
         db.query(Workflow)
-        .filter(and_(Workflow.id == workflow_id, Workflow.user_id == current_user.id))
+        .filter(
+            and_(
+                Workflow.id == workflow_id, Workflow.user_id == current_user.id
+            )
+        )
         .first()
     )
 
@@ -319,7 +341,9 @@ async def execute_workflow(
         )
 
 
-@router.get("/executions/{execution_id}", response_model=ExecutionStatusResponse)
+@router.get(
+    "/executions/{execution_id}", response_model=ExecutionStatusResponse
+)
 async def get_execution_status(
     execution_id: UUID,
     current_user: User = Depends(get_current_active_user),
@@ -365,9 +389,15 @@ async def get_execution_logs(
     limit: Optional[int] = Query(
         100, ge=1, le=1000, description="Maximum number of logs to return"
     ),
-    step_type: Optional[str] = Query(None, description="Filter logs by step type"),
-    step_name: Optional[str] = Query(None, description="Filter logs by step name"),
-    has_error: Optional[bool] = Query(None, description="Filter logs by error status"),
+    step_type: Optional[str] = Query(
+        None, description="Filter logs by step type"
+    ),
+    step_name: Optional[str] = Query(
+        None, description="Filter logs by step name"
+    ),
+    has_error: Optional[bool] = Query(
+        None, description="Filter logs by error status"
+    ),
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
@@ -391,7 +421,9 @@ async def get_execution_logs(
         )
 
     # Build query with filters
-    query = db.query(ExecutionLog).filter(ExecutionLog.execution_id == execution_id)
+    query = db.query(ExecutionLog).filter(
+        ExecutionLog.execution_id == execution_id
+    )
 
     if step_type:
         query = query.filter(ExecutionLog.step_type == step_type)
@@ -423,7 +455,9 @@ async def get_execution_logs(
     ]
 
 
-@router.post("/executions/{execution_id}/cancel", status_code=status.HTTP_200_OK)
+@router.post(
+    "/executions/{execution_id}/cancel", status_code=status.HTTP_200_OK
+)
 async def cancel_execution(
     execution_id: UUID,
     current_user: User = Depends(get_current_active_user),
@@ -470,7 +504,9 @@ async def cancel_execution(
 
 @router.get("/executions", response_model=List[ExecutionStatusResponse])
 async def list_executions(
-    workflow_id: Optional[UUID] = Query(None, description="Filter by workflow ID"),
+    workflow_id: Optional[UUID] = Query(
+        None, description="Filter by workflow ID"
+    ),
     status_filter: Optional[str] = Query(
         None, description="Filter by execution status"
     ),

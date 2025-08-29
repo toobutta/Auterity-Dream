@@ -3,7 +3,15 @@
 import uuid
 from enum import Enum
 
-from sqlalchemy import UUID, Boolean, Column, DateTime, ForeignKey, String, Table
+from sqlalchemy import (
+    UUID,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    String,
+    Table,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -37,15 +45,21 @@ class SystemPermission(str, Enum):
 user_roles = Table(
     "user_roles",
     Base.metadata,
-    Column("user_id", UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True),
-    Column("role_id", UUID(as_uuid=True), ForeignKey("roles.id"), primary_key=True),
+    Column(
+        "user_id", UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True
+    ),
+    Column(
+        "role_id", UUID(as_uuid=True), ForeignKey("roles.id"), primary_key=True
+    ),
 )
 
 # Association table for many-to-many relationship between roles and permissions
 role_permissions = Table(
     "role_permissions",
     Base.metadata,
-    Column("role_id", UUID(as_uuid=True), ForeignKey("roles.id"), primary_key=True),
+    Column(
+        "role_id", UUID(as_uuid=True), ForeignKey("roles.id"), primary_key=True
+    ),
     Column(
         "permission_id",
         UUID(as_uuid=True),
@@ -117,10 +131,14 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
+    tenant_id = Column(
+        UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False
+    )
     email = Column(String(255), nullable=False, index=True)
     name = Column(String(255), nullable=False)
-    hashed_password = Column(String(255), nullable=True)  # Nullable for SSO users
+    hashed_password = Column(
+        String(255), nullable=True
+    )  # Nullable for SSO users
 
     # SSO fields
     sso_provider = Column(String(20), nullable=True)
@@ -146,7 +164,9 @@ class User(Base):
     roles = relationship("Role", secondary=user_roles, back_populates="users")
 
     def __repr__(self):
-        return f"<User(id={self.id}, email='{self.email}', name='{self.name}')>"
+        return (
+            f"<User(id={self.id}, email='{self.email}', name='{self.name}')>"
+        )
 
     def has_permission(self, permission_name: str) -> bool:
         """Check if user has a specific permission."""

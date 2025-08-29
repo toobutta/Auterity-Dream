@@ -1,4 +1,13 @@
-from sqlalchemy import JSON, TIMESTAMP, UUID, Boolean, Column, DateTime, String, Text
+from sqlalchemy import (
+    JSON,
+    TIMESTAMP,
+    UUID,
+    Boolean,
+    Column,
+    DateTime,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 

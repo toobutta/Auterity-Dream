@@ -30,7 +30,9 @@ def execute_workflow_async(workflow_id: str, input_data: dict):
 def process_ai_request(prompt: str, model: str = "gpt-3.5-turbo"):
     ai_service = AIService()
     # Convert string to AIModelType enum
-    model_type = AIModelType.GPT_3_5_TURBO if model == "gpt-3.5-turbo" else None
+    model_type = (
+        AIModelType.GPT_3_5_TURBO if model == "gpt-3.5-turbo" else None
+    )
     return ai_service.process_text(prompt, model=model_type)
 
 

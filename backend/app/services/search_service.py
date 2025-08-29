@@ -15,7 +15,9 @@ class SearchService:
     def __init__(self, host: Optional[str] = None):
         """Initialize search service."""
         settings = get_settings()
-        self.host = host or getattr(settings, "ELASTICSEARCH_HOST", "localhost:9200")
+        self.host = host or getattr(
+            settings, "ELASTICSEARCH_HOST", "localhost:9200"
+        )
 
         self.client = Elasticsearch([f"http://{self.host}"])
 
@@ -83,7 +85,9 @@ class SearchService:
             except RequestError:
                 pass  # Index might already exist
 
-    def index_workflow(self, workflow_id: str, workflow_data: Dict[str, Any]) -> bool:
+    def index_workflow(
+        self, workflow_id: str, workflow_data: Dict[str, Any]
+    ) -> bool:
         """Index workflow for search."""
         try:
             doc = {
@@ -91,11 +95,15 @@ class SearchService:
                 "name": workflow_data.get("name", ""),
                 "description": workflow_data.get("description", ""),
                 "tags": workflow_data.get("tags", []),
-                "created_at": workflow_data.get("created_at", datetime.utcnow()),
+                "created_at": workflow_data.get(
+                    "created_at", datetime.utcnow()
+                ),
                 "definition": workflow_data.get("definition", {}),
             }
 
-            self.client.index(index=self.workflow_index, id=workflow_id, body=doc)
+            self.client.index(
+                index=self.workflow_index, id=workflow_id, body=doc
+            )
             return True
         except Exception:
             return False
@@ -122,14 +130,18 @@ class SearchService:
 
         search_body = {
             "query": {
-                "bool": {"must": must_clauses} if must_clauses else {"match_all": {}}
+                "bool": {"must": must_clauses}
+                if must_clauses
+                else {"match_all": {}}
             },
             "size": limit,
             "sort": [{"_score": {"order": "desc"}}],
         }
 
         try:
-            response = self.client.search(index=self.workflow_index, body=search_body)
+            response = self.client.search(
+                index=self.workflow_index, body=search_body
+            )
             return [
                 {
                     "workflow_id": hit["_id"],
@@ -157,7 +169,9 @@ class SearchService:
                 "output_data": execution_data.get("output_data", {}),
             }
 
-            self.client.index(index=self.execution_index, id=execution_id, body=doc)
+            self.client.index(
+                index=self.execution_index, id=execution_id, body=doc
+            )
             return True
         except Exception:
             return False
@@ -191,13 +205,17 @@ class SearchService:
             )
 
         search_body = {
-            "query": {"bool": {"filter": filters} if filters else {"match_all": {}}},
+            "query": {
+                "bool": {"filter": filters} if filters else {"match_all": {}}
+            },
             "size": limit,
             "sort": [{"started_at": {"order": "desc"}}],
         }
 
         try:
-            response = self.client.search(index=self.execution_index, body=search_body)
+            response = self.client.search(
+                index=self.execution_index, body=search_body
+            )
             return [hit["_source"] for hit in response["hits"]["hits"]]
         except Exception:
             return []
@@ -254,7 +272,9 @@ class SearchService:
         }
 
         try:
-            response = self.client.search(index=self.logs_index, body=search_body)
+            response = self.client.search(
+                index=self.logs_index, body=search_body
+            )
             return [hit["_source"] for hit in response["hits"]["hits"]]
         except Exception:
             return []
@@ -264,7 +284,9 @@ class SearchService:
         try:
             search_body = {
                 "size": 0,
-                "aggs": {"field_stats": {"terms": {"field": field, "size": 10}}},
+                "aggs": {
+                    "field_stats": {"terms": {"field": field, "size": 10}}
+                },
             }
 
             response = self.client.search(index=index, body=search_body)

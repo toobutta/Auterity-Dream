@@ -140,11 +140,15 @@ class IndustrySpecializationService:
         """Create a new industry specialization with dynamic format support."""
         try:
             # Parse and validate configuration
-            config = await self._parse_specialization_config(config_data, format_type)
+            config = await self._parse_specialization_config(
+                config_data, format_type
+            )
 
             # Validate specialization requirements
-            validation_result = await self._validate_specialization_requirements(
-                tenant_id, config
+            validation_result = (
+                await self._validate_specialization_requirements(
+                    tenant_id, config
+                )
             )
 
             if not validation_result["valid"]:
@@ -161,7 +165,9 @@ class IndustrySpecializationService:
             # Apply specialization if auto-apply is enabled
             applied_changes = []
             if config.configuration.get("auto_apply", False):
-                apply_result = await self.apply_specialization(tenant_id, config.id)
+                apply_result = await self.apply_specialization(
+                    tenant_id, config.id
+                )
                 applied_changes = apply_result.applied_changes
 
             return SpecializationResult(
@@ -236,20 +242,29 @@ class IndustrySpecializationService:
         # Check usage limits
         usage_limits = config.requirements.get("usage_limits", {})
         if "max_ai_requests" in usage_limits:
-            if tenant.max_ai_requests_per_month < usage_limits["max_ai_requests"]:
+            if (
+                tenant.max_ai_requests_per_month
+                < usage_limits["max_ai_requests"]
+            ):
                 warnings.append("AI request limit may be insufficient")
 
         # Check compliance requirements
         compliance_reqs = config.requirements.get("compliance", [])
         for compliance in compliance_reqs:
-            if not await self._check_compliance_compatibility(tenant_id, compliance):
+            if not await self._check_compliance_compatibility(
+                tenant_id, compliance
+            ):
                 errors.append(f"Compliance requirement not met: {compliance}")
 
         # Check integration requirements
         integrations = config.requirements.get("integrations", [])
         for integration in integrations:
-            if not await self._check_integration_availability(tenant_id, integration):
-                warnings.append(f"Integration may not be available: {integration}")
+            if not await self._check_integration_availability(
+                tenant_id, integration
+            ):
+                warnings.append(
+                    f"Integration may not be available: {integration}"
+                )
 
         return {
             "valid": len(errors) == 0,
@@ -300,7 +315,9 @@ class IndustrySpecializationService:
             applied_changes = []
 
             # Apply configuration changes
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 return SpecializationResult(
                     success=False,
@@ -310,16 +327,18 @@ class IndustrySpecializationService:
 
             # Apply industry settings
             if config.configuration.get("industry_settings"):
-                tenant.industry_settings = config.configuration["industry_settings"]
+                tenant.industry_settings = config.configuration[
+                    "industry_settings"
+                ]
                 applied_changes.append("Updated industry settings")
 
             # Apply AI model preferences
             if config.configuration.get("ai_model_preferences"):
                 if not tenant.industry_settings:
                     tenant.industry_settings = {}
-                tenant.industry_settings["ai_model_preferences"] = config.configuration[
+                tenant.industry_settings[
                     "ai_model_preferences"
-                ]
+                ] = config.configuration["ai_model_preferences"]
                 applied_changes.append("Updated AI model preferences")
 
             # Apply workflow templates
@@ -330,9 +349,9 @@ class IndustrySpecializationService:
             if config.configuration.get("compliance_settings"):
                 if not tenant.industry_settings:
                     tenant.industry_settings = {}
-                tenant.industry_settings["compliance_settings"] = config.configuration[
+                tenant.industry_settings[
                     "compliance_settings"
-                ]
+                ] = config.configuration["compliance_settings"]
                 applied_changes.append("Applied compliance settings")
 
             # Apply security settings
@@ -380,7 +399,8 @@ class IndustrySpecializationService:
                 "requirements": {
                     "features": ["advanced_compliance", "audit_logging"],
                     "compliance": [
-                        req.get("standard", "") for req in compliance_requirements
+                        req.get("standard", "")
+                        for req in compliance_requirements
                     ],
                 },
             }
@@ -390,7 +410,9 @@ class IndustrySpecializationService:
             )
 
         except Exception as e:
-            logger.error(f"Compliance specialization creation failed: {str(e)}")
+            logger.error(
+                f"Compliance specialization creation failed: {str(e)}"
+            )
             return SpecializationResult(
                 success=False,
                 specialization_id="compliance_specialization",
@@ -416,7 +438,9 @@ class IndustrySpecializationService:
                     "auto_apply": True,
                     "customizable": True,
                 },
-                "requirements": {"features": ["workflow_engine", "template_system"]},
+                "requirements": {
+                    "features": ["workflow_engine", "template_system"]
+                },
             }
 
             return await self.create_specialization(
@@ -450,7 +474,9 @@ class IndustrySpecializationService:
                     "auto_optimization": True,
                     "performance_monitoring": True,
                 },
-                "requirements": {"features": ["ai_optimization", "model_routing"]},
+                "requirements": {
+                    "features": ["ai_optimization", "model_routing"]
+                },
             }
 
             return await self.create_specialization(
@@ -465,7 +491,9 @@ class IndustrySpecializationService:
                 errors=[str(e)],
             )
 
-    async def get_tenant_specializations(self, tenant_id: UUID) -> List[Dict[str, Any]]:
+    async def get_tenant_specializations(
+        self, tenant_id: UUID
+    ) -> List[Dict[str, Any]]:
         """Get all specializations for a tenant."""
         specializations = []
 
@@ -509,8 +537,10 @@ class IndustrySpecializationService:
             config.updated_at = datetime.utcnow()
 
             # Re-validate and re-apply if needed
-            validation_result = await self._validate_specialization_requirements(
-                tenant_id, config
+            validation_result = (
+                await self._validate_specialization_requirements(
+                    tenant_id, config
+                )
             )
 
             applied_changes = []
@@ -593,11 +623,12 @@ class IndustrySpecializationService:
             }
 
             if analytics["total_requests"] > 0:
-                analytics["avg_cost_per_request"] = analytics["total_cost"] / Decimal(
-                    analytics["total_requests"]
-                )
+                analytics["avg_cost_per_request"] = analytics[
+                    "total_cost"
+                ] / Decimal(analytics["total_requests"])
                 analytics["effectiveness_score"] = (
-                    analytics["successful_requests"] / analytics["total_requests"]
+                    analytics["successful_requests"]
+                    / analytics["total_requests"]
                 )
 
             return analytics
@@ -658,7 +689,9 @@ class IndustrySpecializationService:
                 else:
                     import_data = json.loads(import_data)
 
-            return await self.create_specialization(tenant_id, import_data, format_type)
+            return await self.create_specialization(
+                tenant_id, import_data, format_type
+            )
 
         except Exception as e:
             logger.error(f"Specialization import failed: {str(e)}")

@@ -19,7 +19,9 @@ class InputStepExecutor(StepExecutor):
         self, node: WorkflowNode, input_data: Dict[str, Any]
     ) -> StepExecutionResult:
         field_name = node.data.get("field", "input")
-        return StepExecutionResult(success=True, output_data={field_name: input_data})
+        return StepExecutionResult(
+            success=True, output_data={field_name: input_data}
+        )
 
 
 class ProcessStepExecutor(StepExecutor):

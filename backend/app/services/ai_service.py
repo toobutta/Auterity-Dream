@@ -68,7 +68,9 @@ class PromptTemplate:
             # Check for required variables
             missing_vars = [var for var in self.variables if var not in kwargs]
             if missing_vars:
-                raise AIServiceError(f"Missing required variables: {missing_vars}")
+                raise AIServiceError(
+                    f"Missing required variables: {missing_vars}"
+                )
 
             return self.template.format(**kwargs)
         except KeyError as e:
@@ -175,7 +177,9 @@ class AIService:
 
         # Add context if provided
         if context:
-            context_str = f"Additional context: {json.dumps(context, indent=2)}"
+            context_str = (
+                f"Additional context: {json.dumps(context, indent=2)}"
+            )
             messages.append({"role": "system", "content": context_str})
 
         # Use LiteLLM service for API call
@@ -214,7 +218,9 @@ class AIService:
         template = self.DEFAULT_TEMPLATES[template_name]
         prompt = template.format(**variables)
 
-        return await self.process_text(prompt=prompt, context=context, model=model)
+        return await self.process_text(
+            prompt=prompt, context=context, model=model
+        )
 
     async def validate_response(
         self,

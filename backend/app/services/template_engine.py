@@ -16,7 +16,9 @@ class TemplateEngine:
     def __init__(self, db: Session):
         self.db = db
 
-    async def get_templates(self, category: Optional[str] = None) -> List[Template]:
+    async def get_templates(
+        self, category: Optional[str] = None
+    ) -> List[Template]:
         """Get all active templates, optionally filtered by category."""
         query = self.db.query(Template).filter(Template.is_active is True)
 
@@ -82,7 +84,9 @@ class TemplateEngine:
             param_value = parameter_values.get(param_name)
 
             # Check required parameters
-            if param.is_required and (param_value is None or param_value == ""):
+            if param.is_required and (
+                param_value is None or param_value == ""
+            ):
                 errors.append(f"Required parameter '{param_name}' is missing")
                 continue
 
@@ -101,12 +105,16 @@ class TemplateEngine:
                 errors.append(type_error)
 
             # Validate against custom validation rules
-            validation_error = self._validate_parameter_rules(param, param_value)
+            validation_error = self._validate_parameter_rules(
+                param, param_value
+            )
             if validation_error:
                 errors.append(validation_error)
 
         if errors:
-            raise ValueError(f"Parameter validation failed: {'; '.join(errors)}")
+            raise ValueError(
+                f"Parameter validation failed: {'; '.join(errors)}"
+            )
 
     def _validate_parameter_type(
         self, param: TemplateParameter, value: Any
@@ -145,7 +153,9 @@ class TemplateEngine:
             if "max_length" in rules and len(value) > rules["max_length"]:
                 return f"Parameter '{param_name}' must be at most {rules['max_length']} characters long"
             if "pattern" in rules and not re.match(rules["pattern"], value):
-                return f"Parameter '{param_name}' does not match required pattern"
+                return (
+                    f"Parameter '{param_name}' does not match required pattern"
+                )
 
         # Number validation rules
         if isinstance(value, (int, float)):
@@ -187,10 +197,14 @@ class TemplateEngine:
             placeholder = f"{{{{{param_name}}}}}"
             # Convert parameter value to JSON string for substitution
             if isinstance(param_value, str):
-                param_value_str = param_value  # Don't add extra quotes for strings
+                param_value_str = (
+                    param_value  # Don't add extra quotes for strings
+                )
             else:
                 param_value_str = json.dumps(param_value)
-            definition_str = definition_str.replace(placeholder, param_value_str)
+            definition_str = definition_str.replace(
+                placeholder, param_value_str
+            )
 
         # Parse back to dictionary
         try:

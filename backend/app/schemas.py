@@ -88,7 +88,10 @@ class UserResponse(BaseModel):
             name=user.name,
             is_active=user.is_active,
             created_at=user.created_at,
-            roles=[RoleResponse.model_validate(role.__dict__) for role in user.roles],
+            roles=[
+                RoleResponse.model_validate(role.__dict__)
+                for role in user.roles
+            ],
             permissions=user.get_permissions(),
         )
 
@@ -175,7 +178,9 @@ class WorkflowCreate(BaseModel):
         required_fields = ["nodes", "edges"]
         for field in required_fields:
             if field not in v:
-                raise ValueError(f'Workflow definition must contain "{field}" field')
+                raise ValueError(
+                    f'Workflow definition must contain "{field}" field'
+                )
 
         # Validate nodes structure
         if not isinstance(v["nodes"], list):
@@ -228,7 +233,9 @@ class WorkflowUpdate(BaseModel):
     def validate_definition(cls, v):
         if v is not None:
             if not isinstance(v, dict):
-                raise ValueError("Workflow definition must be a valid JSON object")
+                raise ValueError(
+                    "Workflow definition must be a valid JSON object"
+                )
 
             # Basic workflow structure validation
             required_fields = ["nodes", "edges"]
@@ -420,7 +427,9 @@ class TemplateCreate(BaseModel):
         required_fields = ["nodes", "edges"]
         for field in required_fields:
             if field not in v:
-                raise ValueError(f'Template definition must contain "{field}" field')
+                raise ValueError(
+                    f'Template definition must contain "{field}" field'
+                )
 
         # Validate nodes structure
         if not isinstance(v["nodes"], list):
@@ -609,7 +618,9 @@ class SSOConfigurationCreate(BaseModel):
     def validate_provider(cls, v):
         allowed_providers = ["saml", "oidc", "oauth2"]
         if v not in allowed_providers:
-            raise ValueError(f"Provider must be one of: {', '.join(allowed_providers)}")
+            raise ValueError(
+                f"Provider must be one of: {', '.join(allowed_providers)}"
+            )
         return v
 
 

@@ -187,7 +187,10 @@ async def list_categories(
 ):
     """Get list of available template categories."""
     categories = (
-        db.query(Template.category).filter(Template.is_active is True).distinct().all()
+        db.query(Template.category)
+        .filter(Template.is_active is True)
+        .distinct()
+        .all()
     )
 
     return {"categories": [cat[0] for cat in categories]}

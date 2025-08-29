@@ -52,7 +52,9 @@ workflow_executions_total = Counter(
 active_users = Gauge("active_users", "Current active users")
 
 
-async def prometheus_middleware(request: Request, call_next: Callable) -> Response:
+async def prometheus_middleware(
+    request: Request, call_next: Callable
+) -> Response:
     """Prometheus metrics middleware."""
     if request.url.path == "/metrics":
         return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
@@ -72,9 +74,9 @@ async def prometheus_middleware(request: Request, call_next: Callable) -> Respon
         http_requests_total.labels(
             method=method, endpoint=endpoint, status=status
         ).inc()
-        http_request_duration_seconds.labels(method=method, endpoint=endpoint).observe(
-            duration
-        )
+        http_request_duration_seconds.labels(
+            method=method, endpoint=endpoint
+        ).observe(duration)
 
         return response
 
@@ -87,10 +89,14 @@ def record_ai_request(
 ):
     """Record AI request metrics."""
     status = "success" if success else "failed"
-    ai_requests_total.labels(provider=provider, model=model, status=status).inc()
+    ai_requests_total.labels(
+        provider=provider, model=model, status=status
+    ).inc()
     if success:
         ai_request_cost_total.labels(provider=provider, model=model).inc(cost)
-        ai_response_tokens.labels(provider=provider, model=model).observe(tokens)
+        ai_response_tokens.labels(provider=provider, model=model).observe(
+            tokens
+        )
 
 
 def record_workflow_execution(status: str):

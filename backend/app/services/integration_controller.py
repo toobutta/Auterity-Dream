@@ -110,7 +110,9 @@ class ArtifactRepository:
         self.base_path = Path(base_path)
         self.base_path.mkdir(exist_ok=True)
         self.artifacts: Dict[str, Artifact] = {}
-        self.versions: Dict[str, List[str]] = {}  # artifact_name -> [version_ids]
+        self.versions: Dict[
+            str, List[str]
+        ] = {}  # artifact_name -> [version_ids]
 
     async def store_artifact(self, artifact: Artifact) -> str:
         """Store artifact and return storage ID"""
@@ -141,7 +143,9 @@ class ArtifactRepository:
         """Retrieve artifact by ID"""
         return self.artifacts.get(artifact_id)
 
-    async def get_latest_version(self, artifact_name: str) -> Optional[Artifact]:
+    async def get_latest_version(
+        self, artifact_name: str
+    ) -> Optional[Artifact]:
         """Get latest version of an artifact"""
         versions = self.versions.get(artifact_name, [])
         if not versions:
@@ -151,11 +155,15 @@ class ArtifactRepository:
         latest_id = versions[-1]
         return self.artifacts.get(latest_id)
 
-    async def find_conflicts(self, artifact_ids: List[str]) -> List[ConflictResolution]:
+    async def find_conflicts(
+        self, artifact_ids: List[str]
+    ) -> List[ConflictResolution]:
         """Detect conflicts between artifacts"""
         conflicts = []
         artifacts = [
-            self.artifacts[aid] for aid in artifact_ids if aid in self.artifacts
+            self.artifacts[aid]
+            for aid in artifact_ids
+            if aid in self.artifacts
         ]
 
         # Check for dependency conflicts
@@ -220,7 +228,9 @@ class ContextManager:
         self.shared_resources: Dict[str, Any] = {}
         self.communication_history: List[Dict[str, Any]] = []
 
-    async def update_project_state(self, key: str, value: Any, updated_by: str):
+    async def update_project_state(
+        self, key: str, value: Any, updated_by: str
+    ):
         """Update global project state"""
         self.project_state[key] = {
             "value": value,
@@ -244,13 +254,17 @@ class ContextManager:
         state = self.project_state.get(key)
         return state["value"] if state else None
 
-    async def update_stream_context(self, stream: str, context: Dict[str, Any]):
+    async def update_stream_context(
+        self, stream: str, context: Dict[str, Any]
+    ):
         """Update context for a specific development stream"""
         if stream not in self.stream_contexts:
             self.stream_contexts[stream] = {}
 
         self.stream_contexts[stream].update(context)
-        self.stream_contexts[stream]["last_updated"] = datetime.now().isoformat()
+        self.stream_contexts[stream][
+            "last_updated"
+        ] = datetime.now().isoformat()
 
     async def get_stream_context(self, stream: str) -> Dict[str, Any]:
         """Get context for a specific development stream"""
@@ -329,7 +343,9 @@ class HealthMonitor:
             "timestamp": datetime.now().isoformat(),
         }
 
-    async def record_metric(self, name: str, value: float, tags: Dict[str, str] = None):
+    async def record_metric(
+        self, name: str, value: float, tags: Dict[str, str] = None
+    ):
         """Record a metric value"""
         if name not in self.metrics:
             self.metrics[name] = []
@@ -364,7 +380,9 @@ class IntegrationController:
     async def _setup_health_checks(self):
         """Setup default health checks"""
         await self.health_monitor.register_health_check(
-            "artifact_repository", self._check_artifact_repo_health, interval=300
+            "artifact_repository",
+            self._check_artifact_repo_health,
+            interval=300,
         )
 
         await self.health_monitor.register_health_check(
@@ -399,7 +417,9 @@ class IntegrationController:
         except Exception as e:
             return {"healthy": False, "error": str(e)}
 
-    async def submit_integration_request(self, request: IntegrationRequest) -> str:
+    async def submit_integration_request(
+        self, request: IntegrationRequest
+    ) -> str:
         """Submit a new integration request"""
         self.integration_requests[request.id] = request
 
@@ -429,7 +449,9 @@ class IntegrationController:
         try:
             # Step 1: Validate artifacts
             logger.info(f"Validating artifacts for integration {request_id}")
-            validation_result = await self._validate_artifacts(request.source_artifacts)
+            validation_result = await self._validate_artifacts(
+                request.source_artifacts
+            )
 
             if not validation_result["valid"]:
                 logger.error(
@@ -451,7 +473,9 @@ class IntegrationController:
                     self.conflicts[conflict.id] = conflict
 
                 # Auto-resolve if possible
-                resolved_conflicts = await self._auto_resolve_conflicts(conflicts)
+                resolved_conflicts = await self._auto_resolve_conflicts(
+                    conflicts
+                )
                 unresolved_conflicts = [
                     c for c in conflicts if c.id not in resolved_conflicts
                 ]
@@ -488,13 +512,17 @@ class IntegrationController:
 
             # Step 5: Deploy to stages
             for stage in request.deployment_stages:
-                logger.info(f"Deploying integration {request_id} to {stage.value}")
+                logger.info(
+                    f"Deploying integration {request_id} to {stage.value}"
+                )
                 deployment_result = await self._deploy_to_stage(
                     request_id, stage, merge_result["merged_artifacts"]
                 )
 
                 if not deployment_result["success"]:
-                    logger.error(f"Deployment to {stage.value} failed for {request_id}")
+                    logger.error(
+                        f"Deployment to {stage.value} failed for {request_id}"
+                    )
                     # Rollback previous deployments
                     await self._rollback_deployments(request_id)
                     return
@@ -505,7 +533,9 @@ class IntegrationController:
             logger.error(f"Integration {request_id} failed: {e}")
             await self._rollback_deployments(request_id)
 
-    async def _validate_artifacts(self, artifact_ids: List[str]) -> Dict[str, Any]:
+    async def _validate_artifacts(
+        self, artifact_ids: List[str]
+    ) -> Dict[str, Any]:
         """Validate artifacts before integration"""
         errors = []
         warnings = []
@@ -529,7 +559,11 @@ class IntegrationController:
                 # In a real implementation, would verify file hash
                 pass
 
-        return {"valid": len(errors) == 0, "errors": errors, "warnings": warnings}
+        return {
+            "valid": len(errors) == 0,
+            "errors": errors,
+            "warnings": warnings,
+        }
 
     async def _auto_resolve_conflicts(
         self, conflicts: List[ConflictResolution]
@@ -552,7 +586,9 @@ class IntegrationController:
                 conflict.resolved_by = "auto_resolver"
                 conflict.resolved_at = datetime.now()
                 resolved.append(conflict.id)
-                logger.info(f"Auto-resolved API compatibility conflict {conflict.id}")
+                logger.info(
+                    f"Auto-resolved API compatibility conflict {conflict.id}"
+                )
 
         return resolved
 
@@ -592,7 +628,10 @@ class IntegrationController:
         }
 
     async def _deploy_to_stage(
-        self, integration_id: str, stage: DeploymentStage, artifact_ids: List[str]
+        self,
+        integration_id: str,
+        stage: DeploymentStage,
+        artifact_ids: List[str],
     ) -> Dict[str, Any]:
         """Deploy artifacts to a specific stage"""
         try:
@@ -635,9 +674,13 @@ class IntegrationController:
                 deployment.status = "rolled_back"
                 logger.info(f"Rolled back deployment {deployment.id}")
             except Exception as e:
-                logger.error(f"Failed to rollback deployment {deployment.id}: {e}")
+                logger.error(
+                    f"Failed to rollback deployment {deployment.id}: {e}"
+                )
 
-    async def get_integration_status(self, request_id: str) -> Optional[Dict[str, Any]]:
+    async def get_integration_status(
+        self, request_id: str
+    ) -> Optional[Dict[str, Any]]:
         """Get status of an integration request"""
         request = self.integration_requests.get(request_id)
         if not request:
@@ -645,12 +688,16 @@ class IntegrationController:
 
         # Get related deployments
         deployments = [
-            d for d in self.deployments.values() if d.integration_id == request_id
+            d
+            for d in self.deployments.values()
+            if d.integration_id == request_id
         ]
 
         # Get related conflicts
         conflicts = [
-            c for c in self.conflicts.values() if request_id in c.affected_artifacts
+            c
+            for c in self.conflicts.values()
+            if request_id in c.affected_artifacts
         ]
 
         return {
@@ -688,7 +735,11 @@ class IntegrationController:
             "integration_controller": health_result,
             "active_integrations": len(self.integration_requests),
             "active_deployments": len(
-                [d for d in self.deployments.values() if d.status == "deployed"]
+                [
+                    d
+                    for d in self.deployments.values()
+                    if d.status == "deployed"
+                ]
             ),
             "unresolved_conflicts": len(
                 [c for c in self.conflicts.values() if c.resolved_at is None]

@@ -20,7 +20,9 @@ class StorageService:
             settings, "MINIO_ENDPOINT", "localhost:9000"
         )
         self.access_key = getattr(settings, "MINIO_ACCESS_KEY", "minioadmin")
-        self.secret_key = getattr(settings, "MINIO_SECRET_KEY", "minioadmin123")
+        self.secret_key = getattr(
+            settings, "MINIO_SECRET_KEY", "minioadmin123"
+        )
 
         self.client = Minio(
             self.endpoint,
@@ -62,7 +64,9 @@ class StorageService:
 
         return f"{bucket_name}/{object_name}"
 
-    def upload_text(self, bucket_name: str, object_name: str, text: str) -> str:
+    def upload_text(
+        self, bucket_name: str, object_name: str, text: str
+    ) -> str:
         """Upload text content."""
         data = io.BytesIO(text.encode("utf-8"))
         return self.upload_file(bucket_name, object_name, data, "text/plain")
@@ -79,7 +83,9 @@ class StorageService:
         expires: timedelta = timedelta(hours=1),
     ) -> str:
         """Get presigned URL for file access."""
-        return self.client.presigned_get_object(bucket_name, object_name, expires)
+        return self.client.presigned_get_object(
+            bucket_name, object_name, expires
+        )
 
     def delete_file(self, bucket_name: str, object_name: str) -> bool:
         """Delete file from storage."""

@@ -202,7 +202,9 @@ class AgentCacheManager:
 cache_manager = AgentCacheManager()
 
 
-def cached_response(cache_key_prefix: str, ttl: int = None, vary_by: list = None):
+def cached_response(
+    cache_key_prefix: str, ttl: int = None, vary_by: list = None
+):
     """
     Decorator for caching API responses
 
@@ -231,7 +233,9 @@ def cached_response(cache_key_prefix: str, ttl: int = None, vary_by: list = None
             if vary_by:
                 for vary_param in vary_by:
                     if user_info and vary_param in user_info:
-                        cache_key_parts.append(f"{vary_param}:{user_info[vary_param]}")
+                        cache_key_parts.append(
+                            f"{vary_param}:{user_info[vary_param]}"
+                        )
                     elif request and hasattr(request, vary_param):
                         cache_key_parts.append(
                             f"{vary_param}:{getattr(request, vary_param)}"
@@ -287,7 +291,9 @@ def invalidate_cache_on_mutation(cache_patterns: list):
             # Invalidate related cache entries
             for pattern in cache_patterns:
                 cleared = await cache_manager.clear_pattern(pattern)
-                logger.debug(f"Cleared {cleared} cache entries for pattern: {pattern}")
+                logger.debug(
+                    f"Cleared {cleared} cache entries for pattern: {pattern}"
+                )
 
             return result
 
@@ -316,7 +322,9 @@ class CacheMiddleware:
                 f"{request.url.path}:{int(time.time() // max_age)}".encode()
             ).hexdigest()[:16]
         else:
-            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers[
+                "Cache-Control"
+            ] = "no-cache, no-store, must-revalidate"
 
         return response
 

@@ -196,7 +196,9 @@ class TenantService:
             elif provider == "oidc":
                 existing_config.oidc_issuer = config.get("issuer")
                 existing_config.oidc_client_id = config.get("client_id")
-                existing_config.oidc_client_secret = config.get("client_secret")
+                existing_config.oidc_client_secret = config.get(
+                    "client_secret"
+                )
                 existing_config.oidc_redirect_uri = config.get("redirect_uri")
 
             existing_config.auto_provision_users = config.get(
@@ -283,7 +285,9 @@ class TenantService:
 
         return query.first()
 
-    def disable_sso(self, tenant_id: UUID, admin_user: User, provider: str) -> bool:
+    def disable_sso(
+        self, tenant_id: UUID, admin_user: User, provider: str
+    ) -> bool:
         """Disable SSO for a tenant."""
         sso_config = (
             self.db.query(SSOConfiguration)
@@ -350,7 +354,9 @@ class TenantService:
             )
 
         # Count users
-        total_users = self.db.query(User).filter(User.tenant_id == tenant_id).count()
+        total_users = (
+            self.db.query(User).filter(User.tenant_id == tenant_id).count()
+        )
         active_users = (
             self.db.query(User)
             .filter(User.tenant_id == tenant_id, User.is_active)

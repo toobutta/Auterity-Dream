@@ -6,7 +6,15 @@ from typing import Dict, List, Optional
 from uuid import UUID
 
 import stripe
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    HTTPException,
+    UploadFile,
+    status,
+)
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_tenant, get_current_user, get_db
@@ -132,7 +140,9 @@ async def cancel_subscription(
             )
 
         # Cancel subscription
-        tenant = await billing_service.cancel_subscription(tenant_id=current_tenant.id)
+        tenant = await billing_service.cancel_subscription(
+            tenant_id=current_tenant.id
+        )
 
         return {
             "message": "Subscription cancelled successfully",
@@ -288,9 +298,13 @@ async def get_usage_summary(
         parsed_end = None
 
         if start_date:
-            parsed_start = datetime.fromisoformat(start_date.replace("Z", "+00:00"))
+            parsed_start = datetime.fromisoformat(
+                start_date.replace("Z", "+00:00")
+            )
         if end_date:
-            parsed_end = datetime.fromisoformat(end_date.replace("Z", "+00:00"))
+            parsed_end = datetime.fromisoformat(
+                end_date.replace("Z", "+00:00")
+            )
 
         usage_summary = await billing_service.get_usage_summary(
             tenant_id=current_tenant.id,
@@ -385,7 +399,9 @@ async def get_branding_config(
     try:
         branding_service = BrandingService(db)
 
-        theme = await branding_service.get_tenant_theme(tenant_id=current_tenant.id)
+        theme = await branding_service.get_tenant_theme(
+            tenant_id=current_tenant.id
+        )
 
         return theme
 
@@ -511,8 +527,10 @@ async def get_branding_compliance(
     try:
         branding_service = BrandingService(db)
 
-        compliance_report = await branding_service.validate_branding_compliance(
-            tenant_id=current_tenant.id
+        compliance_report = (
+            await branding_service.validate_branding_compliance(
+                tenant_id=current_tenant.id
+            )
         )
 
         return compliance_report

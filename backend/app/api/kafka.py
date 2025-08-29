@@ -9,7 +9,11 @@ from pydantic import BaseModel
 
 from app.auth import get_current_active_user
 from app.models import User
-from app.services.kafka_service import KafkaEventModel, TopicConfig, kafka_service
+from app.services.kafka_service import (
+    KafkaEventModel,
+    TopicConfig,
+    kafka_service,
+)
 
 router = APIRouter(prefix="/kafka", tags=["kafka"])
 
@@ -169,7 +173,9 @@ async def publish_workflow_event(
 ) -> Dict[str, str]:
     """Publish a workflow-specific event (legacy endpoint)."""
     try:
-        await kafka_service.publish_workflow_event(workflow_id, event_type, data)
+        await kafka_service.publish_workflow_event(
+            workflow_id, event_type, data
+        )
         return {"message": "Workflow event published successfully"}
     except Exception as e:
         raise HTTPException(

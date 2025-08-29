@@ -18,7 +18,9 @@ class SaaSConfig(BaseSettings):
     }
 
     # Stripe Configuration
-    STRIPE_SECRET_KEY: str = Field(default="", validation_alias="STRIPE_SECRET_KEY")
+    STRIPE_SECRET_KEY: str = Field(
+        default="", validation_alias="STRIPE_SECRET_KEY"
+    )
     STRIPE_PUBLISHABLE_KEY: str = Field(
         default="", validation_alias="STRIPE_PUBLISHABLE_KEY"
     )
@@ -66,7 +68,8 @@ class SaaSConfig(BaseSettings):
                     "users": 3,
                 },
                 "description": (
-                    "Perfect for small teams getting started " "with automation"
+                    "Perfect for small teams getting started "
+                    "with automation"
                 ),
                 "stripe_price_id": self.STRIPE_PRICE_ID_STARTER,
             },
@@ -90,7 +93,8 @@ class SaaSConfig(BaseSettings):
                     "users": 10,
                 },
                 "description": (
-                    "For growing teams that need advanced " "automation capabilities"
+                    "For growing teams that need advanced "
+                    "automation capabilities"
                 ),
                 "stripe_price_id": self.STRIPE_PRICE_ID_PROFESSIONAL,
             },
@@ -179,7 +183,9 @@ class SaaSConfig(BaseSettings):
         True, validation_alias="USAGE_TRACKING_ENABLED"
     )
     USAGE_RESET_DAY: int = Field(1, validation_alias="USAGE_RESET_DAY")
-    USAGE_ALERT_THRESHOLD: float = Field(0.8, validation_alias="USAGE_ALERT_THRESHOLD")
+    USAGE_ALERT_THRESHOLD: float = Field(
+        0.8, validation_alias="USAGE_ALERT_THRESHOLD"
+    )
 
     # Pricing Configuration
     STORAGE_PRICING: Decimal = Field(
@@ -187,8 +193,12 @@ class SaaSConfig(BaseSettings):
     )
 
     # White Label Configuration
-    WHITE_LABEL_ENABLED: bool = Field(True, validation_alias="WHITE_LABEL_ENABLED")
-    CUSTOM_DOMAIN_ENABLED: bool = Field(True, validation_alias="CUSTOM_DOMAIN_ENABLED")
+    WHITE_LABEL_ENABLED: bool = Field(
+        True, validation_alias="WHITE_LABEL_ENABLED"
+    )
+    CUSTOM_DOMAIN_ENABLED: bool = Field(
+        True, validation_alias="CUSTOM_DOMAIN_ENABLED"
+    )
     BRANDING_CUSTOMIZATION_ENABLED: bool = Field(
         True, validation_alias="BRANDING_CUSTOMIZATION_ENABLED"
     )
@@ -211,7 +221,9 @@ class SaaSConfig(BaseSettings):
     API_RATE_LIMITING_ENABLED: bool = Field(
         True, validation_alias="API_RATE_LIMITING_ENABLED"
     )
-    DEFAULT_RATE_LIMIT: int = Field(1000, validation_alias="DEFAULT_RATE_LIMIT")
+    DEFAULT_RATE_LIMIT: int = Field(
+        1000, validation_alias="DEFAULT_RATE_LIMIT"
+    )
     MAX_RATE_LIMIT: int = Field(10000, validation_alias="MAX_RATE_LIMIT")
 
     # Monitoring Configuration
@@ -260,8 +272,12 @@ class SaaSConfig(BaseSettings):
 
     # Development Configuration
     TEST_MODE: bool = Field(False, validation_alias="TEST_MODE")
-    MOCK_BILLING_ENABLED: bool = Field(False, validation_alias="MOCK_BILLING_ENABLED")
-    MOCK_PAYMENTS_ENABLED: bool = Field(False, validation_alias="MOCK_PAYMENTS_ENABLED")
+    MOCK_BILLING_ENABLED: bool = Field(
+        False, validation_alias="MOCK_BILLING_ENABLED"
+    )
+    MOCK_PAYMENTS_ENABLED: bool = Field(
+        False, validation_alias="MOCK_PAYMENTS_ENABLED"
+    )
 
     @property
     def stripe_price_ids(self) -> Dict[str, str]:
@@ -271,7 +287,9 @@ class SaaSConfig(BaseSettings):
             "professional": self.STRIPE_PRICE_ID_PROFESSIONAL,
             "enterprise": self.STRIPE_PRICE_ID_ENTERPRISE,
             "white_label_starter": self.STRIPE_PRICE_ID_WHITE_LABEL_STARTER,
-            "white_label_enterprise": (self.STRIPE_PRICE_ID_WHITE_LABEL_ENTERPRISE),
+            "white_label_enterprise": (
+                self.STRIPE_PRICE_ID_WHITE_LABEL_ENTERPRISE
+            ),
         }
 
     @property

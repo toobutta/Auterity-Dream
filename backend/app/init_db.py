@@ -5,7 +5,11 @@ import logging
 from passlib.context import CryptContext
 
 # Password hashing
-from app.database import check_database_connection, create_tables, get_db_session
+from app.database import (
+    check_database_connection,
+    create_tables,
+    get_db_session,
+)
 from app.models.template import Template, TemplateParameter
 from app.models.user import User
 
@@ -46,7 +50,9 @@ def create_seed_users():
                 db.query(User).filter(User.email == user_data["email"]).first()
             )
             if existing_user:
-                logger.info(f"User {user_data['email']} already exists, skipping")
+                logger.info(
+                    f"User {user_data['email']} already exists, skipping"
+                )
                 continue
 
             user = User(

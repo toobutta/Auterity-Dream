@@ -33,25 +33,31 @@ class BrandingService:
     async def get_tenant_theme(self, tenant_id: UUID) -> Dict:
         """Get complete theme configuration for a tenant."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
             theme = {
-                "primary_color": tenant.primary_color or self.default_colors["primary"],
+                "primary_color": tenant.primary_color
+                or self.default_colors["primary"],
                 "secondary_color": tenant.secondary_color
                 or self.default_colors["secondary"],
                 "logo_url": tenant.logo_url or "/static/default-logo.png",
                 "company_name": tenant.company_name or tenant.name,
                 "custom_css": tenant.custom_css or "",
-                "remove_auterity_branding": tenant.remove_auterity_branding or False,
+                "remove_auterity_branding": tenant.remove_auterity_branding
+                or False,
                 "custom_domain": tenant.custom_domain,
                 "industry_profile": tenant.industry_profile,
             }
 
             # Add industry-specific theme overrides
             if tenant.industry_profile:
-                industry_theme = self._get_industry_theme(tenant.industry_profile)
+                industry_theme = self._get_industry_theme(
+                    tenant.industry_profile
+                )
                 theme.update(industry_theme)
 
             return theme
@@ -65,7 +71,9 @@ class BrandingService:
     ) -> Tenant:
         """Update tenant branding configuration."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -81,7 +89,9 @@ class BrandingService:
                 )
 
             if "logo_url" in branding_data:
-                tenant.logo_url = self._validate_logo_url(branding_data["logo_url"])
+                tenant.logo_url = self._validate_logo_url(
+                    branding_data["logo_url"]
+                )
 
             if "company_name" in branding_data:
                 tenant.company_name = branding_data["company_name"]
@@ -135,7 +145,9 @@ class BrandingService:
 
             # Add industry-specific CSS
             if theme.get("industry_profile"):
-                industry_css = self._get_industry_css(theme["industry_profile"])
+                industry_css = self._get_industry_css(
+                    theme["industry_profile"]
+                )
                 css_variables += f"\n{industry_css}"
 
             return css_variables
@@ -155,13 +167,17 @@ class BrandingService:
 
             # Generate unique filename
             file_extension = Path(filename).suffix
-            unique_filename = f"tenant_{tenant_id}_{int(time.time())}{file_extension}"
+            unique_filename = (
+                f"tenant_{tenant_id}_{int(time.time())}{file_extension}"
+            )
 
             # Store file (implement your file storage logic here)
             logo_url = await self._store_logo_file(logo_file, unique_filename)
 
             # Update tenant logo URL
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if tenant:
                 tenant.logo_url = logo_url
                 tenant.updated_at = datetime.utcnow()
@@ -212,8 +228,12 @@ class BrandingService:
             compliance_checks = {
                 "logo": self._validate_logo_compliance(theme.get("logo_url")),
                 "colors": self._validate_color_compliance(theme),
-                "css": self._validate_css_compliance(theme.get("custom_css", "")),
-                "domain": self._validate_domain_compliance(theme.get("custom_domain")),
+                "css": self._validate_css_compliance(
+                    theme.get("custom_css", "")
+                ),
+                "domain": self._validate_domain_compliance(
+                    theme.get("custom_domain")
+                ),
                 "overall_score": 0,
             }
 
@@ -291,7 +311,9 @@ class BrandingService:
 
         for pattern in dangerous_patterns:
             if re.search(pattern, css, re.IGNORECASE):
-                logger.warning(f"Potentially dangerous CSS pattern detected: {pattern}")
+                logger.warning(
+                    f"Potentially dangerous CSS pattern detected: {pattern}"
+                )
                 css = re.sub(pattern, "", css, flags=re.IGNORECASE)
 
         return css
@@ -431,7 +453,9 @@ class BrandingService:
 
         return True
 
-    async def _store_logo_file(self, file_content: bytes, filename: str) -> str:
+    async def _store_logo_file(
+        self, file_content: bytes, filename: str
+    ) -> str:
         """Store logo file and return URL."""
         # Implement your file storage logic here
         # This could be AWS S3, local storage, etc.

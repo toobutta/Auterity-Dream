@@ -29,7 +29,9 @@ try:
     LLAMA_INDEX_AVAILABLE = True
 except ImportError:
     LLAMA_INDEX_AVAILABLE = False
-    logging.warning("LlamaIndex not available - using fallback implementations")
+    logging.warning(
+        "LlamaIndex not available - using fallback implementations"
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +74,9 @@ class RAGEngine:
                 self.document_store = PineconeDocumentStore(
                     api_key=self.config.get("pinecone_api_key"),
                     environment=self.config.get("pinecone_environment"),
-                    index_name=self.config.get("pinecone_index", "auterity-docs"),
+                    index_name=self.config.get(
+                        "pinecone_index", "auterity-docs"
+                    ),
                 )
             else:
                 self.document_store = InMemoryDocumentStore()
@@ -135,7 +139,9 @@ class RAGEngine:
 
         try:
             # Configure service context
-            embed_model = OpenAIEmbedding(api_key=self.config.get("openai_api_key"))
+            embed_model = OpenAIEmbedding(
+                api_key=self.config.get("openai_api_key")
+            )
 
             service_context = ServiceContext.from_defaults(
                 embed_model=embed_model, chunk_size=512, chunk_overlap=50
@@ -146,7 +152,9 @@ class RAGEngine:
                 vector_store = PineconeVectorStore(
                     api_key=self.config.get("pinecone_api_key"),
                     environment=self.config.get("pinecone_environment"),
-                    index_name=self.config.get("pinecone_index", "auterity-llama"),
+                    index_name=self.config.get(
+                        "pinecone_index", "auterity-llama"
+                    ),
                 )
                 storage_context = StorageContext.from_defaults(
                     vector_store=vector_store
@@ -222,7 +230,9 @@ class RAGEngine:
             for doc in processed_docs:
                 self.domain_indices[domain].insert(doc.content)
 
-            logger.info(f"Indexed {len(processed_docs)} documents for domain: {domain}")
+            logger.info(
+                f"Indexed {len(processed_docs)} documents for domain: {domain}"
+            )
 
             return {
                 "status": "success",
@@ -272,7 +282,9 @@ class RAGEngine:
                     "status": "success",
                     "query": query,
                     "answer": (
-                        result["answers"][0].answer if result["answers"] else None
+                        result["answers"][0].answer
+                        if result["answers"]
+                        else None
                     ),
                     "confidence": (
                         result["answers"][0].score if result["answers"] else 0
@@ -372,7 +384,9 @@ class RAGEngine:
 
         try:
             # Update in Haystack document store
-            doc = Document(content=updated_content, meta=metadata, id=document_id)
+            doc = Document(
+                content=updated_content, meta=metadata, id=document_id
+            )
 
             self.document_store.write_documents([doc], index="document")
 

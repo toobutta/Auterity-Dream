@@ -75,7 +75,9 @@ class SecurityFilter:
                 ):
                     masked[key] = "[MASKED]"
                 else:
-                    masked[key] = SecurityFilter.mask_sensitive_data(value, depth + 1)
+                    masked[key] = SecurityFilter.mask_sensitive_data(
+                        value, depth + 1
+                    )
             return masked
 
         elif isinstance(data, list):
@@ -142,7 +144,9 @@ class RequestResponseLogger:
                 "url": str(request.url),
                 "path": request.url.path,
                 "query_params": dict(request.query_params),
-                "headers": SecurityFilter.filter_headers(dict(request.headers)),
+                "headers": SecurityFilter.filter_headers(
+                    dict(request.headers)
+                ),
                 "client_ip": getattr(request.client, "host", None)
                 if request.client
                 else None,
@@ -215,13 +219,16 @@ class RequestResponseLogger:
             "response": {
                 "status_code": response.status_code,
                 "headers": dict(response.headers),
-                "body": SecurityFilter.mask_sensitive_data(logged_response_body)
+                "body": SecurityFilter.mask_sensitive_data(
+                    logged_response_body
+                )
                 if logged_response_body
                 else None,
             },
             "performance": {
                 "duration_seconds": round(duration, 3),
-                "is_slow": duration > RequestLoggingConfig.SLOW_REQUEST_THRESHOLD,
+                "is_slow": duration
+                > RequestLoggingConfig.SLOW_REQUEST_THRESHOLD,
             },
             "user_context": {
                 "user_id": request_info.get("user_id"),
@@ -243,7 +250,9 @@ class RequestResponseLogger:
             log_level = RequestLoggingConfig.SUCCESS_LOG_LEVEL
             event_message = "Request completed successfully"
 
-        logger.log(log_level, event_message, extra={"structured_data": log_data})
+        logger.log(
+            log_level, event_message, extra={"structured_data": log_data}
+        )
 
     def get_active_request_count(self) -> int:
         """Get count of currently active requests"""
@@ -295,12 +304,16 @@ class RequestLoggingMiddleware:
                 # For regular responses, try to get the body
                 try:
                     if hasattr(response, "body"):
-                        response_body = response.body.decode("utf-8", errors="replace")
+                        response_body = response.body.decode(
+                            "utf-8", errors="replace"
+                        )
                 except Exception:
                     pass
 
             # Log response
-            await self.logger.log_response(correlation_id, response, response_body)
+            await self.logger.log_response(
+                correlation_id, response, response_body
+            )
 
             # Add correlation ID to response headers
             response.headers["X-Correlation-ID"] = correlation_id

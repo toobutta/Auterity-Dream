@@ -155,12 +155,16 @@ class AdvancedAnalyticsService:
     ) -> BusinessIntelligenceReport:
         """Generate comprehensive business intelligence report."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
             # Gather all analytics data
-            key_metrics = await self._calculate_key_metrics(tenant_id, time_period_days)
+            key_metrics = await self._calculate_key_metrics(
+                tenant_id, time_period_days
+            )
             trends = await self._analyze_trends(tenant_id, time_period_days)
             predictions = []
             roi_analysis = None
@@ -178,7 +182,9 @@ class AdvancedAnalyticsService:
             recommendations = await self._generate_recommendations(
                 tenant_id, key_metrics, trends, predictions
             )
-            alerts = await self._generate_alerts(tenant_id, key_metrics, predictions)
+            alerts = await self._generate_alerts(
+                tenant_id, key_metrics, predictions
+            )
 
             executive_summary = self._generate_executive_summary(
                 tenant.name, key_metrics, trends, predictions
@@ -199,7 +205,9 @@ class AdvancedAnalyticsService:
             )
 
         except Exception as e:
-            logger.error(f"Business intelligence report generation failed: {str(e)}")
+            logger.error(
+                f"Business intelligence report generation failed: {str(e)}"
+            )
             raise
 
     async def _calculate_key_metrics(
@@ -213,7 +221,8 @@ class AdvancedAnalyticsService:
             self.db.query(UsageLog)
             .filter(
                 and_(
-                    UsageLog.tenant_id == tenant_id, UsageLog.created_at >= period_start
+                    UsageLog.tenant_id == tenant_id,
+                    UsageLog.created_at >= period_start,
                 )
             )
             .all()
@@ -234,11 +243,18 @@ class AdvancedAnalyticsService:
         # User metrics
         active_users = (
             self.db.query(User)
-            .filter(and_(User.tenant_id == tenant_id, User.last_login >= period_start))
+            .filter(
+                and_(
+                    User.tenant_id == tenant_id,
+                    User.last_login >= period_start,
+                )
+            )
             .count()
         )
 
-        total_users = self.db.query(User).filter(User.tenant_id == tenant_id).count()
+        total_users = (
+            self.db.query(User).filter(User.tenant_id == tenant_id).count()
+        )
 
         # Workflow metrics
         workflow_executions = (
@@ -259,14 +275,20 @@ class AdvancedAnalyticsService:
         )
         total_cost = sum(log.cost_amount or Decimal("0") for log in usage_logs)
         total_billed = sum(
-            record.amount for record in billing_records if record.status == "paid"
+            record.amount
+            for record in billing_records
+            if record.status == "paid"
         )
 
         success_rate = (
-            (successful_requests / total_requests * 100) if total_requests > 0 else 0
+            (successful_requests / total_requests * 100)
+            if total_requests > 0
+            else 0
         )
         avg_cost_per_request = (
-            (total_cost / total_requests) if total_requests > 0 else Decimal("0")
+            (total_cost / total_requests)
+            if total_requests > 0
+            else Decimal("0")
         )
 
         # Workflow efficiency
@@ -279,7 +301,9 @@ class AdvancedAnalyticsService:
             ]
         )
         avg_execution_time = (
-            np.mean([execution.duration_ms for execution in workflow_executions])
+            np.mean(
+                [execution.duration_ms for execution in workflow_executions]
+            )
             if workflow_executions
             else 0
         )
@@ -525,7 +549,11 @@ class AdvancedAnalyticsService:
         return predictions
 
     async def _predict_metric(
-        self, tenant_id: UUID, metric: str, historical_days: int, forecast_days: int
+        self,
+        tenant_id: UUID,
+        metric: str,
+        historical_days: int,
+        forecast_days: int,
     ) -> Optional[PredictionResult]:
         """Predict future values for a metric."""
         try:
@@ -594,13 +622,17 @@ class AdvancedAnalyticsService:
             period_start = datetime.utcnow() - timedelta(days=time_period_days)
 
             # Calculate total investment (subscription costs)
-            subscription_costs = self.db.query(func.sum(BillingRecord.amount)).filter(
+            subscription_costs = self.db.query(
+                func.sum(BillingRecord.amount)
+            ).filter(
                 and_(
                     BillingRecord.tenant_id == tenant_id,
                     BillingRecord.status == "paid",
                     BillingRecord.created_at >= period_start,
                 )
-            ).scalar() or Decimal("0")
+            ).scalar() or Decimal(
+                "0"
+            )
 
             # Calculate benefits (value delivered)
             # This is a simplified calculation - in practice, you'd have more sophisticated metrics
@@ -617,11 +649,17 @@ class AdvancedAnalyticsService:
 
             # Estimate productivity gains (simplified)
             total_requests = len(usage_logs)
-            productivity_gain_per_request = Decimal("2.50")  # $2.50 value per request
-            productivity_gains = Decimal(total_requests) * productivity_gain_per_request
+            productivity_gain_per_request = Decimal(
+                "2.50"
+            )  # $2.50 value per request
+            productivity_gains = (
+                Decimal(total_requests) * productivity_gain_per_request
+            )
 
             # Cost savings from automation
-            manual_cost_per_request = Decimal("5.00")  # $5 manual cost per request
+            manual_cost_per_request = Decimal(
+                "5.00"
+            )  # $5 manual cost per request
             automation_cost_per_request = Decimal(
                 "0.50"
             )  # $0.50 automation cost per request
@@ -650,7 +688,9 @@ class AdvancedAnalyticsService:
                 else 0
             )
 
-            break_even_date = datetime.utcnow() + timedelta(days=payback_period_days)
+            break_even_date = datetime.utcnow() + timedelta(
+                days=payback_period_days
+            )
 
             return ROIAnalysis(
                 total_investment=total_investment,
@@ -691,7 +731,8 @@ class AdvancedAnalyticsService:
                 .filter(
                     and_(
                         UsageLog.tenant_id == tenant_id,
-                        UsageLog.created_at >= datetime.utcnow() - timedelta(days=7),
+                        UsageLog.created_at
+                        >= datetime.utcnow() - timedelta(days=7),
                     )
                 )
                 .count()
@@ -724,7 +765,9 @@ class AdvancedAnalyticsService:
 
             # Calculate churn probability based on risk factors
             base_probability = 0.1  # 10% base churn rate
-            risk_multiplier = len(risk_factors) * 0.15  # Each risk factor adds 15%
+            risk_multiplier = (
+                len(risk_factors) * 0.15
+            )  # Each risk factor adds 15%
             churn_probability = min(base_probability + risk_multiplier, 1.0)
 
             # Determine risk level
@@ -786,11 +829,16 @@ class AdvancedAnalyticsService:
 
         # Cost-based recommendations
         if usage_metrics.get("avg_cost_per_request", 0) > 1.0:
-            recommendations.append("Optimize AI model selection to reduce costs")
+            recommendations.append(
+                "Optimize AI model selection to reduce costs"
+            )
 
         # Trend-based recommendations
         for trend in trends:
-            if trend.trend == "decreasing" and trend.metric == "usage_requests":
+            if (
+                trend.trend == "decreasing"
+                and trend.metric == "usage_requests"
+            ):
                 recommendations.append(
                     "Implement user engagement initiatives to reverse declining usage"
                 )
@@ -855,9 +903,7 @@ class AdvancedAnalyticsService:
         summary += f"- Total Requests: {total_requests}\n"
         summary += f"- Success Rate: {success_rate}%\n"
         summary += ".2f"
-        summary += (
-            f"- Active Users: {key_metrics.get('users', {}).get('active_users', 0)}\n\n"
-        )
+        summary += f"- Active Users: {key_metrics.get('users', {}).get('active_users', 0)}\n\n"
 
         if trends:
             summary += "Key Trends:\n"
@@ -893,7 +939,9 @@ class AdvancedAnalyticsService:
                         tenant_id, start_date, end_date, granularity
                     )
                 elif metric == "performance":
-                    analytics_data[metric] = await self._get_performance_analytics(
+                    analytics_data[
+                        metric
+                    ] = await self._get_performance_analytics(
                         tenant_id, start_date, end_date, granularity
                     )
 

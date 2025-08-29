@@ -23,7 +23,11 @@ class TemplateService:
         categories = profile.template_categories or []
 
         # Query templates with any of the profile's categories
-        return self.db.query(Template).filter(Template.category.in_(categories)).all()
+        return (
+            self.db.query(Template)
+            .filter(Template.category.in_(categories))
+            .all()
+        )
 
     def get_template_by_id(self, template_id: str) -> Optional[Template]:
         """Retrieve a specific template by ID"""
@@ -40,7 +44,9 @@ class TemplateService:
         self.db.refresh(template)
         return template
 
-    def update_template(self, template_id: str, updates: Dict) -> Optional[Template]:
+    def update_template(
+        self, template_id: str, updates: Dict
+    ) -> Optional[Template]:
         """Update an existing template with new data"""
         template = self.get_template_by_id(template_id)
         if not template:
@@ -80,10 +86,14 @@ class TemplateService:
         """Get all available template categories"""
         return self.db.query(Template.category).distinct().all()
 
-    def filter_templates(self, category: str, is_active: bool = True) -> List[Template]:
+    def filter_templates(
+        self, category: str, is_active: bool = True
+    ) -> List[Template]:
         """Filter templates by category and active status"""
         return (
             self.db.query(Template)
-            .filter(Template.category == category, Template.is_active == is_active)
+            .filter(
+                Template.category == category, Template.is_active == is_active
+            )
             .all()
         )

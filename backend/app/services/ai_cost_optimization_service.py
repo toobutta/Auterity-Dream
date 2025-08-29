@@ -108,10 +108,14 @@ class AICostOptimizationService:
                             model_id=model_id,
                             provider=provider,
                             cost_per_1k_tokens=Decimal(
-                                str(model_data.get("cost_per_1k_tokens", 0.002))
+                                str(
+                                    model_data.get("cost_per_1k_tokens", 0.002)
+                                )
                             ),
                             max_tokens=model_data.get("max_tokens", 4096),
-                            avg_latency_ms=model_data.get("avg_latency_ms", 500),
+                            avg_latency_ms=model_data.get(
+                                "avg_latency_ms", 500
+                            ),
                             success_rate=model_data.get("success_rate", 0.99),
                             capabilities=model_data.get("capabilities", []),
                             use_cases=model_data.get("use_cases", []),
@@ -194,7 +198,9 @@ class AICostOptimizationService:
 
             # Estimate output tokens if not provided
             if output_tokens is None:
-                output_tokens = min(int(input_tokens * 1.5), profile.max_tokens // 2)
+                output_tokens = min(
+                    int(input_tokens * 1.5), profile.max_tokens // 2
+                )
 
             # Calculate cost
             total_tokens = input_tokens + output_tokens
@@ -203,7 +209,9 @@ class AICostOptimizationService:
             ) * profile.cost_per_1k_tokens
 
             # Apply context-based adjustments
-            adjusted_cost = self._apply_context_adjustments(base_cost, context or {})
+            adjusted_cost = self._apply_context_adjustments(
+                base_cost, context or {}
+            )
 
             # Calculate confidence based on historical data
             confidence = await self._calculate_prediction_confidence(
@@ -261,7 +269,9 @@ class AICostOptimizationService:
         if 9 <= current_hour <= 17:  # Business hours
             adjusted_cost *= Decimal("1.05")
 
-        return adjusted_cost.quantize(Decimal("0.0001"), rounding=ROUND_HALF_UP)
+        return adjusted_cost.quantize(
+            Decimal("0.0001"), rounding=ROUND_HALF_UP
+        )
 
     async def _calculate_prediction_confidence(
         self, tenant_id: UUID, model_id: str, total_tokens: int
@@ -289,7 +299,9 @@ class AICostOptimizationService:
 
             # Calculate variance in historical costs
             historical_costs = [
-                usage.cost_amount for usage in historical_usage if usage.cost_amount
+                usage.cost_amount
+                for usage in historical_usage
+                if usage.cost_amount
             ]
 
             if len(historical_costs) < 5:
@@ -357,7 +369,9 @@ class AICostOptimizationService:
         """Generate human-readable reasoning for cost prediction."""
         profile = self.model_profiles[model_id]
 
-        reasoning = f"Model {model_id} ({profile.provider}) estimated cost: ${cost}"
+        reasoning = (
+            f"Model {model_id} ({profile.provider}) estimated cost: ${cost}"
+        )
 
         if confidence > 0.9:
             reasoning += " with high confidence"
@@ -367,7 +381,9 @@ class AICostOptimizationService:
             reasoning += " with low confidence"
 
         if alternatives:
-            reasoning += f". Cheaper alternatives available: {', '.join(alternatives)}"
+            reasoning += (
+                f". Cheaper alternatives available: {', '.join(alternatives)}"
+            )
 
         return reasoning
 
@@ -385,7 +401,9 @@ class AICostOptimizationService:
             cost_constraint = cost_constraint or Decimal("1.0")
 
             # Get tenant information
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -403,7 +421,9 @@ class AICostOptimizationService:
                     continue
 
                 # Calculate performance score (0-100)
-                performance_score = self._calculate_performance_score(profile, context)
+                performance_score = self._calculate_performance_score(
+                    profile, context
+                )
 
                 # Calculate cost efficiency score (0-100)
                 cost_efficiency = self._calculate_cost_efficiency_score(
@@ -445,7 +465,9 @@ class AICostOptimizationService:
                 )
 
             # Sort by overall score (descending)
-            model_evaluations.sort(key=lambda x: x["overall_score"], reverse=True)
+            model_evaluations.sort(
+                key=lambda x: x["overall_score"], reverse=True
+            )
             best_option = model_evaluations[0]
 
             # Calculate savings and impact compared to default model
@@ -480,7 +502,9 @@ class AICostOptimizationService:
                 expected_cost_savings=savings,
                 expected_performance_impact=performance_impact,
                 confidence=best_option["prediction"].confidence,
-                reasoning=self._generate_optimization_reasoning(best_option, strategy),
+                reasoning=self._generate_optimization_reasoning(
+                    best_option, strategy
+                ),
                 implementation_steps=steps,
             )
 
@@ -521,7 +545,10 @@ class AICostOptimizationService:
         ):
             base_score += 15
 
-        if context.get("requires_analysis") and "analysis" in profile.capabilities:
+        if (
+            context.get("requires_analysis")
+            and "analysis" in profile.capabilities
+        ):
             base_score += 10
 
         return max(0.0, min(100.0, base_score))
@@ -606,20 +633,26 @@ class AICostOptimizationService:
     ) -> BudgetAnalysis:
         """Analyze tenant's AI budget utilization and provide recommendations."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
             # Calculate current spend
             period_start = datetime.utcnow() - timedelta(days=time_period_days)
 
-            current_spend = self.db.query(func.sum(UsageLog.cost_amount)).filter(
+            current_spend = self.db.query(
+                func.sum(UsageLog.cost_amount)
+            ).filter(
                 and_(
                     UsageLog.tenant_id == tenant_id,
                     UsageLog.resource_type == "ai_request",
                     UsageLog.created_at >= period_start,
                 )
-            ).scalar() or Decimal("0")
+            ).scalar() or Decimal(
+                "0"
+            )
 
             # Project monthly spend
             days_in_period = (datetime.utcnow() - period_start).days
@@ -660,7 +693,9 @@ class AICostOptimizationService:
                 )
 
             # Model usage analysis
-            model_usage = await self._analyze_model_usage(tenant_id, period_start)
+            model_usage = await self._analyze_model_usage(
+                tenant_id, period_start
+            )
 
             if model_usage:
                 most_expensive = max(
@@ -714,7 +749,9 @@ class AICostOptimizationService:
                         "avg_cost": Decimal("0"),
                     }
 
-                model_stats[model]["total_cost"] += log.cost_amount or Decimal("0")
+                model_stats[model]["total_cost"] += log.cost_amount or Decimal(
+                    "0"
+                )
                 model_stats[model]["request_count"] += 1
 
             # Calculate averages
@@ -737,7 +774,9 @@ class AICostOptimizationService:
     ) -> List[Dict[str, Any]]:
         """Get specific cost optimization suggestions for a tenant."""
         try:
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -745,7 +784,9 @@ class AICostOptimizationService:
 
             # Analyze current model usage
             period_start = datetime.utcnow() - timedelta(days=30)
-            model_usage = await self._analyze_model_usage(tenant_id, period_start)
+            model_usage = await self._analyze_model_usage(
+                tenant_id, period_start
+            )
 
             # Find expensive models
             expensive_models = [
@@ -778,7 +819,8 @@ class AICostOptimizationService:
                             "potential_savings": float(potential_savings),
                             "impact": (
                                 "medium"
-                                if optimization_level == CostOptimizationLevel.MODERATE
+                                if optimization_level
+                                == CostOptimizationLevel.MODERATE
                                 else "high"
                             ),
                             "description": f"Replace {model} with cheaper alternatives to save ~${potential_savings:.2f}",
@@ -787,7 +829,9 @@ class AICostOptimizationService:
 
             # Budget-based suggestions
             if tenant.monthly_budget > 0:
-                budget_analysis = await self.analyze_budget_utilization(tenant_id)
+                budget_analysis = await self.analyze_budget_utilization(
+                    tenant_id
+                )
 
                 if budget_analysis.budget_utilization > 0.8:
                     suggestions.append(
@@ -796,7 +840,8 @@ class AICostOptimizationService:
                             "current_utilization": budget_analysis.budget_utilization,
                             "recommended_action": "Implement strict cost controls",
                             "potential_savings": float(
-                                budget_analysis.budget_remaining * Decimal("0.5")
+                                budget_analysis.budget_remaining
+                                * Decimal("0.5")
                             ),
                             "impact": "high",
                             "description": f"Budget at {budget_analysis.budget_utilization:.1%} utilization - implement cost controls",
@@ -804,7 +849,9 @@ class AICostOptimizationService:
                     )
 
             # Usage pattern suggestions
-            usage_patterns = await self._analyze_usage_patterns(tenant_id, period_start)
+            usage_patterns = await self._analyze_usage_patterns(
+                tenant_id, period_start
+            )
 
             if usage_patterns.get("peak_hours_usage", 0) > 0.7:
                 suggestions.append(
@@ -853,10 +900,14 @@ class AICostOptimizationService:
                 peak_hour_requests = sum(
                     1 for log in usage_logs if 9 <= log.created_at.hour <= 17
                 )
-                patterns["peak_hours_usage"] = peak_hour_requests / len(usage_logs)
+                patterns["peak_hours_usage"] = peak_hour_requests / len(
+                    usage_logs
+                )
 
                 # Cost analysis
-                costs = [log.cost_amount for log in usage_logs if log.cost_amount]
+                costs = [
+                    log.cost_amount for log in usage_logs if log.cost_amount
+                ]
                 if costs:
                     patterns["avg_cost_per_request"] = sum(costs) / len(costs)
                     if len(costs) > 1:

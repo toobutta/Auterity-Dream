@@ -81,9 +81,13 @@ class EnhancedRecoveryService:
         self.strategy_configs = self._initialize_strategy_configs()
 
         # Success rate tracking for ML-based optimization
-        self.success_rates = defaultdict(lambda: {"attempts": 0, "successes": 0})
+        self.success_rates = defaultdict(
+            lambda: {"attempts": 0, "successes": 0}
+        )
 
-    def _initialize_strategy_configs(self) -> Dict[RecoveryStrategy, Dict[str, Any]]:
+    def _initialize_strategy_configs(
+        self,
+    ) -> Dict[RecoveryStrategy, Dict[str, Any]]:
         """Initialize recovery strategy configurations."""
         return {
             RecoveryStrategy.IMMEDIATE_RETRY: {
@@ -125,13 +129,19 @@ class EnhancedRecoveryService:
             RecoveryStrategy.RESOURCE_SCALING: {
                 "scale_factor": 1.5,
                 "cooldown_minutes": 10,
-                "applicable_categories": [ErrorCategory.SYSTEM, ErrorCategory.DATABASE],
+                "applicable_categories": [
+                    ErrorCategory.SYSTEM,
+                    ErrorCategory.DATABASE,
+                ],
                 "success_threshold": 0.8,
             },
             RecoveryStrategy.SERVICE_RESTART: {
                 "graceful_timeout": 30,
                 "force_timeout": 60,
-                "applicable_categories": [ErrorCategory.SYSTEM, ErrorCategory.DATABASE],
+                "applicable_categories": [
+                    ErrorCategory.SYSTEM,
+                    ErrorCategory.DATABASE,
+                ],
                 "success_threshold": 0.85,
             },
             RecoveryStrategy.GRACEFUL_DEGRADATION: {
@@ -155,13 +165,17 @@ class EnhancedRecoveryService:
             error_analysis = await self._analyze_error(error, context)
 
             # Select optimal strategies based on ML insights
-            strategies = await self._select_recovery_strategies(error, error_analysis)
+            strategies = await self._select_recovery_strategies(
+                error, error_analysis
+            )
 
             # Estimate success probability and duration
             success_probability = await self._estimate_success_probability(
                 error, strategies
             )
-            estimated_duration = await self._estimate_recovery_duration(strategies)
+            estimated_duration = await self._estimate_recovery_duration(
+                strategies
+            )
 
             # Determine priority based on error severity and impact
             priority = self._calculate_recovery_priority(error, context)
@@ -196,7 +210,9 @@ class EnhancedRecoveryService:
         context = context or {}
 
         try:
-            self.logger.info(f"Executing recovery plan for error {plan.error_id}")
+            self.logger.info(
+                f"Executing recovery plan for error {plan.error_id}"
+            )
 
             # Notify about recovery start
             notification_service = await get_notification_service()
@@ -220,7 +236,9 @@ class EnhancedRecoveryService:
                 await self._update_success_rates(strategy, attempt.outcome)
 
                 if attempt.outcome == RecoveryOutcome.SUCCESS:
-                    self.logger.info(f"Recovery successful with strategy {strategy}")
+                    self.logger.info(
+                        f"Recovery successful with strategy {strategy}"
+                    )
                     break
                 elif attempt.outcome == RecoveryOutcome.PARTIAL_SUCCESS:
                     # Continue with next strategy but log partial success
@@ -228,7 +246,9 @@ class EnhancedRecoveryService:
                         f"Partial recovery with strategy {strategy}, continuing"
                     )
                 else:
-                    self.logger.warning(f"Recovery failed with strategy {strategy}")
+                    self.logger.warning(
+                        f"Recovery failed with strategy {strategy}"
+                    )
 
                     # If not the last strategy, wait before next attempt
                     if i < len(plan.strategies) - 1:
@@ -294,7 +314,9 @@ class EnhancedRecoveryService:
 
         return analysis
 
-    async def _get_historical_error_data(self, error_code: str) -> Dict[str, Any]:
+    async def _get_historical_error_data(
+        self, error_code: str
+    ) -> Dict[str, Any]:
         """Get historical data for this error type."""
         try:
             # Get recent occurrences of this error
@@ -309,7 +331,11 @@ class EnhancedRecoveryService:
                         historical_attempts.append(attempt_data)
 
             if not historical_attempts:
-                return {"occurrences": 0, "success_rate": 0.0, "common_strategies": []}
+                return {
+                    "occurrences": 0,
+                    "success_rate": 0.0,
+                    "common_strategies": [],
+                }
 
             # Calculate success rate
             successful_attempts = [
@@ -318,7 +344,9 @@ class EnhancedRecoveryService:
             success_rate = len(successful_attempts) / len(historical_attempts)
 
             # Find most successful strategies
-            strategy_success = defaultdict(lambda: {"attempts": 0, "successes": 0})
+            strategy_success = defaultdict(
+                lambda: {"attempts": 0, "successes": 0}
+            )
             for attempt in historical_attempts:
                 strategy = attempt.get("strategy")
                 if strategy:
@@ -330,7 +358,9 @@ class EnhancedRecoveryService:
             common_strategies = sorted(
                 strategy_success.items(),
                 key=lambda x: (
-                    x[1]["successes"] / x[1]["attempts"] if x[1]["attempts"] > 0 else 0
+                    x[1]["successes"] / x[1]["attempts"]
+                    if x[1]["attempts"] > 0
+                    else 0
                 ),
                 reverse=True,
             )[:3]
@@ -343,13 +373,19 @@ class EnhancedRecoveryService:
 
         except Exception as e:
             self.logger.error(f"Failed to get historical error data: {e}")
-            return {"occurrences": 0, "success_rate": 0.0, "common_strategies": []}
+            return {
+                "occurrences": 0,
+                "success_rate": 0.0,
+                "common_strategies": [],
+            }
 
     async def _analyze_system_state(self) -> Dict[str, Any]:
         """Analyze current system state for recovery planning."""
         try:
             # Get system metrics
-            cpu_usage = await self._get_system_metric("cpu_usage", 75.0)  # Default 75%
+            cpu_usage = await self._get_system_metric(
+                "cpu_usage", 75.0
+            )  # Default 75%
             memory_usage = await self._get_system_metric(
                 "memory_usage", 80.0
             )  # Default 80%
@@ -386,7 +422,9 @@ class EnhancedRecoveryService:
             self.logger.error(f"Failed to analyze system state: {e}")
             return {"health_score": 50, "under_stress": True}
 
-    async def _get_system_metric(self, metric_name: str, default_value: float) -> float:
+    async def _get_system_metric(
+        self, metric_name: str, default_value: float
+    ) -> float:
         """Get system metric from Redis or return default."""
         try:
             value = await self.redis.get(f"system_metric:{metric_name}")
@@ -439,7 +477,11 @@ class EnhancedRecoveryService:
                 s for s in low_impact_strategies if s in prioritized_strategies
             ]
             strategies.extend(
-                [s for s in prioritized_strategies if s not in low_impact_strategies]
+                [
+                    s
+                    for s in prioritized_strategies
+                    if s not in low_impact_strategies
+                ]
             )
         else:
             strategies = prioritized_strategies
@@ -473,11 +515,15 @@ class EnhancedRecoveryService:
         key = f"strategy_success:{strategy.value}:{category.value}"
 
         # Get from tracking data
-        tracking_data = self.success_rates.get(key, {"attempts": 0, "successes": 0})
+        tracking_data = self.success_rates.get(
+            key, {"attempts": 0, "successes": 0}
+        )
 
         if tracking_data["attempts"] == 0:
             # Use default from configuration
-            return self.strategy_configs[strategy].get("success_threshold", 0.5)
+            return self.strategy_configs[strategy].get(
+                "success_threshold", 0.5
+            )
 
         return tracking_data["successes"] / tracking_data["attempts"]
 
@@ -522,7 +568,10 @@ class EnhancedRecoveryService:
         # Adjust based on category
         if error.category in [ErrorCategory.SYSTEM, ErrorCategory.DATABASE]:
             priority += 2
-        elif error.category in [ErrorCategory.AI_SERVICE, ErrorCategory.WORKFLOW]:
+        elif error.category in [
+            ErrorCategory.AI_SERVICE,
+            ErrorCategory.WORKFLOW,
+        ]:
             priority += 1
 
         # Adjust based on context
@@ -557,7 +606,9 @@ class EnhancedRecoveryService:
             if strategy == RecoveryStrategy.IMMEDIATE_RETRY:
                 outcome = await self._execute_immediate_retry(error, context)
             elif strategy == RecoveryStrategy.EXPONENTIAL_BACKOFF:
-                outcome = await self._execute_exponential_backoff(error, context)
+                outcome = await self._execute_exponential_backoff(
+                    error, context
+                )
             elif strategy == RecoveryStrategy.CIRCUIT_BREAKER:
                 outcome = await self._execute_circuit_breaker(error, context)
             elif strategy == RecoveryStrategy.FALLBACK_SERVICE:
@@ -567,7 +618,9 @@ class EnhancedRecoveryService:
             elif strategy == RecoveryStrategy.SERVICE_RESTART:
                 outcome = await self._execute_service_restart(error, context)
             elif strategy == RecoveryStrategy.GRACEFUL_DEGRADATION:
-                outcome = await self._execute_graceful_degradation(error, context)
+                outcome = await self._execute_graceful_degradation(
+                    error, context
+                )
             else:
                 outcome = RecoveryOutcome.SKIPPED
 
@@ -634,7 +687,9 @@ class EnhancedRecoveryService:
     ) -> RecoveryOutcome:
         """Execute circuit breaker strategy."""
         # Set circuit breaker state
-        await self.redis.setex(f"circuit_breaker:{error.category.value}", 300, "open")
+        await self.redis.setex(
+            f"circuit_breaker:{error.category.value}", 300, "open"
+        )
         return RecoveryOutcome.SUCCESS
 
     async def _execute_fallback_service(
@@ -642,7 +697,9 @@ class EnhancedRecoveryService:
     ) -> RecoveryOutcome:
         """Execute fallback service strategy."""
         # Activate fallback service
-        await self.redis.setex(f"fallback:{error.category.value}", 3600, "active")
+        await self.redis.setex(
+            f"fallback:{error.category.value}", 3600, "active"
+        )
         return RecoveryOutcome.SUCCESS
 
     async def _execute_resource_scaling(
@@ -732,7 +789,9 @@ class EnhancedRecoveryService:
             success_rate = successful_attempts / total_attempts * 100
 
             # Strategy performance
-            strategy_stats = defaultdict(lambda: {"attempts": 0, "successes": 0})
+            strategy_stats = defaultdict(
+                lambda: {"attempts": 0, "successes": 0}
+            )
             for attempt in attempts:
                 strategy = attempt["strategy"]
                 strategy_stats[strategy]["attempts"] += 1
@@ -753,7 +812,9 @@ class EnhancedRecoveryService:
                 }
 
             # Average recovery time
-            completed_attempts = [a for a in attempts if a.get("duration_seconds")]
+            completed_attempts = [
+                a for a in attempts if a.get("duration_seconds")
+            ]
             avg_duration = (
                 sum(a["duration_seconds"] for a in completed_attempts)
                 / len(completed_attempts)
@@ -784,7 +845,9 @@ async def get_enhanced_recovery_service() -> EnhancedRecoveryService:
     global _recovery_service
 
     if _recovery_service is None:
-        redis_client = redis.from_url("redis://localhost:6379", decode_responses=False)
+        redis_client = redis.from_url(
+            "redis://localhost:6379", decode_responses=False
+        )
         _recovery_service = EnhancedRecoveryService(redis_client)
 
     return _recovery_service

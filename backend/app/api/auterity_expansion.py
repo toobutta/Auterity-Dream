@@ -55,7 +55,9 @@ def convert_db_rule_to_response(rule: Any) -> TriageRuleResponse:
         tenant_id=UUID(str(rule.tenant_id)),
         name=str(rule.name),
         rule_type=str(
-            rule.rule_type.value if hasattr(rule.rule_type, "value") else rule.rule_type
+            rule.rule_type.value
+            if hasattr(rule.rule_type, "value")
+            else rule.rule_type
         ),
         conditions=dict(rule.conditions) if rule.conditions else {},
         routing_logic=dict(rule.routing_logic) if rule.routing_logic else {},
@@ -158,7 +160,11 @@ async def get_triage_rules(
             # Get all rules if not filtering by active
             from app.models.auterity_expansion import TriageRule
 
-            rules = db.query(TriageRule).filter(TriageRule.tenant_id == tenant.id).all()
+            rules = (
+                db.query(TriageRule)
+                .filter(TriageRule.tenant_id == tenant.id)
+                .all()
+            )
 
         return [convert_db_rule_to_response(rule) for rule in rules]
 
@@ -179,7 +185,9 @@ async def get_triage_accuracy(
     """Get triage accuracy metrics."""
     try:
         service = SmartTriageService(db)
-        accuracy = await service.get_triage_accuracy(UUID(str(tenant.id)), days)
+        accuracy = await service.get_triage_accuracy(
+            UUID(str(tenant.id)), days
+        )
         return {"accuracy": accuracy, "period_days": days}
 
     except Exception as e:
@@ -398,7 +406,9 @@ async def assign_task_to_agent(
     """Assign a task to an autonomous agent."""
     try:
         service = AutonomousAgentService(db)
-        task = await service.assign_task(agent_id, task_data, UUID(str(tenant.id)))
+        task = await service.assign_task(
+            agent_id, task_data, UUID(str(tenant.id))
+        )
 
         if not task:
             raise HTTPException(
@@ -427,7 +437,9 @@ async def assign_task_to_agent(
 @router.get("/agents/memory")
 async def get_agent_memory(
     agent_id: UUID = Query(..., description="Agent ID to get memory for"),
-    context_key: Optional[str] = Query(None, description="Filter by context key"),
+    context_key: Optional[str] = Query(
+        None, description="Filter by context key"
+    ),
     limit: int = Query(50, description="Maximum memories to return"),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),

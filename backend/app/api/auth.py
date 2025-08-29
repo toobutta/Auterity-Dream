@@ -40,10 +40,14 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
 )
-async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
+async def register_user(
+    user_data: UserRegister, db: Session = Depends(get_db)
+):
     """Register a new user."""
     # Check if user already exists
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    existing_user = (
+        db.query(User).filter(User.email == user_data.email).first()
+    )
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -66,9 +70,13 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-async def login_user(user_credentials: UserLogin, db: Session = Depends(get_db)):
+async def login_user(
+    user_credentials: UserLogin, db: Session = Depends(get_db)
+):
     """Login user and return JWT token."""
-    user = authenticate_user(db, user_credentials.email, user_credentials.password)
+    user = authenticate_user(
+        db, user_credentials.email, user_credentials.password
+    )
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -190,10 +198,14 @@ async def get_cross_system_token(
             detail=f"Access denied to {request.target_system} system",
         )
 
-    access_token = create_cross_system_token(current_user, request.target_system)
+    access_token = create_cross_system_token(
+        current_user, request.target_system
+    )
     user_permissions = current_user.get_permissions()
     system_permissions = [
-        p for p in user_permissions if p.startswith(f"{request.target_system}:")
+        p
+        for p in user_permissions
+        if p.startswith(f"{request.target_system}:")
     ]
 
     return CrossSystemTokenResponse(
@@ -216,7 +228,9 @@ async def list_roles(
     return roles
 
 
-@router.post("/roles", response_model=RoleResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/roles", response_model=RoleResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_role(
     role_data: RoleCreate,
     db: Session = Depends(get_db),
@@ -301,4 +315,6 @@ async def initialize_default_roles(
     """Initialize default roles and permissions (admin only)."""
     role_manager = RoleManager(db)
     role_manager.create_default_roles()
-    return {"message": "Default roles and permissions initialized successfully"}
+    return {
+        "message": "Default roles and permissions initialized successfully"
+    }

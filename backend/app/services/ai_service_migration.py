@@ -4,7 +4,11 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from app.services.ai_service import AIService as LegacyAIService
-from app.services.ai_service_relaycore import AIModelType, AIResponse, EnhancedAIService
+from app.services.ai_service_relaycore import (
+    AIModelType,
+    AIResponse,
+    EnhancedAIService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +101,9 @@ class AIServiceMigrationWrapper:
                     logger.debug("Enhanced AI service successful")
                     return response
                 else:
-                    logger.warning(f"Enhanced AI service failed: {response.error}")
+                    logger.warning(
+                        f"Enhanced AI service failed: {response.error}"
+                    )
 
             except Exception as e:
                 logger.error(f"Enhanced AI service error: {e}")
@@ -178,11 +184,13 @@ class AIServiceMigrationWrapper:
         # Fallback to legacy service
         if self.legacy_available and self.legacy_service:
             try:
-                legacy_response = await self.legacy_service.process_with_template(
-                    template_name=template_name,
-                    variables=variables,
-                    context=context,
-                    model=model,
+                legacy_response = (
+                    await self.legacy_service.process_with_template(
+                        template_name=template_name,
+                        variables=variables,
+                        context=context,
+                        model=model,
+                    )
                 )
 
                 return AIResponse(

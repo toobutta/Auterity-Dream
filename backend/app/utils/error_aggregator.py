@@ -290,7 +290,9 @@ class ErrorAggregator:
             self.logger.error(f"Failed to aggregate model error: {e}")
             return False
 
-    async def aggregate_batch_errors(self, errors: list[Dict[str, Any]]) -> bool:
+    async def aggregate_batch_errors(
+        self, errors: list[Dict[str, Any]]
+    ) -> bool:
         """
         Aggregate multiple errors in batch.
 
@@ -341,9 +343,7 @@ class ErrorAggregator:
         """
         try:
             async with self.get_session() as session:
-                url = (
-                    f"{self.correlation_service_url}/api/v1/error-correlation/aggregate"
-                )
+                url = f"{self.correlation_service_url}/api/v1/error-correlation/aggregate"
 
                 async with session.post(
                     url,
@@ -376,7 +376,9 @@ class ErrorAggregator:
 
         try:
             return "".join(
-                traceback.format_exception(type(error), error, error.__traceback__)
+                traceback.format_exception(
+                    type(error), error, error.__traceback__
+                )
             )
         except Exception:
             return None

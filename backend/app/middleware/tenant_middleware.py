@@ -35,7 +35,9 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         """Process request with tenant isolation."""
         # Skip tenant isolation for excluded paths
-        if any(request.url.path.startswith(path) for path in self.exclude_paths):
+        if any(
+            request.url.path.startswith(path) for path in self.exclude_paths
+        ):
             return await call_next(request)
 
         # Extract tenant information
@@ -55,7 +57,9 @@ class TenantIsolationMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         return response
 
-    async def _extract_tenant_id(self, request: Request) -> Optional[uuid.UUID]:
+    async def _extract_tenant_id(
+        self, request: Request
+    ) -> Optional[uuid.UUID]:
         """Extract tenant ID from request."""
         # Try to get tenant from subdomain
         host = request.headers.get("host", "")
@@ -139,11 +143,15 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         """Process request with audit logging."""
         # Skip audit logging for excluded paths
-        if any(request.url.path.startswith(path) for path in self.exclude_paths):
+        if any(
+            request.url.path.startswith(path) for path in self.exclude_paths
+        ):
             return await call_next(request)
 
         # Skip GET requests for read-only operations (optional)
-        if request.method == "GET" and not self._should_audit_read(request.url.path):
+        if request.method == "GET" and not self._should_audit_read(
+            request.url.path
+        ):
             return await call_next(request)
 
         # Capture request details
@@ -166,7 +174,8 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
         """Determine if read operations should be audited."""
         sensitive_paths = ["/api/tenants/", "/api/auth/", "/api/users/"]
         return any(
-            path.startswith(sensitive_path) for sensitive_path in sensitive_paths
+            path.startswith(sensitive_path)
+            for sensitive_path in sensitive_paths
         )
 
     async def _get_request_body(self, request: Request) -> Optional[dict]:
@@ -221,13 +230,17 @@ class AuditLoggingMiddleware(BaseHTTPMiddleware):
                     action=action,
                     user=user,
                     request=request,
-                    status=("success" if response.status_code < 400 else "failure"),
+                    status=(
+                        "success" if response.status_code < 400 else "failure"
+                    ),
                     metadata={
                         "method": request.method,
                         "path": str(request.url.path),
                         "status_code": response.status_code,
                         "duration_ms": duration_ms,
-                        "request_body": self._sanitize_request_body(request_body),
+                        "request_body": self._sanitize_request_body(
+                            request_body
+                        ),
                     },
                 )
             finally:

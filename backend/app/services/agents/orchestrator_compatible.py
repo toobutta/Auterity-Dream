@@ -99,7 +99,9 @@ class AgentOrchestrator:
                 "system_integration": {
                     "autmatrix": agent_config.get("autmatrix_enabled", False),
                     "relaycore": agent_config.get("relaycore_enabled", False),
-                    "neuroweaver": agent_config.get("neuroweaver_enabled", False),
+                    "neuroweaver": agent_config.get(
+                        "neuroweaver_enabled", False
+                    ),
                 },
             }
 
@@ -122,14 +124,22 @@ class AgentOrchestrator:
             if agent_id in self.agents:
                 del self.agents[agent_id]
                 logger.info(f"Agent {agent_id} unregistered successfully")
-                return {"success": True, "message": f"Agent {agent_id} unregistered"}
+                return {
+                    "success": True,
+                    "message": f"Agent {agent_id} unregistered",
+                }
             else:
-                return {"success": False, "error": f"Agent {agent_id} not found"}
+                return {
+                    "success": False,
+                    "error": f"Agent {agent_id} not found",
+                }
         except Exception as e:
             logger.error(f"Failed to unregister agent {agent_id}: {e}")
             return {"success": False, "error": str(e)}
 
-    async def execute_workflow(self, workflow_config: Dict[str, Any]) -> Dict[str, Any]:
+    async def execute_workflow(
+        self, workflow_config: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Execute a workflow using registered agents
 
@@ -157,11 +167,17 @@ class AgentOrchestrator:
 
             # Execute based on workflow type
             if workflow_metadata["type"] == "sequential":
-                results = await self._execute_sequential_workflow(steps, execution_id)
+                results = await self._execute_sequential_workflow(
+                    steps, execution_id
+                )
             elif workflow_metadata["type"] == "parallel":
-                results = await self._execute_parallel_workflow(steps, execution_id)
+                results = await self._execute_parallel_workflow(
+                    steps, execution_id
+                )
             elif workflow_metadata["type"] == "hierarchical":
-                results = await self._execute_hierarchical_workflow(steps, execution_id)
+                results = await self._execute_hierarchical_workflow(
+                    steps, execution_id
+                )
             else:
                 raise ValueError(
                     f"Unsupported workflow type: {workflow_metadata['type']}"
@@ -187,7 +203,9 @@ class AgentOrchestrator:
         except Exception as e:
             logger.error(f"Workflow execution failed: {e}")
             return {
-                "execution_id": execution_id if "execution_id" in locals() else None,
+                "execution_id": execution_id
+                if "execution_id" in locals()
+                else None,
                 "status": "failed",
                 "error": str(e),
             }
@@ -212,7 +230,9 @@ class AgentOrchestrator:
 
             except Exception as e:
                 logger.error(f"Step {i} failed in sequential workflow: {e}")
-                results.append({"step_index": i, "success": False, "error": str(e)})
+                results.append(
+                    {"step_index": i, "success": False, "error": str(e)}
+                )
                 break  # Stop on error in sequential
 
         return results
@@ -263,7 +283,9 @@ class AgentOrchestrator:
             input_data = step.get("input", {})
 
             if not agent_id or agent_id not in self.agents:
-                raise ValueError(f"Agent {agent_id} not found or not specified")
+                raise ValueError(
+                    f"Agent {agent_id} not found or not specified"
+                )
 
             agent = self.agents[agent_id]
 
@@ -292,7 +314,11 @@ class AgentOrchestrator:
 
         except Exception as e:
             logger.error(f"Agent step execution failed: {e}")
-            return {"step_index": step_index, "success": False, "error": str(e)}
+            return {
+                "step_index": step_index,
+                "success": False,
+                "error": str(e),
+            }
 
     def get_agent_status(self, agent_id: str) -> Dict[str, Any]:
         """Get the current status of an agent"""
@@ -303,12 +329,17 @@ class AgentOrchestrator:
 
     def list_agents(self) -> Dict[str, Any]:
         """List all registered agents"""
-        return {"total_agents": len(self.agents), "agents": list(self.agents.values())}
+        return {
+            "total_agents": len(self.agents),
+            "agents": list(self.agents.values()),
+        }
 
     def get_workflow_history(self, limit: int = 10) -> Dict[str, Any]:
         """Get recent workflow execution history"""
         recent_history = (
-            self.execution_history[-limit:] if limit else self.execution_history
+            self.execution_history[-limit:]
+            if limit
+            else self.execution_history
         )
         return {
             "total_executions": len(self.execution_history),

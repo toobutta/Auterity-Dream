@@ -33,7 +33,9 @@ async def initiate_saml_login(
     audit_service = AuditService(db)
 
     try:
-        redirect_url = await sso_service.initiate_saml_login(tenant_slug, relay_state)
+        redirect_url = await sso_service.initiate_saml_login(
+            tenant_slug, relay_state
+        )
 
         # Log SSO initiation
         from app.models.tenant import Tenant
@@ -80,12 +82,16 @@ async def handle_saml_response(
     audit_service = AuditService(db)
 
     try:
-        auth_result = await sso_service.handle_saml_response(SAMLResponse, RelayState)
+        auth_result = await sso_service.handle_saml_response(
+            SAMLResponse, RelayState
+        )
 
         # Log successful SAML authentication
         from app.models.user import User
 
-        user = db.query(User).filter(User.id == auth_result["user"]["id"]).first()
+        user = (
+            db.query(User).filter(User.id == auth_result["user"]["id"]).first()
+        )
         if user:
             audit_service.log_authentication(
                 tenant_id=user.tenant_id,
@@ -124,7 +130,9 @@ async def initiate_oidc_login(
     audit_service = AuditService(db)
 
     try:
-        redirect_url = await sso_service.initiate_oidc_login(tenant_slug, state)
+        redirect_url = await sso_service.initiate_oidc_login(
+            tenant_slug, state
+        )
 
         # Log OIDC initiation
         from app.models.tenant import Tenant
@@ -183,7 +191,9 @@ async def handle_oidc_callback(
         # Log successful OIDC authentication
         from app.models.user import User
 
-        user = db.query(User).filter(User.id == auth_result["user"]["id"]).first()
+        user = (
+            db.query(User).filter(User.id == auth_result["user"]["id"]).first()
+        )
         if user:
             audit_service.log_authentication(
                 tenant_id=user.tenant_id,
@@ -260,7 +270,9 @@ async def get_saml_metadata(tenant_slug: str, db: Session = Depends(get_db)):
 
 
 @router.get("/.well-known/openid_configuration/{tenant_slug}")
-async def get_oidc_configuration(tenant_slug: str, db: Session = Depends(get_db)):
+async def get_oidc_configuration(
+    tenant_slug: str, db: Session = Depends(get_db)
+):
     """Get OIDC configuration for a tenant."""
     from app.models.tenant import SSOConfiguration, Tenant
 

@@ -26,7 +26,9 @@ class OutputStepExecutor(BaseStepExecutor):
             destination = input_data.get("destination", "default")
 
             # Process output delivery
-            delivery_result = await self._deliver_output(output_data, destination)
+            delivery_result = await self._deliver_output(
+                output_data, destination
+            )
 
             return ExecutionResult(
                 success=True,
@@ -48,7 +50,9 @@ class OutputStepExecutor(BaseStepExecutor):
         """Validate output data"""
         return isinstance(input_data, dict) and "data" in input_data
 
-    async def _deliver_output(self, data: Dict[str, Any], destination: str) -> str:
+    async def _deliver_output(
+        self, data: Dict[str, Any], destination: str
+    ) -> str:
         """Deliver output to specified destination"""
         # Placeholder for actual output delivery logic
         return f"Delivered to {destination}"

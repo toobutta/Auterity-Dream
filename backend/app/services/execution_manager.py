@@ -161,7 +161,9 @@ class ExecutionManager:
             # Update performance cache
             await self._update_performance_cache(execution)
 
-        logger.debug(f"Updated execution {execution_id} status to {status.value}")
+        logger.debug(
+            f"Updated execution {execution_id} status to {status.value}"
+        )
         return True
 
     async def complete_execution(
@@ -211,11 +213,15 @@ class ExecutionManager:
         limit: int = 100,
     ) -> List[ExecutionLog]:
         """List executions with optional filtering."""
-        all_executions = list(self.active_executions.values()) + self.execution_history
+        all_executions = (
+            list(self.active_executions.values()) + self.execution_history
+        )
 
         # Apply filters
         if user_id:
-            all_executions = [e for e in all_executions if e.user_id == user_id]
+            all_executions = [
+                e for e in all_executions if e.user_id == user_id
+            ]
         if execution_type:
             all_executions = [
                 e for e in all_executions if e.execution_type == execution_type
@@ -227,11 +233,17 @@ class ExecutionManager:
         all_executions.sort(key=lambda x: x.created_at, reverse=True)
         return all_executions[:limit]
 
-    def get_child_executions(self, parent_execution_id: UUID) -> List[ExecutionLog]:
+    def get_child_executions(
+        self, parent_execution_id: UUID
+    ) -> List[ExecutionLog]:
         """Get all child executions for a parent execution."""
-        all_executions = list(self.active_executions.values()) + self.execution_history
+        all_executions = (
+            list(self.active_executions.values()) + self.execution_history
+        )
         return [
-            e for e in all_executions if e.parent_execution_id == parent_execution_id
+            e
+            for e in all_executions
+            if e.parent_execution_id == parent_execution_id
         ]
 
     async def cancel_execution(self, execution_id: UUID) -> bool:
@@ -260,7 +272,9 @@ class ExecutionManager:
 
         # Keep only last 100 measurements
         if len(self.performance_cache[cache_key]) > 100:
-            self.performance_cache[cache_key] = self.performance_cache[cache_key][-100:]
+            self.performance_cache[cache_key] = self.performance_cache[
+                cache_key
+            ][-100:]
 
     def get_performance_stats(
         self, target_id: str, execution_type: ExecutionType
@@ -280,7 +294,9 @@ class ExecutionManager:
             "total_executions": len(durations),
         }
 
-    async def check_rate_limit(self, user_id: UUID, limit_per_minute: int = 60) -> bool:
+    async def check_rate_limit(
+        self, user_id: UUID, limit_per_minute: int = 60
+    ) -> bool:
         """Check if user is within rate limits."""
         now = datetime.utcnow()
         minute_ago = now - timedelta(minutes=1)
@@ -317,7 +333,9 @@ class ExecutionManager:
 
         # Filter executions by date range
         filtered_executions = [
-            e for e in self.execution_history if start_date <= e.created_at <= end_date
+            e
+            for e in self.execution_history
+            if start_date <= e.created_at <= end_date
         ]
 
         if not filtered_executions:
@@ -326,10 +344,18 @@ class ExecutionManager:
         # Calculate analytics
         total_executions = len(filtered_executions)
         successful_executions = len(
-            [e for e in filtered_executions if e.status == ExecutionStatus.COMPLETED]
+            [
+                e
+                for e in filtered_executions
+                if e.status == ExecutionStatus.COMPLETED
+            ]
         )
         failed_executions = len(
-            [e for e in filtered_executions if e.status == ExecutionStatus.FAILED]
+            [
+                e
+                for e in filtered_executions
+                if e.status == ExecutionStatus.FAILED
+            ]
         )
 
         success_rate = (
@@ -342,7 +368,11 @@ class ExecutionManager:
         type_breakdown = {}
         for execution_type in ExecutionType:
             count = len(
-                [e for e in filtered_executions if e.execution_type == execution_type]
+                [
+                    e
+                    for e in filtered_executions
+                    if e.execution_type == execution_type
+                ]
             )
             type_breakdown[execution_type.value] = count
 
@@ -357,9 +387,9 @@ class ExecutionManager:
                 and e.metrics.duration_ms
             ]
             if durations:
-                avg_duration_by_type[execution_type.value] = sum(durations) / len(
+                avg_duration_by_type[execution_type.value] = sum(
                     durations
-                )
+                ) / len(durations)
 
         # Top users by execution count
         user_counts = {}
@@ -367,7 +397,9 @@ class ExecutionManager:
             user_id = str(execution.user_id)
             user_counts[user_id] = user_counts.get(user_id, 0) + 1
 
-        top_users = sorted(user_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+        top_users = sorted(
+            user_counts.items(), key=lambda x: x[1], reverse=True
+        )[:10]
 
         return {
             "date_range": {
@@ -406,7 +438,11 @@ class ExecutionManager:
         active_status_breakdown = {}
         for status in ExecutionStatus:
             count = len(
-                [e for e in self.active_executions.values() if e.status == status]
+                [
+                    e
+                    for e in self.active_executions.values()
+                    if e.status == status
+                ]
             )
             active_status_breakdown[status.value] = count
 
@@ -414,7 +450,11 @@ class ExecutionManager:
         active_priority_breakdown = {}
         for priority in ExecutionPriority:
             count = len(
-                [e for e in self.active_executions.values() if e.priority == priority]
+                [
+                    e
+                    for e in self.active_executions.values()
+                    if e.priority == priority
+                ]
             )
             active_priority_breakdown[priority.value] = count
 

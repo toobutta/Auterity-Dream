@@ -44,7 +44,9 @@ class UserResponse(BaseModel):
             email=user.email,
             name=user.name,
             is_active=user.is_active,
-            roles=[role.name for role in user.roles] if hasattr(user, "roles") else [],
+            roles=[role.name for role in user.roles]
+            if hasattr(user, "roles")
+            else [],
         )
 
 

@@ -157,7 +157,9 @@ class APISecurityEnhancer:
 
         return response
 
-    async def _security_checks(self, request: Request) -> Optional[JSONResponse]:
+    async def _security_checks(
+        self, request: Request
+    ) -> Optional[JSONResponse]:
         """Perform various security checks"""
 
         # Check User-Agent (optional - can be bypassed easily)
@@ -173,9 +175,12 @@ class APISecurityEnhancer:
         # Check for suspicious patterns in query parameters
         for param, value in request.query_params.items():
             if any(
-                pattern in str(value).lower() for pattern in self.suspicious_patterns
+                pattern in str(value).lower()
+                for pattern in self.suspicious_patterns
             ):
-                logger.warning(f"Suspicious query parameter detected: {param}={value}")
+                logger.warning(
+                    f"Suspicious query parameter detected: {param}={value}"
+                )
                 return JSONResponse(
                     status_code=400,
                     content={"error": "Invalid request parameters"},
@@ -183,7 +188,9 @@ class APISecurityEnhancer:
 
         # Check request size
         content_length = request.headers.get("content-length")
-        if content_length and int(content_length) > 10 * 1024 * 1024:  # 10MB limit
+        if (
+            content_length and int(content_length) > 10 * 1024 * 1024
+        ):  # 10MB limit
             logger.warning(f"Request too large: {content_length} bytes")
             return JSONResponse(
                 status_code=413, content={"error": "Request entity too large"}
@@ -203,7 +210,9 @@ class APISecurityEnhancer:
 
         return None
 
-    async def _add_security_context(self, request: Request, response: Response):
+    async def _add_security_context(
+        self, request: Request, response: Response
+    ):
         """Add security context information"""
 
         # Add cache control for sensitive endpoints
@@ -288,7 +297,9 @@ class RateLimitSecurityMiddleware:
 
         # Fallback to direct client IP
         return (
-            getattr(request.client, "host", "unknown") if request.client else "unknown"
+            getattr(request.client, "host", "unknown")
+            if request.client
+            else "unknown"
         )
 
 

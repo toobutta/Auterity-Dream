@@ -5,7 +5,15 @@ SQLAlchemy models for Agent and AgentCapability.
 import enum
 import uuid
 
-from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, ForeignKey, String
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    String,
+)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -52,7 +60,9 @@ class Agent(Base):
 class AgentCapability(Base):
     __tablename__ = "agent_capabilities"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False)
+    agent_id = Column(
+        UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False
+    )
     capability_name = Column(String(255), nullable=False)
     capability_data = Column(JSON, nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)

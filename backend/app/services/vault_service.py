@@ -17,11 +17,15 @@ class VaultService:
             response = self.client.secrets.kv.v2.read_secret_version(path=path)
             return response["data"]["data"]
         except Exception as e:
-            raise ServiceError(f"Failed to retrieve secret from {path}: {str(e)}")
+            raise ServiceError(
+                f"Failed to retrieve secret from {path}: {str(e)}"
+            )
 
     async def store_secret(self, path: str, secret: Dict) -> bool:
         try:
-            self.client.secrets.kv.v2.create_or_update_secret(path=path, secret=secret)
+            self.client.secrets.kv.v2.create_or_update_secret(
+                path=path, secret=secret
+            )
             return True
         except Exception as e:
             raise ServiceError(f"Failed to store secret at {path}: {str(e)}")

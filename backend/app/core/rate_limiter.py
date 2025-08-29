@@ -15,7 +15,9 @@ class RateLimiter:
     def __init__(self):
         self.requests: Dict[str, deque] = defaultdict(deque)
 
-    def is_allowed(self, key: str, limit: int = 100, window: int = 3600) -> bool:
+    def is_allowed(
+        self, key: str, limit: int = 100, window: int = 3600
+    ) -> bool:
         """Check if request is allowed within rate limit"""
         now = time.time()
 
@@ -31,7 +33,9 @@ class RateLimiter:
         self.requests[key].append(now)
         return True
 
-    def check_rate_limit(self, request: Request, limit: int = 100, window: int = 3600):
+    def check_rate_limit(
+        self, request: Request, limit: int = 100, window: int = 3600
+    ):
         """FastAPI dependency for rate limiting"""
         # Use client IP as key (in production, use user ID or API key)
         client_ip = request.client.host if request.client else "unknown"

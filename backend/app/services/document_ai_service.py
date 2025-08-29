@@ -44,8 +44,12 @@ class DocumentAIService:
             )
 
             # Calculate average confidence
-            confidences = [int(conf) for conf in ocr_data["conf"] if int(conf) > 0]
-            avg_confidence = sum(confidences) / len(confidences) if confidences else 0
+            confidences = [
+                int(conf) for conf in ocr_data["conf"] if int(conf) > 0
+            ]
+            avg_confidence = (
+                sum(confidences) / len(confidences) if confidences else 0
+            )
 
             return {
                 "text": extracted_text.strip(),
@@ -236,7 +240,9 @@ class DocumentAIService:
             if not document_type:
                 classification_result = self.classify_document(extracted_text)
                 if "error" not in classification_result:
-                    document_type = classification_result["classification"]["category"]
+                    document_type = classification_result["classification"][
+                        "category"
+                    ]
 
             # Extract structured data
             structured_result = self.extract_structured_data(
@@ -257,7 +263,9 @@ class DocumentAIService:
                 "file_type": file_extension,
                 "document_type": document_type,
                 "extraction_result": extraction_result,
-                "structured_data": structured_result.get("structured_data", {}),
+                "structured_data": structured_result.get(
+                    "structured_data", {}
+                ),
                 "storage_path": storage_path,
                 "processing_timestamp": datetime.utcnow().isoformat(),
             }
@@ -283,21 +291,19 @@ class DocumentAIService:
 
         # Email extraction
         if "email" in entity_types:
-            email_pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+            email_pattern = (
+                r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
+            )
             entities["emails"] = re.findall(email_pattern, text)
 
         # Phone extraction
         if "phone" in entity_types:
-            phone_pattern = (
-                r"(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})"
-            )
+            phone_pattern = r"(\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})"
             entities["phones"] = re.findall(phone_pattern, text)
 
         # Date extraction (basic)
         if "date" in entity_types:
-            date_pattern = (
-                r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b\d{4}[/-]\d{1,2}[/-]\d{1,2}\b"
-            )
+            date_pattern = r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b|\b\d{4}[/-]\d{1,2}[/-]\d{1,2}\b"
             entities["dates"] = re.findall(date_pattern, text)
 
         # Money extraction
@@ -313,7 +319,9 @@ class DocumentAIService:
             "timestamp": datetime.utcnow().isoformat(),
         }
 
-    def summarize_document(self, text: str, max_length: int = 200) -> Dict[str, Any]:
+    def summarize_document(
+        self, text: str, max_length: int = 200
+    ) -> Dict[str, Any]:
         """Generate document summary using AI."""
         if not self.openai_api_key:
             return {"error": "OpenAI API key not configured"}

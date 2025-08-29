@@ -93,14 +93,18 @@ async def detailed_health_check(
         health_data["status"] = "degraded"
 
     # Overall response time
-    health_data["total_response_time_ms"] = round((time.time() - start_time) * 1000, 2)
+    health_data["total_response_time_ms"] = round(
+        (time.time() - start_time) * 1000, 2
+    )
 
     return health_data
 
 
 @router.get("/metrics/performance")
 async def get_performance_metrics(
-    hours: int = Query(24, ge=1, le=168, description="Hours of data to analyze"),
+    hours: int = Query(
+        24, ge=1, le=168, description="Hours of data to analyze"
+    ),
     db: Session = Depends(get_db),
 ) -> Dict[str, Any]:
     """Get performance metrics for workflow executions."""
@@ -140,7 +144,8 @@ async def get_performance_metrics(
             func.avg(
                 func.extract(
                     "epoch",
-                    WorkflowExecution.completed_at - WorkflowExecution.started_at,
+                    WorkflowExecution.completed_at
+                    - WorkflowExecution.started_at,
                 )
                 * 1000
             )
@@ -290,7 +295,8 @@ async def get_workflow_metrics(
                 func.sum(
                     func.case(
                         (
-                            WorkflowExecution.status == ExecutionStatus.COMPLETED,
+                            WorkflowExecution.status
+                            == ExecutionStatus.COMPLETED,
                             1,
                         ),
                         else_=0,
@@ -299,7 +305,8 @@ async def get_workflow_metrics(
                 func.avg(
                     func.extract(
                         "epoch",
-                        WorkflowExecution.completed_at - WorkflowExecution.started_at,
+                        WorkflowExecution.completed_at
+                        - WorkflowExecution.started_at,
                     )
                     * 1000
                 ).label("avg_duration_ms"),
@@ -316,7 +323,9 @@ async def get_workflow_metrics(
         for stat in workflow_stats:
             total_exec = stat.total_executions or 0
             successful_exec = stat.successful_executions or 0
-            success_rate = (successful_exec / total_exec * 100) if total_exec > 0 else 0
+            success_rate = (
+                (successful_exec / total_exec * 100) if total_exec > 0 else 0
+            )
             avg_duration = stat.avg_duration_ms or 0
 
             workflow_metrics.append(

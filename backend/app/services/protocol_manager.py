@@ -192,7 +192,9 @@ class ProtocolManager:
                     )
                 return None
             except Exception as e:
-                logger.error(f"Handler error for method {message.method}: {str(e)}")
+                logger.error(
+                    f"Handler error for method {message.method}: {str(e)}"
+                )
                 return ProtocolMessage(
                     MessageType.ERROR,
                     "",
@@ -218,7 +220,9 @@ class ProtocolManager:
             del self.active_connections[connection_id]
             logger.info(f"Unregistered connection: {connection_id}")
 
-    async def send_message(self, connection_id: UUID, message: ProtocolMessage) -> bool:
+    async def send_message(
+        self, connection_id: UUID, message: ProtocolMessage
+    ) -> bool:
         """Send a message to a specific connection."""
         if connection_id not in self.active_connections:
             logger.error(f"Connection {connection_id} not found")
@@ -230,5 +234,7 @@ class ProtocolManager:
             await connection.send_text(data)
             return True
         except Exception as e:
-            logger.error(f"Failed to send message to {connection_id}: {str(e)}")
+            logger.error(
+                f"Failed to send message to {connection_id}: {str(e)}"
+            )
             return False

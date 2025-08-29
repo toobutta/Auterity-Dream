@@ -27,7 +27,9 @@ class StepExecutorFactory:
             executor_class = cls._executors.get(step_enum)
 
             if not executor_class:
-                raise ValueError(f"No executor found for step type: {step_type}")
+                raise ValueError(
+                    f"No executor found for step type: {step_type}"
+                )
 
             return executor_class()
 

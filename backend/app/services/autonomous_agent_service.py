@@ -101,7 +101,9 @@ class AutonomousAgentService:
 
         try:
             # Validate tenant
-            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -204,11 +206,15 @@ class AutonomousAgentService:
     ) -> List[Dict[str, Any]]:
         """Retrieve agent memory for context awareness."""
         try:
-            query = self.db.query(AgentMemory).filter(AgentMemory.agent_id == agent_id)
+            query = self.db.query(AgentMemory).filter(
+                AgentMemory.agent_id == agent_id
+            )
 
             if context_key:
                 # Filter by context if provided
-                query = query.filter(AgentMemory.context_hash.like(f"%{context_key}%"))
+                query = query.filter(
+                    AgentMemory.context_hash.like(f"%{context_key}%")
+                )
 
             memories = (
                 query.order_by(
@@ -233,7 +239,9 @@ class AutonomousAgentService:
                     "importance_score": float(memory.importance_score),
                     "created_at": memory.created_at.isoformat(),
                     "accessed_at": (
-                        memory.accessed_at.isoformat() if memory.accessed_at else None
+                        memory.accessed_at.isoformat()
+                        if memory.accessed_at
+                        else None
                     ),
                 }
                 for memory in memories
@@ -346,7 +354,9 @@ class AutonomousAgentService:
                 context_key="coordination",
                 memory_data={
                     "task": coordination_task,
-                    "agents_involved": [str(agent.id) for agent in coordination_agents],
+                    "agents_involved": [
+                        str(agent.id) for agent in coordination_agents
+                    ],
                     "result": coordination_result,
                     "timestamp": datetime.utcnow().isoformat(),
                 },
@@ -399,7 +409,8 @@ class AutonomousAgentService:
             completed_tasks = sum(
                 1
                 for memory in task_memories
-                if memory.memory_data.get("task", {}).get("status") == "completed"
+                if memory.memory_data.get("task", {}).get("status")
+                == "completed"
             )
 
             total_tasks = len(task_memories)
@@ -585,7 +596,9 @@ class AutonomousAgentService:
         try:
             # Get coordination rules
             primary_agent.config.get("coordination_rules", {})
-            required_capabilities = coordination_task.get("required_capabilities", [])
+            required_capabilities = coordination_task.get(
+                "required_capabilities", []
+            )
 
             # Find agents with required capabilities
             coordination_agents = []
@@ -604,7 +617,10 @@ class AutonomousAgentService:
 
                 for agent in agents:
                     agent_capabilities = agent.capabilities or []
-                    if any(cap in agent_capabilities for cap in required_capabilities):
+                    if any(
+                        cap in agent_capabilities
+                        for cap in required_capabilities
+                    ):
                         coordination_agents.append(agent)
 
             return coordination_agents

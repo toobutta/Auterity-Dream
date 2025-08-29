@@ -186,7 +186,9 @@ async def generate_sdk(
 ):
     """Generate a new SDK for the specified language."""
     # Start SDK generation in background
-    background_tasks.add_task(generate_sdk_task, request.language, request.version)
+    background_tasks.add_task(
+        generate_sdk_task, request.language, request.version
+    )
 
     return {
         "message": f"SDK generation started for {request.language}",
@@ -209,7 +211,9 @@ async def download_sdk(
     return StreamingResponse(
         io.BytesIO(sdk_content),
         media_type="application/zip",
-        headers={"Content-Disposition": f"attachment; filename={language}-sdk.zip"},
+        headers={
+            "Content-Disposition": f"attachment; filename={language}-sdk.zip"
+        },
     )
 
 
@@ -327,7 +331,9 @@ async def generate_white_label_bundle(
 ):
     """Generate a complete white-label configuration bundle."""
     # Start bundle generation in background
-    background_tasks.add_task(generate_white_label_bundle_task, config, current_user.id)
+    background_tasks.add_task(
+        generate_white_label_bundle_task, config, current_user.id
+    )
 
     return {
         "message": "White-label bundle generation started",
@@ -365,13 +371,17 @@ async def generate_sdk_task(language: str, version: str):
     print(f"SDK generation completed for {language} v{version}")
 
 
-async def generate_white_label_bundle_task(config: WhiteLabelConfig, user_id: int):
+async def generate_white_label_bundle_task(
+    config: WhiteLabelConfig, user_id: int
+):
     """Background task to generate white-label bundle."""
     # Simulate bundle generation
     import asyncio
 
     await asyncio.sleep(15)  # Simulate processing time
-    print(f"White-label bundle generated for theme {config.theme.id} by user {user_id}")
+    print(
+        f"White-label bundle generated for theme {config.theme.id} by user {user_id}"
+    )
 
 
 # Utility Functions

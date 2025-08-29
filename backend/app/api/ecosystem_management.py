@@ -75,7 +75,9 @@ async def get_ecosystem_status():
         return {
             "timestamp": datetime.now().isoformat(),
             "ecosystem": {
-                "health_score": ecosystem_analysis.get("ecosystem_health", 0.0),
+                "health_score": ecosystem_analysis.get(
+                    "ecosystem_health", 0.0
+                ),
                 "cascade_failure_risk": ecosystem_analysis.get(
                     "cascade_failure_risk", 0.0
                 ),
@@ -87,19 +89,23 @@ async def get_ecosystem_status():
             "relaycore": {
                 "status": relay_status.get("status", "unknown"),
                 "message_queue_size": relay_status.get("queue_size", 0),
-                "processed_messages": relay_status.get("processed_messages", 0),
-                "active_routes": relay_status.get("performance_metrics", {}).get(
-                    "active_routes", 0
+                "processed_messages": relay_status.get(
+                    "processed_messages", 0
                 ),
+                "active_routes": relay_status.get(
+                    "performance_metrics", {}
+                ).get("active_routes", 0),
                 "ai_optimization_active": True,
             },
             "neuroweaver": {
                 "is_trained": neuro_status.get("is_trained", False),
                 "current_phase": neuro_status.get("current_phase", "idle"),
-                "available_models": len(neuro_status.get("available_versions", [])),
-                "last_training_score": neuro_status.get("model_metrics", {}).get(
-                    "accuracy", 0.0
+                "available_models": len(
+                    neuro_status.get("available_versions", [])
                 ),
+                "last_training_score": neuro_status.get(
+                    "model_metrics", {}
+                ).get("accuracy", 0.0),
             },
             "ai_orchestration": {
                 "active_websockets": len(ai_orchestrator.active_websockets),
@@ -122,13 +128,17 @@ async def ecosystem_live_feed():
         while True:
             try:
                 # Get real-time ecosystem data
-                ecosystem_data = await ai_orchestrator.analyze_service_ecosystem()
+                ecosystem_data = (
+                    await ai_orchestrator.analyze_service_ecosystem()
+                )
                 relay_status = relay_core.get_status()
                 neuro_status = neuro_weaver.get_training_status()
 
                 live_data = {
                     "timestamp": datetime.now().isoformat(),
-                    "ecosystem_health": ecosystem_data.get("ecosystem_health", 0.0),
+                    "ecosystem_health": ecosystem_data.get(
+                        "ecosystem_health", 0.0
+                    ),
                     "active_services": len(ecosystem_data.get("services", {})),
                     "relay_queue_size": relay_status.get("queue_size", 0),
                     "neuro_training_active": neuro_status.get("current_phase")
@@ -137,15 +147,21 @@ async def ecosystem_live_feed():
                         "anomalies_detected": len(
                             [
                                 s
-                                for s in ecosystem_data.get("services", {}).values()
+                                for s in ecosystem_data.get(
+                                    "services", {}
+                                ).values()
                                 if s.anomaly_score and s.anomaly_score > 0.5
                             ]
                         ),
                         "optimization_recommendations": len(
-                            ecosystem_data.get("auto_scaling_recommendations", {})
+                            ecosystem_data.get(
+                                "auto_scaling_recommendations", {}
+                            )
                         ),
                         "healing_actions_active": len(
-                            ecosystem_data.get("autonomous_healing_actions", [])
+                            ecosystem_data.get(
+                                "autonomous_healing_actions", []
+                            )
                         ),
                     },
                 }
@@ -221,11 +237,14 @@ async def send_message(message_request: MessageRequest):
             "success": success,
             "status": message.status,
             "routing_metadata": message.routing_metadata,
-            "ai_optimization_applied": message.ai_optimization_hints is not None,
+            "ai_optimization_applied": message.ai_optimization_hints
+            is not None,
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Message routing failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Message routing failed: {str(e)}"
+        )
 
 
 @router.get("/relaycore/queue")
@@ -236,11 +255,15 @@ async def get_message_queue():
         return {
             "queue_size": len(queue_data),
             "messages": queue_data,
-            "queue_health": "healthy" if len(queue_data) < 100 else "congested",
+            "queue_health": "healthy"
+            if len(queue_data) < 100
+            else "congested",
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Queue status failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Queue status failed: {str(e)}"
+        )
 
 
 @router.post("/relaycore/optimize")
@@ -342,7 +365,9 @@ async def make_prediction(system_data: Dict[str, Any]):
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Prediction failed: {str(e)}"
+        )
 
 
 @router.get("/neuroweaver/models")
@@ -357,7 +382,9 @@ async def list_available_models():
             "timestamp": datetime.now().isoformat(),
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Model listing failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Model listing failed: {str(e)}"
+        )
 
 
 # ==================== AI ORCHESTRATION ====================
@@ -424,7 +451,9 @@ async def get_ai_insights(service_name: str):
 
         return insights
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"AI insights failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"AI insights failed: {str(e)}"
+        )
 
 
 @router.get("/ai/predictive/capacity")
@@ -468,11 +497,15 @@ async def detect_anomalies():
         for category, category_services in services.items():
             for service_name in category_services.keys():
                 health_data = ai_orchestrator._mock_health_data(service_name)
-                anomaly_score = await ai_orchestrator.anomaly_detector.detect_anomaly(
-                    service_name, health_data
+                anomaly_score = (
+                    await ai_orchestrator.anomaly_detector.detect_anomaly(
+                        service_name, health_data
+                    )
                 )
 
-                if anomaly_score > 0.3:  # Lower threshold for comprehensive reporting
+                if (
+                    anomaly_score > 0.3
+                ):  # Lower threshold for comprehensive reporting
                     anomalies[f"{category}.{service_name}"] = {
                         "anomaly_score": anomaly_score,
                         "severity": (
@@ -524,7 +557,9 @@ async def ecosystem_websocket(websocket: WebSocket):
                 "relaycore": relay_status,
                 "neuroweaver": neuro_status,
                 "connection_metadata": {
-                    "active_connections": len(ai_orchestrator.active_websockets),
+                    "active_connections": len(
+                        ai_orchestrator.active_websockets
+                    ),
                     "update_frequency": "3s",
                 },
             }
@@ -551,7 +586,9 @@ async def integrate_relay_neuro_optimization():
 
         # Use AI insights to optimize RelayCore routing
         optimization_insights = []
-        for service_name, service_data in ecosystem_data.get("services", {}).items():
+        for service_name, service_data in ecosystem_data.get(
+            "services", {}
+        ).items():
             if service_data.health_score and service_data.health_score < 0.7:
                 # Suggest RelayCore routing changes
                 optimization_insights.append(
@@ -586,7 +623,9 @@ async def check_integration_health():
     try:
         # Check all components
         relay_healthy = relay_core.get_status().get("status") == "running"
-        neuro_healthy = neuro_weaver.get_training_status().get("is_trained", False)
+        neuro_healthy = neuro_weaver.get_training_status().get(
+            "is_trained", False
+        )
         ai_orchestrator_healthy = (
             len(ai_orchestrator.active_websockets) >= 0
         )  # Always true if accessible
@@ -607,13 +646,16 @@ async def check_integration_health():
             "components": {
                 "relaycore": "healthy" if relay_healthy else "offline",
                 "neuroweaver": "healthy" if neuro_healthy else "not_trained",
-                "ai_orchestrator": "healthy" if ai_orchestrator_healthy else "offline",
+                "ai_orchestrator": "healthy"
+                if ai_orchestrator_healthy
+                else "offline",
             },
             "features_active": {
                 "ai_routing": relay_healthy,
                 "predictive_analytics": neuro_healthy,
                 "autonomous_optimization": ai_orchestrator_healthy,
-                "real_time_monitoring": len(ai_orchestrator.active_websockets) > 0,
+                "real_time_monitoring": len(ai_orchestrator.active_websockets)
+                > 0,
             },
             "timestamp": datetime.now().isoformat(),
         }
@@ -675,7 +717,9 @@ async def get_performance_analytics():
                 ),
             },
             "system_efficiency": {
-                "cascade_failure_risk": ecosystem_data.get("cascade_failure_risk", 0.0),
+                "cascade_failure_risk": ecosystem_data.get(
+                    "cascade_failure_risk", 0.0
+                ),
                 "optimization_opportunities": len(
                     ecosystem_data.get("optimization_opportunities", [])
                 ),
@@ -705,7 +749,9 @@ async def get_enhanced_services():
             enhanced_services[category] = {}
             for service_name, service_data in category_services.items():
                 health_data = ai_orchestrator._mock_health_data(service_name)
-                ai_score = await ai_orchestrator._calculate_health_score(health_data)
+                ai_score = await ai_orchestrator._calculate_health_score(
+                    health_data
+                )
 
                 enhanced_services[category][service_name] = {
                     **service_data,

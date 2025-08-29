@@ -26,7 +26,9 @@ class SSOService:
         self, tenant_slug: str, relay_state: Optional[str] = None
     ) -> str:
         """Initiate SAML login flow."""
-        tenant = self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+        tenant = (
+            self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+        )
         if not tenant or not tenant.sso_enabled:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -50,7 +52,9 @@ class SSOService:
             )
 
         # Generate SAML AuthnRequest
-        authn_request = self._generate_saml_authn_request(sso_config, relay_state)
+        authn_request = self._generate_saml_authn_request(
+            sso_config, relay_state
+        )
 
         # Encode and redirect
         encoded_request = base64.b64encode(authn_request.encode()).decode()
@@ -77,7 +81,9 @@ class SSOService:
             tenant = self._get_tenant_from_saml_data(user_data, relay_state)
 
             # Authenticate or create user
-            user = await self._authenticate_or_create_saml_user(tenant, user_data)
+            user = await self._authenticate_or_create_saml_user(
+                tenant, user_data
+            )
 
             # Generate JWT token
             token_data = {
@@ -112,7 +118,9 @@ class SSOService:
         self, tenant_slug: str, state: Optional[str] = None
     ) -> str:
         """Initiate OIDC login flow."""
-        tenant = self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+        tenant = (
+            self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+        )
         if not tenant or not tenant.sso_enabled:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -178,7 +186,9 @@ class SSOService:
             user_data = self._parse_oidc_id_token(token_data["id_token"])
 
             # Authenticate or create user
-            user = await self._authenticate_or_create_oidc_user(tenant, user_data)
+            user = await self._authenticate_or_create_oidc_user(
+                tenant, user_data
+            )
 
             # Generate JWT token
             jwt_data = {
@@ -240,12 +250,16 @@ class SSOService:
             user_data = {}
 
             # Find assertion
-            assertion = root.find(".//{urn:oasis:names:tc:SAML:2.0:assertion}Assertion")
+            assertion = root.find(
+                ".//{urn:oasis:names:tc:SAML:2.0:assertion}Assertion"
+            )
             if assertion is None:
                 raise ValueError("No assertion found in SAML response")
 
             # Extract NameID (email)
-            name_id = assertion.find(".//{urn:oasis:names:tc:SAML:2.0:assertion}NameID")
+            name_id = assertion.find(
+                ".//{urn:oasis:names:tc:SAML:2.0:assertion}NameID"
+            )
             if name_id is not None:
                 user_data["email"] = name_id.text
 
@@ -277,7 +291,11 @@ class SSOService:
         # Try to extract tenant from relay state
         if relay_state and relay_state.startswith("tenant:"):
             tenant_slug = relay_state.split(":", 1)[1]
-            tenant = self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+            tenant = (
+                self.db.query(Tenant)
+                .filter(Tenant.slug == tenant_slug)
+                .first()
+            )
             if tenant:
                 return tenant
 
@@ -285,7 +303,9 @@ class SSOService:
         email = user_data.get("email", "")
         if "@" in email:
             domain = email.split("@")[1]
-            tenant = self.db.query(Tenant).filter(Tenant.domain == domain).first()
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.domain == domain).first()
+            )
             if tenant:
                 return tenant
 
@@ -343,7 +363,9 @@ class SSOService:
 
         # Assign default role
         default_role = (
-            self.db.query(Role).filter(Role.name == sso_config.default_role).first()
+            self.db.query(Role)
+            .filter(Role.name == sso_config.default_role)
+            .first()
         )
         if default_role:
             user.roles.append(default_role)
@@ -391,7 +413,9 @@ class SSOService:
             )
 
         tenant_slug = state.split(":", 1)[1]
-        tenant = self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+        tenant = (
+            self.db.query(Tenant).filter(Tenant.slug == tenant_slug).first()
+        )
 
         if not tenant:
             raise HTTPException(
@@ -452,7 +476,9 @@ class SSOService:
 
         # Assign default role
         default_role = (
-            self.db.query(Role).filter(Role.name == sso_config.default_role).first()
+            self.db.query(Role)
+            .filter(Role.name == sso_config.default_role)
+            .first()
         )
         if default_role:
             user.roles.append(default_role)
