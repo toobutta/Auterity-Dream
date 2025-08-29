@@ -36,21 +36,30 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
 @router.post(
-    "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+    "/register",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED
 )
-async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
+async def register_user(
+    user_data: UserRegister, db: Session = Depends(get_db)
+):
     """Register a new user."""
     # Check if user already exists
-    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    existing_user = (
+        db.query(User).filter(User.email == user_data.email).first()
+    )
     if existing_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
         )
 
     # Create new user
     hashed_password = get_password_hash(user_data.password)
     db_user = User(
-        email=user_data.email, name=user_data.name, hashed_password=hashed_password
+        email=user_data.email,
+        name=user_data.name,
+        hashed_password=hashed_password
     )
 
     db.add(db_user)
@@ -61,9 +70,13 @@ async def register_user(user_data: UserRegister, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-async def login_user(user_credentials: UserLogin, db: Session = Depends(get_db)):
+async def login_user(
+    user_credentials: UserLogin, db: Session = Depends(get_db)
+):
     """Login user and return JWT token."""
-    user = authenticate_user(db, user_credentials.email, user_credentials.password)
+    user = authenticate_user(
+        db, user_credentials.email, user_credentials.password
+    )
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -71,25 +84,35 @@ async def login_user(user_credentials: UserLogin, db: Session = Depends(get_db))
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not user.is_active:
+    # Type guard: user is now guaranteed to be User instance
+    assert isinstance(user, User)
+    
+    if user.is_active is False:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user account"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Inactive user account"
         )
 
     # Load user with roles and permissions for token creation
-    user = (
+    user_with_perms = (
         db.query(User)
         .options(joinedload(User.roles).joinedload(Role.permissions))
         .filter(User.id == user.id)
         .first()
     )
+    
+    if not user_with_perms:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     token_data = {
-        "sub": user.email,
-        "user_id": str(user.id),
-        "name": user.name,
-        "permissions": user.get_permissions(),
+        "sub": user_with_perms.email,
+        "user_id": str(user_with_perms.id),
+        "name": user_with_perms.name,
+        "permissions": user_with_perms.get_permissions(),
     }
     access_token = create_access_token(
         data=token_data, expires_delta=access_token_expires
@@ -112,9 +135,13 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not user.is_active:
+    # Type guard: user is now guaranteed to be User instance
+    assert isinstance(user, User)
+    
+    if user.is_active is False:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user account"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Inactive user account"
         )
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -126,7 +153,9 @@ async def login_for_access_token(
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_info(current_user: User = Depends(get_current_active_user)):
+async def get_current_user_info(
+    current_user: User = Depends(get_current_active_user)
+):
     """Get current authenticated user information."""
     return UserResponse.from_user(current_user)
 
@@ -170,10 +199,13 @@ async def get_cross_system_token(
             detail=f"Access denied to {request.target_system} system",
         )
 
-    access_token = create_cross_system_token(current_user, request.target_system)
+    access_token = create_cross_system_token(
+        current_user, request.target_system
+    )
     user_permissions = current_user.get_permissions()
     system_permissions = [
-        p for p in user_permissions if p.startswith(f"{request.target_system}:")
+        p for p in user_permissions
+        if p.startswith(f"{request.target_system}:")
     ]
 
     return CrossSystemTokenResponse(
@@ -188,14 +220,19 @@ async def get_cross_system_token(
 # Role management endpoints
 @router.get("/roles", response_model=List[RoleResponse])
 async def list_roles(
-    db: Session = Depends(get_db), current_user: User = Depends(require_admin_access())
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin_access())
 ):
     """List all roles (admin only)."""
     roles = db.query(Role).all()
     return roles
 
 
-@router.post("/roles", response_model=RoleResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/roles",
+    response_model=RoleResponse,
+    status_code=status.HTTP_201_CREATED
+)
 async def create_role(
     role_data: RoleCreate,
     db: Session = Depends(get_db),
@@ -231,7 +268,8 @@ async def create_role(
 
 @router.get("/permissions", response_model=List[PermissionResponse])
 async def list_permissions(
-    db: Session = Depends(get_db), current_user: User = Depends(require_admin_access())
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin_access())
 ):
     """List all permissions (admin only)."""
     permissions = db.query(Permission).all()
@@ -256,8 +294,8 @@ async def assign_user_roles(
     # Get roles
     roles = db.query(Role).filter(Role.name.in_(assignment.role_names)).all()
     if len(roles) != len(assignment.role_names):
-        found_names = [role.name for role in roles]
-        missing_names = set(assignment.role_names) - set(found_names)
+        found_names = {str(role.name) for role in roles}
+        missing_names = set(assignment.role_names) - found_names
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Roles not found: {', '.join(missing_names)}",
@@ -273,9 +311,12 @@ async def assign_user_roles(
 
 @router.post("/init-roles", status_code=status.HTTP_200_OK)
 async def initialize_default_roles(
-    db: Session = Depends(get_db), current_user: User = Depends(require_admin_access())
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin_access())
 ):
     """Initialize default roles and permissions (admin only)."""
     role_manager = RoleManager(db)
     role_manager.create_default_roles()
-    return {"message": "Default roles and permissions initialized successfully"}
+    return {
+        "message": "Default roles and permissions initialized successfully"
+    }

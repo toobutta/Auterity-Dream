@@ -230,7 +230,8 @@ class ServiceHealthChecker:
         services["kafka"] = await self.check_service_http(
             "Apache Kafka",
             "http://kafka:9092",
-            expected_status=404,  # Kafka doesn't have HTTP endpoint, expect 404
+            # Kafka doesn't have HTTP endpoint, expect 404
+            expected_status=404,
         )
 
         services["zookeeper"] = await self.check_service_http(
@@ -239,7 +240,9 @@ class ServiceHealthChecker:
 
         # Secrets Management
         services["vault"] = await self.check_service_http(
-            "HashiCorp Vault", "http://vault:8200/v1/sys/health", expected_status=200
+            "HashiCorp Vault",
+            "http://vault:8200/v1/sys/health",
+            expected_status=200
         )
 
         # Object Storage
@@ -343,22 +346,30 @@ class ServiceHealthChecker:
 
             # Combine results
             all_services = {
-                "core": results[0] if not isinstance(results[0], Exception) else {},
-                "database": results[1] if not isinstance(results[1], Exception) else {},
+                "core": (
+                    results[0] if not isinstance(results[0], Exception) else {}
+                ),
+                "database": (
+                    results[1] if not isinstance(results[1], Exception) else {}
+                ),
                 "communication": results[2]
                 if not isinstance(results[2], Exception)
                 else {},
                 "automation": results[3]
                 if not isinstance(results[3], Exception)
                 else {},
-                "ai": results[4] if not isinstance(results[4], Exception) else {},
+                "ai": (
+                    results[4] if not isinstance(results[4], Exception) else {}
+                ),
                 "infrastructure": results[5]
                 if not isinstance(results[5], Exception)
                 else {},
                 "monitoring": results[6]
                 if not isinstance(results[6], Exception)
                 else {},
-                "workers": results[7] if not isinstance(results[7], Exception) else {},
+                "workers": (
+                    results[7] if not isinstance(results[7], Exception) else {}
+                ),
             }
 
             # Calculate summary statistics
@@ -367,7 +378,9 @@ class ServiceHealthChecker:
                 for category in all_services.values()
                 if isinstance(category, dict)
             ]
-            total_services = sum(len(category) for category in valid_categories)
+            total_services = sum(
+                len(category) for category in valid_categories
+            )
             healthy_services = sum(
                 len(
                     [
@@ -383,7 +396,10 @@ class ServiceHealthChecker:
                     [
                         s
                         for s in category.values()
-                        if isinstance(s, dict) and s.get("status") == "configured"
+                        if (
+                            isinstance(s, dict)
+                            and s.get("status") == "configured"
+                        )
                     ]
                 )
                 for category in valid_categories
@@ -398,7 +414,8 @@ class ServiceHealthChecker:
                     - healthy_services
                     - configured_services,
                     "health_percentage": round(
-                        (healthy_services + configured_services) / total_services * 100,
+                        (healthy_services + configured_services)
+                        / total_services * 100,
                         1,
                     )
                     if total_services > 0
@@ -446,7 +463,10 @@ async def get_category_services_status(category: str) -> Dict[str, Any]:
     }
 
     if category not in category_map:
-        raise HTTPException(status_code=404, detail=f"Category '{category}' not found")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Category '{category}' not found"
+        )
 
     try:
         result = await category_map[category]()

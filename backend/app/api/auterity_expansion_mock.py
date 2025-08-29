@@ -1,6 +1,7 @@
 """Mock Auterity AI Platform Expansion API endpoints for testing."""
 
 import logging
+from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -22,9 +23,13 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service_mock import MockAutonomousAgentService
+from app.services.autonomous_agent_service_mock import (
+    MockAutonomousAgentService,
+)
 from app.services.smart_triage_service_mock import MockSmartTriageService
-from app.services.vector_duplicate_service_mock import MockVectorDuplicateService
+from app.services.vector_duplicate_service_mock import (
+    MockVectorDuplicateService,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +60,9 @@ async def triage_input(
     try:
         service = MockSmartTriageService()
         decision = await service.triage_content(
-            tenant_id=tenant.id, content=request.content, context=request.context
+            tenant_id=UUID(str(tenant.id)),
+            content=request.content,
+            context=request.context
         )
 
         return TriageResponse(
@@ -63,7 +70,9 @@ async def triage_input(
             confidence_score=decision["confidence_score"],
             rule_applied=decision["rule_applied"],
             reasoning="Mock reasoning based on content analysis",
-            suggested_actions=["Route to appropriate team", "Escalate if urgent"],
+            suggested_actions=[
+                "Route to appropriate team", "Escalate if urgent"
+            ],
             processing_time_ms=decision["processing_time_ms"],
         )
 
@@ -85,7 +94,7 @@ async def create_triage_rule(
     try:
         service = MockSmartTriageService()
         rule = await service.create_triage_rule(
-            tenant_id=tenant.id, rule_data=rule_data.dict()
+            tenant_id=UUID(str(tenant.id)), rule_data=rule_data.dict()
         )
 
         return TriageRuleResponse(
@@ -99,6 +108,7 @@ async def create_triage_rule(
             priority=rule["priority"],
             is_active=rule["is_active"],
             created_at=rule["created_at"],
+            updated_at=rule.get("updated_at", rule["created_at"]),
         )
 
     except Exception as e:
@@ -118,7 +128,9 @@ async def get_triage_accuracy(
     """Mock get triage accuracy metrics."""
     try:
         service = MockSmartTriageService()
-        accuracy = await service.get_triage_accuracy(tenant_id=tenant.id, days=days)
+        accuracy = await service.get_triage_accuracy(
+            tenant_id=UUID(str(tenant.id)), days=days
+        )
 
         return accuracy
 
@@ -197,17 +209,18 @@ async def create_embedding(
     """Mock create a new vector embedding."""
     try:
         service = MockVectorDuplicateService()
-        embedding = await service.generate_embedding("Mock content for embedding")
+        embedding = await service.generate_embedding(
+            "Mock content for embedding"
+        )
 
         return VectorEmbeddingResponse(
-            id="mock-embedding-id",
-            tenant_id=tenant.id,
+            id=UUID("12345678-1234-5678-9abc-123456789abc"),
+            tenant_id=UUID(str(tenant.id)),
             item_type=embedding_data.item_type,
             item_id=embedding_data.item_id,
             content_hash=embedding_data.content_hash,
             embedding_vector=embedding,
-            embedding_metadata=embedding_data.embedding_metadata,
-            created_at="2024-01-01T00:00:00Z",
+            created_at=datetime.now(),
         )
 
     except Exception as e:
@@ -229,7 +242,7 @@ async def create_similarity_clusters(
     try:
         service = MockVectorDuplicateService()
         clusters = await service.create_similarity_cluster(
-            tenant_id=tenant.id, items=items, threshold=threshold
+            tenant_id=UUID(str(tenant.id)), items=items, threshold=threshold
         )
 
         return {
@@ -258,7 +271,7 @@ async def deploy_agent(
     try:
         service = MockAutonomousAgentService()
         agent = await service.deploy_agent(
-            tenant_id=tenant.id, agent_config=request.agent_config
+            tenant_id=UUID(str(tenant.id)), agent_config=request.agent_config
         )
 
         return AgentDeployResponse(
@@ -287,7 +300,9 @@ async def assign_task_to_agent(
     """Mock assign a task to an agent."""
     try:
         service = MockAutonomousAgentService()
-        task = await service.assign_task(agent_id=agent_id, task_data=task_data)
+        task = await service.assign_task(
+            agent_id=agent_id, task_data=task_data
+        )
 
         return task
 
@@ -330,7 +345,8 @@ async def coordinate_agents(
     try:
         service = MockAutonomousAgentService()
         coordination = await service.coordinate_agents(
-            tenant_id=tenant.id, coordination_request=coordination_request
+            tenant_id=UUID(str(tenant.id)),
+            coordination_request=coordination_request
         )
 
         return coordination
@@ -352,8 +368,14 @@ async def get_agent_performance(
     """Mock get agent performance metrics."""
     try:
         service = MockAutonomousAgentService()
+        
+        if agent_id is None:
+            raise HTTPException(
+                status_code=400, detail="agent_id is required"
+            )
+            
         performance = await service.get_agent_performance(
-            tenant_id=tenant.id, agent_id=agent_id
+            tenant_id=UUID(str(tenant.id)), agent_id=agent_id
         )
 
         return performance

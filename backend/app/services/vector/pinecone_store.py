@@ -62,7 +62,9 @@ class PineconeDocumentStore:
         Args:
             retriever: Optional retriever for generating embeddings
         """
-        logger.debug(f"Updated embeddings for {len(self._documents)} documents")
+        logger.debug(
+            f"Updated embeddings for {len(self._documents)} documents"
+        )
 
     def query(
         self,
