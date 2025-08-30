@@ -90,8 +90,13 @@ class SystemDataset(Dataset):
         features = self._extract_features(sample)
         target = self._extract_target(sample)
 
+        target_dtype = (
+            torch.long
+            if self.model_type == ModelType.CLASSIFICATION
+            else torch.float32
+        )
         return torch.tensor(features, dtype=torch.float32), torch.tensor(
-            target, dtype=torch.float32
+            target, dtype=target_dtype
         )
 
     def _extract_feature_names(self) -> List[str]:

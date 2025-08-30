@@ -231,12 +231,10 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
   // Combine refs for drop functionality
   const combinedRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (reactFlowWrapper.current !== node) {
-        (
-          reactFlowWrapper as React.MutableRefObject<HTMLDivElement | null>
-        ).current = node;
+      if (node) {
+        reactFlowWrapper.current = node;
+        drop(node);
       }
-      drop(node);
     },
     [drop],
   );

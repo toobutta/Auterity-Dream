@@ -47,6 +47,19 @@ def upgrade():
         sa.Column("trial_end", sa.DateTime(timezone=True), nullable=True),
     )
 
+    op.create_index(
+        "ix_tenants_stripe_customer_id",
+        "tenants",
+        ["stripe_customer_id"],
+        unique=True,
+    )
+    op.create_index(
+        "ix_tenants_stripe_subscription_id",
+        "tenants",
+        ["stripe_subscription_id"],
+        unique=True,
+    )
+
     # Add usage limits
     op.add_column(
         "tenants", sa.Column("max_users", sa.Integer(), nullable=True)
@@ -255,6 +268,9 @@ def downgrade():
     op.drop_index(op.f("ix_tenants_custom_domain"), table_name="tenants")
     op.drop_index(op.f("ix_tenants_industry_profile"), table_name="tenants")
     op.drop_index(op.f("ix_tenants_stripe_customer_id"), table_name="tenants")
+    op.drop_index(
+        op.f("ix_tenants_stripe_subscription_id"), table_name="tenants"
+    )
     op.drop_index(op.f("ix_tenants_subscription_plan"), table_name="tenants")
 
     # Drop tables

@@ -27,7 +27,7 @@ def upgrade():
             "id",
             postgresql.UUID(as_uuid=True),
             nullable=False,
-            default=uuid.uuid4,
+            server_default=sa.text("gen_random_uuid()"),
         ),
         sa.Column("tenant_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column(
@@ -40,10 +40,10 @@ def upgrade():
             "confidence_threshold",
             sa.Numeric(3, 2),
             nullable=False,
-            default=0.8,
+            server_default="0.8",
         ),
-        sa.Column("priority", sa.Integer, nullable=False, default=1),
-        sa.Column("is_active", sa.Boolean, nullable=False, default=True),
+        sa.Column("priority", sa.Integer, nullable=False, server_default="1"),
+        sa.Column("is_active", sa.Boolean, nullable=False, server_default=sa.true()),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

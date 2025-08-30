@@ -6,16 +6,13 @@ Create Date: 2025-08-09
 """
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
-
 from alembic import op
+from sqlalchemy.dialects import postgresql
 
 
 def upgrade():
     # Enums
-    agent_type_enum = sa.Enum(
-        "MCP", "OPENAI", "CUSTOM", "A2A", name="agenttype"
-    )
+    agent_type_enum = sa.Enum("MCP", "OPENAI", "CUSTOM", "A2A", name="agenttype")
     agent_type_enum.create(op.get_bind(), checkfirst=True)
     agent_status_enum = sa.Enum(
         "ACTIVE", "INACTIVE", "UNHEALTHY", "MAINTENANCE", name="agentstatus"
@@ -33,10 +30,7 @@ def upgrade():
         sa.Column("name", sa.String(255), nullable=False, unique=True),
         sa.Column("config", sa.JSON(), nullable=False),
         sa.Column(
-            "status",
-            agent_status_enum,
-            nullable=False,
-            server_default="INACTIVE",
+            "status", agent_status_enum, nullable=False, server_default="INACTIVE"
         ),
         sa.Column("health_endpoint", sa.String(512)),
         sa.Column(
@@ -63,10 +57,7 @@ def upgrade():
         sa.Column("capabilities", sa.JSON(), nullable=False),
         sa.Column("config", sa.JSON(), nullable=False),
         sa.Column(
-            "status",
-            agent_status_enum,
-            nullable=False,
-            server_default="INACTIVE",
+            "status", agent_status_enum, nullable=False, server_default="INACTIVE"
         ),
         sa.Column("health_url", sa.String(512)),
         sa.Column(
@@ -98,14 +89,10 @@ def upgrade():
         "protocol_messages",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
         sa.Column(
-            "source_agent_id",
-            postgresql.UUID(as_uuid=True),
-            sa.ForeignKey("agents.id"),
+            "source_agent_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("agents.id")
         ),
         sa.Column(
-            "target_agent_id",
-            postgresql.UUID(as_uuid=True),
-            sa.ForeignKey("agents.id"),
+            "target_agent_id", postgresql.UUID(as_uuid=True), sa.ForeignKey("agents.id")
         ),
         sa.Column("protocol_type", protocol_type_enum, nullable=False),
         sa.Column("message_data", sa.JSON(), nullable=False),
@@ -118,13 +105,9 @@ def upgrade():
         ),
         sa.Column("processed_at", sa.DateTime(timezone=True)),
     )
+    op.create_index("ix_protocol_messages_status", "protocol_messages", ["status"])
     op.create_index(
-        "ix_protocol_messages_status", "protocol_messages", ["status"]
-    )
-    op.create_index(
-        "ix_protocol_messages_protocol_type",
-        "protocol_messages",
-        ["protocol_type"],
+        "ix_protocol_messages_protocol_type", "protocol_messages", ["protocol_type"]
     )
     op.create_index(
         "ix_protocol_messages_created_at", "protocol_messages", ["created_at"]
@@ -135,20 +118,24 @@ def upgrade():
         "workflow_contexts",
         sa.Column("id", postgresql.UUID(as_uuid=True), primary_key=True),
         sa.Column(
-            "execution_id", postgresql.UUID(as_uuid=True), nullable=False
+            "execution_id",
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey("workflow_executions.id"),
+            nullable=False,
         ),
         sa.Column("context_data", sa.JSON(), nullable=False),
-        sa.Column("shared_context_id", postgresql.UUID(as_uuid=True)),
-        sa.Column("agent_id", postgresql.UUID(as_uuid=True)),
         sa.Column(
-            "snapshot_version",
-            sa.Integer(),
-            nullable=False,
-            server_default="1",
+            "shared_context_id",
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey("workflow_contexts.id"),
         ),
         sa.Column(
-            "is_active", sa.Boolean(), nullable=False, server_default="true"
+            "agent_id",
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey("agents.id"),
         ),
+        sa.Column("snapshot_version", sa.Integer(), nullable=False, server_default="1"),
+        sa.Column("is_active", sa.Boolean(), nullable=False, server_default="true"),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -163,27 +150,25 @@ def upgrade():
         ),
     )
     op.create_index(
-        "ix_workflow_contexts_execution_id",
-        "workflow_contexts",
-        ["execution_id"],
+        "ix_workflow_contexts_execution_id", "workflow_contexts", ["execution_id"]
     )
     op.create_index(
         "ix_workflow_contexts_shared_context_id",
         "workflow_contexts",
         ["shared_context_id"],
     )
-    op.create_index(
-        "ix_workflow_contexts_agent_id", "workflow_contexts", ["agent_id"]
-    )
+    op.create_index("ix_workflow_contexts_agent_id", "workflow_contexts", ["agent_id"])
 
     # Add agent-specific columns to workflow_executions
     op.add_column(
         "workflow_executions",
-        sa.Column("primary_agent_id", postgresql.UUID(as_uuid=True)),
+        sa.Column(
+            "primary_agent_id",
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey("agents.id"),
+        ),
     )
-    op.add_column(
-        "workflow_executions", sa.Column("agent_execution_data", sa.JSON())
-    )
+    op.add_column("workflow_executions", sa.Column("agent_execution_data", sa.JSON()))
     op.add_column(
         "workflow_executions", sa.Column("multi_agent_coordination", sa.JSON())
     )
@@ -196,8 +181,7 @@ def upgrade():
 
 def downgrade():
     op.drop_index(
-        "ix_workflow_executions_primary_agent_id",
-        table_name="workflow_executions",
+        "ix_workflow_executions_primary_agent_id", table_name="workflow_executions"
     )
     op.drop_column("workflow_executions", "multi_agent_coordination")
     op.drop_column("workflow_executions", "agent_execution_data")

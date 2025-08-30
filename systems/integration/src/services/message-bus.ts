@@ -222,7 +222,10 @@ export class MessageBus extends EventEmitter {
             replyTo: replyQueue,
           });
         })
-        .catch(reject);
+        .catch((error) => {
+          console.error("Failed to publish request:", error);
+          reject(error);
+        });
     });
   }
 

@@ -7,9 +7,8 @@ Create Date: 2025-08-08 10:00:00.000000
 """
 
 import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
-
 from alembic import op
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = "add_mcp_support_tables"
@@ -22,9 +21,7 @@ def upgrade() -> None:
     """Add MCP support tables for multi-agent orchestration."""
 
     # Create agent_types enum
-    agent_type_enum = sa.Enum(
-        "MCP", "OPENAI", "CUSTOM", "A2A", name="agenttype"
-    )
+    agent_type_enum = sa.Enum("MCP", "OPENAI", "CUSTOM", "A2A", name="agenttype")
     agent_type_enum.create(op.get_bind())
 
     # Create agent_status enum
@@ -47,16 +44,11 @@ def upgrade() -> None:
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("config", sa.JSON(), nullable=False),
         sa.Column(
-            "status",
-            agent_status_enum,
-            nullable=False,
-            server_default="INACTIVE",
+            "status", agent_status_enum, nullable=False, server_default="INACTIVE"
         ),
         sa.Column("health_endpoint", sa.String(length=512), nullable=True),
         sa.Column("process_id", sa.String(length=50), nullable=True),
-        sa.Column(
-            "last_health_check", sa.DateTime(timezone=True), nullable=True
-        ),
+        sa.Column("last_health_check", sa.DateTime(timezone=True), nullable=True),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -75,9 +67,6 @@ def upgrade() -> None:
     op.create_index(
         op.f("ix_mcp_servers_status"), "mcp_servers", ["status"], unique=False
     )
-    op.create_index(
-        op.f("ix_mcp_servers_name"), "mcp_servers", ["name"], unique=False
-    )
 
     # Create agents table
     op.create_table(
@@ -89,19 +78,12 @@ def upgrade() -> None:
         sa.Column("capabilities", sa.JSON(), nullable=False),
         sa.Column("config", sa.JSON(), nullable=False),
         sa.Column(
-            "status",
-            agent_status_enum,
-            nullable=False,
-            server_default="INACTIVE",
+            "status", agent_status_enum, nullable=False, server_default="INACTIVE"
         ),
         sa.Column("health_url", sa.String(length=512), nullable=True),
-        sa.Column(
-            "mcp_server_id", postgresql.UUID(as_uuid=True), nullable=True
-        ),
+        sa.Column("mcp_server_id", postgresql.UUID(as_uuid=True), nullable=True),
         sa.Column("user_id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column(
-            "last_health_check", sa.DateTime(timezone=True), nullable=True
-        ),
+        sa.Column("last_health_check", sa.DateTime(timezone=True), nullable=True),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -123,17 +105,11 @@ def upgrade() -> None:
             ["user_id"], ["users.id"], name=op.f("fk_agents_user_id_users")
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_agents")),
-        sa.UniqueConstraint(
-            "name", "user_id", name=op.f("uq_agents_name_user_id")
-        ),
+        sa.UniqueConstraint("name", "user_id", name=op.f("uq_agents_name_user_id")),
     )
     op.create_index(op.f("ix_agents_type"), "agents", ["type"], unique=False)
-    op.create_index(
-        op.f("ix_agents_status"), "agents", ["status"], unique=False
-    )
-    op.create_index(
-        op.f("ix_agents_user_id"), "agents", ["user_id"], unique=False
-    )
+    op.create_index(op.f("ix_agents_status"), "agents", ["status"], unique=False)
+    op.create_index(op.f("ix_agents_user_id"), "agents", ["user_id"], unique=False)
 
     # Create agent_capabilities table for normalized capability storage
     op.create_table(
@@ -142,9 +118,7 @@ def upgrade() -> None:
         sa.Column("agent_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("capability_name", sa.String(length=255), nullable=False),
         sa.Column("capability_data", sa.JSON(), nullable=False),
-        sa.Column(
-            "is_active", sa.Boolean(), nullable=False, server_default="true"
-        ),
+        sa.Column("is_active", sa.Boolean(), nullable=False, server_default="true"),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -187,12 +161,8 @@ def upgrade() -> None:
     op.create_table(
         "protocol_messages",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column(
-            "source_agent_id", postgresql.UUID(as_uuid=True), nullable=True
-        ),
-        sa.Column(
-            "target_agent_id", postgresql.UUID(as_uuid=True), nullable=True
-        ),
+        sa.Column("source_agent_id", postgresql.UUID(as_uuid=True), nullable=True),
+        sa.Column("target_agent_id", postgresql.UUID(as_uuid=True), nullable=True),
         sa.Column("protocol_type", protocol_type_enum, nullable=False),
         sa.Column("message_data", sa.JSON(), nullable=False),
         sa.Column("status", sa.String(length=50), nullable=False),
@@ -240,23 +210,12 @@ def upgrade() -> None:
     op.create_table(
         "workflow_contexts",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column(
-            "execution_id", postgresql.UUID(as_uuid=True), nullable=False
-        ),
+        sa.Column("execution_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("context_data", sa.JSON(), nullable=False),
-        sa.Column(
-            "shared_context_id", postgresql.UUID(as_uuid=True), nullable=True
-        ),
+        sa.Column("shared_context_id", postgresql.UUID(as_uuid=True), nullable=True),
         sa.Column("agent_id", postgresql.UUID(as_uuid=True), nullable=True),
-        sa.Column(
-            "snapshot_version",
-            sa.Integer(),
-            nullable=False,
-            server_default="1",
-        ),
-        sa.Column(
-            "is_active", sa.Boolean(), nullable=False, server_default="true"
-        ),
+        sa.Column("snapshot_version", sa.Integer(), nullable=False, server_default="1"),
+        sa.Column("is_active", sa.Boolean(), nullable=False, server_default="true"),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -305,15 +264,11 @@ def upgrade() -> None:
     op.create_table(
         "mcp_tools",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column(
-            "mcp_server_id", postgresql.UUID(as_uuid=True), nullable=False
-        ),
+        sa.Column("mcp_server_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("tool_name", sa.String(length=255), nullable=False),
         sa.Column("tool_description", sa.Text(), nullable=True),
         sa.Column("tool_schema", sa.JSON(), nullable=False),
-        sa.Column(
-            "is_available", sa.Boolean(), nullable=False, server_default="true"
-        ),
+        sa.Column("is_available", sa.Boolean(), nullable=False, server_default="true"),
         sa.Column(
             "last_discovered",
             sa.DateTime(timezone=True),
@@ -344,24 +299,16 @@ def upgrade() -> None:
         ),
     )
     op.create_index(
-        op.f("ix_mcp_tools_tool_name"),
-        "mcp_tools",
-        ["tool_name"],
-        unique=False,
+        op.f("ix_mcp_tools_tool_name"), "mcp_tools", ["tool_name"], unique=False
     )
     op.create_index(
-        op.f("ix_mcp_tools_is_available"),
-        "mcp_tools",
-        ["is_available"],
-        unique=False,
+        op.f("ix_mcp_tools_is_available"), "mcp_tools", ["is_available"], unique=False
     )
 
     # Add agent-specific columns to existing workflow_executions table
     op.add_column(
         "workflow_executions",
-        sa.Column(
-            "primary_agent_id", postgresql.UUID(as_uuid=True), nullable=True
-        ),
+        sa.Column("primary_agent_id", postgresql.UUID(as_uuid=True), nullable=True),
     )
     op.add_column(
         "workflow_executions",

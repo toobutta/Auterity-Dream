@@ -175,6 +175,12 @@ def upgrade():
     op.create_foreign_key(
         "fk_users_tenant_id", "users", "tenants", ["tenant_id"], ["id"]
     )
+    op.create_index(
+        "uq_users_sso_provider_subject",
+        "users",
+        ["sso_provider", "sso_subject_id"],
+        unique=True,
+    )
 
     # Remove unique constraint on email (will be unique per tenant)
     op.drop_index("ix_users_email", table_name="users")
@@ -208,6 +214,7 @@ def downgrade():
     op.drop_constraint("fk_users_tenant_id", "users", type_="foreignkey")
     op.drop_index("ix_users_email_tenant", table_name="users")
     op.create_index("ix_users_email", "users", ["email"], unique=True)
+    op.drop_index("uq_users_sso_provider_subject", table_name="users")
     op.drop_column("users", "last_login")
     op.drop_column("users", "sso_subject_id")
     op.drop_column("users", "sso_provider")
