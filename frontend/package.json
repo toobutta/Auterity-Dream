@@ -5,20 +5,20 @@
   "private": true,
   "dependencies": {
     "@tailwindcss/line-clamp": "^0.4.4",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
-    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^9.0.8",
     "framer-motion": "^12.23.12",
     "immer": "^10.1.1",
     "langchain": "^0.3.31",
     "llamaindex": "^0.11.27",
+    "prismjs": "^1.30.0",
     "react": "^18.3.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.18.0",
-    "react-syntax-highlighter": "^15.6.1",
     "recharts": "^3.1.2",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.2.2",
@@ -66,7 +66,6 @@
     "fix:all": "node fix-all-typescript-errors.js && npm run lint -- --fix",
     "type-check": "tsc --noEmit --project tsconfig.strict.json"
   },
-  
   "browserslist": {
     "production": [
       ">0.2%",
@@ -79,8 +78,7 @@
       "last 1 safari version"
     ]
   },
-  "overrides": {
-    "prismjs": "^1.30.0",
-    "react-syntax-highlighter": "^15.6.1"
+  "engines": {
+    "node": "18.x"
   }
 }

@@ -49,7 +49,7 @@
     "docs:generate:coverage": "cd frontend && npm run test:coverage && npx istanbul report html"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": "18.x",
     "npm": ">=8.0.0"
   },
   "dependencies": {
@@ -63,6 +63,8 @@
     "redis": "^5.8.2"
   },
   "devDependencies": {
-    "@types/morgan": "^1.9.10"
+    "eslint": "^8.57.1",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0"
   }
 }
