@@ -67,9 +67,7 @@ def convert_db_rule_to_response(rule: Any) -> TriageRuleResponse:
     )
 
 
-def convert_db_embedding_to_response(
-    embedding: Any
-) -> VectorEmbeddingResponse:
+def convert_db_embedding_to_response(embedding: Any) -> VectorEmbeddingResponse:
     """Convert database VectorEmbedding object to response schema."""
     return VectorEmbeddingResponse(
         id=UUID(str(embedding.id)),
@@ -93,8 +91,23 @@ async def triage_input(
     request: TriageRequest,
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
-):
-    """Process input through smart triage system."""
+) -> TriageResponse:
+    """Process input through smart triage system.
+
+    Uses AI-powered analysis combined with rule-based logic to determine
+    the optimal routing decision for the given input content.
+
+    Args:
+        request: Triage request containing content and context
+        db: Database session dependency
+        tenant: Current tenant dependency
+
+    Returns:
+        TriageResponse with routing decision and analysis details
+
+    Raises:
+        HTTPException: If triage processing fails
+    """
     try:
         service = SmartTriageService(db)
         result = await service.triage_input(
@@ -103,20 +116,20 @@ async def triage_input(
             tenant_id=UUID(str(tenant.id)),
         )
 
-        return TriageResponse(
-            routing_decision=result.routing_decision,
-            confidence_score=result.confidence_score,
-            rule_applied=result.rule_applied,
-            reasoning=result.reasoning,
-            processing_time_ms=result.processing_time_ms,
-            suggested_actions=result.suggested_actions,
-        )
+        # Use the to_dict() method for schema compatibility
+        return TriageResponse(**result.to_dict())
 
+    except ValueError as e:
+        logger.error(f"Invalid triage request: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid request: {str(e)}",
+        )
     except Exception as e:
         logger.error(f"Failed to process triage: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to process triage: {str(e)}",
+            detail="Internal server error occurred during triage processing",
         )
 
 
@@ -125,21 +138,43 @@ async def create_triage_rule(
     rule_data: TriageRuleCreate,
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
-):
-    """Create a new triage rule."""
+) -> TriageRuleResponse:
+    """Create a new triage rule for the current tenant.
+
+    Creates a new AI or rule-based triage rule that will be used for
+    automatic content routing decisions.
+
+    Args:
+        rule_data: Triage rule creation data including conditions and logic
+        db: Database session dependency
+        tenant: Current tenant dependency
+
+    Returns:
+        TriageRuleResponse with the created rule details
+
+    Raises:
+        HTTPException: If rule creation fails or validation errors occur
+    """
     try:
         service = SmartTriageService(db)
         rule = await service.create_triage_rule(
-            tenant_id=UUID(str(tenant.id)), rule_data=rule_data.dict()
+            tenant_id=UUID(str(tenant.id)),
+            rule_data=rule_data.model_dump(),  # Updated from dict() to model_dump()
         )
 
         return convert_db_rule_to_response(rule)
 
+    except ValueError as e:
+        logger.error(f"Invalid triage rule data: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid rule data: {str(e)}",
+        )
     except Exception as e:
         logger.error(f"Failed to create triage rule: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create triage rule: {str(e)}",
+            detail="Internal server error occurred during rule creation",
         )
 
 
@@ -158,11 +193,7 @@ async def get_triage_rules(
             # Get all rules if not filtering by active
             from app.models.auterity_expansion import TriageRule
 
-            rules = (
-                db.query(TriageRule)
-                .filter(TriageRule.tenant_id == tenant.id)
-                .all()
-            )
+            rules = db.query(TriageRule).filter(TriageRule.tenant_id == tenant.id).all()
 
         return [convert_db_rule_to_response(rule) for rule in rules]
 
@@ -183,9 +214,7 @@ async def get_triage_accuracy(
     """Get triage accuracy metrics."""
     try:
         service = SmartTriageService(db)
-        accuracy = await service.get_triage_accuracy(
-            UUID(str(tenant.id)), days
-        )
+        accuracy = await service.get_triage_accuracy(UUID(str(tenant.id)), days)
         return {"accuracy": accuracy, "period_days": days}
 
     except Exception as e:
@@ -202,9 +231,28 @@ async def search_similar_items(
     request: SimilaritySearchRequest,
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
-):
-    """Search for similar items using vector embeddings."""
+) -> SimilaritySearchResponse:
+    """Search for similar items using vector embeddings.
+
+    Performs semantic similarity search across the specified item type
+    using AI-generated vector embeddings.
+
+    Args:
+        request: Similarity search request with content and parameters
+        db: Database session dependency
+        tenant: Current tenant dependency
+
+    Returns:
+        SimilaritySearchResponse with ranked similarity results
+
+    Raises:
+        HTTPException: If search fails or invalid parameters provided
+    """
     try:
+        # Validate request parameters
+        if not request.content.strip():
+            raise ValueError("Content cannot be empty")
+
         service = VectorDuplicateService(db)
         results = await service.find_similar_items(
             content=request.content,
@@ -214,31 +262,29 @@ async def search_similar_items(
             limit=request.limit,
         )
 
-        # Assuming results is a list of dict-like objects
-        similarity_results = []
-        for result in results:
-            similarity_results.append(
-                SimilarityResult(
-                    item_id=result.item_id,
-                    item_type=result.item_type,
-                    similarity_score=result.similarity_score,
-                    content_preview=result.content_preview,
-                    metadata=getattr(result, 'metadata', None),
-                )
-            )
+        # Convert service results to schema objects using to_dict()
+        similarity_results = [
+            SimilarityResult(**result.to_dict()) for result in results
+        ]
 
         return SimilaritySearchResponse(
             query_content=request.content,
             results=similarity_results,
             total_found=len(similarity_results),
-            search_time_ms=getattr(results, 'search_time_ms', 0),
+            search_time_ms=0,  # Could be enhanced to track actual search time
         )
 
+    except ValueError as e:
+        logger.error(f"Invalid similarity search request: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid request: {str(e)}",
+        )
     except Exception as e:
         logger.error(f"Failed to search similar items: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to search similar items: {str(e)}",
+            detail="Internal server error occurred during similarity search",
         )
 
 
@@ -288,7 +334,7 @@ async def get_similarity_clusters(
         if item_type is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="item_type parameter is required"
+                detail="item_type parameter is required",
             )
 
         service = VectorDuplicateService(db)
@@ -327,7 +373,7 @@ async def get_duplicate_analysis(
         if item_type is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="item_type parameter is required"
+                detail="item_type parameter is required",
             )
 
         service = VectorDuplicateService(db)
@@ -355,9 +401,28 @@ async def deploy_agent(
     request: AgentDeployRequest,
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
-):
-    """Deploy a new autonomous agent."""
+) -> AgentDeployResponse:
+    """Deploy a new autonomous agent for the current tenant.
+
+    Creates and deploys a new AI agent with the specified configuration,
+    including memory systems and coordination capabilities.
+
+    Args:
+        request: Agent deployment request with configuration
+        db: Database session dependency
+        tenant: Current tenant dependency
+
+    Returns:
+        AgentDeployResponse with deployment status and agent details
+
+    Raises:
+        HTTPException: If deployment fails or configuration is invalid
+    """
     try:
+        # Validate agent configuration
+        if not request.agent_config or not request.agent_config.get("name"):
+            raise ValueError("Agent configuration must include a name")
+
         service = AutonomousAgentService(db)
 
         # Convert schema AgentConfig to service AgentConfig
@@ -382,11 +447,17 @@ async def deploy_agent(
             coordination_enabled=agent_instance.coordination_enabled,
         )
 
+    except ValueError as e:
+        logger.error(f"Invalid agent configuration: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid configuration: {str(e)}",
+        )
     except Exception as e:
         logger.error(f"Failed to deploy agent: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to deploy agent: {str(e)}",
+            detail="Internal server error occurred during agent deployment",
         )
 
 
@@ -400,14 +471,12 @@ async def assign_task_to_agent(
     """Assign a task to an autonomous agent."""
     try:
         service = AutonomousAgentService(db)
-        task = await service.assign_task(
-            agent_id, task_data, UUID(str(tenant.id))
-        )
+        task = await service.assign_task(agent_id, task_data, UUID(str(tenant.id)))
 
         if task is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Failed to assign task to agent"
+                detail="Failed to assign task to agent",
             )
 
         return {
@@ -430,9 +499,7 @@ async def assign_task_to_agent(
 @router.get("/agents/memory")
 async def get_agent_memory(
     agent_id: UUID = Query(..., description="Agent ID to get memory for"),
-    context_key: Optional[str] = Query(
-        None, description="Filter by context key"
-    ),
+    context_key: Optional[str] = Query(None, description="Filter by context key"),
     limit: int = Query(50, description="Maximum memories to return"),
     db: Session = Depends(get_db),
     tenant: Tenant = Depends(get_current_tenant),
@@ -473,12 +540,10 @@ async def get_agent_coordination(
     try:
         # Get active agents for this tenant
         from app.models.agent import Agent, AgentStatus
+
         active_agents = (
             db.query(Agent)
-            .filter(
-                Agent.user_id == tenant.id,
-                Agent.status == AgentStatus.ACTIVE
-            )
+            .filter(Agent.user_id == tenant.id, Agent.status == AgentStatus.ACTIVE)
             .all()
         )
 
@@ -496,8 +561,7 @@ async def get_agent_coordination(
                 for agent in active_agents
             ],
             "last_updated": (
-                active_agents[0].updated_at.isoformat()
-                if active_agents else None
+                active_agents[0].updated_at.isoformat() if active_agents else None
             ),
         }
 
