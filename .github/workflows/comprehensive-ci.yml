@@ -24,14 +24,14 @@ concurrency:
 
 jobs:
   # Quality Gates Setup
-  setup-quality-gates:
+  setup_quality_gates:
     runs-on: ubuntu-latest
     outputs:
-      backend-changed: ${{ steps.changes.outputs.backend }}
-      frontend-changed: ${{ steps.changes.outputs.frontend }}
-      relaycore-changed: ${{ steps.changes.outputs.relaycore }}
-      neuroweaver-changed: ${{ steps.changes.outputs.neuroweaver }}
-      e2e-required: ${{ steps.changes.outputs.e2e-required }}
+      backend_changed: ${{ steps.changes.outputs.backend }}
+      frontend_changed: ${{ steps.changes.outputs.frontend }}
+      relaycore_changed: ${{ steps.changes.outputs.relaycore }}
+      neuroweaver_changed: ${{ steps.changes.outputs.neuroweaver }}
+      e2e_required: ${{ steps.changes.outputs.e2e-required }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -57,7 +57,7 @@ jobs:
   # Code Quality Gates
   code-quality:
     runs-on: ubuntu-latest
-    needs: setup-quality-gates
+    needs: setup_quality_gates
     steps:
       - uses: actions/checkout@v4
         with:
@@ -81,14 +81,14 @@ jobs:
           pip install black isort mypy pylint flake8 bandit
 
       - name: Run frontend linting
-        if: needs.setup-quality-gates.outputs.frontend-changed == 'true'
+        if: needs.setup_quality_gates.outputs.frontend_changed == 'true'
         run: |
           cd frontend && npm ci
           npm run lint || true
           npx prettier --check "src/**/*.{ts,tsx}" || true
 
       - name: Run backend linting
-        if: needs.setup-quality-gates.outputs.backend-changed == 'true'
+        if: needs.setup_quality_gates.outputs.backend_changed == 'true'
         run: |
           cd backend
           pip install -r requirements.txt
@@ -99,17 +99,17 @@ jobs:
 
       - name: Type checking
         run: |
-          if [ "${{ needs.setup-quality-gates.outputs.frontend-changed }}" == "true" ]; then
+          if [ "${{ needs.setup_quality_gates.outputs.frontend_changed }}" == "true" ]; then
             cd frontend && npx tsc --noEmit || true
           fi
-          if [ "${{ needs.setup-quality-gates.outputs.backend-changed }}" == "true" ]; then
+          if [ "${{ needs.setup_quality_gates.outputs.backend_changed }}" == "true" ]; then
             cd backend && mypy app/ || true
           fi
 
   # Security Scanning
   security-scan:
     runs-on: ubuntu-latest
-    needs: setup-quality-gates
+    needs: setup_quality_gates
     steps:
       - uses: actions/checkout@v4
 
@@ -128,13 +128,13 @@ jobs:
           sarif_file: 'trivy-results.sarif'
 
       - name: Run Bandit security linter
-        if: needs.setup-quality-gates.outputs.backend-changed == 'true'
+        if: needs.setup_quality_gates.outputs.backend_changed == 'true'
         run: |
           pip install bandit
           bandit -r backend/app/ -f json -o bandit-report.json || true
 
       - name: Run npm audit
-        if: needs.setup-quality-gates.outputs.frontend-changed == 'true'
+        if: needs.setup_quality_gates.outputs.frontend_changed == 'true'
         run: |
           cd frontend
           npm audit --audit-level moderate --json > npm-audit.json || true
@@ -152,7 +152,7 @@ jobs:
   # Unit Tests with Coverage
   unit-tests:
     runs-on: ubuntu-latest
-    needs: [setup-quality-gates, code-quality]
+    needs: [setup_quality_gates, code-quality]
     if: always() && needs.code-quality.result != 'failure'
     strategy:
       fail-fast: false
@@ -160,27 +160,27 @@ jobs:
         component: [backend, frontend, relaycore, neuroweaver-backend, neuroweaver-frontend]
         include:
           - component: backend
-            condition: needs.setup-quality-gates.outputs.backend-changed == 'true'
+            condition: needs.setup_quality_gates.outputs.backend_changed == 'true'
             path: backend
             test-command: pytest tests/ -v --cov=app --cov-report=xml --cov-report=html || true
             coverage-file: backend/coverage.xml
           - component: frontend
-            condition: needs.setup-quality-gates.outputs.frontend-changed == 'true'
+            condition: needs.setup_quality_gates.outputs.frontend_changed == 'true'
             path: frontend
             test-command: npm test -- --coverage --watchAll=false || true
             coverage-file: frontend/coverage/lcov.info
           - component: relaycore
-            condition: needs.setup-quality-gates.outputs.relaycore-changed == 'true'
+            condition: needs.setup_quality_gates.outputs.relaycore_changed == 'true'
             path: systems/relaycore
             test-command: npm test -- --coverage --watchAll=false || true
             coverage-file: systems/relaycore/coverage/lcov.info
           - component: neuroweaver-backend
-            condition: needs.setup-quality-gates.outputs.neuroweaver-changed == 'true'
+            condition: needs.setup_quality_gates.outputs.neuroweaver_changed == 'true'
             path: systems/neuroweaver/backend
             test-command: pytest tests/ -v --cov=app --cov-report=xml || true
             coverage-file: systems/neuroweaver/backend/coverage.xml
           - component: neuroweaver-frontend
-            condition: needs.setup-quality-gates.outputs.neuroweaver-changed == 'true'
+            condition: needs.setup_quality_gates.outputs.neuroweaver_changed == 'true'
             path: systems/neuroweaver/frontend
             test-command: npm test -- --coverage --watchAll=false || true
             coverage-file: systems/neuroweaver/frontend/coverage/lcov.info
@@ -284,7 +284,7 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
     needs: [integration-tests]
-    if: needs.setup-quality-gates.outputs.e2e-required == 'true'
+    if: needs.setup_quality_gates.outputs.e2e_required == 'true'
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4

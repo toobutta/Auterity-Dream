@@ -1,5 +1,7 @@
-"""White-Label AI Agent Marketplace Service - Templates, revenue sharing, and \
-    custom agent training."""
+"""White-Label AI Agent Marketplace Service.
+
+Templates, revenue sharing, and custom agent training.
+"""
 
 import asyncio
 import logging
@@ -114,6 +116,7 @@ class DeployedAgent:
     deployed_at: datetime = field(default_factory=datetime.utcnow)
     deployed_by: Optional[UUID] = None
     version: str = "1.0"
+    updated_at: datetime = field(default_factory=datetime.utcnow)
 
 
 @dataclass
@@ -167,12 +170,15 @@ class CustomTrainingJob:
 
 
 class AgentMarketplaceService:
-    """White-Label AI Agent Marketplace Service - Templates, revenue sharing, and \
-        custom agent training."""
+    """White-Label AI Agent Marketplace Service.
+
+    Templates, revenue sharing, and custom agent training.
+    """
 
     def __init__(self, db_session):
         self.db = db_session
-        self.config = SaaSConfig()
+        # SaaSConfig uses Pydantic settings and reads from environment
+        self.config = SaaSConfig()  # type: ignore
 
         # Marketplace storage
         self.templates: Dict[str, AgentTemplate] = {}
@@ -192,7 +198,10 @@ class AgentMarketplaceService:
             {
                 "id": "customer_service_basic",
                 "name": "Basic Customer Service Agent",
-                "description": "Handles common customer inquiries with predefined responses",
+                "description": (
+                    "Handles common customer inquiries "
+                    "with predefined responses"
+                ),
                 "category": AgentCategory.CUSTOMER_SERVICE,
                 "capabilities": [
                     "faq_responses",
@@ -212,7 +221,9 @@ class AgentMarketplaceService:
             {
                 "id": "sales_lead_qualifier",
                 "name": "Sales Lead Qualifier",
-                "description": "Qualifies leads and gathers prospect information",
+                "description": (
+                    "Qualifies leads and gathers prospect information"
+                ),
                 "category": AgentCategory.SALES,
                 "capabilities": [
                     "lead_scoring",
@@ -232,7 +243,9 @@ class AgentMarketplaceService:
             {
                 "id": "hr_policy_assistant",
                 "name": "HR Policy Assistant",
-                "description": "Provides instant answers to employee policy questions",
+                "description": (
+                    "Provides instant answers to employee policy questions"
+                ),
                 "category": AgentCategory.HR,
                 "capabilities": [
                     "policy_lookup",
@@ -252,7 +265,9 @@ class AgentMarketplaceService:
             {
                 "id": "marketing_content_creator",
                 "name": "Marketing Content Creator",
-                "description": "Generates marketing content and social media posts",
+                "description": (
+                    "Generates marketing content and social media posts"
+                ),
                 "category": AgentCategory.MARKETING,
                 "capabilities": [
                     "content_generation",
@@ -460,7 +475,8 @@ class AgentMarketplaceService:
 
             self.training_jobs[job_id] = training_job
 
-            # Simulate training start (in real implementation, this would queue the job)
+            # Simulate training start (in real implementation,
+            # this would queue the job)
             asyncio.create_task(self._simulate_training_job(job_id))
 
             logger.info(f"Started custom training job: {job_id}")
@@ -724,9 +740,9 @@ class AgentMarketplaceService:
                 .all()
             )
 
-            total_revenue = sum(
+            total_revenue = Decimal(str(sum(
                 log.cost_amount or Decimal("0") for log in usage_logs
-            )
+            )))
 
             if total_revenue > 0 and template.revenue_share_percentage > 0:
                 creator_revenue = total_revenue * Decimal(

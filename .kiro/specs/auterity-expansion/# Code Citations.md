@@ -18,7 +18,6 @@ viewBox="0 0 24 24"
                   <p className="
 ```
 
-
 ## License: unknown
 
 <https://github.com/Teerut26/my-birthday/blob/1be811808f18caa196b21f467810bcfb7ee00823/pages/index.tsx>

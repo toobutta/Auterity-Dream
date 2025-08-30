@@ -1,6 +1,7 @@
 """
 Comprehensive example of the Workflow Execution Engine
-Demonstrates all key features including parallel execution, dependency resolution, and error recovery
+Demonstrates all key features including parallel execution, dependency
+resolution, and error recovery
 """
 
 # !/usr/bin/env python3
@@ -17,7 +18,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 async def example_complex_workflow():
-    """Example of a complex workflow with multiple dependencies and parallel execution"""
+    """Example of a complex workflow with multiple dependencies and
+    parallel execution"""
 
     print("🚀 Running Complex Workflow Example")
     print("=" * 50)
@@ -91,7 +93,10 @@ async def example_complex_workflow():
                 "input": {
                     "prompt": "Analyze the user and system data for insights"
                 },
-                "depends_on": ["process_user_data", "process_system_data"],
+                "depends_on": [
+                    "process_user_data",
+                    "process_system_data"
+                ],
             },
             # Final output phase
             "generate_report": {

@@ -113,6 +113,7 @@ The AI classifies commit types based on:
 ### Automatic Validation
 
 ✅ **Pass Criteria:**
+
 - Conventional commit format
 - Valid type and scope
 - Subject ≤ 50 characters
@@ -120,12 +121,14 @@ The AI classifies commit types based on:
 - Proper capitalization and punctuation
 
 ⚠️ **Warning Triggers:**
+
 - Unknown scope (not in predefined list)
 - Generic terms like "update", "changes"
 - Missing body for significant changes
 - Long body lines (>72 chars)
 
 ❌ **Fail Criteria:**
+
 - Invalid conventional format
 - Invalid commit type
 - Subject too long (>50 chars)
@@ -182,6 +185,7 @@ ci(validation): implement end-to-end quality checks
 ### 1. Context Inclusion
 
 Always include relevant context:
+
 - Changed file count for formatting work
 - Performance impact for optimizations  
 - Breaking change implications
@@ -190,6 +194,7 @@ Always include relevant context:
 ### 2. Business Value
 
 Connect technical changes to business value:
+
 - "improve developer experience"
 - "enhance system reliability"
 - "reduce maintenance overhead"
@@ -198,6 +203,7 @@ Connect technical changes to business value:
 ### 3. Implementation Details
 
 For significant changes, include:
+
 - What specific patterns were used
 - Why this approach was chosen
 - How the solution addresses the problem

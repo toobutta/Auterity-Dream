@@ -8,7 +8,7 @@ import json
 import logging
 import time
 from functools import wraps
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import redis.asyncio as redis
 from cachetools import TTLCache
@@ -105,7 +105,9 @@ class AgentCacheManager:
             self.stats["errors"] += 1
             return None
 
-    async def set(self, key: str, value: Any, ttl: int = None) -> bool:
+    async def set(
+        self, key: str, value: Any, ttl: Optional[int] = None
+    ) -> bool:
         """Set value in cache"""
         try:
             ttl = ttl or CacheConfig.DEFAULT_TTL
@@ -203,7 +205,9 @@ cache_manager = AgentCacheManager()
 
 
 def cached_response(
-    cache_key_prefix: str, ttl: int = None, vary_by: list = None
+    cache_key_prefix: str,
+    ttl: Optional[int] = None,
+    vary_by: Optional[List[str]] = None
 ):
     """
     Decorator for caching API responses
@@ -211,7 +215,8 @@ def cached_response(
     Args:
         cache_key_prefix: Prefix for cache key
         ttl: Time to live in seconds
-        vary_by: List of request attributes to vary cache by (e.g., ['user_id', 'tenant_id'])
+        vary_by: List of request attributes to vary cache by
+                 (e.g., ['user_id', 'tenant_id'])
     """
 
     def decorator(func):
