@@ -1,0 +1,10 @@
+# This workflow is temporarily disabled to avoid conflicts with optimized-ci-cd.yml
+# Remove this file when the new workflow is stable
+
+# name: Comprehensive CI/CD Pipeline
+# 
+# on:
+#   push:
+#     branches: [ main, develop ]
+#   pull_request:
+#     branches: [ main, develop ]
