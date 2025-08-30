@@ -9,6 +9,17 @@
 
 All endpoints require JWT token in header: `Authorization: Bearer <token>`
 
+### JWT Claims
+
+- `sub`: user email (string)
+- `user_id`: UUID string of the user
+- `tenant_id`: UUID string for multi-tenant scoping (optional for single-tenant)
+- `name`: user display name
+- `permissions`: array of permission strings like `autmatrix:read`, `relaycore:admin`
+- `type`: token type, one of `access`, `refresh`, `cross_system`
+- `target_system`: present when `type == cross_system` (e.g., `relaycore`)
+- `exp`: expiration timestamp (numeric)
+
 ## Core Endpoints
 
 ### Workflows

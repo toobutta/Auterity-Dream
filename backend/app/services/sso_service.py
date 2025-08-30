@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 import httpx
 from fastapi import HTTPException, status
-from jose import jwt
+import jwt
 from sqlalchemy.orm import Session
 
 from app.auth import create_access_token
@@ -396,10 +396,18 @@ class SSOService:
             return response.json()
 
     def _parse_oidc_id_token(self, id_token: str) -> Dict:
-        """Parse OIDC ID token and extract user data."""
+        """Parse OIDC ID token and extract user data.
+
+        Decodes without signature verification; upstream OIDC verification should
+        be performed when configured (issuer, audience, JWKS).
+        """
         try:
-            # Decode without verification for now (should verify in production)
-            payload = jwt.get_unverified_claims(id_token)
+            # Decode without signature verification
+            payload = jwt.decode(
+                id_token,
+                options={"verify_signature": False, "verify_exp": False},
+                algorithms=["HS256", "RS256", "ES256"],
+            )
             return payload
         except Exception as e:
             raise ValueError(f"Invalid ID token: {str(e)}")

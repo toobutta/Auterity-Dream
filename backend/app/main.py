@@ -51,6 +51,14 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 DEBUG = os.getenv("DEBUG", "true").lower() == "true"
 CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 
+# Security guardrails for production
+_secret_key = os.getenv("SECRET_KEY")
+if ENVIRONMENT == "production":
+    if not _secret_key or _secret_key == "your-secret-key-change-in-production":
+        raise RuntimeError(
+            "SECURITY: SECRET_KEY must be set to a strong value in production."
+        )
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -144,6 +152,8 @@ app.include_router(websockets.router)
 
 @app.get("/")
 async def root():
+    from datetime import datetime, timezone
+
     return {
         "message": (
             "AutoMatrix AI Hub Workflow Engine MVP - "
@@ -205,7 +215,7 @@ async def health_check():
                 else "offline"
             ),
         },
-        "timestamp": "2025-08-23T00:00:00Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
 

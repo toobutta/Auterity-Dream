@@ -16,6 +16,13 @@ from app.services.relaycore_client import RelayCoreChatClient, get_relaycore_cli
 
 logger = logging.getLogger(__name__)
 
+# Constants
+RELAYCORE_SOURCE = "relaycore"
+DIRECT_SOURCE = "direct"
+DEFAULT_SYSTEM_MESSAGE = (
+    "You are a helpful AI assistant for automotive dealership workflows."
+)
+
 
 class AIModelType(Enum):
     """Supported AI model types."""
@@ -344,7 +351,7 @@ class EnhancedAIService:
 
             except openai.APIError as e:
                 last_error = e
-                self.logger.error(
+                self.logger.exception(
                     f"OpenAI API error on attempt {attempt + 1}: {e}"
                 )
                 if attempt < self.max_retries:

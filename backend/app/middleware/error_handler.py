@@ -222,13 +222,15 @@ class ErrorReportingMiddleware(BaseHTTPMiddleware):
 
         # In a production environment, this would send to an error reporting service
         # like Sentry, Rollbar, or a custom monitoring system
+        from datetime import datetime, timezone
+
         error_report = {
             "error_type": error_type,
             "error_message": str(exc),
             "request_path": request.url.path,
             "request_method": request.method,
             "user_agent": request.headers.get("user-agent"),
-            "timestamp": "now",  # Would use actual timestamp
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         # For now, just log the report
