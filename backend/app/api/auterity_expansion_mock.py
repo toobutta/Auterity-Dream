@@ -23,13 +23,9 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service_mock import (
-    MockAutonomousAgentService,
-)
+from app.services.autonomous_agent_service_mock import MockAutonomousAgentService
 from app.services.smart_triage_service_mock import MockSmartTriageService
-from app.services.vector_duplicate_service_mock import (
-    MockVectorDuplicateService,
-)
+from app.services.vector_duplicate_service_mock import MockVectorDuplicateService
 
 logger = logging.getLogger(__name__)
 

@@ -1,11 +1,11 @@
-"""AI Cost Optimization Engine - Dynamic model selection and cost management."""
+"""AI Cost Optimization Engine - Dynamic model selection."""
 
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 import numpy as np
@@ -88,11 +88,46 @@ class BudgetAnalysis:
 
 
 class AICostOptimizationService:
-    """AI Cost Optimization Engine - Intelligent model selection and cost management."""
+    """AI Cost Optimization Engine - Intelligent model selection."""
 
     def __init__(self, db: Session):
         self.db = db
-        self.config = SaaSConfig()
+        self.config = SaaSConfig(
+            DEFAULT_TRIAL_DAYS=30,
+            MAX_TRIAL_DAYS=90,
+            AUTO_SUSPEND_DAYS=7,
+            GRACE_PERIOD_DAYS=5,
+            INVOICE_DUE_DAYS=15,
+            USAGE_TRACKING_ENABLED=True,
+            USAGE_RESET_DAY=1,
+            USAGE_ALERT_THRESHOLD=0.8,
+            STORAGE_PRICING=Decimal("0.01"),
+            WHITE_LABEL_ENABLED=False,
+            CUSTOM_DOMAIN_ENABLED=False,
+            BRANDING_CUSTOMIZATION_ENABLED=False,
+            COMPLIANCE_CHECKS_ENABLED=True,
+            GDPR_COMPLIANCE_ENABLED=True,
+            SOC2_COMPLIANCE_ENABLED=True,
+            HIPAA_COMPLIANCE_ENABLED=False,
+            API_RATE_LIMITING_ENABLED=True,
+            DEFAULT_RATE_LIMIT=1000,
+            MAX_RATE_LIMIT=5000,
+            USAGE_MONITORING_ENABLED=True,
+            BILLING_MONITORING_ENABLED=True,
+            PERFORMANCE_MONITORING_ENABLED=True,
+            EMAIL_NOTIFICATIONS_ENABLED=True,
+            SLACK_NOTIFICATIONS_ENABLED=False,
+            WEBHOOK_NOTIFICATIONS_ENABLED=False,
+            USAGE_ANALYTICS_ENABLED=True,
+            BILLING_ANALYTICS_ENABLED=True,
+            USER_ANALYTICS_ENABLED=True,
+            STRIPE_INTEGRATION_ENABLED=True,
+            PAYPAL_INTEGRATION_ENABLED=False,
+            QUICKBOOKS_INTEGRATION_ENABLED=False,
+            TEST_MODE=False,
+            MOCK_BILLING_ENABLED=False,
+            MOCK_PAYMENTS_ENABLED=False,
+        )
         self.model_profiles = self._initialize_model_profiles()
 
     def _initialize_model_profiles(self) -> Dict[str, ModelCostProfile]:
@@ -101,7 +136,9 @@ class AICostOptimizationService:
 
         # Load from model policies configuration
         if hasattr(settings, "MODEL_POLICIES"):
-            for provider, provider_data in settings.MODEL_POLICIES.items():
+            for provider, provider_data in getattr(
+                settings, "MODEL_POLICIES", {}
+            ).items():
                 for model_id, model_data in provider_data.items():
                     if isinstance(model_data, dict):
                         profiles[model_id] = ModelCostProfile(
@@ -186,8 +223,8 @@ class AICostOptimizationService:
         tenant_id: UUID,
         model_id: str,
         input_tokens: int,
-        output_tokens: int = None,
-        context: Dict[str, Any] = None,
+        output_tokens: Optional[int] = None,
+        context: Optional[Dict[str, Any]] = None,
     ) -> CostPrediction:
         """Predict the cost of an AI request with confidence interval."""
         try:
@@ -319,7 +356,7 @@ class AICostOptimizationService:
             # Convert to confidence score (lower variation = higher confidence)
             confidence = max(0.5, min(0.95, 1.0 - coefficient_of_variation))
 
-            return confidence
+            return float(confidence)
 
         except Exception as e:
             logger.warning(f"Confidence calculation failed: {str(e)}")
@@ -391,11 +428,11 @@ class AICostOptimizationService:
         self,
         tenant_id: UUID,
         input_tokens: int,
-        context: Dict[str, Any] = None,
-        cost_constraint: Decimal = None,
+        context: Optional[Dict[str, Any]] = None,
+        cost_constraint: Optional[Decimal] = None,
         strategy: OptimizationStrategy = OptimizationStrategy.BALANCED,
     ) -> OptimizationRecommendation:
-        """Optimize AI model selection based on cost, performance, and constraints."""
+        """Optimize AI model selection based on cost, performance."""
         try:
             context = context or {}
             cost_constraint = cost_constraint or Decimal("1.0")
@@ -599,15 +636,25 @@ class AICostOptimizationService:
         self.model_profiles[model_id]
 
         if strategy == OptimizationStrategy.AGGRESSIVE:
-            return f"Selected {model_id} for maximum cost savings. Performance score: {evaluation['performance_score']:.1f}/100"
+            return (
+                f"Selected {model_id} for maximum cost savings. "
+                f"Performance score: {evaluation['performance_score']:.1f}/100"
+            )
         elif strategy == OptimizationStrategy.BALANCED:
-            return f"Selected {model_id} balancing cost and \
-                performance. Overall score: {evaluation['overall_score']:.1f}/100"
+            return (
+                f"Selected {model_id} balancing cost and performance. "
+                f"Overall score: {evaluation['overall_score']:.1f}/100"
+            )
         elif strategy == OptimizationStrategy.QUALITY_FIRST:
-            return f"Selected {model_id} prioritizing quality and \
-                capabilities. Performance score: {evaluation['performance_score']:.1f}/100"
+            return (
+                f"Selected {model_id} prioritizing quality and capabilities. "
+                f"Performance score: {evaluation['performance_score']:.1f}/100"
+            )
         else:
-            return f"Selected {model_id} for budget compliance. Cost efficiency: {evaluation['cost_efficiency']:.1f}/100"
+            return (
+                f"Selected {model_id} for budget compliance. "
+                f"Cost efficiency: {evaluation['cost_efficiency']:.1f}/100"
+            )
 
     def _generate_implementation_steps(
         self, model_id: str, estimated_cost: Decimal, savings: Decimal
@@ -631,7 +678,7 @@ class AICostOptimizationService:
     async def analyze_budget_utilization(
         self, tenant_id: UUID, time_period_days: int = 30
     ) -> BudgetAnalysis:
-        """Analyze tenant's AI budget utilization and provide recommendations."""
+        """Analyze tenant's AI budget utilization."""
         try:
             tenant = (
                 self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
@@ -663,10 +710,12 @@ class AICostOptimizationService:
                 projected_spend = Decimal("0")
 
             # Calculate budget metrics
-            budget_remaining = tenant.monthly_budget - current_spend
+            monthly_budget_val = Decimal(str(tenant.monthly_budget))
+            current_spend_val = Decimal(str(current_spend))
+            budget_remaining = monthly_budget_val - current_spend_val
             budget_utilization = (
-                float(current_spend / tenant.monthly_budget)
-                if tenant.monthly_budget > 0
+                float(current_spend_val) / float(monthly_budget_val)
+                if monthly_budget_val > 0
                 else 0.0
             )
 
@@ -681,12 +730,18 @@ class AICostOptimizationService:
             elif budget_utilization > 0.8:
                 alerts.append("Budget utilization over 80% - monitor closely")
 
-            if projected_spend > tenant.monthly_budget * Decimal("1.1"):
+            if (
+                projected_spend is not None
+                and projected_spend > monthly_budget_val * Decimal("1.1")
+            ):
                 recommendations.append(
                     "Projected spend exceeds budget by"
                     ">10% - implement aggressive optimization"
                 )
-            elif projected_spend > tenant.monthly_budget:
+            elif (
+                projected_spend is not None
+                and projected_spend > monthly_budget_val
+            ):
                 recommendations.append(
                     "Projected spend exceeds budget"
                     "- consider cost optimization measures"
@@ -702,13 +757,14 @@ class AICostOptimizationService:
                     model_usage.items(), key=lambda x: x[1]["total_cost"]
                 )
                 recommendations.append(
-                    f"Consider alternatives to {most_expensive[0]} (cost: ${most_expensive[1]['total_cost']:.2f})"
+                    f"Consider alternatives to {most_expensive[0]} "
+                    f"(cost: ${most_expensive[1]['total_cost']:.2f})"
                 )
 
             return BudgetAnalysis(
                 current_spend=current_spend,
                 projected_spend=projected_spend,
-                budget_remaining=budget_remaining,
+                budget_remaining=Decimal(str(budget_remaining)),
                 budget_utilization=budget_utilization,
                 recommendations=recommendations,
                 alerts=alerts,
@@ -823,12 +879,16 @@ class AICostOptimizationService:
                                 == CostOptimizationLevel.MODERATE
                                 else "high"
                             ),
-                            "description": f"Replace {model} with cheaper alternatives to save ~${potential_savings:.2f}",
+                            "description": (
+                                f"Replace {model} with cheaper alternatives "
+                                f"to save ~${potential_savings:.2f}"
+                            ),
                         }
                     )
 
             # Budget-based suggestions
-            if tenant.monthly_budget > 0:
+            tenant_monthly_budget = Decimal(str(tenant.monthly_budget))
+            if tenant_monthly_budget is not None and tenant_monthly_budget > 0:
                 budget_analysis = await self.analyze_budget_utilization(
                     tenant_id
                 )
@@ -844,7 +904,11 @@ class AICostOptimizationService:
                                 * Decimal("0.5")
                             ),
                             "impact": "high",
-                            "description": f"Budget at {budget_analysis.budget_utilization:.1%} utilization - implement cost controls",
+                            "description": (
+                                f"Budget "
+                                f"{budget_analysis.budget_utilization:.0%} - "
+                                "cost controls"
+                            ),
                         }
                     )
 
@@ -861,7 +925,9 @@ class AICostOptimizationService:
                         "recommended_action": "Distribute usage across hours",
                         "potential_savings": "10-20%",
                         "impact": "medium",
-                        "description": "High usage during peak hours - distribute across day for potential savings",
+                        "description": (
+                            "High usage in peak hours - distribute for savings"
+                        ),
                     }
                 )
 

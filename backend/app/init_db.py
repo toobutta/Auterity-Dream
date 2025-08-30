@@ -5,11 +5,7 @@ import logging
 from passlib.context import CryptContext
 
 # Password hashing
-from app.database import (
-    check_database_connection,
-    create_tables,
-    get_db_session,
-)
+from app.database import check_database_connection, create_tables, get_db_session
 from app.models.template import Template, TemplateParameter
 from app.models.user import User
 

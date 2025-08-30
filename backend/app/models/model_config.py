@@ -2,16 +2,7 @@
 
 import uuid
 
-from sqlalchemy import (
-    JSON,
-    UUID,
-    Boolean,
-    Column,
-    DateTime,
-    Float,
-    Integer,
-    String,
-)
+from sqlalchemy import JSON, UUID, Boolean, Column, DateTime, Float, Integer, String
 from sqlalchemy.sql import func
 
 from .base import Base

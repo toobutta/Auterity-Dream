@@ -1,9 +1,9 @@
 """Auterity AI Platform Expansion API endpoints - Fixed Version."""
 
 import logging
+from decimal import Decimal
 from typing import Any, Dict, List, Optional
 from uuid import UUID
-from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
@@ -23,10 +23,8 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service import (
-    AutonomousAgentService,
-    AgentConfig as ServiceAgentConfig,
-)
+from app.services.autonomous_agent_service import AgentConfig as ServiceAgentConfig
+from app.services.autonomous_agent_service import AutonomousAgentService
 from app.services.smart_triage_service import SmartTriageService
 from app.services.vector_duplicate_service import VectorDuplicateService
 

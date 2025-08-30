@@ -7,7 +7,6 @@ Addresses all remaining flake8 line length violations in the backend codebase.
 import os
 import re
 import subprocess
-import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 

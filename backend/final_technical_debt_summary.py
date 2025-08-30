@@ -4,8 +4,7 @@ Final Technical Debt Resolution Script
 Addresses remaining syntax errors and critical issues.
 """
 
-import os
-import sys
+
 from pathlib import Path
 
 

@@ -22,11 +22,7 @@ from app.executors.step_executors import (
 )
 from app.handlers.error_handler import ErrorHandler
 from app.interfaces.step_executor import StepExecutorFactory
-from app.models.execution import (
-    ExecutionLog,
-    ExecutionStatus,
-    WorkflowExecution,
-)
+from app.models.execution import ExecutionLog, ExecutionStatus, WorkflowExecution
 from app.models.workflow import Workflow
 from app.monitoring.performance import PerformanceMonitor
 from app.types.workflow import RetryConfig, WorkflowEdge, WorkflowNode

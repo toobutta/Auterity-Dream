@@ -6,15 +6,7 @@ from typing import Dict, List, Optional
 from uuid import UUID
 
 import stripe
-from fastapi import (
-    APIRouter,
-    Depends,
-    File,
-    Form,
-    HTTPException,
-    UploadFile,
-    status,
-)
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_tenant, get_current_user, get_db

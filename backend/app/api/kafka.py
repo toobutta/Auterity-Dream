@@ -9,11 +9,7 @@ from pydantic import BaseModel
 
 from app.auth import get_current_active_user
 from app.models import User
-from app.services.kafka_service import (
-    KafkaEventModel,
-    TopicConfig,
-    kafka_service,
-)
+from app.services.kafka_service import KafkaEventModel, TopicConfig, kafka_service
 
 router = APIRouter(prefix="/kafka", tags=["kafka"])
 

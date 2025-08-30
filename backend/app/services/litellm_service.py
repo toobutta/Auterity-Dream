@@ -14,11 +14,7 @@ import yaml
 
 import litellm
 from litellm import ModelResponse, acompletion
-from litellm.exceptions import (
-    APIError,
-    RateLimitError,
-    ServiceUnavailableError,
-)
+from litellm.exceptions import APIError, RateLimitError, ServiceUnavailableError
 
 
 @dataclass

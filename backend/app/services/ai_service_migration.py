@@ -4,11 +4,7 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from app.services.ai_service import AIService as LegacyAIService
-from app.services.ai_service_relaycore import (
-    AIModelType,
-    AIResponse,
-    EnhancedAIService,
-)
+from app.services.ai_service_relaycore import AIModelType, AIResponse, EnhancedAIService
 
 logger = logging.getLogger(__name__)
 

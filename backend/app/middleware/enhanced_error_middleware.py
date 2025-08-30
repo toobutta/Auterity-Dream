@@ -158,7 +158,7 @@ class EnhancedErrorHandlingMiddleware(BaseHTTPMiddleware):
                     error, context
                 )
 
-                # Execute recovery plan asynchronously (don't block the response)
+                # Execute recovery plan asynchronously
                 asyncio.create_task(
                     recovery_service.execute_recovery_plan(
                         plan, error, context

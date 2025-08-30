@@ -21,13 +21,7 @@ from .auterity_expansion import (
 from .base import Base, SessionLocal, engine
 from .execution import ExecutionLog, ExecutionStatus, WorkflowExecution
 from .template import Template, TemplateParameter
-from .tenant import (
-    AuditLog,
-    SSOConfiguration,
-    SSOProvider,
-    Tenant,
-    TenantStatus,
-)
+from .tenant import AuditLog, SSOConfiguration, SSOProvider, Tenant, TenantStatus
 from .user import Permission, Role, SystemPermission, User, UserRole
 from .workflow import Workflow
 

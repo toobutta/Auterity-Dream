@@ -9,6 +9,7 @@ from datetime import datetime
 
 from sqlalchemy import JSON, Column, DateTime, Enum, String
 from sqlalchemy.dialects.postgresql import UUID
+
 from .base import Base
 
 

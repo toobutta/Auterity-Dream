@@ -1,9 +1,9 @@
 """Auterity AI Platform Expansion API endpoints - Fixed Version."""
 
 import logging
+from decimal import Decimal
 from typing import Any, Dict, List, Optional
 from uuid import UUID
-from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
@@ -23,10 +23,8 @@ from app.schemas.auterity_expansion import (
     VectorEmbeddingCreate,
     VectorEmbeddingResponse,
 )
-from app.services.autonomous_agent_service import (
-    AutonomousAgentService,
-    AgentConfig as ServiceAgentConfig,
-)
+from app.services.autonomous_agent_service import AgentConfig as ServiceAgentConfig
+from app.services.autonomous_agent_service import AutonomousAgentService
 from app.services.smart_triage_service import SmartTriageService
 from app.services.vector_duplicate_service import VectorDuplicateService
 
@@ -68,7 +66,7 @@ def convert_db_rule_to_response(rule: Any) -> TriageRuleResponse:
 
 
 def convert_db_embedding_to_response(
-    embedding: Any
+    embedding: Any,
 ) -> VectorEmbeddingResponse:
     """Convert database VectorEmbedding object to response schema."""
     return VectorEmbeddingResponse(
@@ -223,7 +221,7 @@ async def search_similar_items(
                     item_type=result.item_type,
                     similarity_score=result.similarity_score,
                     content_preview=result.content_preview,
-                    metadata=getattr(result, 'metadata', None),
+                    metadata=getattr(result, "metadata", None),
                 )
             )
 
@@ -231,7 +229,7 @@ async def search_similar_items(
             query_content=request.content,
             results=similarity_results,
             total_found=len(similarity_results),
-            search_time_ms=getattr(results, 'search_time_ms', 0),
+            search_time_ms=getattr(results, "search_time_ms", 0),
         )
 
     except Exception as e:
@@ -288,7 +286,7 @@ async def get_similarity_clusters(
         if item_type is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="item_type parameter is required"
+                detail="item_type parameter is required",
             )
 
         service = VectorDuplicateService(db)
@@ -327,7 +325,7 @@ async def get_duplicate_analysis(
         if item_type is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="item_type parameter is required"
+                detail="item_type parameter is required",
             )
 
         service = VectorDuplicateService(db)
@@ -407,7 +405,7 @@ async def assign_task_to_agent(
         if task is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Failed to assign task to agent"
+                detail="Failed to assign task to agent",
             )
 
         return {
@@ -473,11 +471,11 @@ async def get_agent_coordination(
     try:
         # Get active agents for this tenant
         from app.models.agent import Agent, AgentStatus
+
         active_agents = (
             db.query(Agent)
             .filter(
-                Agent.user_id == tenant.id,
-                Agent.status == AgentStatus.ACTIVE
+                Agent.user_id == tenant.id, Agent.status == AgentStatus.ACTIVE
             )
             .all()
         )
@@ -497,7 +495,8 @@ async def get_agent_coordination(
             ],
             "last_updated": (
                 active_agents[0].updated_at.isoformat()
-                if active_agents else None
+                if active_agents
+                else None
             ),
         }
 
