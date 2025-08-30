@@ -12,7 +12,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "https://auterity-backend.herokuapp.com/api/$1"
+      "dest": "https://auterity-backend.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",
@@ -20,14 +20,9 @@
     }
   ],
   "framework": "vite",
-  "buildCommand": "cd frontend && npm run build",
+  "buildCommand": "cd frontend && npm run build:vercel",
   "outputDirectory": "frontend/dist",
   "installCommand": "npm install && cd frontend && npm install",
-  "functions": {
-    "frontend/dist/index.html": {
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
@@ -50,7 +45,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://auterity-backend.herokuapp.com/api/$1"
+      "destination": "https://auterity-backend.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
