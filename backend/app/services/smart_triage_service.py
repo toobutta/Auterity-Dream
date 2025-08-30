@@ -3,7 +3,7 @@
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
 
 from sqlalchemy import and_, func
@@ -22,7 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class TriageDecision:
-    """Container for triage decision results."""
+    """Container for triage decision results.
+
+    Compatible with TriageResponse schema for API integration.
+    """
 
     def __init__(
         self,
@@ -30,9 +33,19 @@ class TriageDecision:
         confidence_score: float,
         rule_applied: Optional[str] = None,
         reasoning: str = "",
-        suggested_actions: List[str] = None,
+        suggested_actions: Optional[List[str]] = None,
         processing_time_ms: int = 0,
     ):
+        """Initialize triage decision.
+
+        Args:
+            routing_decision: The routing decision made by triage
+            confidence_score: Confidence score between 0.0 and 1.0
+            rule_applied: Name of the rule that was applied, if any
+            reasoning: Explanation for the decision
+            suggested_actions: List of suggested actions to take
+            processing_time_ms: Time taken to process in milliseconds
+        """
         self.routing_decision = routing_decision
         self.confidence_score = confidence_score
         self.rule_applied = rule_applied
@@ -40,11 +53,31 @@ class TriageDecision:
         self.suggested_actions = suggested_actions or []
         self.processing_time_ms = processing_time_ms
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary compatible with TriageResponse schema."""
+        return {
+            "routing_decision": self.routing_decision,
+            "confidence_score": self.confidence_score,
+            "rule_applied": self.rule_applied,
+            "reasoning": self.reasoning,
+            "suggested_actions": self.suggested_actions,
+            "processing_time_ms": self.processing_time_ms,
+        }
+
 
 class SmartTriageService:
-    """AI-powered triage service for intelligent workflow routing."""
+    """AI-powered triage service for intelligent workflow routing.
 
-    def __init__(self, db: Session):
+    This service combines AI-based analysis with rule-based logic to make
+    intelligent routing decisions for incoming content.
+    """
+
+    def __init__(self, db: Session) -> None:
+        """Initialize the triage service.
+
+        Args:
+            db: Database session for accessing triage rules and results
+        """
         self.db = db
         self.ai_service = AIService()
         self.vector_service = VectorService()
@@ -53,14 +86,27 @@ class SmartTriageService:
     async def triage_input(
         self, content: str, context: Dict[str, Any], tenant_id: UUID
     ) -> TriageDecision:
-        """Triage input content and determine routing decision."""
+        """Triage input content and determine routing decision.
+
+        Uses a combination of AI analysis and rule-based logic to determine
+        the best routing decision for the given content.
+
+        Args:
+            content: The text content to be triaged
+            context: Additional context information for decision making
+            tenant_id: Tenant identifier for accessing tenant-specific rules
+
+        Returns:
+            TriageDecision containing routing decision and metadata
+
+        Raises:
+            ValueError: If tenant is not found
+        """
         start_time = time.time()
 
         try:
             # Validate tenant
-            tenant = (
-                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
-            )
+            tenant = self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
             if not tenant:
                 raise ValueError(f"Tenant {tenant_id} not found")
 
@@ -72,13 +118,8 @@ class SmartTriageService:
 
             # Apply rule-based logic if confidence is low
             if ai_decision.confidence_score < 0.7:
-                rule_decision = await self._rule_based_triage(
-                    content, context, rules
-                )
-                if (
-                    rule_decision.confidence_score
-                    > ai_decision.confidence_score
-                ):
+                rule_decision = await self._rule_based_triage(content, context, rules)
+                if rule_decision.confidence_score > ai_decision.confidence_score:
                     ai_decision = rule_decision
 
             # Record triage result for learning
@@ -123,10 +164,7 @@ class SmartTriageService:
                 vector_enhancement = await self._vector_enhanced_triage(
                     content, context
                 )
-                if (
-                    vector_enhancement.confidence_score
-                    > decision.confidence_score
-                ):
+                if vector_enhancement.confidence_score > decision.confidence_score:
                     decision = vector_enhancement
 
             return decision
@@ -153,27 +191,20 @@ class SmartTriageService:
                     TriageRuleType.HYBRID,
                 ]:
                     score = self._evaluate_rule(rule, content, context)
-                    if (
-                        score > best_score
-                        and score >= rule.confidence_threshold
-                    ):
+                    if score > best_score and score >= rule.confidence_threshold:
                         best_score = score
                         best_rule = rule
 
             if best_rule:
                 routing_logic = best_rule.routing_logic
-                decision = routing_logic.get(
-                    "default_decision", "general_queue"
-                )
+                decision = routing_logic.get("default_decision", "general_queue")
 
                 return TriageDecision(
                     routing_decision=decision,
                     confidence_score=best_score,
                     rule_applied=best_rule.name,
                     reasoning=f"Matched rule: {best_rule.name}",
-                    suggested_actions=routing_logic.get(
-                        "suggested_actions", []
-                    ),
+                    suggested_actions=routing_logic.get("suggested_actions", []),
                 )
 
             return TriageDecision(
@@ -218,16 +249,12 @@ class SmartTriageService:
                 routing = item.get("routing_decision", "general_queue")
                 similarity = item.get("similarity_score", 0.0)
 
-                routing_counts[routing] = (
-                    routing_counts.get(routing, 0) + similarity
-                )
+                routing_counts[routing] = routing_counts.get(routing, 0) + similarity
                 total_similarity += similarity
 
             if total_similarity > 0:
                 # Find most common routing decision
-                best_routing = max(routing_counts.items(), key=lambda x: x[1])[
-                    0
-                ]
+                best_routing = max(routing_counts.items(), key=lambda x: x[1])[0]
                 confidence = routing_counts[best_routing] / total_similarity
 
                 return TriageDecision(
@@ -270,9 +297,7 @@ class SmartTriageService:
                 keywords = conditions["keywords"]
                 content_lower = content.lower()
                 matches = sum(
-                    1
-                    for keyword in keywords
-                    if keyword.lower() in content_lower
+                    1 for keyword in keywords if keyword.lower() in content_lower
                 )
                 if matches > 0:
                     score += (matches / len(keywords)) * 0.4
@@ -294,14 +319,9 @@ class SmartTriageService:
                 sentiment_score = self._analyze_sentiment(content)
                 if expected_sentiment == "positive" and sentiment_score > 0.3:
                     score += 0.3
-                elif (
-                    expected_sentiment == "negative" and sentiment_score < -0.3
-                ):
+                elif expected_sentiment == "negative" and sentiment_score < -0.3:
                     score += 0.3
-                elif (
-                    expected_sentiment == "neutral"
-                    and abs(sentiment_score) <= 0.3
-                ):
+                elif expected_sentiment == "neutral" and abs(sentiment_score) <= 0.3:
                     score += 0.3
                 total_conditions += 1
 
@@ -337,19 +357,13 @@ class SmartTriageService:
         ]
 
         content_lower = content.lower()
-        positive_count = sum(
-            1 for word in positive_words if word in content_lower
-        )
-        negative_count = sum(
-            1 for word in negative_words if word in content_lower
-        )
+        positive_count = sum(1 for word in positive_words if word in content_lower)
+        negative_count = sum(1 for word in negative_words if word in content_lower)
 
         if positive_count == 0 and negative_count == 0:
             return 0.0
 
-        return (positive_count - negative_count) / (
-            positive_count + negative_count
-        )
+        return (positive_count - negative_count) / (positive_count + negative_count)
 
     def _build_triage_prompt(
         self, content: str, context: Dict[str, Any], rules: List[TriageRule]
@@ -399,12 +413,8 @@ Respond in this exact JSON format:
             response_data = json.loads(ai_response)
 
             return TriageDecision(
-                routing_decision=response_data.get(
-                    "routing_decision", "general_queue"
-                ),
-                confidence_score=float(
-                    response_data.get("confidence_score", 0.0)
-                ),
+                routing_decision=response_data.get("routing_decision", "general_queue"),
+                confidence_score=float(response_data.get("confidence_score", 0.0)),
                 reasoning=response_data.get("reasoning", "AI analysis"),
                 suggested_actions=response_data.get("suggested_actions", []),
             )
@@ -417,20 +427,14 @@ Respond in this exact JSON format:
                 reasoning="Failed to parse AI response",
             )
 
-    async def _get_active_triage_rules(
-        self, tenant_id: UUID
-    ) -> List[TriageRule]:
+    async def _get_active_triage_rules(self, tenant_id: UUID) -> List[TriageRule]:
         """Get active triage rules for a tenant."""
         cache_key = tenant_id
 
         if cache_key not in self._rule_cache:
             rules = (
                 self.db.query(TriageRule)
-                .filter(
-                    and_(
-                        TriageRule.tenant_id == tenant_id, TriageRule.is_active
-                    )
-                )
+                .filter(and_(TriageRule.tenant_id == tenant_id, TriageRule.is_active))
                 .order_by(TriageRule.priority.desc())
                 .all()
             )
@@ -467,7 +471,26 @@ Respond in this exact JSON format:
     async def create_triage_rule(
         self, tenant_id: UUID, rule_data: Dict[str, Any]
     ) -> TriageRule:
-        """Create a new triage rule."""
+        """Create a new triage rule for the specified tenant.
+
+        Args:
+            tenant_id: Tenant identifier for rule ownership
+            rule_data: Dictionary containing rule configuration including:
+                - name: Rule name
+                - rule_type: Type of rule (ml, rule_based, hybrid)
+                - conditions: JSON conditions for rule matching
+                - routing_logic: JSON routing decisions
+                - confidence_threshold: Minimum confidence score
+                - priority: Rule priority (1-100, optional)
+                - is_active: Whether rule is active (optional)
+
+        Returns:
+            The created TriageRule database object
+
+        Raises:
+            ValueError: If required fields are missing
+            Exception: If database operation fails
+        """
         try:
             rule = TriageRule(
                 tenant_id=tenant_id,
@@ -498,7 +521,19 @@ Respond in this exact JSON format:
     async def update_triage_rule(
         self, rule_id: UUID, tenant_id: UUID, updates: Dict[str, Any]
     ) -> Optional[TriageRule]:
-        """Update an existing triage rule."""
+        """Update an existing triage rule.
+
+        Args:
+            rule_id: Unique identifier of the rule to update
+            tenant_id: Tenant identifier for ownership validation
+            updates: Dictionary of fields to update
+
+        Returns:
+            Updated TriageRule object, or None if not found
+
+        Raises:
+            Exception: If database operation fails
+        """
         try:
             rule = (
                 self.db.query(TriageRule)
@@ -536,7 +571,26 @@ Respond in this exact JSON format:
     async def get_triage_accuracy(
         self, tenant_id: UUID, days: int = 30
     ) -> Dict[str, Any]:
-        """Get triage accuracy metrics."""
+        """Get triage accuracy metrics for the specified period.
+
+        Calculates accuracy by comparing AI predictions with human overrides.
+        Accuracy is measured as the percentage of triage decisions that were
+        not overridden by humans.
+
+        Args:
+            tenant_id: Tenant identifier for filtering results
+            days: Number of days to analyze (default: 30)
+
+        Returns:
+            Dictionary containing accuracy metrics:
+                - accuracy: Percentage accuracy (0.0 to 1.0)
+                - total_results: Total number of triage results
+                - override_count: Number of human overrides
+                - period_days: Analysis period in days
+
+        Raises:
+            Exception: If database query fails
+        """
         try:
             from datetime import datetime, timedelta
 
@@ -570,9 +624,7 @@ Respond in this exact JSON format:
             # Calculate accuracy
             accuracy = 0.0
             if total_results > 0:
-                accuracy = (
-                    (total_results - override_results) / total_results
-                ) * 100
+                accuracy = ((total_results - override_results) / total_results) * 100
 
             # Get average confidence
             avg_confidence = (

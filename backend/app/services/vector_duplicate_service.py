@@ -16,7 +16,10 @@ logger = logging.getLogger(__name__)
 
 
 class SimilarityResult:
-    """Container for similarity search results."""
+    """Container for similarity search results.
+
+    Compatible with SimilarityResult schema for API integration.
+    """
 
     def __init__(
         self,
@@ -26,17 +29,45 @@ class SimilarityResult:
         content_preview: str,
         metadata: Optional[Dict[str, Any]] = None,
     ):
+        """Initialize similarity result.
+
+        Args:
+            item_id: Unique identifier of the similar item
+            item_type: Type of the item (workflow, ticket, template)
+            similarity_score: Similarity score between 0.0 and 1.0
+            content_preview: Preview of the similar content
+            metadata: Additional metadata about the item
+        """
         self.item_id = item_id
         self.item_type = item_type
         self.similarity_score = similarity_score
         self.content_preview = content_preview
         self.metadata = metadata or {}
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary compatible with SimilarityResult schema."""
+        return {
+            "item_id": self.item_id,
+            "item_type": self.item_type,
+            "similarity_score": self.similarity_score,
+            "content_preview": self.content_preview,
+            "metadata": self.metadata,
+        }
+
 
 class VectorDuplicateService:
-    """Service for vector-based similarity detection and duplicate prevention."""
+    """Service for vector-based similarity detection and duplicate prevention.
 
-    def __init__(self, db: Session):
+    This service uses vector embeddings to find similar content and detect
+    potential duplicates across different content types.
+    """
+
+    def __init__(self, db: Session) -> None:
+        """Initialize the vector duplicate service.
+
+        Args:
+            db: Database session for accessing vector embeddings
+        """
         self.db = db
         self.ai_service = AIService()
         self._embedding_cache: Dict[str, List[float]] = {}
@@ -49,7 +80,22 @@ class VectorDuplicateService:
         threshold: float = 0.8,
         limit: int = 10,
     ) -> List[SimilarityResult]:
-        """Find similar items using vector similarity search."""
+        """Find similar items using vector similarity search.
+
+        Args:
+            content: Text content to find similarities for
+            item_type: Type of items to search (workflow, ticket, template)
+            tenant_id: Tenant identifier for scoped search
+            threshold: Minimum similarity score (0.0 to 1.0)
+            limit: Maximum number of results to return
+
+        Returns:
+            List of SimilarityResult objects ordered by similarity score
+
+        Raises:
+            ValueError: If item_type is invalid
+            Exception: If embedding generation or search fails
+        """
         try:
             # Generate embedding for input content
             input_embedding = await self._generate_embedding(content)
@@ -87,9 +133,7 @@ class VectorDuplicateService:
                     )
 
             # Sort by similarity and limit results
-            similarities.sort(
-                key=lambda x: x["similarity_score"], reverse=True
-            )
+            similarities.sort(key=lambda x: x["similarity_score"], reverse=True)
             similarities = similarities[:limit]
 
             # Convert to SimilarityResult objects
@@ -206,9 +250,7 @@ class VectorDuplicateService:
 
             # Update embedding
             embedding.embedding_vector = new_embedding_vector
-            embedding.content_hash = hashlib.sha256(
-                content.encode()
-            ).hexdigest()
+            embedding.content_hash = hashlib.sha256(content.encode()).hexdigest()
             if metadata:
                 embedding.metadata = metadata
 
@@ -222,9 +264,7 @@ class VectorDuplicateService:
             self.db.rollback()
             return None
 
-    async def delete_embedding(
-        self, embedding_id: UUID, tenant_id: UUID
-    ) -> bool:
+    async def delete_embedding(self, embedding_id: UUID, tenant_id: UUID) -> bool:
         """Delete a vector embedding."""
         try:
             embedding = (
@@ -402,9 +442,7 @@ class VectorDuplicateService:
                     similarity_count += 1
 
             avg_similarity = (
-                total_similarities / similarity_count
-                if similarity_count > 0
-                else 0.0
+                total_similarities / similarity_count if similarity_count > 0 else 0.0
             )
             duplicate_percentage = (
                 (potential_duplicates / len(recent_embeddings)) * 100
@@ -519,9 +557,7 @@ class VectorDuplicateService:
             logger.error(f"Failed to get content preview: {str(e)}")
             return "Content preview unavailable"
 
-    def _get_cluster_representative(
-        self, cluster: List[VectorEmbedding]
-    ) -> str:
+    def _get_cluster_representative(self, cluster: List[VectorEmbedding]) -> str:
         """Get representative content for a cluster."""
         try:
             if not cluster:
