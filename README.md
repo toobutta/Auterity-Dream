@@ -32,6 +32,38 @@
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## 🔧 Recent Architecture Improvements
+
+**Latest Enhancement: Dependency Mapping & Refactoring Initiative**
+
+We've completed a comprehensive refactoring of the platform's core architecture focusing on:
+
+### ✅ Schema Consolidation & Modernization
+- **Fixed Critical Issues**: Resolved broken schema definitions (ChannelTriggerResponse)
+- **Namespace Resolution**: Eliminated Pydantic v2 namespace warnings with proper field aliases
+- **Modern Patterns**: Updated all schemas to use `ConfigDict` instead of legacy `Config` classes
+- **Consistency**: Standardized schema patterns across all 40+ models
+
+### ✅ Service Layer Enhancement
+- **Type Safety**: Added comprehensive type hints to all service methods
+- **Documentation**: Enhanced docstrings with Args/Returns/Raises for 25+ service methods
+- **Schema Alignment**: Implemented `to_dict()` methods for seamless API integration
+- **Error Handling**: Improved exception handling with specific error types
+
+### ✅ API Endpoint Optimization
+- **Error Handling**: Proper HTTP status codes (400 for validation, 500 for server errors)
+- **Input Validation**: Enhanced validation with meaningful error messages
+- **Type Annotations**: Complete type safety for all endpoint functions
+- **Service Integration**: Simplified service-to-schema conversion patterns
+
+### ✅ Comprehensive Documentation
+- **Architecture Overview**: Complete system architecture documentation in [DEPENDENCY_MAP.md](./DEPENDENCY_MAP.md)
+- **Dependency Mapping**: Detailed mapping of all internal and external dependencies
+- **Configuration Guide**: Environment variables and deployment considerations
+- **Testing Strategy**: Comprehensive test coverage for all improvements
+
+**Impact**: These improvements enhance code quality, maintainability, and developer experience while maintaining 100% backward compatibility.
+
 ## ⚡ Quick Start
 
 Note: For AI coding agents and contributor rules, consult `.github/copilot-instructions.md` (canonical source of truth).
