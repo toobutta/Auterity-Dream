@@ -5,7 +5,27 @@ from decimal import Decimal
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
+
+
+# Common Mixins for Reusable Field Patterns
+class DatabaseFieldsMixin(BaseModel):
+    """Mixin for common database fields in response schemas."""
+
+    id: UUID
+    tenant_id: UUID
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class TimestampFieldsMixin(BaseModel):
+    """Mixin for timestamp fields."""
+
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Base Schemas
@@ -49,8 +69,7 @@ class TriageRuleResponse(TriageRuleBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class VectorEmbeddingBase(BaseModel):
@@ -76,8 +95,7 @@ class VectorEmbeddingResponse(VectorEmbeddingBase):
     tenant_id: UUID
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SimilarityResult(BaseModel):
@@ -126,8 +144,7 @@ class IntegrationResponse(IntegrationBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class IntegrationWebhookBase(BaseModel):
@@ -150,8 +167,7 @@ class IntegrationWebhookResponse(IntegrationWebhookBase):
     last_triggered: Optional[datetime] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ChannelTriggerBase(BaseModel):
@@ -190,21 +206,26 @@ class ChannelTriggerResponse(ChannelTriggerBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CustomModelBase(BaseModel):
     """Base schema for custom models."""
 
-    model_name: str = Field(..., min_length=1, max_length=255)
+    name: str = Field(..., min_length=1, max_length=255, alias="model_name")
     endpoint_url: str = Field(..., description="Model endpoint URL")
-    model_type: str = Field(
+    type: str = Field(
         ...,
         pattern="^(llm|embedding|classification|translation|summarization)$",
+        alias="model_type"
     )
     config: Dict[str, Any] = Field(..., description="Model configuration")
     version: str = Field("1.0.0", pattern="^\\d+\\.\\d+\\.\\d+$")
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=()
+    )
 
 
 class CustomModelCreate(CustomModelBase):
@@ -214,10 +235,12 @@ class CustomModelCreate(CustomModelBase):
 class CustomModelUpdate(BaseModel):
     """Schema for updating custom models."""
 
-    model_name: Optional[str] = Field(None, min_length=1, max_length=255)
+    name: Optional[str] = Field(None, min_length=1, max_length=255, alias="model_name")
     endpoint_url: Optional[str] = None
     config: Optional[Dict[str, Any]] = None
     version: Optional[str] = Field(None, pattern="^\\d+\\.\\d+\\.\\d+$")
+
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class CustomModelResponse(CustomModelBase):
@@ -230,8 +253,7 @@ class CustomModelResponse(CustomModelBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True, protected_namespaces=())
 
 
 class AgentMemoryBase(BaseModel):
@@ -256,8 +278,7 @@ class AgentMemoryResponse(AgentMemoryBase):
     created_at: datetime
     accessed_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ExecutionMetricBase(BaseModel):
@@ -266,8 +287,10 @@ class ExecutionMetricBase(BaseModel):
     step_name: str = Field(..., min_length=1, max_length=255)
     duration_ms: int = Field(..., ge=0)
     status: str = Field(..., description="Step execution status")
-    model_confidence: Optional[Decimal] = Field(None, ge=0.0, le=1.0)
+    confidence: Optional[Decimal] = Field(None, ge=0.0, le=1.0, alias="model_confidence")
     error_message: Optional[str] = None
+
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class ExecutionMetricCreate(ExecutionMetricBase):
@@ -281,8 +304,7 @@ class ExecutionMetricResponse(ExecutionMetricBase):
     execution_id: UUID
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TriageResultBase(BaseModel):
@@ -313,8 +335,7 @@ class TriageResultResponse(TriageResultBase):
     rule_id: Optional[UUID] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Request/Response Schemas for Core Features
@@ -406,7 +427,8 @@ class ChannelTriggerRequest(BaseModel):
     input_data: Dict[str, Any]
     tenant_id: UUID
 
-    # class ChannelTriggerResponse(BaseModel):
+
+class ChannelTriggerResponse(BaseModel):
     """Schema for channel trigger responses."""
 
     triggered: bool
@@ -418,12 +440,14 @@ class ChannelTriggerRequest(BaseModel):
 class CustomModelHealthCheck(BaseModel):
     """Schema for custom model health checks."""
 
-    model_id: UUID
+    id: UUID = Field(alias="model_id")
     endpoint_url: str
-    model_type: str
+    type: str = Field(alias="model_type")
     response_time_ms: Optional[int] = None
     status: str
     error_message: Optional[str] = None
+
+    model_config = ConfigDict(protected_namespaces=())
 
 
 class LiveInsightsRequest(BaseModel):
