@@ -46,13 +46,12 @@ class SolutionPackage:
     package_id: str
     name: str
     description: str
-    workflows: List[Dict[str, Any]]
-    dashboards: List[Dict[str, Any]]
-    integrations: List[Dict[str, Any]]
+    workflows: List[str]
+    dashboards: List[str]
+    integrations: List[str]
     compliance_rules: List[ComplianceRule]
     setup_cost: float
     monthly_cost: float
-
 class BaseIndustryAccelerator(ABC):
     """Base class for all industry accelerators"""
     

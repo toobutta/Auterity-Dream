@@ -62,6 +62,12 @@
   },
   "dependencies": {
     "@xyflow/react": "^12.8.4",
+    "ai": "latest",
+    "@ai-sdk/anthropic": "latest",
+    "@ai-sdk/azure": "latest",
+    "@ai-sdk/cohere": "latest",
+    "@ai-sdk/google": "latest",
+    "@ai-sdk/openai": "latest",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
