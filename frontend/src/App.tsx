@@ -25,6 +25,7 @@ const AgentModelCorrelationPage = lazy(
   () => import("./pages/AgentModelCorrelationPage"),
 );
 const AuterityExpansion = lazy(() => import("./pages/AuterityExpansion"));
+const CognitiveAutomationPage = lazy(() => import("./pages/CognitiveAutomationPage"));
 const EnterpriseDashboard = lazy(
   () => import("./components/enterprise/EnterpriseDashboard"),
 );
@@ -201,6 +202,18 @@ function App() {
                           <ErrorBoundary component="AuterityExpansion">
                             <Suspense fallback={<LoadingSpinner />}>
                               <AuterityExpansion />
+                            </Suspense>
+                          </ErrorBoundary>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/cognitive-automation"
+                      element={
+                        <ProtectedRoute>
+                          <ErrorBoundary component="CognitiveAutomation">
+                            <Suspense fallback={<LoadingSpinner />}>
+                              <CognitiveAutomationPage />
                             </Suspense>
                           </ErrorBoundary>
                         </ProtectedRoute>

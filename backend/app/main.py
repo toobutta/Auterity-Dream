@@ -1,5 +1,6 @@
 import os
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,13 +9,16 @@ from app.api import (
     agents,
     auterity_expansion,
     auth,
+    cognitive,
     ecosystem_management,
     error_correlation,
     error_management,
     kafka,
     logs,
     monitoring,
+    process_mining,
     service_status_enhanced,
+    simulation,
     sso,
     tasks,
     templates,
@@ -133,6 +137,7 @@ app.include_router(tasks.router, prefix="/api")
 app.include_router(logs.router, prefix="/api")
 app.include_router(monitoring.router, prefix="/api")
 app.include_router(kafka.router, prefix="/api")
+app.include_router(process_mining.router)
 app.include_router(error_correlation.router)
 app.include_router(error_management.router)
 
@@ -152,8 +157,6 @@ app.include_router(websockets.router)
 
 @app.get("/")
 async def root():
-    from datetime import datetime, timezone
-
     return {
         "message": (
             "AutoMatrix AI Hub Workflow Engine MVP - "

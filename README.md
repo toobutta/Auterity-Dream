@@ -66,6 +66,27 @@ npm run prod
 - **ML Tracking (MLflow)**: http://localhost:5000
 - **Tracing (Jaeger)**: http://localhost:16686
 
+## Workflow Contracts (developer quickstart)
+
+If you're developing the Workflow Studio or integrating with Error-IQ, use `@auterity/workflow-contracts` as the canonical source of types and schema.
+
+Quick local setup:
+
+```powershell
+cd packages/workflow-contracts
+npm ci
+npm run build
+# publish or pack and consume in other repos
+```
+
+Start the API server for local development:
+
+```powershell
+cd apps/api
+npm ci
+npm run dev
+```
+
 ## 🏗️ System Components
 
 ### **AutoMatrix** - Core Workflow Engine (Port 8000)

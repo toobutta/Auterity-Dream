@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../auterity-workflow-studio"
 		}
 	],
 	"settings": {

@@ -6,7 +6,9 @@
   "workspaces": [
     "frontend",
     "shared",
-    "systems/relaycore"
+    "systems/relaycore",
+    "packages/workflow-contracts",
+    "apps/api"
   ],
   "scripts": {
     "dev": "docker-compose -f docker-compose.unified.yml up -d",
@@ -46,7 +48,13 @@
     "deploy:production": "./scripts/deploy-production.sh",
     "docs:generate": "npm run docs:generate:api && npm run docs:generate:coverage",
     "docs:generate:api": "cd backend && python -m sphinx docs/ _build/html",
-    "docs:generate:coverage": "cd frontend && npm run test:coverage && npx istanbul report html"
+    "docs:generate:coverage": "cd frontend && npm run test:coverage && npx istanbul report html",
+    "contracts:build": "cd packages/workflow-contracts && npm run build",
+    "contracts:test": "cd packages/workflow-contracts && npm run test",
+    "api:dev": "cd apps/api && npm run dev",
+    "api:test": "cd apps/api && npm run test",
+    "api:smoke": "cd apps/api && pwsh ./smoke-test.ps1",
+    "workflow:test-all": "npm run contracts:test && npm run api:test"
   },
   "engines": {
     "node": "18.x",
