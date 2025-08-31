@@ -2,6 +2,18 @@
 
 import uuid
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
+from enum import Enum
+
+from pydantic import BaseModel, EmailStr, Field, ConfigDict, field_validator
+
+
+class TenantStatus(str, Enum):
+    """Tenant status enumeration."""
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    SUSPENDED = "suspended"
+    PENDING = "pending"
 
 
 # Authentication schemas
@@ -125,7 +137,7 @@ class CrossSystemTokenRequest(BaseModel):
 
     target_system: str
 
-    @validator("target_system")
+    @field_validator("target_system")
     def validate_target_system(cls, v):
         allowed_systems = ["autmatrix", "relaycore", "neuroweaver"]
         if v not in allowed_systems:
@@ -153,7 +165,7 @@ class WorkflowCreate(BaseModel):
     description: Optional[str] = None
     definition: Dict[str, Any]
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, v):
         if not v or not v.strip():
             raise ValueError("Workflow name cannot be empty")
@@ -161,7 +173,7 @@ class WorkflowCreate(BaseModel):
             raise ValueError("Workflow name cannot exceed 255 characters")
         return v.strip()
 
-    @validator("definition")
+    @field_validator("definition")
     def validate_definition(cls, v):
         if not isinstance(v, dict):
             raise ValueError("Workflow definition must be a valid JSON object")
@@ -209,7 +221,7 @@ class WorkflowUpdate(BaseModel):
     definition: Optional[Dict[str, Any]] = None
     is_active: Optional[bool] = None
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, v):
         if v is not None:
             if not v or not v.strip():
@@ -219,7 +231,7 @@ class WorkflowUpdate(BaseModel):
             return v.strip()
         return v
 
-    @validator("definition")
+    @field_validator("definition")
     def validate_definition(cls, v):
         if v is not None:
             if not isinstance(v, dict):
@@ -346,7 +358,7 @@ class TemplateParameterCreate(BaseModel):
     default_value: Optional[Any] = None
     validation_rules: Optional[Dict[str, Any]] = None
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, v):
         if not v or not v.strip():
             raise ValueError("Parameter name cannot be empty")
@@ -354,7 +366,7 @@ class TemplateParameterCreate(BaseModel):
             raise ValueError("Parameter name cannot exceed 255 characters")
         return v.strip()
 
-    @validator("parameter_type")
+    @field_validator("parameter_type")
     def validate_parameter_type(cls, v):
         allowed_types = ["string", "number", "boolean", "array", "object"]
         if v not in allowed_types:
@@ -389,7 +401,7 @@ class TemplateCreate(BaseModel):
     definition: Dict[str, Any]
     parameters: Optional[List[TemplateParameterCreate]] = []
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, v):
         if not v or not v.strip():
             raise ValueError("Template name cannot be empty")
@@ -397,7 +409,7 @@ class TemplateCreate(BaseModel):
             raise ValueError("Template name cannot exceed 255 characters")
         return v.strip()
 
-    @validator("category")
+    @field_validator("category")
     def validate_category(cls, v):
         allowed_categories = ["sales", "service", "parts", "general"]
         if v.lower() not in allowed_categories:
@@ -406,7 +418,7 @@ class TemplateCreate(BaseModel):
             )
         return v.lower()
 
-    @validator("definition")
+    @field_validator("definition")
     def validate_definition(cls, v):
         if not isinstance(v, dict):
             raise ValueError("Template definition must be a valid JSON object")
@@ -437,7 +449,7 @@ class TemplateUpdate(BaseModel):
     definition: Optional[Dict[str, Any]] = None
     is_active: Optional[bool] = None
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, v):
         if v is not None:
             if not v or not v.strip():
@@ -447,7 +459,7 @@ class TemplateUpdate(BaseModel):
             return v.strip()
         return v
 
-    @validator("category")
+    @field_validator("category")
     def validate_category(cls, v):
         if v is not None:
             allowed_categories = ["sales", "service", "parts", "general"]
@@ -492,7 +504,7 @@ class TemplateInstantiateRequest(BaseModel):
     description: Optional[str] = None
     parameter_values: Dict[str, Any] = {}
 
-    @validator("name")
+    @field_validator("name")
     def validate_name(cls, v):
         if not v or not v.strip():
             raise ValueError("Workflow name cannot be empty")
@@ -511,7 +523,7 @@ class TenantCreate(BaseModel):
     sso_enabled: bool = False
     audit_enabled: bool = True
 
-    @validator("slug")
+    @field_validator("slug")
     def validate_slug(cls, v):
         if not v or not v.strip():
             raise ValueError("Tenant slug cannot be empty")
@@ -524,7 +536,7 @@ class TenantCreate(BaseModel):
             )
         return v.strip()
 
-    @validator("domain")
+    @field_validator("domain")
     def validate_domain(cls, v):
         if not v or not v.strip():
             raise ValueError("Tenant domain cannot be empty")
@@ -599,7 +611,7 @@ class SSOConfigurationCreate(BaseModel):
     provider: str
     config: Dict[str, Any]
 
-    @validator("provider")
+    @field_validator("provider")
     def validate_provider(cls, v):
         allowed_providers = ["saml", "oidc", "oauth2"]
         if v not in allowed_providers:
