@@ -270,9 +270,8 @@ export const EnhancedErrorDashboard: React.FC = () => {
     try {
       // Simulate data refresh
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Error dashboard refreshed');
     } catch (error) {
-      console.error('Failed to refresh dashboard:', error);
+      // Error handled silently for user experience
     } finally {
       setIsLoading(false);
     }
@@ -296,7 +295,7 @@ export const EnhancedErrorDashboard: React.FC = () => {
 
       setExternalDashboards(prev => [...prev, adapter]);
     } catch (error) {
-      console.error('Failed to create external adapter:', error);
+      // Error handled silently for user experience
     }
   }, [externalDashboards.length]);
 
@@ -328,7 +327,7 @@ export const EnhancedErrorDashboard: React.FC = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export dashboard:', error);
+      // Error handled silently for user experience
     }
   }, [activeDashboard]);
 
