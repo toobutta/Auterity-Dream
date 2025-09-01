@@ -1,38 +1,45 @@
-# Auterity Unified AI Platform - Technical Specifications
+# Auterity Unified AI Platform - Technical Spec┌───────▼──────┐ ┌────▼─────┐ ┌────▼──────────┐
+│ Frontend     │ │Workflow  │ │ API Services  │
+│ (React/TS)   │ │Studio    │ │ (Node.js/TS)  │
+│              │ │(Visual)  │ │               │
+│ • UI/UX      │ │• Designer│ │ • REST APIs   │
+│ • Components │ │• Canvas  │ │ • GraphQL     │
+│ • Routing    │ │• AI Int. │ │ • WebSockets  │
+└──────────────┘ └──────────┘ └───────────────┘s
 
 ## � Executive Summary
 
 **Platform**: Auterity Unified AI Platform
-**Architecture**: Three-System Integration (AutoMatrix + RelayCore + NeuroWeaver)
-**Status**: Production Ready (90% Complete)
-**Purpose**: Enterprise workflow automation with intelligent AI routing and model specialization
+**Architecture**: Monorepo Unified Platform with Integrated Workflow Studio
+**Status**: Production Ready (95% Complete)
+**Purpose**: Enterprise workflow automation with integrated visual designer and comprehensive AI capabilities
 **Version**: 1.0.0
-**Last Updated**: August 25, 2025
+**Last Updated**: December 2024
 
 ## �🏗️ System Architecture
 
-### **Three-System Integration Architecture**
+### **Unified Platform Architecture**
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                        AUTERITY UNIFIED AI PLATFORM                        │
+│                     AUTERITY UNIFIED AI PLATFORM                           │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐        │
-│  │   AutoMatrix    │◄──►│   RelayCore     │◄──►│ NeuroWeaver     │        │
-│  │   (Core Engine) │    │   (AI Router)   │    │ (Model Mgmt)    │        │
-│  │   Port: 8000    │    │   Port: 3001    │    │ Port: 3002      │        │
+│  │   Frontend      │    │ Workflow Studio │    │   API Services  │        │
+│  │   React/TS      │    │ (Visual Design) │    │   Node.js/TS    │        │
+│  │   Port: 3000    │    │   Port: 3000    │    │   Port: 8000    │        │
 │  └─────────────────┘    └─────────────────┘    └─────────────────┘        │
 │           │                       │                       │                │
 │           └───────────────────────┼───────────────────────┘                │
 │                                   │                                        │
 │              ┌─────────────────────────────────────┐                       │
-│              │        Shared Infrastructure        │                       │
-│              │   Auth • Monitoring • Database     │                       │
+│              │        RelayCore AI Router          │                       │
+│              │   Intelligent Model Orchestration   │                       │
 │              └─────────────────────────────────────┘                       │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-API Gateway (Kong) → Load Balancer (Nginx) → 26 Integrated Services
+Kong Gateway → Load Balancer → 25+ Integrated Services
 ```
 
 ### **Service Layer Architecture**

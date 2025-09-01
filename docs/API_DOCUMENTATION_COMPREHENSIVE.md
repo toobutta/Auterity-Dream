@@ -413,33 +413,59 @@ Get available AI models and pricing.
 }
 ```
 
-### **NeuroWeaver (Model Management)**
+### **RelayCore AI Router (Model Management)**
 
-#### `GET /api/models/custom`
+#### `GET /api/models/available`
 
-Get custom trained models.
+Get available AI models across all providers.
 
-#### `POST /api/models/train`
-
-Start training a custom model.
-
-**Request Body:**
-
+**Response:**
 ```json
 {
-  "name": "Customer Service Specialist",
-  "base_model": "gpt-3.5-turbo",
-  "training_data": [
+  "models": [
     {
-      "input": "Customer complaint about late delivery",
-      "output": "I apologize for the delay. Let me track your order..."
+      "id": "gpt-4",
+      "provider": "openai",
+      "name": "GPT-4",
+      "context_window": 8192,
+      "cost_per_token": 0.00003,
+      "status": "available"
+    },
+    {
+      "id": "claude-3-sonnet",
+      "provider": "anthropic",
+      "name": "Claude 3 Sonnet",
+      "context_window": 200000,
+      "cost_per_token": 0.000015,
+      "status": "available"
     }
-  ],
-  "training_config": {
-    "epochs": 3,
-    "learning_rate": 0.0001,
-    "batch_size": 16
-  }
+  ]
+}
+```
+
+#### `POST /api/models/route`
+
+Route a request to the optimal AI model based on performance and cost.
+
+**Request Body:**
+```json
+{
+  "prompt": "Analyze this customer feedback...",
+  "task_type": "analysis",
+  "max_tokens": 1000,
+  "priority": "cost", // "cost", "performance", "balanced"
+  "providers": ["openai", "anthropic", "google"]
+}
+```
+
+**Response:**
+```json
+{
+  "model": "claude-3-sonnet",
+  "provider": "anthropic",
+  "estimated_cost": 0.0015,
+  "estimated_tokens": 500,
+  "confidence_score": 0.92
 }
 ```
 
