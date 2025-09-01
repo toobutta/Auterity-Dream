@@ -1,6 +1,8 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UnifiedNavigation } from '@shared/components/Navigation';
 import { Button } from '@auterity/design-system';
+import N8nManagementPage from './pages/n8n/N8nManagementPage';
 
 // System switcher items
 const systemItems = [
@@ -59,6 +61,12 @@ const navigationItems = [
     href: '/templates'
   },
   {
+    id: 'n8n-integration',
+    label: 'n8n Integration',
+    icon: '⚡',
+    href: '/n8n'
+  },
+  {
     id: 'analytics',
     label: 'Analytics',
     icon: '📈',
@@ -84,44 +92,59 @@ const App: React.FC = () => {
     // In a real implementation, this would handle navigation
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <UnifiedNavigation
-        currentSystem="workflow-studio"
-        navigationItems={navigationItems}
-        systemItems={systemItems}
-        user={{
-          name: 'John Doe',
-          role: 'admin'
-        }}
-        onSystemChange={handleSystemChange}
-        onNavigation={handleNavigation}
-      />
+  const HomePage = () => (
+    <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="px-4 py-6 sm:px-0">
+        <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Welcome to Auterity Workflow Studio
+            </h1>
+            <p className="text-lg text-gray-600 mb-8">
+              Build and manage your workflows with our unified platform
+            </p>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                Welcome to Auterity Workflow Studio
-              </h1>
-              <p className="text-lg text-gray-600 mb-8">
-                Build and manage your workflows with our unified platform
-              </p>
-
-              <div className="space-x-4">
-                <Button variant="primary" size="lg">
-                  Create New Workflow
-                </Button>
-                <Button variant="outline" size="lg">
-                  Browse Templates
-                </Button>
-              </div>
+            <div className="space-x-4">
+              <Button variant="primary" size="lg">
+                Create New Workflow
+              </Button>
+              <Button variant="outline" size="lg">
+                Browse Templates
+              </Button>
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
+  );
+
+  return (
+    <Router>
+      <div className="min-h-screen bg-gray-50">
+        <UnifiedNavigation
+          currentSystem="workflow-studio"
+          navigationItems={navigationItems}
+          systemItems={systemItems}
+          user={{
+            name: 'John Doe',
+            role: 'admin'
+          }}
+          onSystemChange={handleSystemChange}
+          onNavigation={handleNavigation}
+        />
+
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/n8n" element={<N8nManagementPage />} />
+          {/* Add more routes as needed */}
+          <Route path="/dashboard" element={<HomePage />} />
+          <Route path="/workflows" element={<HomePage />} />
+          <Route path="/templates" element={<HomePage />} />
+          <Route path="/analytics" element={<HomePage />} />
+          <Route path="/settings" element={<HomePage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

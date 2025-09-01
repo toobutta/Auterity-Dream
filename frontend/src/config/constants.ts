@@ -22,6 +22,83 @@ export const config = {
   THEME: import.meta.env.VITE_THEME || 'light',
   LOCALE: import.meta.env.VITE_LOCALE || 'en-US',
 
+  // Theme Customization
+  THEME_PRIMARY: import.meta.env.VITE_THEME_PRIMARY || '#2563eb',
+  THEME_ACCENT: import.meta.env.VITE_THEME_ACCENT || '#f59e0b',
+  THEME_SURFACE: import.meta.env.VITE_THEME_SURFACE || '#f8fafc',
+  THEME_STORAGE_KEY: import.meta.env.VITE_THEME_STORAGE_KEY || 'autmatrix-theme',
+
+  // UI/UX Features
+  GLASSMORPHISM_ENABLED: import.meta.env.VITE_GLASSMORPHISM_ENABLED === 'true',
+  GLASSMORPHISM_INTENSITY: import.meta.env.VITE_GLASSMORPHISM_INTENSITY || 'medium',
+  ANIMATIONS_ENABLED: import.meta.env.VITE_ANIMATIONS_ENABLED === 'true',
+  ANIMATIONS_DURATION: import.meta.env.VITE_ANIMATIONS_DURATION || 'normal',
+
+  // UI Component Variants
+  BUTTON_VARIANT: import.meta.env.VITE_BUTTON_VARIANT || 'filled',
+  CARD_VARIANT: import.meta.env.VITE_CARD_VARIANT || 'elevated',
+  MODAL_VARIANT: import.meta.env.VITE_MODAL_VARIANT || 'glass',
+
+  // Additional Theme Colors
+  THEME_ERROR: import.meta.env.VITE_THEME_ERROR || '#dc2626',
+  THEME_WARNING: import.meta.env.VITE_THEME_WARNING || '#f59e0b',
+  THEME_SUCCESS: import.meta.env.VITE_THEME_SUCCESS || '#16a34a',
+  THEME_INFO: import.meta.env.VITE_THEME_INFO || '#0284c7',
+  THEME_SECONDARY: import.meta.env.VITE_THEME_SECONDARY || '#64748b',
+
+  // Component Sizing
+  COMPONENT_SIZE_DEFAULT: import.meta.env.VITE_COMPONENT_SIZE_DEFAULT || 'md',
+  BUTTON_SIZE_DEFAULT: import.meta.env.VITE_BUTTON_SIZE_DEFAULT || 'md',
+  INPUT_SIZE_DEFAULT: import.meta.env.VITE_INPUT_SIZE_DEFAULT || 'md',
+  MODAL_SIZE_DEFAULT: import.meta.env.VITE_MODAL_SIZE_DEFAULT || 'md',
+
+  // Layout & Spacing
+  LAYOUT_DENSITY: import.meta.env.VITE_LAYOUT_DENSITY || 'comfortable',
+  GRID_GAP: parseInt(import.meta.env.VITE_GRID_GAP || '4'),
+  CONTAINER_MAX_WIDTH: import.meta.env.VITE_CONTAINER_MAX_WIDTH || 'xl',
+  SIDEBAR_WIDTH: import.meta.env.VITE_SIDEBAR_WIDTH || '280px',
+
+  // Typography
+  FONT_FAMILY: import.meta.env.VITE_FONT_FAMILY || 'sans',
+  FONT_SIZE_BASE: import.meta.env.VITE_FONT_SIZE_BASE || 'base',
+  LINE_HEIGHT: import.meta.env.VITE_LINE_HEIGHT || 'normal',
+  LETTER_SPACING: import.meta.env.VITE_LETTER_SPACING || 'normal',
+
+  // Accessibility
+  ACCESSIBILITY_HIGH_CONTRAST: import.meta.env.VITE_ACCESSIBILITY_HIGH_CONTRAST === 'true',
+  ACCESSIBILITY_REDUCED_MOTION: import.meta.env.VITE_ACCESSIBILITY_REDUCED_MOTION === 'true',
+  ACCESSIBILITY_FOCUS_VISIBLE: import.meta.env.VITE_ACCESSIBILITY_FOCUS_VISIBLE !== 'false',
+
+  // Dashboard & Data Visualization
+  DASHBOARD_LAYOUT: import.meta.env.VITE_DASHBOARD_LAYOUT || 'grid',
+  CHART_THEME: import.meta.env.VITE_CHART_THEME || 'default',
+  METRIC_CARD_VARIANT: import.meta.env.VITE_METRIC_CARD_VARIANT || 'glass',
+  STATUS_INDICATOR_SIZE: import.meta.env.VITE_STATUS_INDICATOR_SIZE || 'md',
+
+  // Forms & Inputs
+  FORM_LAYOUT: import.meta.env.VITE_FORM_LAYOUT || 'vertical',
+  INPUT_VARIANT: import.meta.env.VITE_INPUT_VARIANT || 'outlined',
+  LABEL_POSITION: import.meta.env.VITE_LABEL_POSITION || 'top',
+  VALIDATION_STYLE: import.meta.env.VITE_VALIDATION_STYLE || 'inline',
+
+  // Notifications & Feedback
+  TOAST_POSITION: import.meta.env.VITE_TOAST_POSITION || 'top-right',
+  TOAST_DURATION: parseInt(import.meta.env.VITE_TOAST_DURATION || '5000'),
+  NOTIFICATION_VARIANT: import.meta.env.VITE_NOTIFICATION_VARIANT || 'glass',
+  LOADING_SPINNER_VARIANT: import.meta.env.VITE_LOADING_SPINNER_VARIANT || 'pulse',
+
+  // Responsive Design
+  RESPONSIVE_BREAKPOINT_SM: import.meta.env.VITE_RESPONSIVE_BREAKPOINT_SM || '640px',
+  RESPONSIVE_BREAKPOINT_MD: import.meta.env.VITE_RESPONSIVE_BREAKPOINT_MD || '768px',
+  RESPONSIVE_BREAKPOINT_LG: import.meta.env.VITE_RESPONSIVE_BREAKPOINT_LG || '1024px',
+  RESPONSIVE_BREAKPOINT_XL: import.meta.env.VITE_RESPONSIVE_BREAKPOINT_XL || '1280px',
+
+  // Advanced UI Features
+  ENABLE_RIPPLE_EFFECTS: import.meta.env.VITE_ENABLE_RIPPLE_EFFECTS !== 'false',
+  ENABLE_HOVER_LIFT: import.meta.env.VITE_ENABLE_HOVER_LIFT !== 'false',
+  ENABLE_FOCUS_RINGS: import.meta.env.VITE_ENABLE_FOCUS_RINGS !== 'false',
+  ENABLE_GRADIENT_BACKGROUNDS: import.meta.env.VITE_ENABLE_GRADIENT_BACKGROUNDS !== 'false',
+
   // External Services
   SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
   ANALYTICS_ID: import.meta.env.VITE_ANALYTICS_ID,

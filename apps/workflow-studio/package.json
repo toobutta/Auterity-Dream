@@ -25,8 +25,8 @@
     "deploy:production": "npm run build && vercel --prod=true"
   },
   "dependencies": {
-    "@auterity/design-system": "workspace:*",
-    "@auterity/workflow-contracts": "workspace:*",
+    "@auterity/design-system": "file:../../packages/design-system",
+    "@auterity/workflow-contracts": "file:../../packages/workflow-contracts",
     "@xyflow/react": "^12.8.4",
     "@ai-sdk/anthropic": "^2.0.9",
     "@ai-sdk/azure": "^2.0.23",
@@ -34,6 +34,21 @@
     "@ai-sdk/google": "^2.0.11",
     "@ai-sdk/openai": "^2.0.23",
     "@ai-sdk/react": "^2.0.28",
+    "@langchain/core": "^0.3.0",
+    "@langchain/openai": "^0.3.0",
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/google-genai": "^0.1.0",
+    "@langchain/cohere": "^0.3.0",
+    "langchain": "^0.3.0",
+    "litellm": "^1.50.0",
+    "@huggingface/transformers": "^3.0.0",
+    "@huggingface/hub": "^0.16.0",
+    "autogen": "^0.0.1",
+    "temporalio": "^1.10.0",
+    "@temporalio/worker": "^1.10.0",
+    "@temporalio/workflow": "^1.10.0",
+    "@temporalio/client": "^1.10.0",
+    "wandb": "^0.17.0",
     "ai": "^5.0.28",
     "framer-motion": "^12.23.12",
     "immer": "^10.1.1",
@@ -45,7 +60,8 @@
     "zod": "^4.1.5",
     "date-fns": "^4.1.0",
     "clsx": "^2.1.1",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.0.0",
+    "axios": "^1.7.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
