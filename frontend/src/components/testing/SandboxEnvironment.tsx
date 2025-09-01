@@ -100,7 +100,7 @@ export const useSandboxEnvironment = ({
     try {
       await executeInSandbox(execution);
     } catch (error) {
-      console.error('Sandbox execution failed:', error);
+
       onExecutionError?.(error instanceof Error ? error.message : 'Unknown sandbox error');
     } finally {
       if (timeoutRef.current) {
@@ -364,3 +364,5 @@ export const useSandboxEnvironment = ({
     formatBytes
   };
 };
+
+

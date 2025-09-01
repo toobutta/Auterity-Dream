@@ -53,7 +53,7 @@ class ConsoleEnhancer {
     this.setupErrorHandling();
 
     this.isInitialized = true;
-    console.log('[ConsoleEnhancer] Console enhancement initialized');
+
   }
 
   /**
@@ -129,7 +129,7 @@ class ConsoleEnhancer {
 
       longTaskObserver.observe({ entryTypes: ['longtask'] });
     } catch (error) {
-      console.warn('[ConsoleEnhancer] Long task observation not supported:', error);
+
     }
   }
 
@@ -138,19 +138,11 @@ class ConsoleEnhancer {
    */
   private setupErrorHandling(): void {
     window.addEventListener('error', (event) => {
-      console.error('[Global Error]', event.error, {
-        message: event.message,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno,
-        stack: event.error?.stack,
-      });
+
     });
 
     window.addEventListener('unhandledrejection', (event) => {
-      console.error('[Unhandled Promise Rejection]', event.reason, {
-        stack: event.reason?.stack,
-      });
+
     });
   }
 
@@ -189,11 +181,11 @@ class ConsoleEnhancer {
     console.group(`${prefix} ${entry.message.substring(0, 50)}${entry.message.length > 50 ? '...' : ''}`);
 
     if (entry.context) {
-      console.log('Context:', entry.context);
+
     }
 
     if (entry.performanceMetrics) {
-      console.log('Performance:', entry.performanceMetrics);
+
     }
 
     if (entry.data && entry.data.length > 1) {
@@ -201,7 +193,7 @@ class ConsoleEnhancer {
     }
 
     if (entry.stack) {
-      console.log('Stack:', entry.stack);
+
     }
 
     console.groupEnd();
@@ -274,7 +266,7 @@ class ConsoleEnhancer {
    */
   public mark(name: string): void {
     performance.mark(name);
-    console.log(`[Performance] Mark created: ${name}`);
+
   }
 
   /**
@@ -286,7 +278,7 @@ class ConsoleEnhancer {
       const measure = performance.getEntriesByName(name, 'measure')[0];
       console.log(`[Performance] ${name}: ${measure.duration.toFixed(2)}ms`);
     } catch (error) {
-      console.warn(`[Performance] Failed to measure ${name}:`, error);
+
     }
   }
 
@@ -296,7 +288,7 @@ class ConsoleEnhancer {
   public clearPerformanceMarks(): void {
     performance.clearMarks();
     performance.clearMeasures();
-    console.log('[Performance] All marks and measures cleared');
+
   }
 
   /**
@@ -339,3 +331,5 @@ class ConsoleEnhancer {
 }
 
 export { ConsoleEnhancer };
+
+

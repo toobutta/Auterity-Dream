@@ -7,12 +7,18 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import (
     agents,
+    analytics,
     auterity_expansion,
     auth,
     cognitive,
+    collaboration,
+    dashboard,
+    dashboards,
+    data_connectors,
     ecosystem_management,
     error_correlation,
     error_management,
+    gateway,
     kafka,
     logs,
     monitoring,
@@ -128,7 +134,13 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(agents.router)
+app.include_router(analytics.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
+app.include_router(collaboration.router, prefix="/api")
+app.include_router(data_connectors.router, prefix="/api")
+app.include_router(dashboard.router, prefix="/api")
+app.include_router(dashboards.router, prefix="/api")
+app.include_router(gateway.router, prefix="/api")
 app.include_router(sso.router, prefix="/api")
 app.include_router(tenants.router, prefix="/api")
 app.include_router(workflows.router, prefix="/api")

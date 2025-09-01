@@ -160,3 +160,4 @@ export default {
     // Add any additional plugins here
   ],
 };
+

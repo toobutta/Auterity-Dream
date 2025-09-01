@@ -37,7 +37,7 @@ export const useWebSocket = (url: string | null): UseWebSocketReturn => {
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
+
         setConnectionStatus('connected');
         reconnectAttempts.current = 0;
       };
@@ -47,12 +47,12 @@ export const useWebSocket = (url: string | null): UseWebSocketReturn => {
           const message: WebSocketMessage = JSON.parse(event.data);
           setLastMessage(message);
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+
         }
       };
 
       ws.onclose = (event) => {
-        console.log('WebSocket disconnected:', event.code, event.reason);
+
         setConnectionStatus('disconnected');
         wsRef.current = null;
 
@@ -67,12 +67,12 @@ export const useWebSocket = (url: string | null): UseWebSocketReturn => {
       };
 
       ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+
         setConnectionStatus('error');
       };
 
     } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
+
       setConnectionStatus('error');
     }
   }, [url]);
@@ -84,7 +84,7 @@ export const useWebSocket = (url: string | null): UseWebSocketReturn => {
         timestamp: new Date()
       }));
     } else {
-      console.warn('WebSocket is not connected. Message not sent:', message);
+
     }
   }, []);
 
@@ -128,3 +128,5 @@ export const useWebSocket = (url: string | null): UseWebSocketReturn => {
     close
   };
 };
+
+

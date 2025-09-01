@@ -368,3 +368,5 @@ export const QueryResultsDisplay: React.FC<QueryResultsDisplayProps> = ({
     </div>
   );
 };
+
+

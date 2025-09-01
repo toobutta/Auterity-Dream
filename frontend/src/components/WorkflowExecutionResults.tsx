@@ -40,7 +40,7 @@ const WorkflowExecutionResults: React.FC<WorkflowExecutionResultsProps> = ({
           errorMessage,
           stack: err instanceof Error ? err.stack : undefined,
         };
-        console.error("Execution fetch failed:", errorContext);
+
         setError(`Failed to fetch execution results: ${errorMessage}`);
       } finally {
         setLoading(false);
@@ -102,7 +102,7 @@ const WorkflowExecutionResults: React.FC<WorkflowExecutionResultsProps> = ({
         errorMessage,
         errorType: err instanceof Error ? err.constructor.name : "UnknownError",
       };
-      console.error("Clipboard operation failed:", errorContext);
+
       // Could add user notification here if needed
     }
   };
@@ -458,3 +458,5 @@ const WorkflowExecutionResults: React.FC<WorkflowExecutionResultsProps> = ({
 };
 
 export default WorkflowExecutionResults;
+
+

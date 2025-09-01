@@ -286,3 +286,5 @@ export class N8nRelayCoreAdapter {
 }
 
 export const n8nRelayCoreAdapter = new N8nRelayCoreAdapter();
+
+

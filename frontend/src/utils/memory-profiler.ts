@@ -55,7 +55,7 @@ class MemoryProfiler {
     this.startPeriodicSnapshots();
 
     this.isInitialized = true;
-    console.log('[MemoryProfiler] Memory profiling initialized');
+
   }
 
   /**
@@ -64,9 +64,9 @@ class MemoryProfiler {
   private setupMemoryMonitoring(): void {
     if ('memory' in performance) {
       this.takeSnapshot();
-      console.log('[MemoryProfiler] Performance.memory API available');
+
     } else {
-      console.warn('[MemoryProfiler] Performance.memory API not available');
+
     }
   }
 
@@ -89,7 +89,7 @@ class MemoryProfiler {
 
       this.gcObserver.observe({ entryTypes: ['gc'] });
     } catch (error) {
-      console.warn('[MemoryProfiler] GC observation not supported:', error);
+
     }
   }
 
@@ -130,7 +130,7 @@ class MemoryProfiler {
     // Log to console for DevTools visibility
     const heapUsedMB = (memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
     const heapTotalMB = (memory.totalJSHeapSize / 1024 / 1024).toFixed(2);
-    console.log(`[Memory] Heap: ${heapUsedMB}MB / ${heapTotalMB}MB`);
+
   }
 
   /**
@@ -176,7 +176,7 @@ class MemoryProfiler {
       // Trigger garbage collection if available
       if ('gc' in window) {
         (window as any).gc();
-        console.log('[Memory] Manual garbage collection triggered');
+
       }
     } else {
       this.metrics.leakDetected = false;
@@ -230,10 +230,10 @@ class MemoryProfiler {
   public forceGarbageCollection(): void {
     if ('gc' in window) {
       (window as any).gc();
-      console.log('[Memory] Manual garbage collection executed');
+
       this.takeSnapshot();
     } else {
-      console.warn('[Memory] Manual garbage collection not available');
+
     }
   }
 
@@ -256,7 +256,7 @@ class MemoryProfiler {
    */
   public createHeapSnapshot(): void {
     if ('memory' in performance) {
-      console.log('[Memory] Creating heap snapshot...');
+
       // In a real implementation, this would integrate with DevTools heap snapshot
       console.log('[Memory] Heap snapshot created (simulated)');
     }
@@ -296,3 +296,5 @@ class MemoryProfiler {
 }
 
 export { MemoryProfiler };
+
+

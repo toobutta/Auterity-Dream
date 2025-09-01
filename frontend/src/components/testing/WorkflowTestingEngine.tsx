@@ -79,7 +79,7 @@ export const useWorkflowTesting = ({
     try {
       await executeWorkflowTest(execution);
     } catch (error) {
-      console.error('Test execution failed:', error);
+
       onTestError?.(error instanceof Error ? error.message : 'Unknown error occurred');
     } finally {
       setIsTesting(false);
@@ -250,3 +250,5 @@ export const useWorkflowTesting = ({
     clearHistory
   };
 };
+
+

@@ -71,7 +71,7 @@ const CognitiveDashboard: React.FC = () => {
         setStats(data);
       }
     } catch (error) {
-      console.error('Failed to load cognitive stats:', error);
+
     }
   };
 
@@ -92,7 +92,7 @@ const CognitiveDashboard: React.FC = () => {
         setActiveTab('insights');
       }
     } catch (error) {
-      console.error('Failed to analyze workflow:', error);
+
     } finally {
       setIsAnalyzing(false);
     }
@@ -114,7 +114,7 @@ const CognitiveDashboard: React.FC = () => {
         setActiveTab('recommendations');
       }
     } catch (error) {
-      console.error('Failed to generate recommendations:', error);
+
     }
   };
 
@@ -135,7 +135,7 @@ const CognitiveDashboard: React.FC = () => {
         alert(`Optimization completed! Estimated improvements: ${JSON.stringify(result.estimated_improvements, null, 2)}`);
       }
     } catch (error) {
-      console.error('Failed to optimize workflow:', error);
+
     } finally {
       setIsOptimizing(false);
     }
@@ -505,3 +505,5 @@ const CognitiveDashboard: React.FC = () => {
 };
 
 export default CognitiveDashboard;
+
+

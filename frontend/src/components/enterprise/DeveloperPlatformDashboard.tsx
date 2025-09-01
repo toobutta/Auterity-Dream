@@ -110,7 +110,7 @@ export const DeveloperPlatformDashboard: React.FC = () => {
         },
       ]);
     } catch (error) {
-      console.error("Error loading platform data:", error);
+
     } finally {
       setLoading(false);
     }
@@ -136,7 +136,7 @@ export const DeveloperPlatformDashboard: React.FC = () => {
         ),
       );
     } catch (error) {
-      console.error("Error generating SDK:", error);
+
       setSDKs((prev) =>
         prev.map((sdk) =>
           sdk.language === language
@@ -406,3 +406,5 @@ export const DeveloperPlatformDashboard: React.FC = () => {
     </div>
   );
 };
+
+

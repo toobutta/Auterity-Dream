@@ -54,7 +54,7 @@ export function usePerformanceMonitoring(enabled = true) {
     if (!enabled || typeof window === 'undefined') return;
 
     // Web Vitals library not available - skip for now
-    console.debug('Web Vitals monitoring not available');
+
   }, [enabled]);
 
   const getPerformanceMetrics = useCallback((): PerformanceMetrics => {
@@ -150,7 +150,7 @@ export function usePerformanceMonitoring(enabled = true) {
 
     // Resource metrics
     if (metrics.totalResources !== undefined) {
-      console.log(`📦 Total Resources: ${metrics.totalResources}`);
+
     }
     if (metrics.totalResourceSize !== undefined) {
       console.log(`💾 Total Resource Size: ${(metrics.totalResourceSize / 1024).toFixed(2)} KB`);
@@ -234,3 +234,5 @@ export function useApiPerformance(enabled = true) {
 }
 
 export default usePerformanceMonitoring;
+
+

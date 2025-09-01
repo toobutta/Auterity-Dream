@@ -19,6 +19,17 @@ from .auterity_expansion import (
     VectorEmbedding,
 )
 from .base import Base, SessionLocal, engine
+from .analytics import (
+    AnalyticsEvent,
+    PerformanceMetric,
+    UserSession,
+    ReportTemplate,
+    ScheduledReport,
+    ReportExecution,
+    DashboardAnalytics,
+    BusinessMetric,
+)
+from .dashboard import Dashboard, DashboardWidget, DashboardShare, DashboardTemplate
 from .execution import ExecutionLog, ExecutionStatus, WorkflowExecution
 from .template import Template, TemplateParameter
 from .tenant import AuditLog, SSOConfiguration, SSOProvider, Tenant, TenantStatus
@@ -45,6 +56,20 @@ __all__ = [
     "ExecutionStatus",
     "Template",
     "TemplateParameter",
+    # Dashboard Models
+    "Dashboard",
+    "DashboardWidget",
+    "DashboardShare",
+    "DashboardTemplate",
+    # Analytics Models
+    "AnalyticsEvent",
+    "PerformanceMetric",
+    "UserSession",
+    "ReportTemplate",
+    "ScheduledReport",
+    "ReportExecution",
+    "DashboardAnalytics",
+    "BusinessMetric",
     # Agent Models
     "Agent",
     "AgentType",

@@ -90,7 +90,7 @@ export const DatabaseQueryBuilder: React.FC<DatabaseQueryBuilderProps> = ({
   // Handle load more results
   const handleLoadMore = useCallback(() => {
     // This would trigger loading more results from the database
-    console.log('Loading more results...');
+
   }, []);
 
   return (
@@ -170,3 +170,5 @@ export const DatabaseQueryBuilder: React.FC<DatabaseQueryBuilderProps> = ({
     </div>
   );
 };
+
+

@@ -109,7 +109,7 @@ export class TemporalService {
       this.calculateMetrics();
     }, 30000); // Every 30 seconds
 
-    console.log('Temporal service metrics initialized');
+
   }
 
   /**
@@ -121,7 +121,7 @@ export class TemporalService {
       this.checkWorkflowHealth();
     }, 60000); // Every minute
 
-    console.log('Temporal health monitoring started');
+
   }
 
   /**
@@ -165,7 +165,6 @@ export class TemporalService {
       this.metrics.totalWorkflows++;
       this.metrics.activeWorkflows++;
 
-      console.log(`Started workflow: ${workflowId} (${name})`);
 
       // Simulate workflow execution
       this.simulateWorkflowExecution(workflowId, workflow);
@@ -173,7 +172,7 @@ export class TemporalService {
       return workflowId;
 
     } catch (error) {
-      console.error('Failed to start workflow:', error);
+
       throw new Error(`Workflow start failed: ${(error as Error).message}`);
     }
   }
@@ -185,7 +184,7 @@ export class TemporalService {
     try {
       return this.workflows.get(workflowId) || null;
     } catch (error) {
-      console.error(`Failed to get workflow status for ${workflowId}:`, error);
+
       return null;
     }
   }
@@ -204,13 +203,13 @@ export class TemporalService {
         workflow.status = 'cancelled';
         workflow.completedAt = new Date();
         this.metrics.activeWorkflows--;
-        console.log(`Cancelled workflow: ${workflowId}`);
+
         return true;
       }
 
       return false;
     } catch (error) {
-      console.error(`Failed to cancel workflow ${workflowId}:`, error);
+
       return false;
     }
   }
@@ -222,7 +221,7 @@ export class TemporalService {
     try {
       return this.activities.get(workflowId) || [];
     } catch (error) {
-      console.error(`Failed to get activities for workflow ${workflowId}:`, error);
+
       return [];
     }
   }
@@ -262,11 +261,10 @@ export class TemporalService {
       // Calculate next execution
       this.updateScheduleExecutionTimes(scheduleId);
 
-      console.log(`Scheduled workflow: ${scheduleId} (${workflowName})`);
       return scheduleId;
 
     } catch (error) {
-      console.error('Failed to schedule workflow:', error);
+
       throw new Error(`Workflow scheduling failed: ${(error as Error).message}`);
     }
   }
@@ -284,7 +282,7 @@ export class TemporalService {
       const nextExecution = new Date(now.getTime() + (24 * 60 * 60 * 1000)); // Next day as approximation
       schedule.nextExecution = nextExecution;
     } catch (error) {
-      console.error(`Failed to update execution times for schedule ${scheduleId}:`, error);
+
     }
   }
 
@@ -295,7 +293,7 @@ export class TemporalService {
     try {
       return Array.from(this.schedules.values()).filter(schedule => schedule.enabled);
     } catch (error) {
-      console.error('Failed to get active schedules:', error);
+
       return [];
     }
   }
@@ -362,10 +360,10 @@ export class TemporalService {
         this.metrics.failedWorkflows++;
       }
 
-      console.log(`Workflow ${workflowId} completed with status: ${workflow.status}`);
+
 
     } catch (error) {
-      console.error(`Workflow execution simulation failed for ${workflowId}:`, error);
+
       workflow.status = 'failed';
       workflow.error = (error as Error).message;
       workflow.completedAt = new Date();
@@ -552,12 +550,11 @@ export class TemporalService {
           workflow.completedAt = new Date();
           this.metrics.activeWorkflows--;
           this.metrics.failedWorkflows++;
-          console.warn(`Workflow ${workflowId} timed out after ${workflow.timeout} seconds`);
+
         }
 
         // Check for stuck workflows (no progress updates)
         if (workflow.progress && runtime > timeoutThreshold) {
-          console.warn(`Workflow ${workflowId} may be stuck (no progress for ${timeoutThreshold / 1000} seconds)`);
         }
       }
     }
@@ -618,10 +615,11 @@ export class TemporalService {
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old records`);
+
     return cleanedCount;
   }
 }
 
 // Export singleton instance
 export const temporalService = new TemporalService();
+

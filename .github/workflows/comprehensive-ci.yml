@@ -139,6 +139,17 @@ jobs:
           cd frontend
           npm audit --audit-level moderate --json > npm-audit.json || true
 
+      - name: Check licenses
+        run: |
+          npm install -g license-checker
+          license-checker --production --json > licenses.json || true
+          # Check for GPL licenses (incompatible with MIT)
+          if grep -q "GPL" licenses.json 2>/dev/null; then
+            echo "❌ GPL license found - incompatible with MIT"
+            exit 1
+          fi
+          echo "✅ License check passed"
+
       - name: Upload security reports
         uses: actions/upload-artifact@v4
         if: always()
@@ -148,6 +159,7 @@ jobs:
             trivy-results.sarif
             bandit-report.json
             frontend/npm-audit.json
+            licenses.json
 
   # Unit Tests with Coverage
   unit-tests:

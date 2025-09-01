@@ -19,9 +19,9 @@ if (import.meta.env.DEV) {
   });
 
   devTools.init().then(() => {
-    console.log('[DevTools] Chrome DevTools integration initialized');
+
   }).catch((error: unknown) => {
-    console.error('[DevTools] Failed to initialize:', error);
+
   });
 }
 
@@ -33,5 +33,7 @@ if (rootElement) {
     </React.StrictMode>,
   );
 } else {
-  console.error("Root element not found");
+
 }
+
+

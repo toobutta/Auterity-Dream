@@ -50,3 +50,5 @@ const CustomerInquiryNode: React.FC<NodeProps> = ({
 };
 
 export default CustomerInquiryNode;
+
+

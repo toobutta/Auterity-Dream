@@ -307,7 +307,25 @@ ecosystem_manager = AIEcosystemManager()
 async def startup_event():
     """FastAPI startup event"""
     logger.info("🌟 FastAPI startup - Initializing AI Ecosystem...")
+
+    # Initialize AI Ecosystem
     startup_result = await ecosystem_manager.startup_ecosystem()
+
+    # Initialize Collaboration Service
+    try:
+        from app.services.collaboration_service import collaboration_service
+        await collaboration_service.start()
+        logger.info("🤝 Collaboration service initialized")
+    except Exception as e:
+        logger.error(f"Failed to initialize collaboration service: {str(e)}")
+
+    # Initialize Service Discovery
+    try:
+        from app.services.service_discovery import service_discovery
+        await service_discovery.start()
+        logger.info("🔍 Service discovery initialized")
+    except Exception as e:
+        logger.error(f"Failed to initialize service discovery: {str(e)}")
 
     if startup_result.get("status") == "completed":
         logger.info("🎉 AI Ecosystem ready for requests!")
@@ -320,6 +338,24 @@ async def startup_event():
 async def shutdown_event():
     """FastAPI shutdown event"""
     logger.info("👋 FastAPI shutdown - Cleaning up AI Ecosystem...")
+
+    # Shutdown Collaboration Service
+    try:
+        from app.services.collaboration_service import collaboration_service
+        await collaboration_service.stop()
+        logger.info("🤝 Collaboration service stopped")
+    except Exception as e:
+        logger.error(f"Failed to stop collaboration service: {str(e)}")
+
+    # Shutdown Service Discovery
+    try:
+        from app.services.service_discovery import service_discovery
+        await service_discovery.stop()
+        logger.info("🔍 Service discovery stopped")
+    except Exception as e:
+        logger.error(f"Failed to stop service discovery: {str(e)}")
+
+    # Shutdown AI Ecosystem
     shutdown_result = await ecosystem_manager.shutdown_ecosystem()
 
     if shutdown_result.get("status") == "completed":

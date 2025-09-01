@@ -60,7 +60,7 @@ const N8nNodeConfigPanel: React.FC<N8nNodeConfigPanelProps> = ({
         ]);
       }
     } catch (error) {
-      console.error('Failed to load workflows/templates:', error);
+
       // Don't show error to user, just log it
     } finally {
       setLoading(false);
@@ -315,3 +315,4 @@ const N8nNodeConfigPanel: React.FC<N8nNodeConfigPanelProps> = ({
 };
 
 export { N8nNodeConfigPanel };
+

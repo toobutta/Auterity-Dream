@@ -156,7 +156,7 @@ export class N8nTriggerNode implements StudioNode {
     // Merge with inputs and resolve template variables
     const mergedParams = this.resolveTemplateVariables({ ...parsedParams, ...inputs });
 
-    console.log(`Executing n8n workflow: ${workflowId} with params:`, mergedParams);
+
 
     const execution: N8nWorkflowExecution = {
       workflowId,
@@ -199,14 +199,14 @@ export class N8nTriggerNode implements StudioNode {
         // Cache result if enabled and successful
         if (enableCaching && result.status === 'completed') {
           // Implementation would cache here for future identical executions
-          console.log(`Caching successful result for workflow: ${workflowId}`);
+
         }
 
         return output;
 
       } catch (error: any) {
         lastError = error;
-        console.warn(`n8n execution attempt ${attempt} failed:`, error.message);
+
 
         // Don't retry on certain errors
         if (error.message?.includes('authentication failed') ||
@@ -225,7 +225,7 @@ export class N8nTriggerNode implements StudioNode {
 
     // All retries failed
     const errorMessage = `N8nTriggerNode: Workflow execution failed after ${retryCount + 1} attempts. Last error: ${lastError?.message || 'Unknown error'}`;
-    console.error(errorMessage);
+
 
     return {
       [outputVariable]: null,
@@ -317,8 +317,9 @@ export class N8nTriggerNode implements StudioNode {
     try {
       return await n8nApiService.getExecutionStatus(executionId);
     } catch (error) {
-      console.error('Failed to get execution status:', error);
+
       return null;
     }
   }
 }
+

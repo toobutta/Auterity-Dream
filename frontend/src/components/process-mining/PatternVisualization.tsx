@@ -273,3 +273,5 @@ export const PatternVisualization: React.FC<PatternVisualizationProps> = ({
     </div>
   );
 };
+
+

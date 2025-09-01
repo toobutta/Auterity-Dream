@@ -50,7 +50,7 @@ class NetworkMonitor {
     this.setupXMLHttpRequestInterception();
 
     this.isInitialized = true;
-    console.log('[NetworkMonitor] Network monitoring initialized');
+
   }
 
   /**
@@ -69,7 +69,7 @@ class NetworkMonitor {
       observer.observe({ entryTypes: ['resource'] });
       this.observers.push(observer);
     } catch (error) {
-      console.warn('[NetworkMonitor] Resource timing not supported:', error);
+
     }
   }
 
@@ -238,3 +238,5 @@ class NetworkMonitor {
 }
 
 export { NetworkMonitor };
+
+

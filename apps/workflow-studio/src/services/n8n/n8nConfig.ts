@@ -63,8 +63,9 @@ export const validateN8nConfig = (): { isValid: boolean; errors: string[] } => {
 // Auto-validation on import
 const configValidation = validateN8nConfig();
 if (!configValidation.isValid) {
-  console.warn('n8n Configuration Issues:', configValidation.errors);
-  console.warn('Some n8n features may not work correctly until configuration is fixed.');
+
+
 }
 
 export default n8nConfig;
+

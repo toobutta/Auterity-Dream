@@ -41,13 +41,13 @@ export async function loadIndustryTemplates(): Promise<IndustryWorkflowTemplate[
           templates.push(template);
         }
       } catch (error) {
-        console.warn(`Failed to load template ${file}:`, error);
+
       }
     }
 
     return templates;
   } catch (error) {
-    console.error('Failed to load industry templates:', error);
+
     return [];
   }
 }
@@ -173,3 +173,5 @@ export async function getTemplateMetadata(): Promise<{
 
   return { industries, categories, compliance };
 }
+
+

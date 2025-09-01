@@ -12,3 +12,4 @@ export interface WorkflowAnalyticsDashboardWebSocketMessage {
   payload: any;
   timestamp: Date;
 }
+

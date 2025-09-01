@@ -36,7 +36,6 @@ global.navigator = mockNavigator;
 
 // Test the integration
 async function testChromeDevToolsIntegration() {
-  console.log('🧪 Testing Chrome DevTools Integration...');
 
   try {
     // Initialize DevTools
@@ -52,29 +51,27 @@ async function testChromeDevToolsIntegration() {
 
     // Initialize the bridge
     await devTools.init();
-    console.log('✅ DevTools bridge initialized successfully');
 
     // Test getting metrics
     const metrics = devTools.getMetrics();
-    console.log('📊 Metrics retrieved:', metrics);
 
     // Test global API
     if ((global as any).window?.devtools) {
-      console.log('🌐 Global API available at window.devtools');
 
       // Test some API methods
       const config = (global as any).window.devtools.getConfig();
-      console.log('⚙️ Configuration:', config);
 
-      console.log('✅ All tests passed!');
+
     } else {
-      console.error('❌ Global API not available');
+
     }
 
   } catch (error) {
-    console.error('❌ Test failed:', error);
+
   }
 }
 
 // Run the test
 testChromeDevToolsIntegration();
+
+

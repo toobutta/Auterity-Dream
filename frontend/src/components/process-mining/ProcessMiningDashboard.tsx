@@ -62,7 +62,7 @@ export const ProcessMiningDashboard: React.FC<ProcessMiningDashboardProps> = ({
         setLastAnalyzed(new Date());
       }
     } catch (err) {
-      console.warn('Failed to load cached analysis:', err);
+
     }
   };
 
@@ -252,3 +252,5 @@ export const ProcessMiningDashboard: React.FC<ProcessMiningDashboardProps> = ({
     </div>
   );
 };
+
+

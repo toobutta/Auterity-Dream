@@ -10,3 +10,5 @@ const CognitiveAutomationPage: React.FC = () => {
 };
 
 export default CognitiveAutomationPage;
+
+

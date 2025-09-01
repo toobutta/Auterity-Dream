@@ -92,7 +92,7 @@ class N8nApiService {
         return this.cache.get(cacheKey);
       }
 
-      console.log(`Triggering n8n workflow: ${validated.workflowId} from ${validated.systemSource}`);
+
 
       const response: AxiosResponse = await axios.post(
         `${n8nConfig.apiUrl}/workflows/${validated.workflowId}/execute`,
@@ -133,7 +133,7 @@ class N8nApiService {
       return result;
 
     } catch (error: any) {
-      console.error('n8n triggerWorkflow error:', error);
+
 
       // Enhanced error handling with specific error types
       if (error.code === 'ECONNABORTED') {
@@ -166,7 +166,7 @@ class N8nApiService {
         return this.cache.get(cacheKey);
       }
 
-      console.log(`Importing n8n template: ${templateId}`);
+
 
       const response: AxiosResponse = await axios.get(
         `${n8nConfig.apiUrl}/workflows/templates/${templateId}`,
@@ -202,7 +202,7 @@ class N8nApiService {
       return template;
 
     } catch (error: any) {
-      console.error('n8n importTemplate error:', error);
+
 
       if (error.response?.status === 401) {
         throw new Error('n8n authentication failed for template import.');
@@ -250,7 +250,7 @@ class N8nApiService {
       return result;
 
     } catch (error: any) {
-      console.error('n8n getExecutionStatus error:', error);
+
 
       if (error.response?.status === 404) {
         throw new Error(`Execution not found: ${executionId}`);
@@ -275,7 +275,7 @@ class N8nApiService {
 
       return response.data.workflows || response.data || [];
     } catch (error: any) {
-      console.error('n8n listWorkflows error:', error);
+
       throw new Error(`Failed to list workflows: ${error.message || 'Unknown error'}`);
     }
   }
@@ -283,7 +283,7 @@ class N8nApiService {
   // Utility: Convert n8n template to auterity-error-iq format
   private async convertTemplateForAuterity(template: N8nTemplate): Promise<void> {
     // This would integrate with auterity-error-iq's node conversion system
-    console.log(`Converting n8n template ${template.id} for auterity-error-iq compatibility`);
+
 
     // Implementation would map n8n node types to auterity-error-iq equivalents
     // For example: n8n 'httpRequest' -> auterity 'api-call' node
@@ -316,7 +316,7 @@ class N8nApiService {
         }).catch(err => console.warn('Failed to log to neuroweaver:', err.message));
       }
     } catch (error) {
-      console.warn('Failed to log execution to auterity systems:', error);
+
     }
   }
 
@@ -328,3 +328,4 @@ class N8nApiService {
 }
 
 export const n8nApiService = new N8nApiService();
+

@@ -42,9 +42,9 @@ const N8nCanvasIntegration: React.FC<N8nCanvasIntegrationProps> = ({
       };
       const node = N8nNodeFactory.createNode('n8n.trigger', position);
       onAddNode(node);
-      console.log('Added n8n trigger node to canvas');
+
     } catch (error) {
-      console.error('Error adding n8n trigger node:', error);
+
       alert(`Failed to add n8n node: ${(error as Error).message}`);
     }
   };
@@ -62,9 +62,9 @@ const N8nCanvasIntegration: React.FC<N8nCanvasIntegrationProps> = ({
       };
       const node = N8nNodeFactory.createNode('n8n.template', position);
       onAddNode(node);
-      console.log('Added n8n template node to canvas');
+
     } catch (error) {
-      console.error('Error adding n8n template node:', error);
+
       alert(`Failed to add n8n template node: ${(error as Error).message}`);
     }
   };
@@ -94,12 +94,12 @@ const N8nCanvasIntegration: React.FC<N8nCanvasIntegrationProps> = ({
         };
 
         onUpdateNode(configuringNode.id, updatedNode);
-        console.log('Updated n8n node config:', updatedNode);
+
 
         setShowConfigPanel(false);
         setConfiguringNode(null);
       } catch (error) {
-        console.error('Error saving n8n node config:', error);
+
         alert(`Failed to save configuration: ${(error as Error).message}`);
       }
     }
@@ -212,3 +212,4 @@ const N8nCanvasIntegration: React.FC<N8nCanvasIntegrationProps> = ({
 };
 
 export default N8nCanvasIntegration;
+

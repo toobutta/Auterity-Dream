@@ -50,7 +50,7 @@ class ApiClient {
         message: data.message,
       };
     } catch (error) {
-      console.error('API request failed:', error);
+
       throw error;
     }
   }
@@ -105,3 +105,5 @@ class ApiClient {
 }
 
 export const apiClient = new ApiClient();
+
+

@@ -132,7 +132,7 @@ const NoCodeQueryBuilderPage: React.FC = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to execute query";
       setError(errorMessage);
-      console.error("Query execution failed:", err);
+
     } finally {
       setIsExecuting(false);
     }
@@ -157,12 +157,12 @@ const NoCodeQueryBuilderPage: React.FC = () => {
 
   const handleQueryChange = useCallback((query: string) => {
     // Update query string when QueryEditor generates it
-    console.log('Generated query:', query);
+
   }, []);
 
   const handleAggregationChange = useCallback((aggregations: any[]) => {
     // Handle aggregation changes
-    console.log('Aggregations:', aggregations);
+
   }, []);
 
   const handleExportResults = useCallback(() => {
@@ -312,3 +312,5 @@ const NoCodeQueryBuilderPage: React.FC = () => {
 };
 
 export default NoCodeQueryBuilderPage;
+
+

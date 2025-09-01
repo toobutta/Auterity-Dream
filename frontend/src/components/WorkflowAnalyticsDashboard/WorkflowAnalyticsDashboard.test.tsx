@@ -22,3 +22,4 @@ describe('WorkflowAnalyticsDashboard', () => {
     // Add WebSocket tests
   });
 });
+

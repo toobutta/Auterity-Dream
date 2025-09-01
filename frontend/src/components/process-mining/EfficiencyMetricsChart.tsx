@@ -220,3 +220,5 @@ export const EfficiencyMetricsChart: React.FC<EfficiencyMetricsChartProps> = ({
     </div>
   );
 };
+
+

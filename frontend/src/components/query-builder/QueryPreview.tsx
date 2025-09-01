@@ -160,3 +160,5 @@ export const QueryPreview: React.FC<QueryPreviewProps> = ({
     </div>
   );
 };
+
+

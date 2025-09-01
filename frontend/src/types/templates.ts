@@ -24,3 +24,5 @@ export interface IndustryWorkflowTemplate {
   benefits?: string[];
   sampleData?: any;
 }
+
+

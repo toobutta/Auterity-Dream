@@ -95,14 +95,14 @@ export class EnterpriseOrchestrator {
    */
   private async initializeEnterpriseServices(): Promise<void> {
     try {
-      console.log('Initializing Enterprise Orchestrator...');
+
 
       // All services are already initialized as singletons
       // This method can be used for any cross-service initialization
 
-      console.log('Enterprise Orchestrator initialized successfully');
+
     } catch (error) {
-      console.error('Failed to initialize enterprise services:', error);
+
     }
   }
 
@@ -113,8 +113,6 @@ export class EnterpriseOrchestrator {
     try {
       const workflowId = `ewf_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const startTime = Date.now();
-
-      console.log(`Executing enterprise workflow: ${workflowId} (${request.name})`);
 
       // Create result tracking
       const result: EnterpriseWorkflowResult = {
@@ -166,11 +164,11 @@ export class EnterpriseOrchestrator {
       this.workflowHistory.push(result);
       this.activeWorkflows.delete(workflowId);
 
-      console.log(`Enterprise workflow ${workflowId} completed successfully`);
+
       return result;
 
     } catch (error) {
-      console.error(`Enterprise workflow execution failed:`, error);
+
 
       // Update failed result
       const failedResult: EnterpriseWorkflowResult = {
@@ -640,7 +638,7 @@ export class EnterpriseOrchestrator {
       };
 
     } catch (error) {
-      console.error('Failed to generate enterprise analytics:', error);
+
       throw new Error(`Analytics generation failed: ${(error as Error).message}`);
     }
   }
@@ -722,7 +720,7 @@ export class EnterpriseOrchestrator {
     this.workflowHistory = this.workflowHistory.filter(workflow => workflow.timestamp >= cutoffTime);
 
     const cleanedCount = initialLength - this.workflowHistory.length;
-    console.log(`Cleaned up ${cleanedCount} old enterprise workflows`);
+
 
     return cleanedCount;
   }
@@ -730,3 +728,4 @@ export class EnterpriseOrchestrator {
 
 // Export singleton instance
 export const enterpriseOrchestrator = new EnterpriseOrchestrator();
+

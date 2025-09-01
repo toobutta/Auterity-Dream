@@ -92,7 +92,7 @@ export const TableSelector: React.FC<TableSelectorProps> = ({
       // In a real implementation, fetch detailed table info from API
       onTableSelect(table);
     } catch (error) {
-      console.error('Failed to select table:', error);
+
     } finally {
       setLoading(false);
     }
@@ -207,3 +207,5 @@ export const TableSelector: React.FC<TableSelectorProps> = ({
     </div>
   );
 };
+
+

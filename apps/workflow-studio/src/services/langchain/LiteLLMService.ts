@@ -107,7 +107,6 @@ export class LiteLLMService {
       }
     });
 
-    console.log(`LiteLLM initialized with ${this.providers.size} providers:`, Array.from(this.providers.keys()));
   }
 
   /**
@@ -184,11 +183,11 @@ export class LiteLLMService {
       // Record routing decision
       this.routingHistory.push(decision);
 
-      console.log(`LiteLLM routing decision:`, decision);
+
       return decision;
 
     } catch (error) {
-      console.error('LiteLLM routing failed:', error);
+
       throw new Error(`Routing determination failed: ${(error as Error).message}`);
     }
   }
@@ -292,7 +291,7 @@ export class LiteLLMService {
     } catch (error) {
       provider.health = 'unhealthy';
       provider.lastHealthCheck = new Date();
-      console.error(`Health check failed for ${providerName}:`, error);
+
       return false;
     }
   }
@@ -370,7 +369,7 @@ export class LiteLLMService {
       responseTime: 1000
     });
 
-    console.log(`Provider ${config.name} added/updated`);
+
   }
 
   /**
@@ -379,7 +378,7 @@ export class LiteLLMService {
   removeProvider(providerName: string): boolean {
     const deleted = this.providers.delete(providerName);
     if (deleted) {
-      console.log(`Provider ${providerName} removed`);
+
     }
     return deleted;
   }
@@ -387,3 +386,4 @@ export class LiteLLMService {
 
 // Export singleton instance
 export const liteLLMService = new LiteLLMService();
+

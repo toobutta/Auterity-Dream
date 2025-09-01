@@ -153,6 +153,9 @@ class User(Base):
     workflows = relationship(
         "Workflow", back_populates="user", cascade="all, delete-orphan"
     )
+    dashboards = relationship(
+        "Dashboard", back_populates="user", cascade="all, delete-orphan"
+    )
     roles = relationship("Role", secondary=user_roles, back_populates="users")
 
     def __repr__(self):

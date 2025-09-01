@@ -54,7 +54,7 @@ export class ProcessMiningService {
       );
       return response.data;
     } catch (error) {
-      console.error('Process mining analysis failed:', error);
+
       throw new Error('Failed to analyze workflow patterns');
     }
   }
@@ -66,7 +66,7 @@ export class ProcessMiningService {
       );
       return response.data || null;
     } catch (error) {
-      console.warn('No cached analysis available:', error);
+
       return null;
     }
   }
@@ -76,7 +76,7 @@ export class ProcessMiningService {
       const response = await apiClient.get(`${this.baseUrl}/health`);
       return response.data;
     } catch (error) {
-      console.error('Health check failed:', error);
+
       throw new Error('Process mining service unavailable');
     }
   }
@@ -142,3 +142,5 @@ export class ProcessMiningService {
     }
   }
 }
+
+

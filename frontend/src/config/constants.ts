@@ -279,3 +279,6 @@ export const FILE_UPLOAD = {
   ALLOWED_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'],
   MAX_FILES: 5,
 } as const;
+
+
+

@@ -168,3 +168,5 @@ export const BottleneckAnalysisCard: React.FC<BottleneckAnalysisCardProps> = ({
     </Card>
   );
 };
+
+

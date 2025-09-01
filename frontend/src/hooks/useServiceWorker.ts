@@ -33,8 +33,6 @@ export function useServiceWorker() {
           scope: '/',
         });
 
-        console.log('Service Worker registered:', registration);
-
         // Update state based on registration
         setState(prev => ({
           ...prev,
@@ -49,7 +47,6 @@ export function useServiceWorker() {
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
-            console.log('Service Worker update found');
 
             newWorker.addEventListener('statechange', () => {
               const currentState = newWorker.state as string;
@@ -65,7 +62,7 @@ export function useServiceWorker() {
 
         // Listen for controller change (new SW activated)
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          console.log('Service Worker controller changed - page will reload');
+
           window.location.reload();
         });
 
@@ -75,7 +72,7 @@ export function useServiceWorker() {
         }, 60 * 60 * 1000); // Check every hour
 
       } catch (error) {
-        console.error('Service Worker registration failed:', error);
+
         setState(prev => ({
           ...prev,
           isRegistered: false,
@@ -118,7 +115,7 @@ export function useServiceWorker() {
       await Promise.all(
         cacheNames.map(cacheName => caches.delete(cacheName))
       );
-      console.log('All caches cleared');
+
     }
   };
 
@@ -138,21 +135,20 @@ export function useServiceWorkerMessages() {
     if (!('serviceWorker' in navigator)) return;
 
     const handleMessage = (event: MessageEvent) => {
-      console.log('Service Worker message:', event.data);
 
       // Handle different message types
       switch (event.data.type) {
         case 'CACHE_UPDATED':
-          console.log('Cache updated:', event.data.payload);
+
           break;
         case 'OFFLINE_READY':
-          console.log('App is ready for offline use');
+
           break;
         case 'SYNC_COMPLETED':
-          console.log('Background sync completed');
+
           break;
         default:
-          console.log('Unknown message type:', event.data.type);
+
       }
     };
 
@@ -165,3 +161,5 @@ export function useServiceWorkerMessages() {
 }
 
 export default useServiceWorker;
+
+

@@ -192,3 +192,5 @@ export const preloadImages = (sources: string[]): Promise<void[]> => {
 };
 
 export default OptimizedImage;
+
+

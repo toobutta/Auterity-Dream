@@ -178,13 +178,13 @@ export class N8nTemplateNode implements BaseNode {
     }
 
     try {
-      console.log(`Executing n8n template: ${templateId}`);
+
 
       // Import template if auto-import is enabled
       let template;
       if (autoImport) {
         template = await n8nApiService.importTemplate(templateId);
-        console.log(`Imported template: ${template.name}`);
+
       }
 
       // Prepare parameters with template variable resolution
@@ -203,11 +203,11 @@ export class N8nTemplateNode implements BaseNode {
         executedAt: new Date().toISOString()
       };
 
-      console.log(`Template execution completed: ${executionResult.executionId}`);
+
       return output;
 
     } catch (error: any) {
-      console.error(`N8nTemplateNode execution error:`, error);
+
 
       const errorMessage = `N8nTemplateNode: Template execution failed: ${error.message || 'Unknown error'}`;
 
@@ -317,7 +317,7 @@ export class N8nTemplateNode implements BaseNode {
       };
 
     } catch (error) {
-      console.error(`Template execution failed:`, error);
+
       throw error;
     }
   }
@@ -341,10 +341,11 @@ export class N8nTemplateNode implements BaseNode {
     try {
       return await n8nApiService.importTemplate(templateId);
     } catch (error) {
-      console.error(`Failed to get template info for ${templateId}:`, error);
+
       return null;
     }
   }
 }
 
 export default N8nTemplateNode;
+

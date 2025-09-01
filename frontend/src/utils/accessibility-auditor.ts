@@ -61,9 +61,9 @@ class AccessibilityAuditor {
       await this.loadAxeCore();
       this.setupPeriodicAuditing();
       this.isInitialized = true;
-      console.log('[AccessibilityAuditor] Accessibility auditing initialized');
+
     } catch (error) {
-      console.error('[AccessibilityAuditor] Failed to initialize:', error);
+
     }
   }
 
@@ -101,7 +101,7 @@ class AccessibilityAuditor {
    */
   public async runAudit(): Promise<AccessibilityReport | null> {
     if (!(window as any).axe) {
-      console.warn('[AccessibilityAuditor] axe-core not loaded');
+
       return null;
     }
 
@@ -130,7 +130,7 @@ class AccessibilityAuditor {
 
       return this.report;
     } catch (error) {
-      console.error('[AccessibilityAuditor] Audit failed:', error);
+
       return null;
     }
   }
@@ -195,9 +195,7 @@ class AccessibilityAuditor {
   private logAuditResults(report: AccessibilityReport): void {
     console.group(`[Accessibility] Audit Results - Score: ${report.score}/100`);
 
-    console.log(`✅ Passes: ${report.passes}`);
-    console.log(`⚠️  Incomplete: ${report.incomplete}`);
-    console.log(`❌ Violations: ${report.violations.length}`);
+
 
     if (report.violations.length > 0) {
       console.group('Violations:');
@@ -210,9 +208,9 @@ class AccessibilityAuditor {
         }[violation.impact] || '⚪';
 
         console.group(`${impactEmoji} ${index + 1}. ${violation.description}`);
-        console.log(`Impact: ${violation.impact}`);
-        console.log(`Help: ${violation.help}`);
-        console.log(`URL: ${violation.helpUrl}`);
+
+
+
         console.log(`Affected: ${violation.nodes.length} element(s)`);
         console.groupEnd();
       });
@@ -252,7 +250,7 @@ class AccessibilityAuditor {
     try {
       const element = document.querySelector(selector);
       if (!element) {
-        console.warn(`[AccessibilityAuditor] Element not found: ${selector}`);
+
         return null;
       }
 
@@ -273,10 +271,9 @@ class AccessibilityAuditor {
         timestamp: Date.now(),
       };
 
-      console.log(`[Accessibility] Element check for "${selector}": ${report.score}/100`);
       return report;
     } catch (error) {
-      console.error(`[AccessibilityAuditor] Element check failed for ${selector}:`, error);
+
       return null;
     }
   }
@@ -362,3 +359,5 @@ class AccessibilityAuditor {
 }
 
 export { AccessibilityAuditor };
+
+

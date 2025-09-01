@@ -40,13 +40,11 @@ const CACHE_STRATEGIES = {
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
 
   event.waitUntil(
     (async () => {
       const cache = await caches.open(STATIC_CACHE);
       await cache.addAll(STATIC_ASSETS);
-      console.log('Service Worker: Static assets cached');
 
       // Skip waiting to activate immediately
       await self.skipWaiting();
@@ -56,7 +54,6 @@ self.addEventListener('install', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Activating...');
 
   event.waitUntil(
     (async () => {
@@ -68,7 +65,7 @@ self.addEventListener('activate', (event) => {
               cacheName !== STATIC_CACHE &&
               cacheName !== API_CACHE &&
               cacheName !== IMAGE_CACHE) {
-            console.log(`Service Worker: Deleting old cache: ${cacheName}`);
+
             return caches.delete(cacheName);
           }
         })
@@ -76,7 +73,7 @@ self.addEventListener('activate', (event) => {
 
       // Take control of all clients
       await self.clients.claim();
-      console.log('Service Worker: Activated and claimed all clients');
+
     })()
   );
 });
@@ -140,7 +137,7 @@ async function handleStaticAsset(request) {
     }
     return networkResponse;
   } catch (error) {
-    console.error('Service Worker: Failed to fetch static asset:', error);
+
     throw error;
   }
 }
@@ -162,11 +159,10 @@ async function handleApiRequest(request) {
     // Fallback to cache
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
-      console.log('Service Worker: Serving API response from cache');
+
       return cachedResponse;
     }
 
-    console.error('Service Worker: API request failed:', error);
     throw error;
   }
 }
@@ -188,7 +184,7 @@ async function handleImageRequest(request) {
     }
     return networkResponse;
   } catch (error) {
-    console.error('Service Worker: Failed to fetch image:', error);
+
     throw error;
   }
 }
@@ -219,7 +215,6 @@ async function handlePageRequest(request) {
       return offlineResponse;
     }
 
-    console.error('Service Worker: Page request failed:', error);
     throw error;
   }
 }
@@ -232,7 +227,6 @@ self.addEventListener('sync', (event) => {
 });
 
 async function syncOfflineActions() {
-  console.log('Service Worker: Syncing offline actions');
 
   // Implement offline action sync logic here
   // This could include retrying failed API calls, syncing local data, etc.
@@ -304,3 +298,5 @@ async function getCacheInfo() {
 
 // Export for TypeScript
 export {};
+
+

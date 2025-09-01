@@ -50,7 +50,7 @@ const N8nManagementPage: React.FC = () => {
       setIsConnected(true);
       setConfigErrors([]);
     } catch (error: any) {
-      console.error('Connection test failed:', error);
+
       setIsConnected(false);
       setConfigErrors([error.message || 'Connection failed']);
       setWorkflows([]);
@@ -81,7 +81,7 @@ const N8nManagementPage: React.FC = () => {
 
       // Update environment variables if possible (client-side limitation)
       if (window.location.protocol === 'http:' || window.location.hostname === 'localhost') {
-        console.log('Configuration saved successfully. Note: Environment variables may require server restart.');
+
       }
 
     } catch (error: any) {
@@ -300,3 +300,4 @@ const N8nManagementPage: React.FC = () => {
 };
 
 export default N8nManagementPage;
+

@@ -293,3 +293,5 @@ export const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     </div>
   );
 };
+
+

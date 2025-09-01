@@ -268,7 +268,7 @@ export class NovitaAIService {
       this.availableModels.set(model.id, model);
     });
 
-    console.log(`Novita AI initialized with ${mockModels.length} models`);
+
   }
 
   /**
@@ -317,11 +317,10 @@ export class NovitaAIService {
       // Update usage metrics
       this.updateUsageMetrics(request, response, latency);
 
-      console.log(`Novita AI request completed: ${request.model} (${latency}ms)`);
       return response;
 
     } catch (error) {
-      console.error('Novita AI request failed:', error);
+
       throw new Error(`AI request failed: ${(error as Error).message}`);
     }
   }
@@ -334,7 +333,7 @@ export class NovitaAIService {
       const batchId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const startTime = Date.now();
 
-      console.log(`Executing Novita AI batch: ${requests.requests.length} requests`);
+
 
       const results: NovitaResponse[] = [];
       const errors: Array<{ requestIndex: number; error: string }> = [];
@@ -394,11 +393,11 @@ export class NovitaAIService {
         }
       };
 
-      console.log(`Batch ${batchId} completed: ${results.length}/${requests.requests.length} successful`);
+
       return batchResponse;
 
     } catch (error) {
-      console.error('Batch execution failed:', error);
+
       throw new Error(`Batch execution failed: ${(error as Error).message}`);
     }
   }
@@ -489,7 +488,7 @@ export class NovitaAIService {
       };
 
     } catch (error) {
-      console.error('Simulated API call failed:', error);
+
       throw error;
     }
   }
@@ -747,9 +746,10 @@ export class NovitaAIService {
       }
     };
 
-    console.log('Novita AI usage metrics reset');
+
   }
 }
 
 // Export singleton instance
 export const novitaAIService = new NovitaAIService();
+

@@ -103,7 +103,7 @@ const IndustryWorkflowMarketplacePage: React.FC = () => {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Failed to load templates";
         setError(errorMessage);
-        console.error("Failed to load templates:", err);
+
       } finally {
         setIsLoading(false);
       }
@@ -152,7 +152,7 @@ const IndustryWorkflowMarketplacePage: React.FC = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to import template";
       setError(errorMessage);
-      console.error("Failed to import template:", err);
+
     } finally {
       setImportingTemplateId(null);
     }
@@ -321,3 +321,5 @@ const IndustryWorkflowMarketplacePage: React.FC = () => {
 };
 
 export default IndustryWorkflowMarketplacePage;
+
+

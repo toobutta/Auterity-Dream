@@ -111,7 +111,7 @@ export class UnifiedAIOrchestrator {
       this.workflowTemplates.set(template.id, template);
     });
 
-    console.log(`Unified AI Orchestrator initialized with ${templates.length} workflow templates`);
+
   }
 
   /**
@@ -122,7 +122,6 @@ export class UnifiedAIOrchestrator {
       const taskId = `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const startTime = Date.now();
 
-      console.log(`Orchestrating task: ${taskId} (${request.task})`);
 
       // Determine the best orchestration strategy
       const strategy = this.determineStrategy(request);
@@ -173,11 +172,11 @@ export class UnifiedAIOrchestrator {
       // Store result for tracking
       this.activeTasks.set(taskId, orchestrationResult);
 
-      console.log(`Task ${taskId} completed in ${executionTime}ms using ${service}`);
+
       return orchestrationResult;
 
     } catch (error) {
-      console.error('Orchestration failed:', error);
+
       throw new Error(`Task orchestration failed: ${(error as Error).message}`);
     }
   }
@@ -484,10 +483,11 @@ export class UnifiedAIOrchestrator {
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old tasks`);
+
     return cleanedCount;
   }
 }
 
 // Export singleton instance
 export const unifiedAIOrchestrator = new UnifiedAIOrchestrator();
+

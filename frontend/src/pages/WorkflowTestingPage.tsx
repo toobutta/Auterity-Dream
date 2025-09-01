@@ -39,7 +39,7 @@ const WorkflowTestingPage: React.FC = () => {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Failed to load workflows";
         setError(errorMessage);
-        console.error("Failed to load workflows:", err);
+
       } finally {
         setIsLoading(false);
       }
@@ -79,7 +79,7 @@ const WorkflowTestingPage: React.FC = () => {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to refresh workflows";
       setError(errorMessage);
-      console.error("Failed to refresh workflows:", err);
+
     } finally {
       setIsLoading(false);
     }
@@ -253,3 +253,5 @@ const WorkflowTestingPage: React.FC = () => {
 };
 
 export default WorkflowTestingPage;
+
+

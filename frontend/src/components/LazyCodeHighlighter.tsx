@@ -65,3 +65,5 @@ export const LazyCodeHighlighter: React.FC<LazyCodeHighlighterProps> = ({
 };
 
 export default LazyCodeHighlighter;
+
+

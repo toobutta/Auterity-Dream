@@ -122,7 +122,7 @@ export class PostmanPostbotService {
     };
 
     this.environments.set('default', defaultEnv);
-    console.log('Postman Postbot service initialized with default environment');
+
   }
 
   /**
@@ -143,12 +143,11 @@ export class PostmanPostbotService {
       await this.validateTest(test);
 
       this.tests.set(testId, test);
-      console.log(`Created API test: ${testId} (${testData.name})`);
 
       return testId;
 
     } catch (error) {
-      console.error('Failed to create API test:', error);
+
       throw new Error(`API test creation failed: ${(error as Error).message}`);
     }
   }
@@ -210,11 +209,11 @@ export class PostmanPostbotService {
       test.status = result.status;
       test.result = result;
 
-      console.log(`Test ${testId} completed: ${result.status}`);
+
       return result;
 
     } catch (error) {
-      console.error(`Test execution failed for ${testId}:`, error);
+
 
       const errorResult: TestResult = {
         testId,
@@ -263,12 +262,11 @@ export class PostmanPostbotService {
       };
 
       this.testSuites.set(suiteId, suite);
-      console.log(`Created test suite: ${suiteId} (${suiteData.name})`);
 
       return suiteId;
 
     } catch (error) {
-      console.error('Failed to create test suite:', error);
+
       throw new Error(`Test suite creation failed: ${(error as Error).message}`);
     }
   }
@@ -295,7 +293,7 @@ export class PostmanPostbotService {
           const result = await this.runTest(testId, suite.environment);
           testResults.push(result);
         } catch (error) {
-          console.error(`Failed to run test ${testId} in suite ${suiteId}:`, error);
+
           // Continue with other tests
         }
       }
@@ -325,11 +323,11 @@ export class PostmanPostbotService {
       suite.status = result.failedTests > 0 ? 'failed' : 'completed';
       suite.results = result;
 
-      console.log(`Test suite ${suiteId} completed: ${result.passedTests}/${result.totalTests} passed`);
+
       return result;
 
     } catch (error) {
-      console.error(`Test suite execution failed for ${suiteId}:`, error);
+
       throw new Error(`Test suite execution failed: ${(error as Error).message}`);
     }
   }
@@ -349,12 +347,11 @@ export class PostmanPostbotService {
       };
 
       this.environments.set(envId, environment);
-      console.log(`Created environment: ${envId} (${envData.name})`);
 
       return envId;
 
     } catch (error) {
-      console.error('Failed to create environment:', error);
+
       throw new Error(`Environment creation failed: ${(error as Error).message}`);
     }
   }
@@ -561,7 +558,7 @@ export class PostmanPostbotService {
         .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
         .slice(0, limit);
     } catch (error) {
-      console.error(`Failed to get results for test ${testId}:`, error);
+
       return [];
     }
   }
@@ -576,7 +573,7 @@ export class PostmanPostbotService {
         .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
         .slice(0, limit);
     } catch (error) {
-      console.error(`Failed to get results for suite ${suiteId}:`, error);
+
       return [];
     }
   }
@@ -588,7 +585,7 @@ export class PostmanPostbotService {
     try {
       return Array.from(this.tests.values());
     } catch (error) {
-      console.error('Failed to get all tests:', error);
+
       return [];
     }
   }
@@ -600,7 +597,7 @@ export class PostmanPostbotService {
     try {
       return Array.from(this.testSuites.values());
     } catch (error) {
-      console.error('Failed to get all test suites:', error);
+
       return [];
     }
   }
@@ -632,7 +629,7 @@ export class PostmanPostbotService {
       };
 
     } catch (error) {
-      console.error('Failed to get test statistics:', error);
+
       return {
         totalTests: 0,
         totalSuites: 0,
@@ -668,11 +665,11 @@ export class PostmanPostbotService {
         trends: this.calculateTrends(recentResults, cutoffTime)
       };
 
-      console.log(`Generated test report for ${timeframe}`);
+
       return report;
 
     } catch (error) {
-      console.error('Failed to generate test report:', error);
+
       throw new Error(`Test report generation failed: ${(error as Error).message}`);
     }
   }
@@ -748,10 +745,11 @@ export class PostmanPostbotService {
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old test results`);
+
     return cleanedCount;
   }
 }
 
 // Export singleton instance
 export const postmanPostbotService = new PostmanPostbotService();
+

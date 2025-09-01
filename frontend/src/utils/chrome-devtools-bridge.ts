@@ -128,11 +128,9 @@ class ChromeDevToolsBridge {
 
     // Only initialize in development/staging environments
     if (this.config.environment === 'production') {
-      console.warn('[DevTools] Chrome DevTools integration disabled in production');
+
       return;
     }
-
-    console.log('[DevTools] Initializing Chrome DevTools integration...');
 
     try {
       // Initialize Web Vitals monitoring
@@ -177,10 +175,9 @@ class ChromeDevToolsBridge {
       this.startPerformanceMonitoring();
 
       this.isInitialized = true;
-      console.log('[DevTools] Chrome DevTools integration initialized successfully');
 
     } catch (error) {
-      console.error('[DevTools] Failed to initialize Chrome DevTools integration:', error);
+
     }
   }
 
@@ -199,7 +196,7 @@ class ChromeDevToolsBridge {
         this.checkPerformanceThresholds(metric);
       });
     } catch (error) {
-      console.error('[DevTools] Failed to initialize Web Vitals:', error);
+
     }
   }
 
@@ -213,7 +210,7 @@ class ChromeDevToolsBridge {
     const threshold = thresholds[metricName as keyof typeof thresholds];
 
     if (threshold && value > threshold) {
-      console.warn(`[Performance Alert] ${metric.name} exceeded threshold: ${value} > ${threshold}`);
+
     }
   }
 
@@ -241,7 +238,6 @@ class ChromeDevToolsBridge {
         }
 
         // Log performance metrics
-        console.log(`[Performance] FPS: ${fps}, Memory: ${this.metrics.performance.memoryUsage}MB`);
 
         frameCount = 0;
         lastTime = currentTime;
@@ -267,14 +263,14 @@ class ChromeDevToolsBridge {
       startPerformanceRecording: () => {
         if (window.performance && window.performance.mark) {
           window.performance.mark('devtools-recording-start');
-          console.log('[DevTools] Performance recording started');
+
         }
       },
       stopPerformanceRecording: () => {
         if (window.performance && window.performance.mark) {
           window.performance.mark('devtools-recording-end');
           window.performance.measure('devtools-session', 'devtools-recording-start', 'devtools-recording-end');
-          console.log('[DevTools] Performance recording stopped');
+
         }
       },
 
@@ -316,7 +312,6 @@ class ChromeDevToolsBridge {
       exportMetrics: () => this.exportMetrics(),
     };
 
-    console.log('[DevTools] Global API available at window.devtools');
   }
 
   /**
@@ -382,7 +377,7 @@ class ChromeDevToolsBridge {
     }
 
     this.isInitialized = false;
-    console.log('[DevTools] Chrome DevTools integration destroyed');
+
   }
 }
 
@@ -422,3 +417,5 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 
 export { ChromeDevToolsBridge };
 export default ChromeDevToolsBridge;
+
+

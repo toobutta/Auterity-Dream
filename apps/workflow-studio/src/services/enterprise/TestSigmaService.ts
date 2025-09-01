@@ -222,7 +222,7 @@ export class TestSigmaService {
       this.createTestCase(testData);
     });
 
-    console.log('TestSigma service initialized with sample test cases');
+
   }
 
   /**
@@ -242,12 +242,11 @@ export class TestSigmaService {
       };
 
       this.testCases.set(testId, testCase);
-      console.log(`Created test case: ${testId} (${testData.name})`);
 
       return testId;
 
     } catch (error) {
-      console.error('Failed to create test case:', error);
+
       throw new Error(`Test case creation failed: ${(error as Error).message}`);
     }
   }
@@ -274,12 +273,11 @@ export class TestSigmaService {
       };
 
       this.testSuites.set(suiteId, suite);
-      console.log(`Created test suite: ${suiteId} (${suiteData.name})`);
 
       return suiteId;
 
     } catch (error) {
-      console.error('Failed to create test suite:', error);
+
       throw new Error(`Test suite creation failed: ${(error as Error).message}`);
     }
   }
@@ -305,7 +303,6 @@ export class TestSigmaService {
       const executionId = `exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const startTime = new Date();
 
-      console.log(`Executing test suite: ${suiteId} (${suite.name})`);
 
       // Execute all test cases
       const testResults: TestExecutionResult[] = [];
@@ -319,7 +316,7 @@ export class TestSigmaService {
           screenshots.push(...result.screenshots);
           logs.push(...result.logs);
         } catch (error) {
-          console.error(`Failed to execute test case ${testId}:`, error);
+
           // Create failed result
           testResults.push({
             testCaseId: testId,
@@ -381,11 +378,11 @@ export class TestSigmaService {
         }
       });
 
-      console.log(`Test suite ${suiteId} completed: ${passedTests}/${testResults.length} passed`);
+
       return result;
 
     } catch (error) {
-      console.error(`Test suite execution failed for ${suiteId}:`, error);
+
       throw new Error(`Test suite execution failed: ${(error as Error).message}`);
     }
   }
@@ -401,7 +398,6 @@ export class TestSigmaService {
       }
 
       const startTime = new Date();
-      console.log(`Executing test case: ${testId} (${testCase.name})`);
 
       // Execute test steps
       const stepResults: TestStepResult[] = [];
@@ -418,7 +414,7 @@ export class TestSigmaService {
             screenshots.push(stepResult.screenshot);
           }
         } catch (error) {
-          console.error(`Step ${step.id} failed:`, error);
+
           stepResults.push({
             stepId: step.id,
             status: 'failed',
@@ -454,11 +450,11 @@ export class TestSigmaService {
         }
       };
 
-      console.log(`Test case ${testId} completed: ${status}`);
+
       return result;
 
     } catch (error) {
-      console.error(`Test case execution failed for ${testId}:`, error);
+
       throw new Error(`Test case execution failed: ${(error as Error).message}`);
     }
   }
@@ -510,7 +506,7 @@ export class TestSigmaService {
       };
 
     } catch (error) {
-      console.error(`Test step execution failed for ${step.id}:`, error);
+
       throw error;
     }
   }
@@ -529,12 +525,11 @@ export class TestSigmaService {
       };
 
       this.environments.set(envId, environment);
-      console.log(`Created test environment: ${envId} (${envData.name})`);
 
       return envId;
 
     } catch (error) {
-      console.error('Failed to create test environment:', error);
+
       throw new Error(`Environment creation failed: ${(error as Error).message}`);
     }
   }
@@ -546,7 +541,7 @@ export class TestSigmaService {
     try {
       return this.executionResults.get(executionId) || null;
     } catch (error) {
-      console.error(`Failed to get execution results for ${executionId}:`, error);
+
       return null;
     }
   }
@@ -558,7 +553,7 @@ export class TestSigmaService {
     try {
       return Array.from(this.testCases.values());
     } catch (error) {
-      console.error('Failed to get test cases:', error);
+
       return [];
     }
   }
@@ -570,7 +565,7 @@ export class TestSigmaService {
     try {
       return Array.from(this.testSuites.values());
     } catch (error) {
-      console.error('Failed to get test suites:', error);
+
       return [];
     }
   }
@@ -613,7 +608,7 @@ export class TestSigmaService {
       };
 
     } catch (error) {
-      console.error('Failed to get test statistics:', error);
+
       return {
         totalTestCases: 0,
         totalTestSuites: 0,
@@ -649,11 +644,11 @@ export class TestSigmaService {
         recommendations: this.generateRecommendations(statistics)
       };
 
-      console.log(`Generated comprehensive test report for ${timeframe}`);
+
       return report;
 
     } catch (error) {
-      console.error('Failed to generate test report:', error);
+
       throw new Error(`Test report generation failed: ${(error as Error).message}`);
     }
   }
@@ -746,11 +741,11 @@ export class TestSigmaService {
 
       if (schedule.enabled) {
         this.scheduleNextExecution(suiteId);
-        console.log(`Scheduled test suite: ${suiteId}`);
+
       }
 
     } catch (error) {
-      console.error(`Failed to schedule test suite ${suiteId}:`, error);
+
       throw new Error(`Test suite scheduling failed: ${(error as Error).message}`);
     }
   }
@@ -794,10 +789,11 @@ export class TestSigmaService {
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old test execution results`);
+
     return cleanedCount;
   }
 }
 
 // Export singleton instance
 export const testSigmaService = new TestSigmaService();
+

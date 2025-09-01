@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to load dashboard metrics";
       setError(errorMessage);
-      console.error("Dashboard metrics error:", err);
+
     } finally {
       setLoading(false);
     }
@@ -298,3 +298,5 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+
+

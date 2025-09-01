@@ -67,7 +67,6 @@ class SecurityScanner {
 
     this.setupSecurityMonitoring();
     this.isInitialized = true;
-    console.log('[SecurityScanner] Security scanning initialized');
 
     // Run initial scan
     setTimeout(() => this.runScan(), 1000);
@@ -93,7 +92,7 @@ class SecurityScanner {
   private monitorMixedContent(): void {
     document.addEventListener('securitypolicyviolation', (event) => {
       if (event.violatedDirective === 'mixed-content') {
-        console.warn('[Security] Mixed content detected:', event.blockedURI);
+
         this.addSecurityIssue({
           id: 'mixed-content',
           severity: 'high',
@@ -117,7 +116,7 @@ class SecurityScanner {
       const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
 
       if (url.startsWith('http://') && window.location.protocol === 'https:') {
-        console.warn('[Security] Insecure request detected:', url);
+
         this.addSecurityIssue({
           id: 'insecure-request',
           severity: 'medium',
@@ -138,7 +137,7 @@ class SecurityScanner {
    */
   private monitorCSPViolations(): void {
     document.addEventListener('securitypolicyviolation', (event) => {
-      console.warn('[Security] CSP violation:', event.violatedDirective, event.blockedURI);
+
       this.addSecurityIssue({
         id: 'csp-violation',
         severity: 'medium',
@@ -174,7 +173,7 @@ class SecurityScanner {
 
       return this.report;
     } catch (error) {
-      console.error('[SecurityScanner] Scan failed:', error);
+
       return null;
     }
   }
@@ -212,7 +211,7 @@ class SecurityScanner {
       headers['permissions-policy'] = responseHeaders.has('permissions-policy');
 
     } catch (error) {
-      console.warn('[SecurityScanner] Header scan failed:', error);
+
     }
 
     return headers;
@@ -341,10 +340,9 @@ class SecurityScanner {
     console.group(`[Security] Scan Results - Score: ${report.score}/100`);
 
     console.log(`🔒 Headers Score: ${this.metrics.headersScore.toFixed(1)}%`);
-    console.log(`🚨 Critical: ${this.metrics.criticalIssues}`);
-    console.log(`🔴 High: ${this.metrics.highIssues}`);
-    console.log(`🟡 Medium: ${this.metrics.mediumIssues}`);
-    console.log(`🔵 Low: ${this.metrics.lowIssues}`);
+
+
+
 
     if (report.issues.length > 0) {
       console.group('Issues:');
@@ -357,9 +355,9 @@ class SecurityScanner {
         }[issue.severity] || '⚪';
 
         console.group(`${severityEmoji} ${index + 1}. ${issue.title}`);
-        console.log(`Severity: ${issue.severity}`);
-        console.log(`Description: ${issue.description}`);
-        console.log(`Recommendation: ${issue.recommendation}`);
+
+
+
         if (issue.owasp) console.log(`OWASP: ${issue.owasp}`);
         console.groupEnd();
       });
@@ -422,3 +420,5 @@ class SecurityScanner {
 }
 
 export { SecurityScanner };
+
+

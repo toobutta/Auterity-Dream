@@ -81,9 +81,9 @@ export class LangChainService {
         maxTokens: 1000,
       }));
 
-      console.log('LangChain models initialized successfully');
+
     } catch (error) {
-      console.error('Failed to initialize LangChain models:', error);
+
     }
   }
 
@@ -127,7 +127,7 @@ export class LangChainService {
       return { chainId, chain };
 
     } catch (error) {
-      console.error('Failed to create conversation chain:', error);
+
       throw new Error(`Failed to create conversation chain: ${(error as Error).message}`);
     }
   }
@@ -165,11 +165,11 @@ export class LangChainService {
       execution.endTime = new Date();
       execution.status = 'completed';
 
-      console.log(`Chain ${chainId} executed successfully:`, executionId);
+
       return execution;
 
     } catch (error) {
-      console.error(`Failed to execute chain ${chainId}:`, error);
+
 
       // Update execution with error
       const execution = Array.from(this.activeExecutions.values())
@@ -209,7 +209,7 @@ export class LangChainService {
       return { chainId: id, chain };
 
     } catch (error) {
-      console.error('Failed to create custom chain:', error);
+
       throw new Error(`Failed to create custom chain: ${(error as Error).message}`);
     }
   }
@@ -248,11 +248,11 @@ Assistant: Let me help you with that.`);
         createdAt: new Date()
       };
 
-      console.log(`Agent ${config.name} created successfully`);
+
       return agent;
 
     } catch (error) {
-      console.error('Failed to create agent:', error);
+
       throw new Error(`Failed to create agent: ${(error as Error).message}`);
     }
   }
@@ -287,7 +287,7 @@ Assistant: Let me help you with that.`);
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old executions`);
+
     return cleanedCount;
   }
 
@@ -313,3 +313,4 @@ Assistant: Let me help you with that.`);
 
 // Export singleton instance
 export const langChainService = new LangChainService();
+

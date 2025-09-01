@@ -209,7 +209,7 @@ export const CrossFilterAnalyticsDashboard: React.FC<CrossFilterAnalyticsDashboa
 
     } catch (err) {
       setError("Failed to load analytics data");
-      console.error("Analytics data error:", err);
+
     } finally {
       setLoading(false);
     }
@@ -485,3 +485,5 @@ export const CrossFilterAnalyticsDashboard: React.FC<CrossFilterAnalyticsDashboa
 };
 
 export default CrossFilterAnalyticsDashboard;
+
+

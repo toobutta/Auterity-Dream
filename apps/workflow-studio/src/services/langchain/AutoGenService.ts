@@ -118,7 +118,7 @@ export class AutoGenService {
       this.agents.set(agent.name, agent);
     });
 
-    console.log(`AutoGen initialized with ${defaultAgents.length} default agents`);
+
   }
 
   /**
@@ -133,11 +133,10 @@ export class AutoGenService {
 
       this.agents.set(agentId, { ...config, name: agentId });
 
-      console.log(`Agent created: ${agentId} (${config.role})`);
       return agentId;
 
     } catch (error) {
-      console.error('Failed to create agent:', error);
+
       throw new Error(`Agent creation failed: ${(error as Error).message}`);
     }
   }
@@ -155,7 +154,7 @@ export class AutoGenService {
     this.validateAgentConfig(updatedAgent);
     this.agents.set(agentId, updatedAgent);
 
-    console.log(`Agent updated: ${agentId}`);
+
   }
 
   /**
@@ -164,7 +163,7 @@ export class AutoGenService {
   deleteAgent(agentId: string): boolean {
     const deleted = this.agents.delete(agentId);
     if (deleted) {
-      console.log(`Agent deleted: ${agentId}`);
+
     }
     return deleted;
   }
@@ -230,7 +229,6 @@ export class AutoGenService {
         throw new Error(`Agent ${agentId} not found`);
       }
 
-      console.log(`Executing agent: ${agentId} (${agent.role})`);
 
       // In a real implementation, this would call the actual AI model
       // For now, simulate the response
@@ -246,7 +244,7 @@ export class AutoGenService {
       };
 
     } catch (error) {
-      console.error(`Agent execution failed for ${agentId}:`, error);
+
       throw new Error(`Agent execution failed: ${(error as Error).message}`);
     }
   }
@@ -325,11 +323,11 @@ export class AutoGenService {
         execution.status = 'completed';
       }
 
-      console.log(`Multi-agent conversation completed: ${executionId}`);
+
       return execution;
 
     } catch (error) {
-      console.error('Multi-agent conversation failed:', error);
+
       throw new Error(`Multi-agent conversation failed: ${(error as Error).message}`);
     }
   }
@@ -346,11 +344,10 @@ export class AutoGenService {
 
       this.workflows.set(workflowId, { ...workflow, id: workflowId });
 
-      console.log(`Workflow created: ${workflowId} (${workflow.name})`);
       return workflowId;
 
     } catch (error) {
-      console.error('Failed to create workflow:', error);
+
       throw new Error(`Workflow creation failed: ${(error as Error).message}`);
     }
   }
@@ -365,7 +362,6 @@ export class AutoGenService {
         throw new Error(`Workflow ${workflowId} not found`);
       }
 
-      console.log(`Executing workflow: ${workflowId} (${workflow.name})`);
 
       // Execute based on workflow type
       switch (workflow.workflow.type) {
@@ -380,7 +376,7 @@ export class AutoGenService {
       }
 
     } catch (error) {
-      console.error(`Workflow execution failed for ${workflowId}:`, error);
+
       throw new Error(`Workflow execution failed: ${(error as Error).message}`);
     }
   }
@@ -563,10 +559,11 @@ export class AutoGenService {
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old executions`);
+
     return cleanedCount;
   }
 }
 
 // Export singleton instance
 export const autoGenService = new AutoGenService();
+

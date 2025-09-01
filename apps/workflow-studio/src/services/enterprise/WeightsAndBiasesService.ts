@@ -129,9 +129,9 @@ export class WeightsAndBiasesService {
       });
 
       this.isInitialized = true;
-      console.log('Weights & Biases service initialized');
+
     } catch (error) {
-      console.error('Failed to initialize W&B service:', error);
+
     }
   }
 
@@ -152,11 +152,10 @@ export class WeightsAndBiasesService {
       };
 
       this.projects.set(projectId, project);
-      console.log(`Created project: ${projectId} (${projectData.name})`);
 
       return projectId;
     } catch (error) {
-      console.error('Failed to create project:', error);
+
       throw new Error(`Project creation failed: ${(error as Error).message}`);
     }
   }
@@ -202,11 +201,10 @@ export class WeightsAndBiasesService {
       project.experiments++;
       project.lastActivity = new Date();
 
-      console.log(`Started experiment: ${experimentId} (${name}) in project ${projectId}`);
       return experimentId;
 
     } catch (error) {
-      console.error('Failed to start experiment:', error);
+
       throw new Error(`Experiment start failed: ${(error as Error).message}`);
     }
   }
@@ -249,10 +247,10 @@ export class WeightsAndBiasesService {
         project.lastActivity = new Date();
       }
 
-      console.log(`Logged metrics for experiment ${experimentId}:`, metrics);
+
 
     } catch (error) {
-      console.error(`Failed to log metrics for experiment ${experimentId}:`, error);
+
       throw new Error(`Metrics logging failed: ${(error as Error).message}`);
     }
   }
@@ -274,10 +272,10 @@ export class WeightsAndBiasesService {
         experiment.config.result = result;
       }
 
-      console.log(`Completed experiment: ${experimentId}`);
+
 
     } catch (error) {
-      console.error(`Failed to complete experiment ${experimentId}:`, error);
+
       throw new Error(`Experiment completion failed: ${(error as Error).message}`);
     }
   }
@@ -297,12 +295,11 @@ export class WeightsAndBiasesService {
       };
 
       this.models.set(modelId, model);
-      console.log(`Registered model: ${modelId} (${modelData.name} v${modelData.version})`);
 
       return modelId;
 
     } catch (error) {
-      console.error('Failed to register model:', error);
+
       throw new Error(`Model registration failed: ${(error as Error).message}`);
     }
   }
@@ -318,10 +315,10 @@ export class WeightsAndBiasesService {
       }
 
       Object.assign(model, updates);
-      console.log(`Updated model ${modelId}:`, updates);
+
 
     } catch (error) {
-      console.error(`Failed to update model ${modelId}:`, error);
+
       throw new Error(`Model update failed: ${(error as Error).message}`);
     }
   }
@@ -341,12 +338,11 @@ export class WeightsAndBiasesService {
       };
 
       this.alerts.set(alertId, alert);
-      console.log(`Created alert: ${alertId} (${alertData.title})`);
 
       return alertId;
 
     } catch (error) {
-      console.error('Failed to create alert:', error);
+
       throw new Error(`Alert creation failed: ${(error as Error).message}`);
     }
   }
@@ -358,7 +354,7 @@ export class WeightsAndBiasesService {
     try {
       return this.runMetrics.get(experimentId) || [];
     } catch (error) {
-      console.error(`Failed to get metrics for experiment ${experimentId}:`, error);
+
       return [];
     }
   }
@@ -370,7 +366,7 @@ export class WeightsAndBiasesService {
     try {
       return this.experiments.get(experimentId) || null;
     } catch (error) {
-      console.error(`Failed to get experiment ${experimentId}:`, error);
+
       return null;
     }
   }
@@ -383,7 +379,7 @@ export class WeightsAndBiasesService {
       return Array.from(this.experiments.values())
         .filter(exp => exp.project === projectId);
     } catch (error) {
-      console.error(`Failed to get experiments for project ${projectId}:`, error);
+
       return [];
     }
   }
@@ -395,7 +391,7 @@ export class WeightsAndBiasesService {
     try {
       return this.models.get(modelId) || null;
     } catch (error) {
-      console.error(`Failed to get model ${modelId}:`, error);
+
       return null;
     }
   }
@@ -407,7 +403,7 @@ export class WeightsAndBiasesService {
     try {
       return Array.from(this.models.values());
     } catch (error) {
-      console.error('Failed to get models:', error);
+
       return [];
     }
   }
@@ -421,7 +417,7 @@ export class WeightsAndBiasesService {
         .filter(alert => alert.status === 'active')
         .sort((a, b) => b.triggeredAt.getTime() - a.triggeredAt.getTime());
     } catch (error) {
-      console.error('Failed to get active alerts:', error);
+
       return [];
     }
   }
@@ -485,7 +481,7 @@ export class WeightsAndBiasesService {
       };
 
     } catch (error) {
-      console.error(`Failed to get dashboard for project ${projectId}:`, error);
+
       throw new Error(`Dashboard retrieval failed: ${(error as Error).message}`);
     }
   }
@@ -539,11 +535,10 @@ export class WeightsAndBiasesService {
         trends: this.calculateTrends(timeframeExperiments, startTime, now)
       };
 
-      console.log(`Generated performance report for project ${projectId} (${timeframe})`);
       return report;
 
     } catch (error) {
-      console.error(`Failed to generate performance report for project ${projectId}:`, error);
+
       throw new Error(`Performance report generation failed: ${(error as Error).message}`);
     }
   }
@@ -627,7 +622,7 @@ export class WeightsAndBiasesService {
       }
     }
 
-    console.log(`Cleaned up ${cleanedCount} old records`);
+
     return cleanedCount;
   }
 
@@ -668,3 +663,4 @@ export class WeightsAndBiasesService {
 
 // Export singleton instance
 export const weightsAndBiasesService = new WeightsAndBiasesService();
+

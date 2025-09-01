@@ -47,18 +47,18 @@ class WebSocketService {
       });
 
       this.socket.on('connect', () => {
-        console.log('Connected to collaborative session');
+
         this.reconnectAttempts = 0;
         resolve();
       });
 
       this.socket.on('disconnect', (reason: string) => {
-        console.log('Disconnected from collaborative session:', reason);
+
         this.handleReconnect(workflowId, userId, username);
       });
 
       this.socket.on('connect_error', (error: Error) => {
-        console.error('Connection error:', error);
+
         reject(error);
       });
 
@@ -95,7 +95,7 @@ class WebSocketService {
 
     // Error handling
     this.socket.on('error', (error) => {
-      console.error('WebSocket error:', error);
+
       this.emit('error', error);
     });
   }
@@ -104,11 +104,11 @@ class WebSocketService {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       setTimeout(() => {
-        console.log(`Reconnecting... Attempt ${this.reconnectAttempts}`);
+
         this.connect(workflowId, userId, username);
       }, this.reconnectDelay * this.reconnectAttempts);
     } else {
-      console.error('Max reconnection attempts reached');
+
       this.emit('max_reconnect_attempts_reached', {});
     }
   }
@@ -116,7 +116,7 @@ class WebSocketService {
   // Send collaborative actions
   sendAction(action: Omit<CollaborativeAction, 'userId' | 'timestamp'>) {
     if (!this.socket?.connected) {
-      console.warn('Socket not connected, cannot send action');
+
       return;
     }
 
@@ -171,7 +171,7 @@ class WebSocketService {
         try {
           callback(data);
         } catch (error) {
-          console.error(`Error in ${event} callback:`, error);
+
         }
       });
     }
@@ -204,3 +204,5 @@ class WebSocketService {
 // Export singleton instance
 export const websocketService = new WebSocketService();
 export default websocketService;
+
+

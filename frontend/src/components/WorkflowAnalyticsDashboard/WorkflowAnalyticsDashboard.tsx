@@ -103,7 +103,7 @@ export const WorkflowAnalyticsDashboard: React.FC<WorkflowAnalyticsDashboardProp
       setLastUpdated(new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
-      console.error('Analytics fetch error:', err);
+
     } finally {
       setIsLoading(false);
     }
@@ -377,3 +377,5 @@ export const WorkflowAnalyticsDashboard: React.FC<WorkflowAnalyticsDashboardProp
 };
 
 export default WorkflowAnalyticsDashboard;
+
+

@@ -36,7 +36,7 @@ class WebVitalsMonitor {
     const reportCallback = callback || this.config.reportCallback;
 
     if (!reportCallback) {
-      console.warn('[WebVitals] No callback provided for metrics reporting');
+
       return;
     }
 
@@ -56,10 +56,8 @@ class WebVitalsMonitor {
       // TTFB (Time to First Byte)
       this.observeTTFB(reportCallback);
 
-      console.log('[WebVitals] Web Vitals monitoring initialized');
-
     } catch (error) {
-      console.error('[WebVitals] Failed to initialize monitoring:', error);
+
     }
   }
 
@@ -88,7 +86,7 @@ class WebVitalsMonitor {
       observer.observe({ type: 'layout-shift', buffered: true });
       this.observers.push(observer);
     } catch (error) {
-      console.warn('[WebVitals] CLS observation not supported:', error);
+
     }
   }
 
@@ -115,7 +113,7 @@ class WebVitalsMonitor {
       observer.observe({ type: 'first-input', buffered: true });
       this.observers.push(observer);
     } catch (error) {
-      console.warn('[WebVitals] FID observation not supported:', error);
+
     }
   }
 
@@ -142,7 +140,7 @@ class WebVitalsMonitor {
       observer.observe({ type: 'paint', buffered: true });
       this.observers.push(observer);
     } catch (error) {
-      console.warn('[WebVitals] FCP observation not supported:', error);
+
     }
   }
 
@@ -172,7 +170,7 @@ class WebVitalsMonitor {
       observer.observe({ type: 'largest-contentful-paint', buffered: true });
       this.observers.push(observer);
     } catch (error) {
-      console.warn('[WebVitals] LCP observation not supported:', error);
+
     }
   }
 
@@ -199,7 +197,7 @@ class WebVitalsMonitor {
       observer.observe({ type: 'navigation', buffered: true });
       this.observers.push(observer);
     } catch (error) {
-      console.warn('[WebVitals] TTFB observation not supported:', error);
+
     }
   }
 
@@ -292,7 +290,7 @@ class WebVitalsMonitor {
       observer.disconnect();
     });
     this.observers = [];
-    console.log('[WebVitals] Web Vitals monitoring stopped');
+
   }
 }
 
@@ -333,3 +331,5 @@ export function getCurrentWebVitals(): Partial<WebVitalsMetric>[] {
 
 export { WebVitalsMonitor };
 export default WebVitalsMonitor;
+
+

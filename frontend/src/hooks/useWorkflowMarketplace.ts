@@ -366,7 +366,6 @@ export const useWorkflowMarketplace = () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Here you would integrate with the workflow builder to import the template
-      console.log('Importing template:', template.name);
 
       return {
         success: true,
@@ -429,3 +428,5 @@ export const useWorkflowMarketplace = () => {
     loadMarketplace
   };
 };
+
+

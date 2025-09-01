@@ -66,7 +66,7 @@ export class GoogleVertexService {
     try {
       const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
       if (!apiKey) {
-        console.warn('Google API key not found. Vertex AI features will be limited.');
+
         return;
       }
 
@@ -84,7 +84,7 @@ export class GoogleVertexService {
           });
           this.chatModels.set(modelName, model);
         } catch (error) {
-          console.warn(`Failed to initialize ${modelName}:`, error);
+
         }
       });
 
@@ -94,9 +94,9 @@ export class GoogleVertexService {
         modelName: 'embedding-001',
       });
 
-      console.log(`Google Vertex AI initialized with ${this.chatModels.size} models`);
+
     } catch (error) {
-      console.error('Failed to initialize Google Vertex AI:', error);
+
     }
   }
 
@@ -167,7 +167,7 @@ export class GoogleVertexService {
       };
 
     } catch (error) {
-      console.error('Google Vertex text generation failed:', error);
+
       throw new Error(`Vertex AI text generation failed: ${(error as Error).message}`);
     }
   }
@@ -209,7 +209,7 @@ export class GoogleVertexService {
       };
 
     } catch (error) {
-      console.error('Google Vertex multimodal generation failed:', error);
+
       throw new Error(`Vertex AI multimodal generation failed: ${(error as Error).message}`);
     }
   }
@@ -227,7 +227,7 @@ export class GoogleVertexService {
       return embeddings;
 
     } catch (error) {
-      console.error('Google Vertex embeddings generation failed:', error);
+
       throw new Error(`Vertex AI embeddings failed: ${(error as Error).message}`);
     }
   }
@@ -259,7 +259,7 @@ export class GoogleVertexService {
       };
 
     } catch (error) {
-      console.error('Google Vertex image analysis failed:', error);
+
       throw new Error(`Vertex AI image analysis failed: ${(error as Error).message}`);
     }
   }
@@ -283,7 +283,7 @@ export class GoogleVertexService {
       };
 
     } catch (error) {
-      console.error('Failed to create Gemini conversation chain:', error);
+
       throw new Error(`Gemini conversation chain creation failed: ${(error as Error).message}`);
     }
   }
@@ -376,3 +376,4 @@ export class GoogleVertexService {
 
 // Export singleton instance
 export const googleVertexService = new GoogleVertexService();
+

@@ -55,9 +55,9 @@ export class HuggingFaceService {
 
     if (apiKey) {
       this.inferenceClient = new HfInference(apiKey);
-      console.log('Hugging Face Inference client initialized');
+
     } else {
-      console.warn('Hugging Face API key not found. Some features will be limited.');
+
       // Initialize without API key for public models
       this.inferenceClient = new HfInference();
     }
@@ -149,7 +149,7 @@ export class HuggingFaceService {
       return filteredModels.slice(0, limit);
 
     } catch (error) {
-      console.error('Hugging Face model search failed:', error);
+
       throw new Error(`Model search failed: ${(error as Error).message}`);
     }
   }
@@ -192,7 +192,7 @@ export class HuggingFaceService {
       };
 
     } catch (error) {
-      console.error(`Hugging Face inference failed for ${modelId}:`, error);
+
       throw new Error(`Inference failed: ${(error as Error).message}`);
     }
   }
@@ -224,7 +224,7 @@ export class HuggingFaceService {
       return result;
 
     } catch (error) {
-      console.error('Local pipeline inference failed:', error);
+
       throw error;
     }
   }
@@ -281,7 +281,7 @@ export class HuggingFaceService {
       }
 
     } catch (error) {
-      console.error('Remote inference failed:', error);
+
       throw error;
     }
   }
@@ -343,7 +343,7 @@ export class HuggingFaceService {
       return mockModel;
 
     } catch (error) {
-      console.error(`Failed to get model info for ${modelId}:`, error);
+
       return null;
     }
   }
@@ -355,7 +355,7 @@ export class HuggingFaceService {
     try {
       return await this.searchModels('', task, limit, 'downloads');
     } catch (error) {
-      console.error(`Failed to get popular models for task ${task}:`, error);
+
       return [];
     }
   }
@@ -365,7 +365,7 @@ export class HuggingFaceService {
    */
   async downloadModel(modelId: string, progressCallback?: (progress: number) => void): Promise<void> {
     try {
-      console.log(`Downloading model: ${modelId}`);
+
 
       // This would implement actual model downloading in a real application
       // For now, just simulate the process
@@ -377,10 +377,10 @@ export class HuggingFaceService {
         }
       }
 
-      console.log(`Model ${modelId} downloaded successfully`);
+
 
     } catch (error) {
-      console.error(`Failed to download model ${modelId}:`, error);
+
       throw new Error(`Model download failed: ${(error as Error).message}`);
     }
   }
@@ -410,7 +410,7 @@ export class HuggingFaceService {
   clearCache(): void {
     this.modelCache.clear();
     this.localPipelines.clear();
-    console.log('Hugging Face cache cleared');
+
   }
 
   /**
@@ -434,3 +434,4 @@ export class HuggingFaceService {
 
 // Export singleton instance
 export const huggingFaceService = new HuggingFaceService();
+

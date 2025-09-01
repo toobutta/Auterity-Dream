@@ -223,7 +223,7 @@ export class MessageBus extends EventEmitter {
           });
         })
         .catch((error) => {
-          console.error("Failed to publish request:", error);
+
           reject(error);
         });
     });
@@ -310,3 +310,4 @@ export class MessageBus extends EventEmitter {
     return messageId;
   }
 }
+
