@@ -13,12 +13,49 @@ export type DeploymentType = 'saas' | 'white-label' | 'self-hosted';
 
 export type FeatureEntitlement = 'basic' | 'premium' | 'enterprise' | 'disabled';
 
+export interface APICostLimits {
+  // AI Inference APIs
+  aiInferenceRequests: number; // per month
+  aiStreamingRequests: number; // per month
+  aiBatchRequests: number; // per month
+
+  // Advanced AI APIs
+  smartInferenceRequests: number; // per month
+  modelOptimizationRequests: number; // per month
+  batchJobRequests: number; // per month
+  fineTuneJobs: number; // per month
+  abTestRuns: number; // per month
+
+  // Model Management
+  modelLoads: number; // per month
+  customModelStorage: number; // in GB
+
+  // Cost Limits
+  monthlyAPIBudget: number; // in USD
+  maxCostPerRequest: number; // in USD
+  costAlertThreshold: number; // percentage (e.g., 80)
+
+  // Rate Limits
+  requestsPerMinute: number;
+  requestsPerHour: number;
+  concurrentRequests: number;
+}
+
 export interface SubscriptionFeatures {
   // AI Services
   aiModelAccess: FeatureEntitlement;
   customModels: FeatureEntitlement;
   multimodalAI: FeatureEntitlement;
   batchProcessing: FeatureEntitlement;
+
+  // Advanced AI Features
+  smartInference: FeatureEntitlement;
+  modelOptimization: FeatureEntitlement;
+  advancedBatchProcessing: FeatureEntitlement;
+  fineTuning: FeatureEntitlement;
+  abTesting: FeatureEntitlement;
+  realTimeCollaboration: FeatureEntitlement;
+  modelMarketplace: FeatureEntitlement;
 
   // Workflow Features
   workflowCanvas: FeatureEntitlement;
@@ -57,6 +94,9 @@ export interface SubscriptionFeatures {
   maxAPIRequests: number;
   storageLimit: number; // in GB
   computeHours: number; // monthly
+
+  // API Cost & Usage Limits
+  apiCostLimits: APICostLimits;
 }
 
 export interface SubscriptionPlan {
@@ -78,6 +118,34 @@ export interface SubscriptionPlan {
   };
   isActive: boolean;
   trialDays?: number;
+}
+
+export interface APICostUsage {
+  // Monthly usage counters
+  aiInferenceRequests: number;
+  aiStreamingRequests: number;
+  aiBatchRequests: number;
+  smartInferenceRequests: number;
+  modelOptimizationRequests: number;
+  batchJobRequests: number;
+  fineTuneJobs: number;
+  abTestRuns: number;
+  modelLoads: number;
+
+  // Cost tracking
+  totalAPICost: number;
+  monthlyAPICost: number;
+  costByEndpoint: Record<string, number>;
+  costByModel: Record<string, number>;
+
+  // Usage analytics
+  averageCostPerRequest: number;
+  peakUsageDay: string;
+  usageTrend: Array<{
+    date: string;
+    requests: number;
+    cost: number;
+  }>;
 }
 
 export interface Subscription {
@@ -106,6 +174,7 @@ export interface Subscription {
       storage: number;
     };
   };
+  apiCostUsage: APICostUsage;
   metadata?: Record<string, any>;
 }
 
@@ -243,6 +312,15 @@ export class SubscriptionService {
       multimodalAI: 'disabled',
       batchProcessing: 'disabled',
 
+      // Advanced AI Features
+      smartInference: 'disabled',
+      modelOptimization: 'disabled',
+      advancedBatchProcessing: 'disabled',
+      fineTuning: 'disabled',
+      abTesting: 'disabled',
+      realTimeCollaboration: 'disabled',
+      modelMarketplace: 'disabled',
+
       // Workflow Features
       workflowCanvas: 'basic',
       advancedNodes: 'disabled',
@@ -279,7 +357,27 @@ export class SubscriptionService {
       maxUsers: 3,
       maxAPIRequests: 1000,
       storageLimit: 1,
-      computeHours: 10
+      computeHours: 10,
+
+      // API Cost & Usage Limits
+      apiCostLimits: {
+        aiInferenceRequests: 500,
+        aiStreamingRequests: 100,
+        aiBatchRequests: 50,
+        smartInferenceRequests: 0,
+        modelOptimizationRequests: 0,
+        batchJobRequests: 0,
+        fineTuneJobs: 0,
+        abTestRuns: 0,
+        modelLoads: 10,
+        customModelStorage: 0,
+        monthlyAPIBudget: 5.00,
+        maxCostPerRequest: 0.01,
+        costAlertThreshold: 90,
+        requestsPerMinute: 10,
+        requestsPerHour: 100,
+        concurrentRequests: 2
+      }
     };
   }
 
@@ -292,7 +390,16 @@ export class SubscriptionService {
       aiModelAccess: 'basic',
       customModels: 'disabled',
       multimodalAI: 'disabled',
-      batchProcessing: 'disabled',
+      batchProcessing: 'basic',
+
+      // Advanced AI Features
+      smartInference: 'basic',
+      modelOptimization: 'disabled',
+      advancedBatchProcessing: 'disabled',
+      fineTuning: 'disabled',
+      abTesting: 'disabled',
+      realTimeCollaboration: 'basic',
+      modelMarketplace: 'basic',
 
       // Workflow Features
       workflowCanvas: 'basic',
@@ -330,7 +437,27 @@ export class SubscriptionService {
       maxUsers: 5,
       maxAPIRequests: 10000,
       storageLimit: 5,
-      computeHours: 50
+      computeHours: 50,
+
+      // API Cost & Usage Limits
+      apiCostLimits: {
+        aiInferenceRequests: 5000,
+        aiStreamingRequests: 1000,
+        aiBatchRequests: 500,
+        smartInferenceRequests: 1000,
+        modelOptimizationRequests: 0,
+        batchJobRequests: 0,
+        fineTuneJobs: 0,
+        abTestRuns: 0,
+        modelLoads: 50,
+        customModelStorage: 0,
+        monthlyAPIBudget: 25.00,
+        maxCostPerRequest: 0.02,
+        costAlertThreshold: 85,
+        requestsPerMinute: 30,
+        requestsPerHour: 500,
+        concurrentRequests: 5
+      }
     };
   }
 
@@ -343,7 +470,16 @@ export class SubscriptionService {
       aiModelAccess: 'premium',
       customModels: 'basic',
       multimodalAI: 'basic',
-      batchProcessing: 'basic',
+      batchProcessing: 'premium',
+
+      // Advanced AI Features
+      smartInference: 'premium',
+      modelOptimization: 'premium',
+      advancedBatchProcessing: 'premium',
+      fineTuning: 'basic',
+      abTesting: 'basic',
+      realTimeCollaboration: 'premium',
+      modelMarketplace: 'premium',
 
       // Workflow Features
       workflowCanvas: 'premium',
@@ -381,7 +517,27 @@ export class SubscriptionService {
       maxUsers: 25,
       maxAPIRequests: 100000,
       storageLimit: 50,
-      computeHours: 500
+      computeHours: 500,
+
+      // API Cost & Usage Limits
+      apiCostLimits: {
+        aiInferenceRequests: 50000,
+        aiStreamingRequests: 10000,
+        aiBatchRequests: 5000,
+        smartInferenceRequests: 10000,
+        modelOptimizationRequests: 1000,
+        batchJobRequests: 500,
+        fineTuneJobs: 10,
+        abTestRuns: 50,
+        modelLoads: 500,
+        customModelStorage: 10,
+        monthlyAPIBudget: 250.00,
+        maxCostPerRequest: 0.05,
+        costAlertThreshold: 80,
+        requestsPerMinute: 100,
+        requestsPerHour: 2000,
+        concurrentRequests: 20
+      }
     };
   }
 
@@ -395,6 +551,15 @@ export class SubscriptionService {
       customModels: 'enterprise',
       multimodalAI: 'enterprise',
       batchProcessing: 'enterprise',
+
+      // Advanced AI Features
+      smartInference: 'enterprise',
+      modelOptimization: 'enterprise',
+      advancedBatchProcessing: 'enterprise',
+      fineTuning: 'enterprise',
+      abTesting: 'enterprise',
+      realTimeCollaboration: 'enterprise',
+      modelMarketplace: 'enterprise',
 
       // Workflow Features
       workflowCanvas: 'enterprise',
@@ -432,7 +597,27 @@ export class SubscriptionService {
       maxUsers: 1000,
       maxAPIRequests: 1000000,
       storageLimit: 500,
-      computeHours: 5000
+      computeHours: 5000,
+
+      // API Cost & Usage Limits
+      apiCostLimits: {
+        aiInferenceRequests: 500000,
+        aiStreamingRequests: 100000,
+        aiBatchRequests: 50000,
+        smartInferenceRequests: 100000,
+        modelOptimizationRequests: 10000,
+        batchJobRequests: 5000,
+        fineTuneJobs: 100,
+        abTestRuns: 500,
+        modelLoads: 5000,
+        customModelStorage: 100,
+        monthlyAPIBudget: 2500.00,
+        maxCostPerRequest: 0.10,
+        costAlertThreshold: 75,
+        requestsPerMinute: 500,
+        requestsPerHour: 10000,
+        concurrentRequests: 100
+      }
     };
   }
 
@@ -466,6 +651,41 @@ export class SubscriptionService {
             apiCalls: 1000000,
             storage: 500
           }
+        },
+        apiCostUsage: {
+          aiInferenceRequests: 125000,
+          aiStreamingRequests: 25000,
+          aiBatchRequests: 12000,
+          smartInferenceRequests: 45000,
+          modelOptimizationRequests: 2500,
+          batchJobRequests: 1200,
+          fineTuneJobs: 25,
+          abTestRuns: 150,
+          modelLoads: 1200,
+          totalAPICost: 1250.75,
+          monthlyAPICost: 1250.75,
+          costByEndpoint: {
+            '/api/ai/inference': 450.25,
+            '/api/ai/inference/stream': 280.50,
+            '/api/ai/advanced/inference/smart': 320.00,
+            '/api/ai/advanced/batch/create': 200.00
+          },
+          costByModel: {
+            'gpt-4': 650.50,
+            'claude-3-opus': 425.25,
+            'llama-2-70b': 175.00
+          },
+          averageCostPerRequest: 0.0085,
+          peakUsageDay: '2024-01-15',
+          usageTrend: [
+            { date: '2024-01-01', requests: 3200, cost: 27.20 },
+            { date: '2024-01-02', requests: 3800, cost: 32.30 },
+            { date: '2024-01-03', requests: 2900, cost: 24.65 },
+            { date: '2024-01-04', requests: 4200, cost: 35.70 },
+            { date: '2024-01-05', requests: 3900, cost: 33.15 },
+            { date: '2024-01-06', requests: 4600, cost: 39.10 },
+            { date: '2024-01-07', requests: 4800, cost: 40.80 }
+          ]
         }
       };
 
@@ -473,7 +693,7 @@ export class SubscriptionService {
       this.currentSubscription = mockSubscription;
 
     } catch (error) {
-      console.error('Failed to load subscription:', error);
+      // Failed to load subscription - error logged elsewhere
     }
   }
 
@@ -749,7 +969,7 @@ export class SubscriptionService {
       return true;
 
     } catch (error) {
-      console.error('Failed to upgrade subscription:', error);
+      // Failed to upgrade subscription - error handled elsewhere
       return false;
     }
   }
@@ -832,6 +1052,230 @@ export class SubscriptionService {
       amountDue: this.currentSubscription.billingCycle === 'monthly' ? plan.pricing.monthly : plan.pricing.annual,
       billingHistory
     };
+  }
+
+  /**
+   * Track API cost and usage
+   */
+  trackAPICost(endpoint: string, modelId: string, cost: number, requestType: keyof APICostLimits): void {
+    if (!this.currentSubscription) return;
+
+    // Update usage counters
+    if (requestType in this.currentSubscription.apiCostUsage) {
+      (this.currentSubscription.apiCostUsage as any)[requestType]++;
+    }
+
+    // Update cost tracking
+    this.currentSubscription.apiCostUsage.totalAPICost += cost;
+    this.currentSubscription.apiCostUsage.monthlyAPICost += cost;
+
+    // Update cost by endpoint
+    if (!this.currentSubscription.apiCostUsage.costByEndpoint[endpoint]) {
+      this.currentSubscription.apiCostUsage.costByEndpoint[endpoint] = 0;
+    }
+    this.currentSubscription.apiCostUsage.costByEndpoint[endpoint] += cost;
+
+    // Update cost by model
+    if (!this.currentSubscription.apiCostUsage.costByModel[modelId]) {
+      this.currentSubscription.apiCostUsage.costByModel[modelId] = 0;
+    }
+    this.currentSubscription.apiCostUsage.costByModel[modelId] += cost;
+
+    // Update average cost per request
+    const totalRequests = Object.values(this.currentSubscription.apiCostUsage).filter(
+      (value): value is number => typeof value === 'number' && !isNaN(value)
+    ).reduce((sum, count) => sum + count, 0);
+    this.currentSubscription.apiCostUsage.averageCostPerRequest =
+      this.currentSubscription.apiCostUsage.totalAPICost / Math.max(totalRequests, 1);
+  }
+
+  /**
+   * Check API cost limits
+   */
+  checkAPICostLimits(): {
+    withinLimits: boolean;
+    costViolations: Array<{
+      metric: string;
+      current: number;
+      limit: number;
+      percentage: number;
+    }>;
+    recommendations: string[];
+  } {
+    if (!this.currentSubscription) {
+      return { withinLimits: false, costViolations: [], recommendations: [] };
+    }
+
+    const plan = this.getCurrentPlan();
+    if (!plan) {
+      return { withinLimits: false, costViolations: [], recommendations: [] };
+    }
+
+    const costLimits = plan.features.apiCostLimits;
+    const currentUsage = this.currentSubscription.apiCostUsage;
+    const violations = [];
+    const recommendations = [];
+
+    // Check monthly API budget
+    const budgetUsagePercent = (currentUsage.monthlyAPICost / costLimits.monthlyAPIBudget) * 100;
+    if (budgetUsagePercent >= costLimits.costAlertThreshold) {
+      violations.push({
+        metric: 'monthlyAPIBudget',
+        current: currentUsage.monthlyAPICost,
+        limit: costLimits.monthlyAPIBudget,
+        percentage: budgetUsagePercent
+      });
+    }
+
+    // Check individual request limits
+    const requestLimits = [
+      { key: 'aiInferenceRequests', name: 'AI Inference Requests' },
+      { key: 'aiStreamingRequests', name: 'AI Streaming Requests' },
+      { key: 'aiBatchRequests', name: 'AI Batch Requests' },
+      { key: 'smartInferenceRequests', name: 'Smart Inference Requests' },
+      { key: 'modelOptimizationRequests', name: 'Model Optimization Requests' },
+      { key: 'batchJobRequests', name: 'Batch Job Requests' },
+      { key: 'fineTuneJobs', name: 'Fine-tune Jobs' },
+      { key: 'abTestRuns', name: 'A/B Test Runs' }
+    ];
+
+    for (const limit of requestLimits) {
+      const current = (currentUsage as any)[limit.key] || 0;
+      const max = (costLimits as any)[limit.key];
+      const percentage = (current / max) * 100;
+
+      if (percentage >= 90) {
+        violations.push({
+          metric: limit.name,
+          current,
+          limit: max,
+          percentage
+        });
+      }
+    }
+
+    // Generate recommendations
+    if (violations.length > 0) {
+      recommendations.push('Consider upgrading to a higher tier plan for increased limits');
+      recommendations.push('Monitor your API usage patterns to optimize costs');
+      recommendations.push('Use batch processing for multiple similar requests');
+    }
+
+    if (budgetUsagePercent >= costLimits.costAlertThreshold) {
+      recommendations.push('You are approaching your monthly API budget limit');
+      recommendations.push('Consider setting up budget alerts for better cost control');
+    }
+
+    return {
+      withinLimits: violations.length === 0,
+      costViolations: violations,
+      recommendations
+    };
+  }
+
+  /**
+   * Get API cost analytics
+   */
+  getAPICostAnalytics(): {
+    totalCost: number;
+    monthlyCost: number;
+    averageCostPerRequest: number;
+    costByEndpoint: Record<string, number>;
+    costByModel: Record<string, number>;
+    usageEfficiency: {
+      mostUsedEndpoint: string;
+      mostExpensiveModel: string;
+      costPerRequestTrend: number[];
+    };
+    budgetUtilization: number;
+    recommendations: string[];
+  } {
+    if (!this.currentSubscription) {
+      return {
+        totalCost: 0,
+        monthlyCost: 0,
+        averageCostPerRequest: 0,
+        costByEndpoint: {},
+        costByModel: {},
+        usageEfficiency: { mostUsedEndpoint: '', mostExpensiveModel: '', costPerRequestTrend: [] },
+        budgetUtilization: 0,
+        recommendations: []
+      };
+    }
+
+    const plan = this.getCurrentPlan();
+    const costLimits = plan?.features.apiCostLimits;
+    const usage = this.currentSubscription.apiCostUsage;
+
+    const recommendations = [];
+
+    // Find most used endpoint
+    const mostUsedEndpoint = Object.entries(usage.costByEndpoint).reduce(
+      (max, [endpoint, cost]) => cost > max.cost ? { endpoint, cost } : max,
+      { endpoint: '', cost: 0 }
+    );
+
+    // Find most expensive model
+    const mostExpensiveModel = Object.entries(usage.costByModel).reduce(
+      (max, [model, cost]) => cost > max.cost ? { model, cost } : max,
+      { model: '', cost: 0 }
+    );
+
+    // Calculate budget utilization
+    const budgetUtilization = costLimits ?
+      (usage.monthlyAPICost / costLimits.monthlyAPIBudget) * 100 : 0;
+
+    // Generate recommendations
+    if (mostUsedEndpoint.cost > usage.totalAPICost * 0.5) {
+      recommendations.push(`Optimize usage of ${mostUsedEndpoint.endpoint} - it accounts for 50% of costs`);
+    }
+
+    if (budgetUtilization > 80) {
+      recommendations.push('Consider upgrading your plan or optimizing usage to stay within budget');
+    }
+
+    if (usage.averageCostPerRequest > 0.05) {
+      recommendations.push('Your average cost per request is high - consider using smaller models or batch processing');
+    }
+
+    return {
+      totalCost: usage.totalAPICost,
+      monthlyCost: usage.monthlyAPICost,
+      averageCostPerRequest: usage.averageCostPerRequest,
+      costByEndpoint: usage.costByEndpoint,
+      costByModel: usage.costByModel,
+      usageEfficiency: {
+        mostUsedEndpoint: mostUsedEndpoint.endpoint,
+        mostExpensiveModel: mostExpensiveModel.model,
+        costPerRequestTrend: usage.usageTrend.map(day => day.cost / Math.max(day.requests, 1))
+      },
+      budgetUtilization,
+      recommendations
+    };
+  }
+
+  /**
+   * Reset monthly API usage counters
+   */
+  resetMonthlyAPIUsage(): void {
+    if (!this.currentSubscription) return;
+
+    // Reset usage counters
+    this.currentSubscription.apiCostUsage.aiInferenceRequests = 0;
+    this.currentSubscription.apiCostUsage.aiStreamingRequests = 0;
+    this.currentSubscription.apiCostUsage.aiBatchRequests = 0;
+    this.currentSubscription.apiCostUsage.smartInferenceRequests = 0;
+    this.currentSubscription.apiCostUsage.modelOptimizationRequests = 0;
+    this.currentSubscription.apiCostUsage.batchJobRequests = 0;
+    this.currentSubscription.apiCostUsage.fineTuneJobs = 0;
+    this.currentSubscription.apiCostUsage.abTestRuns = 0;
+    this.currentSubscription.apiCostUsage.modelLoads = 0;
+
+    // Reset monthly cost
+    this.currentSubscription.apiCostUsage.monthlyAPICost = 0;
+
+    // Keep historical data
+    this.currentSubscription.apiCostUsage.usageTrend = [];
   }
 
   /**

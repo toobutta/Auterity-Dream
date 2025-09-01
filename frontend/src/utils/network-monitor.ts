@@ -157,7 +157,7 @@ class NetworkMonitor {
   private setupXMLHttpRequestInterception(): void {
     // Skip XHR interception for now to avoid TypeScript issues
     // This can be implemented later with proper typing
-    // NetworkMonitor XHR interception skipped for TypeScript compatibility
+    console.log('[NetworkMonitor] XHR interception skipped (TypeScript compatibility)');
   }
 
   /**

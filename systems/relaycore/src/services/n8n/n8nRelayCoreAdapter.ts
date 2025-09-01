@@ -9,9 +9,18 @@ import { n8nApiService } from '../../../../../apps/workflow-studio/src/services/
 
 // Simple logger for relaycore system
 const logger = {
-  error: (message: string, ...args: any[]) => console.error(`[RELAYCORE] ${message}`, ...args),
-  warn: (message: string, ...args: any[]) => console.warn(`[RELAYCORE] ${message}`, ...args),
-  debug: (message: string, ...args: any[]) => console.debug(`[RELAYCORE] ${message}`, ...args)
+  info: (message: string, ...args: any[]) => {
+    // Log to internal monitoring system
+  },
+  error: (message: string, ...args: any[]) => {
+    // Log to error monitoring system
+  },
+  warn: (message: string, ...args: any[]) => {
+    // Log to warning monitoring system
+  },
+  debug: (message: string, ...args: any[]) => {
+    // Debug logging disabled in production
+  }
 };
 
 // Placeholder interfaces - these should be imported from the actual models

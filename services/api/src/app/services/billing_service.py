@@ -164,6 +164,129 @@ class BillingService:
             self.db.rollback()
             raise
 
+    # API Cost Tracking
+    async def track_api_cost(
+        self,
+        tenant_id: UUID,
+        endpoint: str,
+        model_id: str,
+        cost: Decimal,
+        tokens_used: Optional[int] = None,
+        processing_time: Optional[float] = None,
+        request_type: str = "ai_inference",
+        user_id: Optional[UUID] = None,
+        metadata: Optional[Dict] = None,
+    ) -> UsageLog:
+        """Track API costs with detailed breakdown."""
+        try:
+            # Get tenant to check limits
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
+            if not tenant:
+                raise ValueError(f"Tenant {tenant_id} not found")
+
+            # Check cost limits before processing
+            await self._check_api_cost_limits(tenant, cost, request_type)
+
+            # Create detailed usage log
+            usage_log = UsageLog(
+                tenant_id=tenant_id,
+                resource_type=f"api_{request_type}",
+                quantity=1,
+                cost=cost,
+                user_id=user_id,
+                metadata={
+                    **(metadata or {}),
+                    "endpoint": endpoint,
+                    "model_id": model_id,
+                    "tokens_used": tokens_used,
+                    "processing_time": processing_time,
+                    "request_type": request_type,
+                    "cost_breakdown": {
+                        "base_cost": str(cost),
+                        "model_cost": str(cost * Decimal("0.8")),
+                        "infrastructure_cost": str(cost * Decimal("0.2"))
+                    }
+                }
+            )
+            self.db.add(usage_log)
+
+            # Update tenant API usage counters
+            await self._update_tenant_api_usage(tenant, request_type, cost, tokens_used)
+
+            # Update cost analytics
+            await self._update_cost_analytics(tenant_id, endpoint, model_id, cost)
+
+            self.db.commit()
+            return usage_log
+
+        except Exception as e:
+            logger.error(f"Failed to track API cost: {str(e)}")
+            self.db.rollback()
+            raise
+
+    async def _check_api_cost_limits(self, tenant: Tenant, cost: Decimal, request_type: str):
+        """Check if API cost is within tenant limits."""
+        plan_features = tenant.get_plan_features()
+        api_limits = plan_features.get("api_cost_limits", {})
+
+        # Check monthly budget
+        monthly_budget = api_limits.get("monthly_api_budget", Decimal("100.00"))
+        if tenant.current_month_api_cost + cost > monthly_budget:
+            raise ValueError("Monthly API budget exceeded")
+
+        # Check per-request limit
+        max_cost_per_request = api_limits.get("max_cost_per_request", Decimal("1.00"))
+        if cost > max_cost_per_request:
+            raise ValueError(f"Cost per request exceeds limit: ${max_cost_per_request}")
+
+        # Check request-type specific limits
+        request_limits = {
+            "ai_inference": api_limits.get("ai_inference_requests", 10000),
+            "ai_streaming": api_limits.get("ai_streaming_requests", 1000),
+            "ai_batch": api_limits.get("ai_batch_requests", 500),
+            "smart_inference": api_limits.get("smart_inference_requests", 1000),
+            "model_optimization": api_limits.get("model_optimization_requests", 100),
+            "batch_job": api_limits.get("batch_job_requests", 50),
+            "fine_tune": api_limits.get("fine_tune_jobs", 10),
+            "ab_test": api_limits.get("ab_test_runs", 20)
+        }
+
+        limit = request_limits.get(request_type, 1000)
+        current_usage = getattr(tenant, f"current_month_{request_type}_requests", 0)
+
+        if current_usage >= limit:
+            raise ValueError(f"{request_type} request limit exceeded: {limit}")
+
+    async def _update_tenant_api_usage(self, tenant: Tenant, request_type: str, cost: Decimal, tokens_used: Optional[int]):
+        """Update tenant API usage counters."""
+        # Update monthly cost
+        tenant.current_month_api_cost = (tenant.current_month_api_cost or Decimal("0.00")) + cost
+
+        # Update request counters
+        counter_attr = f"current_month_{request_type}_requests"
+        current_count = getattr(tenant, counter_attr, 0) or 0
+        setattr(tenant, counter_attr, current_count + 1)
+
+        # Update tokens used if provided
+        if tokens_used:
+            tenant.current_month_tokens_used = (tenant.current_month_tokens_used or 0) + tokens_used
+
+        # Update cost by endpoint/model tracking
+        if not hasattr(tenant, 'api_cost_breakdown'):
+            tenant.api_cost_breakdown = {}
+
+        # This would be stored as JSON in the database
+        cost_breakdown = tenant.api_cost_breakdown or {}
+        # Implementation would update cost breakdown here
+
+    async def _update_cost_analytics(self, tenant_id: UUID, endpoint: str, model_id: str, cost: Decimal):
+        """Update cost analytics for reporting."""
+        # This would update Redis-based analytics
+        # Implementation would store cost analytics here
+        pass
+
     # Usage Tracking
     async def track_usage(
         self,
@@ -474,6 +597,133 @@ class BillingService:
         self.db.commit()
 
     # Utility Methods
+    async def get_api_cost_analytics(self, tenant_id: UUID, days: int = 30) -> Dict:
+        """Get comprehensive API cost analytics for a tenant."""
+        try:
+            # Calculate date range
+            end_date = datetime.utcnow()
+            start_date = end_date - timedelta(days=days)
+
+            # Get API usage logs
+            api_usage = (
+                self.db.query(UsageLog)
+                .filter(
+                    UsageLog.tenant_id == tenant_id,
+                    UsageLog.resource_type.like("api_%"),
+                    UsageLog.timestamp >= start_date,
+                    UsageLog.timestamp <= end_date
+                )
+                .all()
+            )
+
+            # Analyze costs by endpoint
+            cost_by_endpoint = {}
+            cost_by_model = {}
+            cost_by_request_type = {}
+            daily_costs = {}
+
+            total_cost = Decimal("0.00")
+            total_requests = 0
+            total_tokens = 0
+
+            for log in api_usage:
+                total_cost += log.cost
+                total_requests += log.quantity
+
+                # Extract metadata
+                metadata = log.metadata or {}
+                endpoint = metadata.get("endpoint", "unknown")
+                model_id = metadata.get("model_id", "unknown")
+                request_type = metadata.get("request_type", "unknown")
+                tokens_used = metadata.get("tokens_used", 0)
+
+                total_tokens += tokens_used
+
+                # Cost by endpoint
+                if endpoint not in cost_by_endpoint:
+                    cost_by_endpoint[endpoint] = {"cost": Decimal("0.00"), "requests": 0}
+                cost_by_endpoint[endpoint]["cost"] += log.cost
+                cost_by_endpoint[endpoint]["requests"] += log.quantity
+
+                # Cost by model
+                if model_id not in cost_by_model:
+                    cost_by_model[model_id] = {"cost": Decimal("0.00"), "requests": 0}
+                cost_by_model[model_id]["cost"] += log.cost
+                cost_by_model[model_id]["requests"] += log.quantity
+
+                # Cost by request type
+                if request_type not in cost_by_request_type:
+                    cost_by_request_type[request_type] = {"cost": Decimal("0.00"), "requests": 0}
+                cost_by_request_type[request_type]["cost"] += log.cost
+                cost_by_request_type[request_type]["requests"] += log.quantity
+
+                # Daily costs
+                date_key = log.timestamp.date().isoformat()
+                if date_key not in daily_costs:
+                    daily_costs[date_key] = {"cost": Decimal("0.00"), "requests": 0}
+                daily_costs[date_key]["cost"] += log.cost
+                daily_costs[date_key]["requests"] += log.quantity
+
+            # Calculate averages
+            avg_cost_per_request = total_cost / max(total_requests, 1)
+            avg_cost_per_token = total_cost / max(total_tokens, 1)
+
+            # Get tenant for budget comparison
+            tenant = (
+                self.db.query(Tenant).filter(Tenant.id == tenant_id).first()
+            )
+            plan_features = tenant.get_plan_features() if tenant else {}
+            api_limits = plan_features.get("api_cost_limits", {})
+            monthly_budget = api_limits.get("monthly_api_budget", Decimal("100.00"))
+
+            # Generate recommendations
+            recommendations = []
+            budget_utilization = (total_cost / monthly_budget) * 100 if monthly_budget > 0 else 0
+
+            if budget_utilization > 80:
+                recommendations.append("Consider upgrading your plan or optimizing usage to stay within budget")
+
+            if avg_cost_per_request > Decimal("0.05"):
+                recommendations.append("Your average cost per request is high - consider using smaller models or batch processing")
+
+            # Find most expensive endpoint
+            most_expensive_endpoint = max(cost_by_endpoint.items(), key=lambda x: x[1]["cost"]) if cost_by_endpoint else None
+            if most_expensive_endpoint and most_expensive_endpoint[1]["cost"] > total_cost * Decimal("0.5"):
+                recommendations.append(f"Optimize usage of {most_expensive_endpoint[0]} - it accounts for 50% of costs")
+
+            return {
+                "period": {
+                    "start_date": start_date,
+                    "end_date": end_date,
+                    "days": days
+                },
+                "summary": {
+                    "total_cost": total_cost,
+                    "total_requests": total_requests,
+                    "total_tokens": total_tokens,
+                    "avg_cost_per_request": avg_cost_per_request,
+                    "avg_cost_per_token": avg_cost_per_token,
+                    "budget_utilization": budget_utilization,
+                    "monthly_budget": monthly_budget
+                },
+                "breakdown": {
+                    "by_endpoint": cost_by_endpoint,
+                    "by_model": cost_by_model,
+                    "by_request_type": cost_by_request_type,
+                    "daily_costs": daily_costs
+                },
+                "insights": {
+                    "most_expensive_endpoint": most_expensive_endpoint[0] if most_expensive_endpoint else None,
+                    "most_used_model": max(cost_by_model.items(), key=lambda x: x[1]["requests"])[0] if cost_by_model else None,
+                    "cost_trend": list(daily_costs.values())
+                },
+                "recommendations": recommendations
+            }
+
+        except Exception as e:
+            logger.error(f"Failed to get API cost analytics: {str(e)}")
+            raise
+
     async def get_tenant_billing_info(self, tenant_id: UUID) -> Dict:
         """Get comprehensive billing information for a tenant."""
         try:
@@ -490,6 +740,9 @@ class BillingService:
             usage_summary = await self.get_usage_summary(
                 tenant_id, start_of_month
             )
+
+            # Get API cost analytics
+            api_cost_analytics = await self.get_api_cost_analytics(tenant_id, 30)
 
             # Get recent billing records
             recent_billing = (
@@ -520,8 +773,10 @@ class BillingService:
                         "current_month_ai_requests": tenant.current_month_ai_requests,
                     },
                 },
+                "api_costs": api_cost_analytics,
                 "billing": {
                     "monthly_budget": tenant.monthly_budget,
+                    "current_month_api_cost": tenant.current_month_api_cost,
                     "recent_records": [
                         {
                             "id": str(record.id),
