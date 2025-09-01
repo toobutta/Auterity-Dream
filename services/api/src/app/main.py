@@ -7,6 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import (
     agents,
+    ai_advanced,
+    ai_core,
     analytics,
     auterity_expansion,
     auth,
@@ -134,6 +136,8 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(agents.router)
+app.include_router(ai_core.router, prefix="/api")
+app.include_router(ai_advanced.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(collaboration.router, prefix="/api")

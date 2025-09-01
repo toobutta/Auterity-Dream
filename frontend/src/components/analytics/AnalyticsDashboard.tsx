@@ -131,7 +131,6 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
 
   const handleExport = (format: 'pdf' | 'csv' | 'json') => {
     // In real app, trigger export
-    console.log(`Exporting analytics as ${format}`);
   };
 
   if (loading && !analyticsData) {

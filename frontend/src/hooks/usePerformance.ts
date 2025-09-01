@@ -125,27 +125,20 @@ export function usePerformanceMonitoring(enabled = true) {
 
     // Core Web Vitals
     if (metrics.cls !== null && metrics.cls !== undefined) {
-      console.log(`📏 CLS (Cumulative Layout Shift): ${metrics.cls.toFixed(4)}`);
     }
     if (metrics.fid !== null && metrics.fid !== undefined) {
-      console.log(`👆 FID (First Input Delay): ${metrics.fid.toFixed(2)}ms`);
     }
     if (metrics.lcp !== null && metrics.lcp !== undefined) {
-      console.log(`🎯 LCP (Largest Contentful Paint): ${metrics.lcp.toFixed(2)}ms`);
     }
     if (metrics.fcp !== null && metrics.fcp !== undefined) {
-      console.log(`🎨 FCP (First Contentful Paint): ${metrics.fcp.toFixed(2)}ms`);
     }
     if (metrics.ttfb !== null && metrics.ttfb !== undefined) {
-      console.log(`⚡ TTFB (Time to First Byte): ${metrics.ttfb.toFixed(2)}ms`);
     }
 
     // Additional metrics
     if (metrics.domContentLoaded !== null && metrics.domContentLoaded !== undefined) {
-      console.log(`📄 DOM Content Loaded: ${metrics.domContentLoaded.toFixed(2)}ms`);
     }
     if (metrics.loadComplete !== null && metrics.loadComplete !== undefined) {
-      console.log(`🏁 Load Complete: ${metrics.loadComplete.toFixed(2)}ms`);
     }
 
     // Resource metrics
@@ -153,10 +146,8 @@ export function usePerformanceMonitoring(enabled = true) {
 
     }
     if (metrics.totalResourceSize !== undefined) {
-      console.log(`💾 Total Resource Size: ${(metrics.totalResourceSize / 1024).toFixed(2)} KB`);
     }
     if (metrics.cacheHitRatio !== undefined) {
-      console.log(`💰 Cache Hit Ratio: ${(metrics.cacheHitRatio * 100).toFixed(1)}%`);
     }
 
     console.groupEnd();
@@ -197,7 +188,6 @@ export function useComponentPerformance(componentName: string, enabled = true) {
     return () => {
       if (renderStartTime.current) {
         const renderTime = performance.now() - renderStartTime.current;
-        console.log(`⚛️ ${componentName} render time: ${renderTime.toFixed(2)}ms`);
       }
     };
   });
@@ -206,7 +196,6 @@ export function useComponentPerformance(componentName: string, enabled = true) {
     if (!enabled || !renderStartTime.current) return;
 
     const renderTime = performance.now() - renderStartTime.current;
-    console.log(`✅ ${componentName} render complete: ${renderTime.toFixed(2)}ms`);
   }, [componentName, enabled]);
 
   return { markRenderComplete };
@@ -222,7 +211,6 @@ export function useApiPerformance(enabled = true) {
     const duration = endTime - startTime;
     const status = success ? '✅' : '❌';
 
-    console.log(`${status} API ${method} ${endpoint}: ${duration.toFixed(2)}ms`);
 
     // Track slow API calls
     if (duration > 1000) {

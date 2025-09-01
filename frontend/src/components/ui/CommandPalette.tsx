@@ -178,7 +178,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         icon: <CheckCircleIcon className="w-4 h-4" />,
         handler: () => {
           // Handle workflow creation
-          console.log('Creating new workflow');
         },
         keywords: ['create', 'new', 'workflow', 'build']
       },
@@ -192,7 +191,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         icon: <CloudArrowUpIcon className="w-4 h-4" />,
         handler: () => {
           // Handle workflow import
-          console.log('Importing workflow');
         },
         keywords: ['import', 'upload', 'load']
       },
@@ -208,7 +206,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         icon: <CpuChipIcon className="w-4 h-4" />,
         handler: () => {
           // Handle AI assistance
-          console.log('Opening AI assistant');
         },
         keywords: ['ai', 'assistant', 'help', 'support']
       }

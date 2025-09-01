@@ -1,3 +1,3 @@
 # API routes package
 
-from . import analytics, collaboration, dashboard, dashboards, data_connectors, gateway
+from . import ai_advanced, ai_core, analytics, collaboration, dashboard, dashboards, data_connectors, gateway

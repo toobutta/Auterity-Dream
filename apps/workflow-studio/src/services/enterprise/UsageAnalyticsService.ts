@@ -221,7 +221,6 @@ export class UsageAnalyticsService {
       // Check for optimization opportunities
       await this.checkOptimizationTriggers(usageEvent);
 
-      console.log(`Tracked usage event: ${eventId} (${event.eventType})`);
       return eventId;
 
     } catch (error) {
@@ -748,7 +747,6 @@ export class UsageAnalyticsService {
     };
 
     this.insights.set(insightId, fullInsight);
-    console.log(`Created optimization insight: ${insightId} (${insight.title})`);
   }
 
   /**
@@ -838,7 +836,6 @@ export class UsageAnalyticsService {
       this.events.push(event);
     }
 
-    console.log('Generated mock usage data for demonstration');
   }
 
   /**
@@ -872,7 +869,6 @@ export class UsageAnalyticsService {
     }
 
     const cleanedCount = initialLength - this.events.length;
-    console.log(`Cleaned up ${cleanedCount} old usage events`);
 
     return cleanedCount;
   }

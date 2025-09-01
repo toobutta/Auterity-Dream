@@ -81,7 +81,6 @@ class MemoryProfiler {
             this.metrics.garbageCollections++;
             const gcEntry = entry as any;
             if (gcEntry.usedJSHeapSize) {
-              console.log(`[Memory] Garbage collection: ${(gcEntry.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB used`);
             }
           }
         }
@@ -258,7 +257,6 @@ class MemoryProfiler {
     if ('memory' in performance) {
 
       // In a real implementation, this would integrate with DevTools heap snapshot
-      console.log('[Memory] Heap snapshot created (simulated)');
     }
   }
 

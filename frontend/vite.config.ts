@@ -120,7 +120,6 @@ export default defineConfig({
 
   // Performance optimizations
   esbuild: {
-    // Remove console.log in production
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     // Enable JSX runtime for better performance
     jsxFactory: 'React.createElement',

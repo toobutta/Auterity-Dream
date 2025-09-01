@@ -319,7 +319,6 @@ export class MCPServer extends EventEmitter {
   async registerModel(model: Model): Promise<void> {
     this.models.set(model.id, model);
     this.emit("model-registered", model);
-    console.log(`Model registered: ${model.name} (${model.id})`);
   }
 
   async unregisterModel(modelId: string): Promise<boolean> {
@@ -328,7 +327,6 @@ export class MCPServer extends EventEmitter {
 
     this.models.delete(modelId);
     this.emit("model-unregistered", model);
-    console.log(`Model unregistered: ${model.name} (${modelId})`);
     return true;
   }
 

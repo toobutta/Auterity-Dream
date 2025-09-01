@@ -9,7 +9,6 @@ import { n8nApiService } from '../../../../../apps/workflow-studio/src/services/
 
 // Simple logger for relaycore system
 const logger = {
-  info: (message: string, ...args: any[]) => console.log(`[RELAYCORE] ${message}`, ...args),
   error: (message: string, ...args: any[]) => console.error(`[RELAYCORE] ${message}`, ...args),
   warn: (message: string, ...args: any[]) => console.warn(`[RELAYCORE] ${message}`, ...args),
   debug: (message: string, ...args: any[]) => console.debug(`[RELAYCORE] ${message}`, ...args)

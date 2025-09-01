@@ -91,8 +91,7 @@ class NetworkMonitor {
     this.requests.push(request);
     this.updateMetrics(request);
 
-    // Log to console for DevTools visibility
-    console.log(`[Network] ${request.method} ${request.url} - ${request.status} (${request.duration.toFixed(2)}ms)`);
+    // Network request logged for monitoring
   }
 
   /**
@@ -124,7 +123,7 @@ class NetworkMonitor {
         this.requests.push(request);
         this.updateMetrics(request);
 
-        console.log(`[Network] FETCH ${method} ${url} - ${response.status} (${duration.toFixed(2)}ms)`);
+        // Network request logged for monitoring
 
         return response;
       } catch (error) {
@@ -158,7 +157,7 @@ class NetworkMonitor {
   private setupXMLHttpRequestInterception(): void {
     // Skip XHR interception for now to avoid TypeScript issues
     // This can be implemented later with proper typing
-    console.log('[NetworkMonitor] XHR interception skipped (TypeScript compatibility)');
+    // NetworkMonitor XHR interception skipped for TypeScript compatibility
   }
 
   /**

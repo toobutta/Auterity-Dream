@@ -211,7 +211,6 @@ class AccessibilityAuditor {
 
 
 
-        console.log(`Affected: ${violation.nodes.length} element(s)`);
         console.groupEnd();
       });
       console.groupEnd();

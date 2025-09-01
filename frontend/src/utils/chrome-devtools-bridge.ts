@@ -190,7 +190,6 @@ class ChromeDevToolsBridge {
         this.metrics.webVitals[metric.name.toLowerCase() as keyof typeof this.metrics.webVitals] = metric.value;
 
         // Log to console for DevTools visibility
-        console.log(`[WebVitals] ${metric.name}: ${metric.value} (${metric.rating})`);
 
         // Check thresholds and alert if needed
         this.checkPerformanceThresholds(metric);

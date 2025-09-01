@@ -87,7 +87,6 @@ const WorkflowExecutionResults: React.FC<WorkflowExecutionResultsProps> = ({
 
     try {
       await navigator.clipboard.writeText(formatValue(execution.outputData));
-      console.log("Clipboard operation successful", {
         operation: "copyToClipboard",
         timestamp: new Date().toISOString(),
         dataLength: formatValue(execution.outputData).length,

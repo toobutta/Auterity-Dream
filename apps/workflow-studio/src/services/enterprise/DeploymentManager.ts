@@ -106,7 +106,6 @@ export class DeploymentManager {
    */
   private async initializeDeployment(): Promise<void> {
     try {
-      console.log('Initializing deployment configuration...');
 
       // Detect deployment type
       const deploymentType = this.detectDeploymentType();
@@ -137,7 +136,6 @@ export class DeploymentManager {
         }
       };
 
-      console.log(`Deployment initialized: ${deploymentType} (${this.deploymentStatus.version})`);
     } catch (error) {
       console.error('Failed to initialize deployment:', error);
       this.deploymentStatus = {
@@ -519,7 +517,6 @@ export class DeploymentManager {
       console.warn('Enterprise security level should have audit logging enabled');
     }
 
-    console.log('Deployment configuration validated successfully');
   }
 
   /**
@@ -540,7 +537,6 @@ export class DeploymentManager {
     // Apply limits
     await this.applyLimits(config.limits);
 
-    console.log('Deployment configuration applied successfully');
   }
 
   /**
@@ -567,7 +563,6 @@ export class DeploymentManager {
     root.style.setProperty('--color-warning', branding.colors.warning);
     root.style.setProperty('--color-error', branding.colors.error);
 
-    console.log('Branding applied:', branding.name);
   }
 
   /**
@@ -581,7 +576,6 @@ export class DeploymentManager {
       custom: features.custom
     };
 
-    console.log('Feature flags applied:', features.enabled.length, 'enabled');
   }
 
   /**
@@ -591,18 +585,14 @@ export class DeploymentManager {
     // Initialize auth provider
     if (integrations.auth.provider === 'auth0') {
       // Initialize Auth0
-      console.log('Initializing Auth0 authentication');
     } else if (integrations.auth.provider === 'client-sso') {
       // Initialize client SSO
-      console.log('Initializing client SSO authentication');
     }
 
     // Initialize monitoring
     if (integrations.monitoring.enabled) {
-      console.log('Initializing monitoring:', integrations.monitoring.provider);
     }
 
-    console.log('Integrations applied successfully');
   }
 
   /**
@@ -612,7 +602,6 @@ export class DeploymentManager {
     // Store limits globally for runtime checking
     (window as any).AUTERITY_LIMITS = limits;
 
-    console.log('Resource limits applied:', limits.users, 'users max');
   }
 
   /**
@@ -764,7 +753,6 @@ export class DeploymentManager {
       this.deploymentStatus.config.lastUpdated = new Date();
     }
 
-    console.log('Deployment configuration updated successfully');
   }
 
   /**
@@ -777,7 +765,6 @@ export class DeploymentManager {
     }
 
     this.configCache.clear();
-    console.log('Deployment manager cleaned up');
   }
 }
 

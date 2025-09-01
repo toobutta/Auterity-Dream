@@ -189,7 +189,6 @@ class ConsoleEnhancer {
     }
 
     if (entry.data && entry.data.length > 1) {
-      console.log('Data:', ...entry.data.slice(1));
     }
 
     if (entry.stack) {
@@ -276,7 +275,6 @@ class ConsoleEnhancer {
     try {
       performance.measure(name, startMark, endMark);
       const measure = performance.getEntriesByName(name, 'measure')[0];
-      console.log(`[Performance] ${name}: ${measure.duration.toFixed(2)}ms`);
     } catch (error) {
 
     }

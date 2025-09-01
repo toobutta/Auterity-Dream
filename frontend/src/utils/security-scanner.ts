@@ -339,7 +339,6 @@ class SecurityScanner {
   private logScanResults(report: SecurityReport): void {
     console.group(`[Security] Scan Results - Score: ${report.score}/100`);
 
-    console.log(`🔒 Headers Score: ${this.metrics.headersScore.toFixed(1)}%`);
 
 
 
@@ -358,7 +357,6 @@ class SecurityScanner {
 
 
 
-        if (issue.owasp) console.log(`OWASP: ${issue.owasp}`);
         console.groupEnd();
       });
       console.groupEnd();

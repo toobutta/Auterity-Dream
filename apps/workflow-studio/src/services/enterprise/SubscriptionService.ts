@@ -230,7 +230,6 @@ export class SubscriptionService {
       this.plans.set(plan.id, plan);
     });
 
-    console.log(`Initialized ${plans.length} subscription plans`);
   }
 
   /**
@@ -668,7 +667,6 @@ export class SubscriptionService {
     };
 
     this.licenseKeys.set(licenseKey.id, licenseKey);
-    console.log(`Created license key: ${licenseKey.key} for ${deploymentType}`);
 
     return licenseKey.key;
   }
@@ -748,7 +746,6 @@ export class SubscriptionService {
         storage: newPlan.limits.storage
       };
 
-      console.log(`Subscription upgraded to ${newPlan.name}`);
       return true;
 
     } catch (error) {

@@ -8,7 +8,6 @@ import { n8nApiService } from '../../../../../apps/workflow-studio/src/services/
 
 // Simple logger for neuroweaver system
 const logger = {
-  info: (message: string, ...args: any[]) => console.log(`[NEUROWEAVER] ${message}`, ...args),
   error: (message: string, ...args: any[]) => console.error(`[NEUROWEAVER] ${message}`, ...args),
   warn: (message: string, ...args: any[]) => console.warn(`[NEUROWEAVER] ${message}`, ...args),
   debug: (message: string, ...args: any[]) => console.debug(`[NEUROWEAVER] ${message}`, ...args)

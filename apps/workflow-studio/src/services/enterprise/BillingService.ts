@@ -440,7 +440,6 @@ export class BillingService {
       this.plans.set(plan.id, plan);
     });
 
-    console.log(`Initialized ${plans.length} billing plans`);
   }
 
   /**
@@ -452,7 +451,6 @@ export class BillingService {
       this.paymentProvider = provider;
     }
 
-    console.log(`Payment provider initialized: ${this.paymentProvider}`);
   }
 
   /**
@@ -521,7 +519,6 @@ export class BillingService {
       };
 
       this.subscriptions.set(subscriptionId, subscription);
-      console.log(`Created subscription: ${subscriptionId} for plan ${planId}`);
 
       return subscription;
 
@@ -578,7 +575,6 @@ export class BillingService {
       // Calculate total amount
       this.calculateTotalAmount(subscription, plan);
 
-      console.log(`Updated usage for subscription ${subscriptionId}`);
 
     } catch (error) {
       console.error(`Failed to update usage for subscription ${subscriptionId}:`, error);
@@ -694,7 +690,6 @@ export class BillingService {
       this.invoices.set(invoiceId, invoice);
       subscription.latestInvoice = invoice;
 
-      console.log(`Generated invoice: ${invoiceId} for $${invoice.total.toFixed(2)}`);
       return invoice;
 
     } catch (error) {
@@ -730,7 +725,6 @@ export class BillingService {
 
         const transactionId = `txn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-        console.log(`Payment processed: ${transactionId} for $${invoice.total.toFixed(2)}`);
         return { success: true, transactionId };
 
       } else {
@@ -769,7 +763,6 @@ export class BillingService {
       };
 
       this.alerts.set(alertId, alert);
-      console.log(`Created billing alert: ${alertId} (${alertData.title})`);
 
       return alertId;
 
