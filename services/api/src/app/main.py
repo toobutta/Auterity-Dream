@@ -10,6 +10,7 @@ from app.api import (
     ai_advanced,
     ai_core,
     analytics,
+    analytics_websocket,
     auterity_expansion,
     auth,
     cognitive,
@@ -18,11 +19,14 @@ from app.api import (
     dashboards,
     data_connectors,
     ecosystem_management,
+    enhanced_analytics,
     error_correlation,
     error_management,
     gateway,
     kafka,
     logs,
+    management,
+    modelhub,
     monitoring,
     process_mining,
     service_status_enhanced,
@@ -31,6 +35,7 @@ from app.api import (
     tasks,
     templates,
     tenants,
+    unified,
     websockets,
     workflows,
 )
@@ -47,6 +52,12 @@ from app.middleware.error_handler import (
 from app.middleware.logging import StructuredLoggingMiddleware
 from app.middleware.otel_middleware import setup_opentelemetry
 from app.middleware.prometheus import prometheus_middleware
+from app.middleware.security_middleware import (
+    AnalyticsSecurityMiddleware,
+    RateLimitMiddleware,
+    DataPrivacyMiddleware,
+    AuditLoggingMiddleware as SecurityAuditMiddleware,
+)
 from app.middleware.tenant_middleware import (
     AuditLoggingMiddleware,
     TenantIsolationMiddleware,
@@ -76,8 +87,18 @@ if ENVIRONMENT == "production":
 async def lifespan(app: FastAPI):
     # Startup
     await startup_event()
+
+    # Start analytics WebSocket manager
+    from app.database import get_db
+    from app.api.analytics_websocket import startup_analytics_websocket
+    db = next(get_db())
+    await startup_analytics_websocket(db)
+
     yield
+
     # Shutdown
+    from app.api.analytics_websocket import shutdown_analytics_websocket
+    await shutdown_analytics_websocket()
     await shutdown_event()
 
 
@@ -112,9 +133,15 @@ app.add_middleware(HealthCheckMiddleware)
 # Add structured logging middleware
 app.add_middleware(StructuredLoggingMiddleware)
 
+# Add security middleware (must come before other middleware)
+app.add_middleware(AnalyticsSecurityMiddleware, jwt_secret=_secret_key or "default-secret-key", encryption_key=os.getenv("ENCRYPTION_KEY"))
+app.add_middleware(RateLimitMiddleware, security_service=None)  # Will be initialized properly later
+app.add_middleware(DataPrivacyMiddleware, security_service=None)  # Will be initialized properly later
+
 # Add tenant isolation and audit logging middleware
 app.add_middleware(AuditLoggingMiddleware)
 app.add_middleware(TenantIsolationMiddleware)
+app.add_middleware(SecurityAuditMiddleware, security_service=None)  # Will be initialized properly later
 
 # Add Prometheus metrics middleware
 app.middleware("http")(prometheus_middleware)
@@ -139,6 +166,9 @@ app.include_router(agents.router)
 app.include_router(ai_core.router, prefix="/api")
 app.include_router(ai_advanced.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
+app.include_router(enhanced_analytics.router, prefix="/api")
+app.include_router(modelhub.router, prefix="/api")
+app.include_router(unified.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(collaboration.router, prefix="/api")
 app.include_router(data_connectors.router, prefix="/api")
@@ -151,6 +181,7 @@ app.include_router(workflows.router, prefix="/api")
 app.include_router(templates.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 app.include_router(logs.router, prefix="/api")
+app.include_router(management.router, prefix="/api")
 app.include_router(monitoring.router, prefix="/api")
 app.include_router(kafka.router, prefix="/api")
 app.include_router(process_mining.router)
@@ -169,6 +200,7 @@ app.include_router(enterprise_router)
 
 # Include WebSocket routes (no prefix for WebSocket endpoints)
 app.include_router(websockets.router)
+app.include_router(analytics_websocket.router, prefix="/api")
 
 
 @app.get("/")

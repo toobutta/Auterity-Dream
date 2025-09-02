@@ -17,7 +17,57 @@ import { google } from '@ai-sdk/google';
 import { cohere } from '@ai-sdk/cohere';
 import { z } from 'zod';
 
-// Provider configuration
+// Environment configuration
+const AI_CONFIG = {
+  openai: {
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
+    enabled: !!import.meta.env.VITE_OPENAI_API_KEY
+  },
+  anthropic: {
+    apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY || '',
+    enabled: !!import.meta.env.VITE_ANTHROPIC_API_KEY
+  },
+  google: {
+    apiKey: import.meta.env.VITE_GOOGLE_API_KEY || '',
+    enabled: !!import.meta.env.VITE_GOOGLE_API_KEY
+  },
+  azure: {
+    endpoint: import.meta.env.VITE_AZURE_OPENAI_ENDPOINT || '',
+    apiKey: import.meta.env.VITE_AZURE_OPENAI_API_KEY || '',
+    apiVersion: import.meta.env.VITE_AZURE_OPENAI_VERSION || '2024-02-15-preview',
+    enabled: !!(import.meta.env.VITE_AZURE_OPENAI_ENDPOINT && import.meta.env.VITE_AZURE_OPENAI_API_KEY)
+  },
+  cohere: {
+    apiKey: import.meta.env.VITE_COHERE_API_KEY || '',
+    enabled: !!import.meta.env.VITE_COHERE_API_KEY
+  },
+  ollama: {
+    endpoint: import.meta.env.VITE_OLLAMA_ENDPOINT || 'http://localhost:11434',
+    model: import.meta.env.VITE_OLLAMA_MODEL || 'llama3.2:3b',
+    enabled: import.meta.env.VITE_ENABLE_AI_ASSISTANT !== 'false'
+  },
+  features: {
+    aiAssistant: import.meta.env.VITE_ENABLE_AI_ASSISTANT !== 'false',
+    costTracking: import.meta.env.VITE_ENABLE_COST_TRACKING !== 'false',
+    healthCheck: import.meta.env.VITE_ENABLE_PROVIDER_HEALTH_CHECK !== 'false',
+    defaultProvider: import.meta.env.VITE_DEFAULT_AI_PROVIDER || 'ollama'
+  },
+  performance: {
+    timeout: parseInt(import.meta.env.VITE_AI_REQUEST_TIMEOUT || '30000'),
+    maxRetries: parseInt(import.meta.env.VITE_AI_MAX_RETRIES || '3'),
+    batchSize: parseInt(import.meta.env.VITE_AI_BATCH_SIZE || '10')
+  }
+};
+
+// Dynamic Ollama import for local AI
+let ollamaModule: any = null;
+try {
+  ollamaModule = require('ollama');
+} catch (error) {
+  console.warn('Ollama not available:', error instanceof Error ? error.message : 'Unknown error');
+}
+
+// Enhanced Provider configuration with Ollama support
 const PROVIDERS = {
   openai: openai('gpt-4o'),
   anthropic: anthropic('claude-3-5-sonnet-20241022'),
@@ -26,7 +76,23 @@ const PROVIDERS = {
   cohere: cohere('command-r-plus')
 } as const;
 
-type ProviderKey = keyof typeof PROVIDERS;
+// Ollama provider setup (dynamic based on environment)
+const initializeOllama = () => {
+  if (ollamaModule && AI_CONFIG.ollama.enabled) {
+    try {
+      const { createOllama } = ollamaModule;
+      return createOllama({
+        baseURL: AI_CONFIG.ollama.endpoint
+      });
+    } catch (error) {
+      console.warn('Failed to initialize Ollama:', error instanceof Error ? error.message : 'Unknown error');
+      return null;
+    }
+  }
+  return null;
+};
+
+type ProviderKey = keyof typeof PROVIDERS | 'ollama';
 
 // Workflow optimization schema
 const WorkflowOptimizationSchema = z.object({
@@ -73,7 +139,7 @@ const WorkflowGenerationSchema = z.object({
     id: z.string(),
     type: z.string(),
     position: z.object({ x: z.number(), y: z.number() }),
-    data: z.record(z.unknown())
+    data: z.record(z.string(), z.unknown())
   })),
   edges: z.array(z.object({
     id: z.string(),
@@ -99,18 +165,33 @@ const workflowTools = {
 export class AISDKService {
   private currentProvider: ProviderKey = 'openai';
   private costTracker = new Map<string, number>();
+  private ollamaProvider: any = null;
+  private availableProviders: Record<string, any> = {};
 
   constructor() {
-    // Initialize with default provider
+    // Initialize providers
+    this.initializeProviders();
+    // Set default provider
     this.setProvider('openai');
+  }
+
+  private initializeProviders(): void {
+    // Copy base providers
+    this.availableProviders = { ...PROVIDERS };
+    
+    // Initialize Ollama if available
+    this.ollamaProvider = initializeOllama();
+    if (this.ollamaProvider) {
+      this.availableProviders.ollama = this.ollamaProvider('llama3.1:8b');
+    }
   }
 
   /**
    * Set the AI provider to use
    */
   setProvider(provider: ProviderKey): void {
-    if (!PROVIDERS[provider]) {
-      throw new Error(`Provider ${provider} not supported`);
+    if (!this.availableProviders[provider]) {
+      throw new Error(`Provider ${provider} not supported or not available`);
     }
     this.currentProvider = provider;
   }
@@ -119,7 +200,21 @@ export class AISDKService {
    * Get available providers
    */
   getProviders(): ProviderKey[] {
-    return Object.keys(PROVIDERS) as ProviderKey[];
+    return Object.keys(this.availableProviders) as ProviderKey[];
+  }
+
+  /**
+   * Get current provider model
+   */
+  private getCurrentModel(): any {
+    return this.availableProviders[this.currentProvider];
+  }
+
+  /**
+   * Check if Ollama is available
+   */
+  isOllamaAvailable(): boolean {
+    return this.ollamaProvider !== null;
   }
 
   /**
@@ -142,7 +237,7 @@ Provide detailed optimization analysis including performance gains, cost reducti
     ];
 
     const result = await generateObject({
-      model: PROVIDERS[this.currentProvider],
+      model: this.getCurrentModel(),
       schema: WorkflowOptimizationSchema,
       messages,
       temperature: 0.3
@@ -172,7 +267,7 @@ Generate a detailed workflow with appropriate nodes, connections, and metadata.`
     ];
 
     const result = await generateObject({
-      model: PROVIDERS[this.currentProvider],
+      model: this.getCurrentModel(),
       schema: WorkflowGenerationSchema,
       messages,
       temperature: 0.7
@@ -207,7 +302,7 @@ Generate a detailed workflow with appropriate nodes, connections, and metadata.`
     const allMessages = [systemMessage, ...messages];
 
     const result = await streamText({
-      model: PROVIDERS[this.currentProvider],
+      model: this.getCurrentModel(),
       messages: allMessages,
       temperature: 0.7
     });
@@ -235,7 +330,7 @@ Generate a detailed workflow with appropriate nodes, connections, and metadata.`
     ];
 
     const result = await generateText({
-      model: PROVIDERS[this.currentProvider],
+      model: this.getCurrentModel(),
       messages,
       temperature: 0.7
     });
@@ -246,13 +341,33 @@ Generate a detailed workflow with appropriate nodes, connections, and metadata.`
   }
 
   /**
-   * Get cost tracking information
+   * Get cost tracking information with provider breakdown
    */
-  getCostSummary(): { total: number; byOperation: Record<string, number> } {
+  getCostSummary(): { 
+    total: number; 
+    byOperation: Record<string, number>;
+    byProvider: Record<string, number>;
+    savings: { ollama: number; total: number };
+  } {
     const byOperation = Object.fromEntries(this.costTracker);
     const total = Array.from(this.costTracker.values()).reduce((sum, cost) => sum + cost, 0);
+    
+    // Calculate provider-specific costs
+    const byProvider: Record<string, number> = {};
+    const savings = { ollama: 0, total: 0 };
+    
+    // Estimate savings from Ollama usage (requests that would have cost money)
+    const ollamaRequests = Array.from(this.costTracker.entries())
+      .filter(([key]) => key.includes('ollama'))
+      .reduce((sum, [, cost]) => sum + cost, 0);
+    
+    // If we're using Ollama, calculate potential savings
+    if (this.currentProvider === 'ollama' || this.isOllamaAvailable()) {
+      savings.ollama = ollamaRequests * 0.02; // Estimate $0.02 per request saved
+      savings.total = savings.ollama;
+    }
 
-    return { total, byOperation };
+    return { total, byOperation, byProvider, savings };
   }
 
   /**
@@ -262,9 +377,58 @@ Generate a detailed workflow with appropriate nodes, connections, and metadata.`
     this.costTracker.clear();
   }
 
+  /**
+   * Check if AI features are enabled in configuration
+   */
+  isAIFeaturesEnabled(): boolean {
+    return AI_CONFIG.features.aiAssistant;
+  }
+
+  /**
+   * Check if cost tracking is enabled
+   */
+  isCostTrackingEnabled(): boolean {
+    return AI_CONFIG.features.costTracking;
+  }
+
+  /**
+   * Check if health checking is enabled
+   */
+  isHealthCheckEnabled(): boolean {
+    return AI_CONFIG.features.healthCheck;
+  }
+
+  /**
+   * Get the default AI provider from configuration
+   */
+  getDefaultProvider(): string {
+    return AI_CONFIG.features.defaultProvider;
+  }
+
+  /**
+   * Get available providers based on configuration
+   */
+  getAvailableProviders(): string[] {
+    const providers: string[] = [];
+    
+    if (AI_CONFIG.openai.enabled) providers.push('openai');
+    if (AI_CONFIG.anthropic.enabled) providers.push('anthropic');
+    if (AI_CONFIG.google.enabled) providers.push('google');
+    if (AI_CONFIG.azure.enabled) providers.push('azure');
+    if (AI_CONFIG.cohere.enabled) providers.push('cohere');
+    if (AI_CONFIG.ollama.enabled && this.isOllamaAvailable()) providers.push('ollama');
+    
+    return providers;
+  }
+
   private trackCost(operation: string, cost: number): void {
-    const current = this.costTracker.get(operation) || 0;
-    this.costTracker.set(operation, current + cost);
+    if (!this.isCostTrackingEnabled()) return;
+    
+    // Ollama is free, so track as 0 cost but still count usage
+    const actualCost = this.currentProvider === 'ollama' ? 0 : cost;
+    const key = `${operation}_${this.currentProvider}`;
+    const current = this.costTracker.get(key) || 0;
+    this.costTracker.set(key, current + actualCost);
   }
 }
 

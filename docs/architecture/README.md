@@ -5,7 +5,7 @@
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-Optimized-blue)](https://webassembly.org/)
 [![Autonomous Agents](https://img.shields.io/badge/Autonomous-Agents-green)](https://github.com/microsoft/autogen)
 [![Ethics Monitoring](https://img.shields.io/badge/Ethics-Arthur%20AI-purple)](https://arthur.ai/)
-[![API Integration](https://img.shields.io/badge/API-Integration-orange)](https://github.com/toobutta/auterity-workflow-studio)
+[![API Integration](https://img.shields.io/badge/API-Integration-orange)](./)
 
 A **production-ready enterprise error intelligence platform** featuring **WebAssembly-optimized AI**, **autonomous agents**, **ethics monitoring**, and seamless **API-based integration** with Auterity Workflow Studio. Built with Python, React, and advanced AI technologies.
 
@@ -112,7 +112,7 @@ await workflowStudioIntegration.syncWorkflow(errorWorkflowId, 'to_studio');
 
 1. **Workflow Studio Running** (Required for full integration):
 ```bash
-cd ../auterity-workflow-studio
+cd ./
 npm run dev
 # Enhanced features available at http://localhost:5173
 ```
@@ -134,19 +134,19 @@ cp .env.example .env.local
 
 ```bash
 # Use the enhanced CLI for complete setup
-node ../auterity-workflow-studio/scripts/enhanced-dev-workflow.js init
+node .//scripts/enhanced-dev-workflow.js init
 
 # Start all development servers with full integration
-node ../auterity-workflow-studio/scripts/enhanced-dev-workflow.js dev
+node .//scripts/enhanced-dev-workflow.js dev
 
 # Run comprehensive test suite across both projects
-node ../auterity-workflow-studio/scripts/enhanced-dev-workflow.js test --coverage
+node .//scripts/enhanced-dev-workflow.js test --coverage
 
 # Build both projects for production with optimizations
-node ../auterity-workflow-studio/scripts/enhanced-dev-workflow.js build
+node .//scripts/enhanced-dev-workflow.js build
 
 # Deploy both to different environments
-node ../auterity-workflow-studio/scripts/enhanced-dev-workflow.js deploy production
+node .//scripts/enhanced-dev-workflow.js deploy production
 ```
 
 ### Manual Setup (Alternative)

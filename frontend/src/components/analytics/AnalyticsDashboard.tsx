@@ -26,7 +26,7 @@ import {
   Legend,
   ResponsiveContainer,
   Area,
-  AreaChart
+  AreaChart,
 } from 'recharts';
 import {
   TrendingUp,
@@ -54,11 +54,16 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   dateRange,
   refreshInterval = 30000
 }) => {
+  // Main analytics state
   const [analyticsData, setAnalyticsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState(new Date());
 
+  // Tab management
+  const [activeTab, setActiveTab] = useState<'overview' | 'performance'>('overview');
+
   // Mock data for demonstration - in real app, this would come from API
+
   const mockData = useMemo(() => ({
     summary: {
       totalEvents: 15420,
@@ -104,6 +109,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     }
   }), []);
 
+  // Load main analytics data
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -120,6 +126,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const interval = setInterval(loadData, refreshInterval);
     return () => clearInterval(interval);
   }, [dateRange, refreshInterval, mockData]);
+
+
 
   const handleRefresh = async () => {
     setLoading(true);
@@ -157,7 +165,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Analytics Dashboard</h1>
           <p className="text-muted-foreground">
-            Comprehensive insights into user behavior and system performance
+            Comprehensive insights into user behavior, system performance, and AI model analytics
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -184,8 +192,34 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Tab Navigation */}
+      <div className="border-b border-gray-200">
+        <nav className="flex space-x-8">
+          {[
+            { id: 'overview', label: 'Overview', icon: BarChart3 },
+            { id: 'performance', label: 'Performance', icon: Activity }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center px-1 py-4 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === tab.id
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <tab.icon className="w-4 h-4 mr-2" />
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'overview' && (
+        <>
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Events"
           value={analyticsData.summary.totalEvents.toLocaleString()}
@@ -453,6 +487,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
         </CardContent>
       </Card>
+        </>
+      )}
+
+      {/* Models and ML Analytics moved to separate ModelHub component */}
     </div>
   );
 };

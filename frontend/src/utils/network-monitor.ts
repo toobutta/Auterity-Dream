@@ -144,7 +144,7 @@ class NetworkMonitor {
         this.requests.push(request);
         this.updateMetrics(request);
 
-        console.error(`[Network] FETCH ${method} ${url} - Failed (${duration.toFixed(2)}ms):`, error);
+        // Network error logged for monitoring
 
         throw error;
       }
@@ -157,7 +157,7 @@ class NetworkMonitor {
   private setupXMLHttpRequestInterception(): void {
     // Skip XHR interception for now to avoid TypeScript issues
     // This can be implemented later with proper typing
-    console.log('[NetworkMonitor] XHR interception skipped (TypeScript compatibility)');
+    // XHR interception skipped for TypeScript compatibility
   }
 
   /**

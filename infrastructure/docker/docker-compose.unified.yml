@@ -701,6 +701,354 @@ services:
         reservations:
           memory: 128M
 
+  # AI Services - High-Throughput Model Serving
+  vllm-server:
+    build:
+      context: ./vllm
+      dockerfile: Dockerfile
+    container_name: auterity-vllm
+    ports:
+      - "${VLLM_PORT:-8001}:8001"
+    environment:
+      # Model Configuration
+      - VLLM_MODEL_NAME=${VLLM_MODEL_NAME:-meta-llama/Llama-2-7b-chat-hf}
+      - VLLM_TENSOR_PARALLEL_SIZE=${VLLM_TENSOR_PARALLEL_SIZE:-1}
+      - VLLM_GPU_MEMORY_UTILIZATION=${VLLM_GPU_MEMORY_UTILIZATION:-0.9}
+      - VLLM_MAX_MODEL_LEN=${VLLM_MAX_MODEL_LEN:-4096}
+      - VLLM_MAX_BATCH_SIZE=${VLLM_MAX_BATCH_SIZE:-32}
+      - VLLM_DTYPE=${VLLM_DTYPE:-auto}
+      - VLLM_QUANTIZATION=${VLLM_QUANTIZATION:-}
+
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=3
+
+      # Service Configuration
+      - SERVICE_NAME=vllm-server
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      # Mount model cache for persistence
+      - vllm_model_cache:/root/.cache/huggingface
+      # Mount logs for monitoring
+      - vllm_logs:/app/logs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${VLLM_GPU_COUNT:-1}
+              capabilities: [gpu]
+        limits:
+          memory: ${VLLM_MEMORY_LIMIT:-16G}
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - auterity
+    depends_on:
+      - redis
+    profiles:
+      - ai-services
+
+  # AI Workflow Orchestration Service
+  langgraph-service:
+    build:
+      context: ./langgraph
+      dockerfile: Dockerfile
+    container_name: auterity-langgraph
+    ports:
+      - "${LANGGRAPH_PORT:-8002}:8002"
+    environment:
+      # AI Provider Configuration
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # Service Configuration
+      - SERVICE_NAME=langgraph-service
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=4
+
+      # Integration URLs
+      - N8N_BASE_URL=http://workflow-studio:3000
+      - TEMPORAL_BASE_URL=http://temporal:7233
+      - VLLM_BASE_URL=http://vllm-server:8001
+      - KONG_BASE_URL=http://kong:8001
+
+      # Workflow Limits
+      - MAX_CONCURRENT_EXECUTIONS=${MAX_CONCURRENT_EXECUTIONS:-50}
+      - MAX_EXECUTION_TIME=${MAX_EXECUTION_TIME:-3600}
+      - MAX_NODES_PER_WORKFLOW=${MAX_NODES_PER_WORKFLOW:-100}
+    volumes:
+      # Mount logs for monitoring
+      - langgraph_logs:/app/logs
+      # Mount config for customization
+      - ./langgraph/config:/app/config:ro
+    deploy:
+      resources:
+        limits:
+          memory: ${LANGGRAPH_MEMORY_LIMIT:-2G}
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - auterity
+    depends_on:
+      - redis
+    profiles:
+      - ai-services
+
+  # Multi-Agent Collaborative Systems Service
+  crewai-service:
+    build:
+      context: ./crewai
+      dockerfile: Dockerfile
+    container_name: auterity-crewai
+    ports:
+      - "${CREWAI_PORT:-8003}:8003"
+    environment:
+      # AI Provider Configuration
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # Service Configuration
+      - SERVICE_NAME=crewai-service
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=5
+
+      # Integration URLs
+      - N8N_BASE_URL=http://workflow-studio:3000
+      - TEMPORAL_BASE_URL=http://temporal:7233
+      - LANGGRAPH_BASE_URL=http://langgraph-service:8002
+      - VLLM_BASE_URL=http://vllm-server:8001
+      - KONG_BASE_URL=http://kong:8001
+
+      # Crew Limits
+      - MAX_CONCURRENT_CREWS=${MAX_CONCURRENT_CREWS:-10}
+      - MAX_AGENTS_PER_CREW=${MAX_AGENTS_PER_CREW:-20}
+      - MAX_TASKS_PER_CREW=${MAX_TASKS_PER_CREW:-50}
+    volumes:
+      # Mount logs for monitoring
+      - crewai_logs:/app/logs
+      # Mount config for customization
+      - ./crewai/config:/app/config:ro
+    deploy:
+      resources:
+        limits:
+          memory: ${CREWAI_MEMORY_LIMIT:-1G}
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - auterity
+    depends_on:
+      - redis
+    profiles:
+      - ai-services
+
+  # Advanced Monitoring Stack
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: auterity-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-auterity123}
+      - path.data=/usr/share/elasticsearch/data
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+    networks:
+      - auterity
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    profiles:
+      - monitoring
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: auterity-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-auterity123}
+    ports:
+      - "${KIBANA_PORT:-5601}:5601"
+    networks:
+      - auterity
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    profiles:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: auterity-prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - auterity
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9090/-/healthy || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    profiles:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: auterity-grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-auterity123}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    networks:
+      - auterity
+    depends_on:
+      - prometheus
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    profiles:
+      - monitoring
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: auterity-logstash
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    volumes:
+      - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./monitoring/logstash/config:/usr/share/logstash/config:ro
+      - logstash_data:/usr/share/logstash/data
+    ports:
+      - "${LOGSTASH_PORT:-5044}:5044"
+    networks:
+      - auterity
+    depends_on:
+      - elasticsearch
+    profiles:
+      - monitoring
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.11.0
+    container_name: auterity-filebeat
+    user: root
+    volumes:
+      - ./monitoring/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat_data:/usr/share/filebeat/data
+    networks:
+      - auterity
+    depends_on:
+      - logstash
+    profiles:
+      - monitoring
+
+  sentry:
+    image: sentry:23.11.0
+    container_name: auterity-sentry
+    environment:
+      - SENTRY_SECRET_KEY=${SENTRY_SECRET_KEY:-random-secret-key-change-in-production}
+      - SENTRY_POSTGRES_HOST=postgres
+      - SENTRY_POSTGRES_PORT=5432
+      - SENTRY_DB_NAME=sentry
+      - SENTRY_DB_USER=sentry
+      - SENTRY_DB_PASSWORD=${SENTRY_DB_PASSWORD:-sentry123}
+      - SENTRY_REDIS_HOST=redis
+      - SENTRY_REDIS_PORT=6379
+      - SENTRY_REDIS_DB=2
+      - SENTRY_EMAIL_HOST=${SENTRY_EMAIL_HOST:-}
+      - SENTRY_EMAIL_PORT=${SENTRY_EMAIL_PORT:-}
+      - SENTRY_EMAIL_USER=${SENTRY_EMAIL_USER:-}
+      - SENTRY_EMAIL_PASSWORD=${SENTRY_EMAIL_PASSWORD:-}
+      - SENTRY_SERVER_EMAIL=${SENTRY_SERVER_EMAIL:-sentry@localhost}
+    volumes:
+      - sentry_data:/data
+    ports:
+      - "${SENTRY_PORT:-9000}:9000"
+    networks:
+      - auterity
+    depends_on:
+      - postgres
+      - redis
+    profiles:
+      - monitoring
+
 volumes:
   postgres_data:
   redis_data:
@@ -718,3 +1066,25 @@ volumes:
   nginx_logs:
   nginx_cache:
   promtail_positions:
+  # AI Service Volumes
+  vllm_model_cache:
+    driver: local
+  vllm_logs:
+    driver: local
+  langgraph_logs:
+    driver: local
+  crewai_logs:
+    driver: local
+  # Monitoring Stack Volumes
+  elasticsearch_data:
+    driver: local
+  kibana_data:
+    driver: local
+  logstash_data:
+    driver: local
+  filebeat_data:
+    driver: local
+  sentry_data:
+    driver: local
+  monitoring_logs:
+    driver: local
