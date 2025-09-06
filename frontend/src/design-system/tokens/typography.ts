@@ -1,282 +1,176 @@
 /**
- * Unified Typography System for Error-IQ
- * Provides consistent typography scales and styles across all components
+ * Auterity Typography System
+ * Clean and professional typography system inspired by Google's clean UI principles
+ * with humanized touches for an anthropomorphic feel
  */
 
-export const TYPOGRAPHY = {
-  // Font Families
-  fonts: {
-    primary: [
-      'Inter',
-      '-apple-system',
-      'BlinkMacSystemFont',
-      'Segoe UI',
-      'Roboto',
-      'Oxygen',
-      'Ubuntu',
-      'Cantarell',
-      'Helvetica Neue',
-      'sans-serif'
-    ].join(', '),
-
-    mono: [
-      'JetBrains Mono',
-      'SF Mono',
-      'Monaco',
-      'Inconsolata',
-      'Fira Code',
-      'Droid Sans Mono',
-      'Source Code Pro',
-      'monospace'
-    ].join(', '),
-
-    heading: [
-      'Inter',
-      '-apple-system',
-      'BlinkMacSystemFont',
-      'Segoe UI',
-      'Roboto',
-      'sans-serif'
-    ].join(', ')
+export const typography = {
+  // Font families
+  fontFamily: {
+    // Primary font for UI elements - clean and professional
+    sans: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    // Secondary font with slightly more personality for headings
+    display: '"DM Sans", Inter, system-ui, sans-serif',
+    // Monospace font for code snippets, logs, and technical content
+    mono: '"Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, monospace',
   },
 
-  // Font Sizes (responsive scale)
-  sizes: {
-    xs: '0.75rem',    // 12px
-    sm: '0.875rem',   // 14px
-    base: '1rem',     // 16px
-    lg: '1.125rem',   // 18px
-    xl: '1.25rem',    // 20px
-    '2xl': '1.5rem',  // 24px
+  // Font sizes with clear scale progression
+  fontSize: {
+    xs: '0.75rem',     // 12px
+    sm: '0.875rem',    // 14px
+    base: '1rem',      // 16px
+    lg: '1.125rem',    // 18px
+    xl: '1.25rem',     // 20px
+    '2xl': '1.5rem',   // 24px
     '3xl': '1.875rem', // 30px
-    '4xl': '2.25rem', // 36px
-    '5xl': '3rem',    // 48px
-    '6xl': '3.75rem', // 60px
-    '7xl': '4.5rem',  // 72px
-    '8xl': '6rem',    // 96px
-    '9xl': '8rem'     // 128px
+    '4xl': '2.25rem',  // 36px
+    '5xl': '3rem',     // 48px
+    '6xl': '3.75rem',  // 60px
   },
 
-  // Font Weights
-  weights: {
-    thin: '100',
-    extralight: '200',
-    light: '300',
-    normal: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
-    extrabold: '800',
-    black: '900'
+  // Font weights to control emphasis and hierarchy
+  fontWeight: {
+    light: 300,
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
   },
 
-  // Line Heights
-  lineHeights: {
-    none: '1',
-    tight: '1.25',
-    snug: '1.375',
-    normal: '1.5',
-    relaxed: '1.625',
-    loose: '2'
+  // Line heights for optimal readability
+  lineHeight: {
+    none: 1,
+    tight: 1.25,
+    snug: 1.375,
+    normal: 1.5,
+    relaxed: 1.625,
+    loose: 2,
   },
 
-  // Letter Spacing
+  // Letter spacing for fine-tuned typography
   letterSpacing: {
     tighter: '-0.05em',
     tight: '-0.025em',
-    normal: '0',
+    normal: '0em',
     wide: '0.025em',
     wider: '0.05em',
-    widest: '0.1em'
-  }
-} as const;
-
-// Typography presets for consistent usage
-export const TEXT_PRESETS = {
-  // Display text (large headings)
-  display: {
-    '2xl': {
-      fontSize: TYPOGRAPHY.sizes['7xl'],
-      fontWeight: TYPOGRAPHY.weights.bold,
-      lineHeight: TYPOGRAPHY.lineHeights.tight,
-      letterSpacing: TYPOGRAPHY.letterSpacing.tighter
-    },
-    xl: {
-      fontSize: TYPOGRAPHY.sizes['6xl'],
-      fontWeight: TYPOGRAPHY.weights.bold,
-      lineHeight: TYPOGRAPHY.lineHeights.tight,
-      letterSpacing: TYPOGRAPHY.letterSpacing.tighter
-    },
-    lg: {
-      fontSize: TYPOGRAPHY.sizes['5xl'],
-      fontWeight: TYPOGRAPHY.weights.bold,
-      lineHeight: TYPOGRAPHY.lineHeights.tight,
-      letterSpacing: TYPOGRAPHY.letterSpacing.tighter
-    }
+    widest: '0.1em',
   },
 
-  // Headings
-  heading: {
+  // Text styles - predefined combinations for consistent usage
+  textStyles: {
+    // Headings
     h1: {
-      fontSize: TYPOGRAPHY.sizes['4xl'],
-      fontWeight: TYPOGRAPHY.weights.bold,
-      lineHeight: TYPOGRAPHY.lineHeights.tight,
-      letterSpacing: TYPOGRAPHY.letterSpacing.tight
+      fontSize: '2.25rem',
+      fontWeight: 700,
+      lineHeight: 1.25,
+      fontFamily: '"DM Sans", Inter, system-ui, sans-serif',
+      letterSpacing: '-0.025em',
     },
     h2: {
-      fontSize: TYPOGRAPHY.sizes['3xl'],
-      fontWeight: TYPOGRAPHY.weights.semibold,
-      lineHeight: TYPOGRAPHY.lineHeights.tight,
-      letterSpacing: TYPOGRAPHY.letterSpacing.tight
+      fontSize: '1.875rem',
+      fontWeight: 700,
+      lineHeight: 1.25,
+      fontFamily: '"DM Sans", Inter, system-ui, sans-serif',
+      letterSpacing: '-0.025em',
     },
     h3: {
-      fontSize: TYPOGRAPHY.sizes['2xl'],
-      fontWeight: TYPOGRAPHY.weights.semibold,
-      lineHeight: TYPOGRAPHY.lineHeights.snug,
-      letterSpacing: TYPOGRAPHY.letterSpacing.tight
+      fontSize: '1.5rem',
+      fontWeight: 600,
+      lineHeight: 1.3,
+      fontFamily: '"DM Sans", Inter, system-ui, sans-serif',
+      letterSpacing: '-0.015em',
     },
     h4: {
-      fontSize: TYPOGRAPHY.sizes.xl,
-      fontWeight: TYPOGRAPHY.weights.semibold,
-      lineHeight: TYPOGRAPHY.lineHeights.snug,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+      fontSize: '1.25rem',
+      fontWeight: 600,
+      lineHeight: 1.4,
+      fontFamily: '"DM Sans", Inter, system-ui, sans-serif',
     },
     h5: {
-      fontSize: TYPOGRAPHY.sizes.lg,
-      fontWeight: TYPOGRAPHY.weights.medium,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+      fontSize: '1.125rem',
+      fontWeight: 600,
+      lineHeight: 1.4,
+      fontFamily: '"DM Sans", Inter, system-ui, sans-serif',
     },
     h6: {
-      fontSize: TYPOGRAPHY.sizes.base,
-      fontWeight: TYPOGRAPHY.weights.medium,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
-    }
-  },
+      fontSize: '1rem',
+      fontWeight: 600,
+      lineHeight: 1.4,
+      fontFamily: '"DM Sans", Inter, system-ui, sans-serif',
+    },
 
-  // Body text
-  body: {
-    lg: {
-      fontSize: TYPOGRAPHY.sizes.lg,
-      fontWeight: TYPOGRAPHY.weights.normal,
-      lineHeight: TYPOGRAPHY.lineHeights.relaxed,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+    // Body text
+    body: {
+      fontSize: '1rem',
+      fontWeight: 400,
+      lineHeight: 1.5,
+      fontFamily: 'Inter, system-ui, sans-serif',
     },
-    base: {
-      fontSize: TYPOGRAPHY.sizes.base,
-      fontWeight: TYPOGRAPHY.weights.normal,
-      lineHeight: TYPOGRAPHY.lineHeights.relaxed,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+    'body-lg': {
+      fontSize: '1.125rem',
+      fontWeight: 400,
+      lineHeight: 1.5,
+      fontFamily: 'Inter, system-ui, sans-serif',
     },
-    sm: {
-      fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: TYPOGRAPHY.weights.normal,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+    'body-sm': {
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      lineHeight: 1.5,
+      fontFamily: 'Inter, system-ui, sans-serif',
     },
-    xs: {
-      fontSize: TYPOGRAPHY.sizes.xs,
-      fontWeight: TYPOGRAPHY.weights.normal,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.wide
-    }
-  },
+    'body-xs': {
+      fontSize: '0.75rem',
+      fontWeight: 400,
+      lineHeight: 1.5,
+      fontFamily: 'Inter, system-ui, sans-serif',
+    },
 
-  // UI text (buttons, labels, etc.)
-  ui: {
-    lg: {
-      fontSize: TYPOGRAPHY.sizes.lg,
-      fontWeight: TYPOGRAPHY.weights.medium,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+    // UI elements
+    label: {
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      lineHeight: 1.4,
+      fontFamily: 'Inter, system-ui, sans-serif',
     },
-    base: {
-      fontSize: TYPOGRAPHY.sizes.base,
-      fontWeight: TYPOGRAPHY.weights.medium,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+    button: {
+      fontSize: '0.875rem',
+      fontWeight: 600,
+      lineHeight: 1.4,
+      fontFamily: 'Inter, system-ui, sans-serif',
+      letterSpacing: '0.025em',
     },
-    sm: {
-      fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: TYPOGRAPHY.weights.medium,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.wide
+    caption: {
+      fontSize: '0.75rem',
+      fontWeight: 400,
+      lineHeight: 1.4,
+      fontFamily: 'Inter, system-ui, sans-serif',
     },
-    xs: {
-      fontSize: TYPOGRAPHY.sizes.xs,
-      fontWeight: TYPOGRAPHY.weights.medium,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.wider
-    }
-  },
+    overline: {
+      fontSize: '0.75rem',
+      fontWeight: 600,
+      lineHeight: 1.4,
+      fontFamily: 'Inter, system-ui, sans-serif',
+      letterSpacing: '0.05em',
+      textTransform: 'uppercase',
+    },
 
-  // Code text
-  code: {
-    inline: {
-      fontFamily: TYPOGRAPHY.fonts.mono,
-      fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: TYPOGRAPHY.weights.normal,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
+    // Special elements
+    code: {
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      lineHeight: 1.6,
+      fontFamily: '"Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, monospace',
     },
-    block: {
-      fontFamily: TYPOGRAPHY.fonts.mono,
-      fontSize: TYPOGRAPHY.sizes.sm,
-      fontWeight: TYPOGRAPHY.weights.normal,
-      lineHeight: TYPOGRAPHY.lineHeights.normal,
-      letterSpacing: TYPOGRAPHY.letterSpacing.normal
-    }
-  }
+    quote: {
+      fontSize: '1.125rem',
+      fontWeight: 400,
+      lineHeight: 1.6,
+      fontFamily: 'Inter, system-ui, sans-serif',
+      fontStyle: 'italic',
+    },
+  },
 } as const;
 
-// Typography utilities
-export const getTypographyClass = (preset: keyof typeof TEXT_PRESETS, variant: string) => {
-  return `text-preset-${preset}-${variant}`;
-};
-
-// CSS custom properties for typography
-export const TYPOGRAPHY_CSS_VARIABLES = {
-  // Font families
-  '--font-primary': TYPOGRAPHY.fonts.primary,
-  '--font-mono': TYPOGRAPHY.fonts.mono,
-  '--font-heading': TYPOGRAPHY.fonts.heading,
-
-  // Font sizes
-  '--text-xs': TYPOGRAPHY.sizes.xs,
-  '--text-sm': TYPOGRAPHY.sizes.sm,
-  '--text-base': TYPOGRAPHY.sizes.base,
-  '--text-lg': TYPOGRAPHY.sizes.lg,
-  '--text-xl': TYPOGRAPHY.sizes.xl,
-  '--text-2xl': TYPOGRAPHY.sizes['2xl'],
-  '--text-3xl': TYPOGRAPHY.sizes['3xl'],
-  '--text-4xl': TYPOGRAPHY.sizes['4xl'],
-  '--text-5xl': TYPOGRAPHY.sizes['5xl'],
-  '--text-6xl': TYPOGRAPHY.sizes['6xl'],
-
-  // Font weights
-  '--font-thin': TYPOGRAPHY.weights.thin,
-  '--font-light': TYPOGRAPHY.weights.light,
-  '--font-normal': TYPOGRAPHY.weights.normal,
-  '--font-medium': TYPOGRAPHY.weights.medium,
-  '--font-semibold': TYPOGRAPHY.weights.semibold,
-  '--font-bold': TYPOGRAPHY.weights.bold,
-
-  // Line heights
-  '--leading-none': TYPOGRAPHY.lineHeights.none,
-  '--leading-tight': TYPOGRAPHY.lineHeights.tight,
-  '--leading-normal': TYPOGRAPHY.lineHeights.normal,
-  '--leading-relaxed': TYPOGRAPHY.lineHeights.relaxed,
-
-  // Letter spacing
-  '--tracking-tight': TYPOGRAPHY.letterSpacing.tight,
-  '--tracking-normal': TYPOGRAPHY.letterSpacing.normal,
-  '--tracking-wide': TYPOGRAPHY.letterSpacing.wide
-} as const;
-
-// Export types for TypeScript
-export type TypographyFonts = typeof TYPOGRAPHY.fonts;
-export type TypographySizes = typeof TYPOGRAPHY.sizes;
-export type TypographyWeights = typeof TYPOGRAPHY.weights;
-export type TextPresets = typeof TEXT_PRESETS;
-export type TypographyPreset = keyof typeof TEXT_PRESETS;
+export type TypographySystem = typeof typography;

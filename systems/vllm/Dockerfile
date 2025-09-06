@@ -51,3 +51,4 @@ EXPOSE 8001
 
 # Default command
 CMD ["python", "src/vllm_service.py"]
+

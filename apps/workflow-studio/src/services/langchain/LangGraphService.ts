@@ -486,3 +486,4 @@ export const createWorkflowFromN8n = (nodes: any[], edges: any[]) =>
 
 export const createWorkflowTemplate = (templateName: string) =>
   langGraphService.createTemplate(templateName);
+

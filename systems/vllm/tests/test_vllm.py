@@ -405,9 +405,6 @@ class TestLoad:
         success_count = sum(1 for _, status in results if status in [200, 503])
         error_count = len(errors)
 
-        print(f"Successful requests: {success_count}")
-        print(f"Errors: {error_count}")
-
         # Should handle the load without crashing
         assert success_count + error_count == 100
 
@@ -416,19 +413,12 @@ if __name__ == "__main__":
     # Run basic health check
     client = TestClient(app)
 
-    print("🧪 Running vLLM Service Tests...")
-
     # Test health endpoint
     response = client.get("/health")
-    print(f"✅ Health check: {response.status_code}")
 
     # Test models endpoint
     response = client.get("/v1/models")
-    print(f"✅ Models endpoint: {response.status_code}")
 
     # Test root endpoint
     response = client.get("/")
-    print(f"✅ Root endpoint: {response.status_code}")
 
-    print("🎉 Basic functionality tests passed!")
-    print("💡 Run 'pytest tests/test_vllm.py' for comprehensive testing")

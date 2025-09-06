@@ -8,6 +8,43 @@
 **Content Type**: `application/json`
 **Rate Limiting**: 1000 requests/minute per user
 
+## 🚀 Service Architecture
+
+The Auterity platform consists of multiple specialized services:
+
+### **Core Services**
+- **Main API** (`/api`): Primary REST API for application functionality (Port: 8000)
+- **LangGraph Service** (`/api/langgraph`): AI-powered workflow orchestration (Port: 8002)
+- **vLLM Service** (`/api/vllm`): High-throughput AI model serving (Port: 8001)
+- **RelayCore** (`/api/relaycore`): AI model routing and management (Port: 8001)
+- **CrewAI Service** (`/api/crewai`): Multi-agent collaborative systems (Port: 8003)
+- **NeuroWeaver** (`/api/neuroweaver`): Model specialization platform (Port: 8004)
+- **MCP Orchestrator** (`/api/mcp`): Model Context Protocol orchestrator (Port: 8005)
+- **n8n AI Enhancements** (`/api/n8n-ai`): AI-enhanced workflow platform (Port: 8006)
+- **Integration Layer** (`/api/integration`): Cross-system integration (Port: 8007)
+
+### **Service Endpoints**
+| Service | Base URL | Purpose | Port |
+|---------|----------|---------|------|
+| **Main API** | `http://localhost:8000/api` | Core application functionality | 8000 |
+| **LangGraph** | `http://localhost:8002` | AI workflow orchestration | 8002 |
+| **vLLM** | `http://localhost:8001` | AI model inference | 8001 |
+| **RelayCore** | `http://localhost:8001/api/relaycore` | AI model routing | 8001 |
+| **CrewAI** | `http://localhost:8003` | Multi-agent collaboration | 8003 |
+| **NeuroWeaver** | `http://localhost:8004` | Model specialization | 8004 |
+| **MCP Orchestrator** | `http://localhost:8005` | Model context management | 8005 |
+| **n8n AI Enhancements** | `http://localhost:8006` | AI-enhanced workflows | 8006 |
+| **Integration Layer** | `http://localhost:8007` | Cross-system integration | 8007 |
+
+### **AI Service Integration**
+- **LangGraph**: Advanced workflow orchestration with AI-driven decision making
+- **vLLM**: GPU-accelerated AI model serving with intelligent caching
+- **CrewAI**: Multi-agent collaborative systems with hierarchical/democratic modes
+- **NeuroWeaver**: Automotive domain specialization with fine-tuning pipelines
+- **MCP Orchestrator**: Unified model context management across providers
+- **n8n AI Enhancements**: Intelligent workflow generation and optimization
+- **Multi-Model Support**: OpenAI, Anthropic, Google AI, Azure AI, and custom models
+
 ## 🔐 Authentication
 
 ### **JWT Authentication Flow**
@@ -92,6 +129,174 @@ Refresh access token using refresh token.
 #### `POST /api/auth/logout`
 
 Invalidate current session tokens.
+
+## 🤖 AI Services APIs
+
+### **CrewAI Service** (Port: 8003)
+
+#### `POST /api/crewai/agents`
+Create and configure AI agents for collaborative tasks.
+
+**Request Body:**
+```json
+{
+  "name": "Research Agent",
+  "role": "Research Specialist",
+  "goal": "Conduct comprehensive research on automotive trends",
+  "backstory": "Expert in automotive industry analysis",
+  "mode": "hierarchical",
+  "manager_id": "agent-123"
+}
+```
+
+**Response:**
+```json
+{
+  "agent_id": "crewai-agent-456",
+  "status": "created",
+  "capabilities": ["research", "analysis", "reporting"],
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+#### `POST /api/crewai/tasks`
+Assign tasks to agent crews.
+
+**Request Body:**
+```json
+{
+  "crew_id": "crew-789",
+  "task_description": "Analyze Q4 automotive sales data",
+  "expected_output": "Comprehensive sales analysis report",
+  "context": "Focus on electric vehicle trends",
+  "priority": "high"
+}
+```
+
+### **NeuroWeaver Platform** (Port: 8004)
+
+#### `POST /api/neuroweaver/models/finetune`
+Initiate model fine-tuning for automotive domain.
+
+**Request Body:**
+```json
+{
+  "base_model": "gpt-4",
+  "domain": "automotive",
+  "training_data": "s3://dataset/automotive-q4-2024",
+  "specialization": "vehicle_diagnostics",
+  "hyperparameters": {
+    "learning_rate": 0.0001,
+    "epochs": 10,
+    "batch_size": 8
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "job_id": "fine-tune-123",
+  "status": "queued",
+  "estimated_completion": "2024-01-16T14:00:00Z",
+  "model_name": "automotive-diagnostics-v1"
+}
+```
+
+#### `GET /api/neuroweaver/models/{model_id}/performance`
+Retrieve model performance metrics.
+
+### **MCP Orchestrator** (Port: 8005)
+
+#### `POST /api/mcp/contexts`
+Create a new model context session.
+
+**Request Body:**
+```json
+{
+  "session_name": "Customer Support Session",
+  "models": ["gpt-4", "claude-3", "gemini-pro"],
+  "context_window": 4096,
+  "fallback_strategy": "performance_based"
+}
+```
+
+#### `POST /api/mcp/infer`
+Execute inference across multiple models with context management.
+
+**Request Body:**
+```json
+{
+  "context_id": "ctx-456",
+  "prompt": "Analyze this vehicle diagnostic report",
+  "max_tokens": 1000,
+  "temperature": 0.7
+}
+```
+
+### **n8n AI Enhancements** (Port: 8006)
+
+#### `POST /api/n8n-ai/analyze`
+Analyze workflow for AI optimization opportunities.
+
+**Request Body:**
+```json
+{
+  "workflow_json": "{...}",
+  "analysis_type": "performance",
+  "optimization_goals": ["efficiency", "cost", "reliability"]
+}
+```
+
+**Response:**
+```json
+{
+  "workflow_id": "wf-789",
+  "analysis_complete": true,
+  "recommendations": [
+    {
+      "type": "node_optimization",
+      "description": "Replace manual data processing with AI-powered node",
+      "estimated_improvement": "35% faster execution"
+    }
+  ],
+  "optimized_workflow": "{...}"
+}
+```
+
+#### `POST /api/n8n-ai/generate`
+Generate workflow from natural language description.
+
+**Request Body:**
+```json
+{
+  "description": "Create a workflow that processes customer feedback, analyzes sentiment, and generates response recommendations",
+  "domain": "customer_service",
+  "complexity": "advanced"
+}
+```
+
+### **Integration Layer** (Port: 8007)
+
+#### `POST /api/integration/authenticate`
+Unified authentication across all services.
+
+#### `POST /api/integration/message`
+Send cross-system messages via RabbitMQ.
+
+**Request Body:**
+```json
+{
+  "target_service": "crewai",
+  "message_type": "task_assignment",
+  "payload": {
+    "task_id": "task-123",
+    "agent_id": "agent-456",
+    "priority": "high"
+  },
+  "routing_key": "crewai.tasks.high_priority"
+}
+```
 
 ## 🔄 Workflow Management
 
@@ -344,6 +549,182 @@ Create workflow from template.
 ```
 
 ## 🤖 AI Services Integration
+
+### **LangGraph Service (AI Workflow Orchestration)**
+
+**Base URL**: `http://localhost:8002`
+**Purpose**: AI-powered workflow orchestration with intelligent decision making
+
+#### `POST /workflows`
+
+Create a new AI-powered workflow.
+
+**Request Body:**
+
+```json
+{
+  "workflow_id": "ai-content-workflow",
+  "name": "AI Content Generation Pipeline",
+  "description": "Multi-step content creation with AI decision making",
+  "nodes": [
+    {
+      "id": "research",
+      "type": "llm",
+      "config": {
+        "prompt": "Research the topic: {{topic}}",
+        "model": "gpt-4",
+        "temperature": 0.3
+      }
+    },
+    {
+      "id": "generate",
+      "type": "llm",
+      "config": {
+        "prompt": "Create content about: {{research}}",
+        "model": "claude-3-sonnet-20240229"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "research",
+      "target": "generate"
+    }
+  ]
+}
+```
+
+#### `POST /workflows/{workflow_id}/execute`
+
+Execute an AI-powered workflow.
+
+**Request Body:**
+
+```json
+{
+  "input": {
+    "topic": "AI-powered workflow orchestration"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "execution_id": "exec-12345",
+  "status": "completed",
+  "result": {
+    "research": "Research results...",
+    "generated_content": "Generated content..."
+  },
+  "execution_time": 2.45,
+  "execution_path": ["research", "generate"]
+}
+```
+
+#### `GET /metrics`
+
+Get LangGraph service performance metrics.
+
+**Response:**
+
+```json
+{
+  "performance_metrics": {
+    "total_workflows": 150,
+    "active_workflows": 3,
+    "completed_workflows": 145,
+    "failed_workflows": 2,
+    "average_execution_time": 2.34,
+    "average_decision_time": 0.45
+  },
+  "node_type_usage": {
+    "llm": 85,
+    "condition": 12,
+    "tool": 8,
+    "integration": 5
+  }
+}
+```
+
+### **vLLM Service (High-Throughput AI Inference)**
+
+**Base URL**: `http://localhost:8001`
+**Purpose**: GPU-accelerated AI model serving with optimized performance
+
+#### `POST /v1/generate`
+
+Generate text using high-performance AI models.
+
+**Request Body:**
+
+```json
+{
+  "prompt": "Explain quantum computing in simple terms",
+  "temperature": 0.7,
+  "max_tokens": 500,
+  "top_p": 1.0,
+  "stop_sequences": ["\\n\\n"],
+  "model": "meta-llama/Llama-2-7b-chat-hf"
+}
+```
+
+**Response:**
+
+```json
+{
+  "response": "Quantum computing uses quantum mechanics principles...",
+  "usage": {
+    "prompt_tokens": 8,
+    "completion_tokens": 127,
+    "total_tokens": 135
+  },
+  "performance": {
+    "latency_ms": 245,
+    "model": "meta-llama/Llama-2-7b-chat-hf",
+    "timestamp": "2025-08-25T15:45:00Z"
+  },
+  "metadata": {
+    "finish_reason": "length",
+    "cached": false
+  }
+}
+```
+
+#### `GET /v1/metrics`
+
+Get vLLM service performance and GPU metrics.
+
+**Response:**
+
+```json
+{
+  "model_metrics": {
+    "model_name": "meta-llama/Llama-2-7b-chat-hf",
+    "requests_per_second": 45.2,
+    "average_latency_ms": 245.3,
+    "gpu_memory_used_gb": 12.4,
+    "gpu_memory_total_gb": 16.0,
+    "active_requests": 2,
+    "queue_depth": 0,
+    "cache_hit_rate": 0.23
+  },
+  "gpu_info": {
+    "available": true,
+    "device_count": 1,
+    "devices": [
+      {
+        "id": 0,
+        "name": "NVIDIA A100-SXM4-16GB",
+        "total_memory_gb": 16.0,
+        "allocated_memory_gb": 12.4,
+        "utilization": 0.775
+      }
+    ]
+  }
+}
+```
 
 ### **RelayCore (AI Routing)**
 

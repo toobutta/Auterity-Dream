@@ -3,6 +3,30 @@
 ## **Overview**
 
 This guide provides comprehensive instructions for deploying the enhanced Auterity Analytics Platform to production environments. The platform includes unified analytics, AI/ML optimization, real-time WebSocket updates, enterprise security, and comprehensive monitoring.
+## **Platform Components**
+
+### **Core Services**
+- **Frontend Application**: React/TypeScript UI with integrated Workflow Studio
+- **API Gateway**: Main REST API service (Port: 8080)
+- **LangGraph Service**: AI-powered workflow orchestration (Port: 8002)
+- **vLLM Service**: High-throughput AI model serving (Port: 8001)
+- **RelayCore**: AI model routing and management (Port: 8001)
+- **Workflow Studio**: Visual workflow designer
+- **PostgreSQL**: Primary database (Port: 5432)
+- **Redis**: Caching and session management (Port: 6379)
+
+### **AI Services Architecture**
+```
+Frontend (3000) → API Gateway (8080) → AI Services
+                                      ├── LangGraph (8002)
+                                      ├── vLLM (8001)
+                                      └── RelayCore (8001)
+```
+
+### **Service Dependencies**
+- **LangGraph Service**: Requires Redis for caching and state management
+- **vLLM Service**: Requires GPU support for optimal performance (optional CPU fallback)
+- **RelayCore**: Requires API keys for AI providers (OpenAI, Anthropic, etc.)
 
 ## **Prerequisites**
 
@@ -49,6 +73,24 @@ POSTGRES_PASSWORD=your-secure-password
 # Cache
 REDIS_URL=redis://:password@redis:6379/0
 REDIS_PASSWORD=your-redis-password
+
+# AI Services Configuration
+OPENAI_API_KEY=your-openai-api-key
+ANTHROPIC_API_KEY=your-anthropic-api-key
+GOOGLE_AI_API_KEY=your-google-ai-api-key
+AZURE_AI_API_KEY=your-azure-ai-api-key
+
+# LangGraph Service
+LANGGRAPH_PORT=8002
+LANGGRAPH_MEMORY_LIMIT=2G
+
+# vLLM Service
+VLLM_PORT=8001
+VLLM_MODEL_NAME=meta-llama/Llama-2-7b-chat-hf
+VLLM_GPU_MEMORY_UTILIZATION=0.9
+VLLM_TENSOR_PARALLEL_SIZE=1
+VLLM_MAX_MODEL_LEN=4096
+VLLM_MAX_BATCH_SIZE=32
 
 # External Services
 CORS_ORIGINS=https://yourdomain.com,https://app.yourdomain.com

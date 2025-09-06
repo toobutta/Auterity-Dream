@@ -1,212 +1,92 @@
-import React, { forwardRef } from 'react';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
-import { COLORS } from '../../tokens/colors';
-import { SIZES } from '../../tokens/spacing';
+import { LoadingSpinner } from '../LoadingSpinner';
 
-// Button variants
-export const BUTTON_VARIANTS = {
-  primary: {
-    solid: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-    outline: 'border border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500',
-    ghost: 'text-blue-600 hover:bg-blue-50 focus:ring-blue-500'
-  },
-  secondary: {
-    solid: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
-    outline: 'border border-gray-600 text-gray-600 hover:bg-gray-50 focus:ring-gray-500',
-    ghost: 'text-gray-600 hover:bg-gray-50 focus:ring-gray-500'
-  },
-  success: {
-    solid: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
-    outline: 'border border-green-600 text-green-600 hover:bg-green-50 focus:ring-green-500',
-    ghost: 'text-green-600 hover:bg-green-50 focus:ring-green-500'
-  },
-  error: {
-    solid: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-    outline: 'border border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500',
-    ghost: 'text-red-600 hover:bg-red-50 focus:ring-red-500'
-  },
-  warning: {
-    solid: 'bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500',
-    outline: 'border border-yellow-600 text-yellow-600 hover:bg-yellow-50 focus:ring-yellow-500',
-    ghost: 'text-yellow-600 hover:bg-yellow-50 focus:ring-yellow-500'
+const buttonVariants = cva(
+  // Base styles
+  'inline-flex items-center justify-center font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        primary:
+          'bg-primary-500 text-white hover:bg-primary-600 focus-visible:ring-primary-500 shadow-sm hover:shadow-md active:shadow-sm',
+        secondary:
+          'bg-neutral-100 text-neutral-900 hover:bg-neutral-200 focus-visible:ring-neutral-400 border border-neutral-200',
+        ghost:
+          'hover:bg-neutral-100 hover:text-neutral-900 focus-visible:ring-neutral-400',
+        danger:
+          'bg-semantic-error text-white hover:bg-red-600 focus-visible:ring-semantic-error shadow-sm hover:shadow-md',
+        link:
+          'text-primary-500 underline-offset-4 hover:underline focus-visible:ring-primary-500',
+      },
+      size: {
+        sm: 'h-8 px-3 text-xs rounded-md gap-1.5',
+        md: 'h-10 px-4 text-sm rounded-md gap-2',
+        lg: 'h-12 px-6 text-base rounded-lg gap-2.5',
+        icon: 'h-10 w-10 rounded-md',
+      },
+      fullWidth: {
+        true: 'w-full',
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+    },
   }
-} as const;
+);
 
-// Button sizes
-export const BUTTON_SIZES = {
-  xs: {
-    height: SIZES.button.xs.height,
-    paddingX: SIZES.button.xs.paddingX,
-    fontSize: SIZES.button.xs.fontSize,
-    iconSize: 'w-3 h-3'
-  },
-  sm: {
-    height: SIZES.button.sm.height,
-    paddingX: SIZES.button.sm.paddingX,
-    fontSize: SIZES.button.sm.fontSize,
-    iconSize: 'w-4 h-4'
-  },
-  md: {
-    height: SIZES.button.md.height,
-    paddingX: SIZES.button.md.paddingX,
-    fontSize: SIZES.button.md.fontSize,
-    iconSize: 'w-5 h-5'
-  },
-  lg: {
-    height: SIZES.button.lg.height,
-    paddingX: SIZES.button.lg.paddingX,
-    fontSize: SIZES.button.lg.fontSize,
-    iconSize: 'w-6 h-6'
-  },
-  xl: {
-    height: SIZES.button.xl.height,
-    paddingX: SIZES.button.xl.paddingX,
-    fontSize: SIZES.button.xl.fontSize,
-    iconSize: 'w-7 h-7'
-  }
-} as const;
-
-// Button component props
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: keyof typeof BUTTON_VARIANTS;
-  style?: keyof typeof BUTTON_VARIANTS.primary;
-  size?: keyof typeof BUTTON_SIZES;
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   loading?: boolean;
-  loadingText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  fullWidth?: boolean;
-  children: React.ReactNode;
 }
 
-// Loading spinner component
-const LoadingSpinner: React.FC<{ size: keyof typeof BUTTON_SIZES }> = ({ size }) => {
-  const iconSize = BUTTON_SIZES[size].iconSize;
-  return (
-    <svg
-      className={`animate-spin ${iconSize}`}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
-  );
-};
-
-// Button component with forwardRef for proper ref handling
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      variant = 'primary',
-      style = 'solid',
-      size = 'md',
+      className,
+      variant,
+      size,
+      fullWidth,
       loading = false,
-      loadingText = 'Loading...',
+      disabled = false,
       leftIcon,
       rightIcon,
-      fullWidth = false,
-      disabled = false,
-      className = '',
       children,
-      onClick,
       ...props
     },
     ref
   ) => {
-    // Get variant classes
-    const variantClasses = BUTTON_VARIANTS[variant][style];
-
-    // Get size configuration
-    const sizeConfig = BUTTON_SIZES[size];
-
-    // Combine all classes
-    const buttonClasses = cn(
-      // Base button styles
-      'inline-flex items-center justify-center',
-      'font-medium rounded-md',
-      'transition-all duration-200',
-      'focus:outline-none focus:ring-2 focus:ring-offset-2',
-      'disabled:opacity-50 disabled:cursor-not-allowed',
-      'active:transform active:scale-95',
-
-      // Size-specific styles
-      `h-${sizeConfig.height}`,
-      `px-${sizeConfig.paddingX}`,
-      `text-${sizeConfig.fontSize}`,
-
-      // Variant styles
-      variantClasses,
-
-      // Full width
-      fullWidth && 'w-full',
-
-      // Loading state
-      loading && 'cursor-wait',
-
-      // Custom className
-      className
-    );
-
-    // Handle click with loading prevention
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (loading || disabled) return;
-      onClick?.(event);
-    };
+    const isDisabled = disabled || loading;
+    const showLeftIcon = leftIcon && !loading;
+    const showRightIcon = rightIcon && !loading;
 
     return (
       <button
         ref={ref}
-        className={buttonClasses}
-        disabled={disabled || loading}
-        onClick={handleClick}
+        className={cn(
+          buttonVariants({ variant, size, fullWidth }),
+          className
+        )}
+        disabled={isDisabled}
         {...props}
       >
-        {/* Left icon */}
-        {leftIcon && !loading && (
-          <span className="mr-2 flex-shrink-0">
-            {leftIcon}
-          </span>
-        )}
-
-        {/* Loading spinner */}
         {loading && (
-          <span className="mr-2 flex-shrink-0">
-            <LoadingSpinner size={size} />
-          </span>
+          <LoadingSpinner
+            size={size === 'sm' ? 'sm' : 'md'}
+            className="mr-2"
+          />
         )}
-
-        {/* Button content */}
-        <span className={cn(
-          'truncate',
-          loading && 'opacity-75'
-        )}>
-          {loading ? loadingText : children}
-        </span>
-
-        {/* Right icon */}
-        {rightIcon && !loading && (
-          <span className="ml-2 flex-shrink-0">
-            {rightIcon}
-          </span>
-        )}
+        {showLeftIcon && <span className="inline-flex">{leftIcon}</span>}
+        {children}
+        {showRightIcon && <span className="inline-flex">{rightIcon}</span>}
       </button>
     );
   }
 );
 
 Button.displayName = 'Button';
-
-export default Button;

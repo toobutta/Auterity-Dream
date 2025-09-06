@@ -2,6 +2,7 @@
  * Unified AI Service Layer
  *
  * Extends existing AISDKService to provide cross-application AI capabilities
+ * Integrates vLLM, LangGraph, CrewAI, and existing providers
  * Leverages existing providers, components, and design systems
  */
 
@@ -12,6 +13,7 @@ import { azure } from '@ai-sdk/azure';
 import { google } from '@ai-sdk/google';
 import { cohere } from '@ai-sdk/cohere';
 import { z } from 'zod';
+import axios from 'axios';
 
 // Extend existing AISDKService
 export class UnifiedAIService {
@@ -19,6 +21,12 @@ export class UnifiedAIService {
   private errorIqAPI: any;
   private aiGateway: any;
   private crossAppInsights: Map<string, any> = new Map();
+
+  // New AI Services Integration
+  private vllmService: any = null;
+  private langGraphService: any = null;
+  private crewAIService: any = null;
+  private aiServiceHealth: Map<string, ServiceHealth> = new Map();
 
   constructor() {
     // Leverage existing AISDKService
@@ -29,6 +37,9 @@ export class UnifiedAIService {
 
     // Initialize AI Gateway (if available)
     this.initializeAIGateway();
+
+    // Initialize new AI services
+    this.initializeNewAIServices();
   }
 
   private async initializeExistingServices() {
@@ -53,6 +64,113 @@ export class UnifiedAIService {
     if (this.isAIGatewayAvailable()) {
       this.aiGateway = this.createAIGatewayClient();
     }
+  }
+
+  private async initializeNewAIServices() {
+    // Initialize vLLM service
+    this.vllmService = {
+      baseUrl: process.env.VLLM_BASE_URL || 'http://localhost:8001',
+      async generate(request: any) {
+        try {
+          const response = await axios.post(`${this.baseUrl}/v1/generate`, request, {
+            timeout: 30000
+          });
+          return response.data;
+        } catch (error) {
+          console.warn('vLLM service unavailable:', error);
+          return null;
+        }
+      },
+      async health() {
+        try {
+          const response = await axios.get(`${this.baseUrl}/health`, { timeout: 5000 });
+          return response.status === 200;
+        } catch {
+          return false;
+        }
+      }
+    };
+
+    // Initialize LangGraph service
+    this.langGraphService = {
+      baseUrl: process.env.LANGGRAPH_BASE_URL || 'http://localhost:8002',
+      async executeWorkflow(workflowId: string, input: any) {
+        try {
+          const response = await axios.post(`${this.baseUrl}/workflows/${workflowId}/execute`, { input }, {
+            timeout: 60000
+          });
+          return response.data;
+        } catch (error) {
+          console.warn('LangGraph service unavailable:', error);
+          return null;
+        }
+      },
+      async health() {
+        try {
+          const response = await axios.get(`${this.baseUrl}/health`, { timeout: 5000 });
+          return response.status === 200;
+        } catch {
+          return false;
+        }
+      }
+    };
+
+    // Initialize CrewAI service
+    this.crewAIService = {
+      baseUrl: process.env.CREWAI_BASE_URL || 'http://localhost:8003',
+      async executeCrew(crewId: string, input: any) {
+        try {
+          const response = await axios.post(`${this.baseUrl}/crews/${crewId}/execute`, { input_data: input }, {
+            timeout: 120000
+          });
+          return response.data;
+        } catch (error) {
+          console.warn('CrewAI service unavailable:', error);
+          return null;
+        }
+      },
+      async health() {
+        try {
+          const response = await axios.get(`${this.baseUrl}/health`, { timeout: 5000 });
+          return response.status === 200;
+        } catch {
+          return false;
+        }
+      }
+    };
+
+    // Start health monitoring
+    this.startHealthMonitoring();
+  }
+
+  private async startHealthMonitoring() {
+    // Check service health every 30 seconds
+    setInterval(async () => {
+      const services = [
+        { name: 'vllm', service: this.vllmService },
+        { name: 'langgraph', service: this.langGraphService },
+        { name: 'crewai', service: this.crewAIService }
+      ];
+
+      for (const { name, service } of services) {
+        try {
+          const isHealthy = await service.health();
+          this.aiServiceHealth.set(name, {
+            service: name,
+            status: isHealthy ? 'healthy' : 'unhealthy',
+            lastChecked: new Date(),
+            responseTime: 0
+          });
+        } catch (error) {
+          this.aiServiceHealth.set(name, {
+            service: name,
+            status: 'unhealthy',
+            lastChecked: new Date(),
+            responseTime: 0
+          });
+        }
+      }
+    }, 30000);
   }
 
   /**
@@ -172,6 +290,283 @@ export class UnifiedAIService {
       estimatedSavings: deployment.savings,
       nextSteps: deployment.nextSteps
     };
+  }
+
+  /**
+   * Unified AI Request Processing
+   * Routes requests to appropriate AI services with intelligent fallback
+   */
+  async processUnifiedRequest(request: UnifiedAIRequest): Promise<UnifiedAIResponse> {
+    const startTime = Date.now();
+
+    try {
+      // Try preferred services first
+      if (request.preferredServices) {
+        for (const serviceName of request.preferredServices) {
+          const result = await this.tryService(serviceName, request);
+          if (result) {
+            return {
+              ...result,
+              latency: Date.now() - startTime,
+              status: 'success'
+            };
+          }
+        }
+      }
+
+      // Try all available services
+      const services = this.getAvailableServices(request.type);
+      for (const serviceName of services) {
+        const result = await this.tryService(serviceName, request);
+        if (result) {
+          return {
+            ...result,
+            latency: Date.now() - startTime,
+            status: 'fallback'
+          };
+        }
+      }
+
+      throw new Error('No AI service available');
+
+    } catch (error: any) {
+      return {
+        requestId: request.id,
+        status: 'error',
+        service: 'unified-ai',
+        latency: Date.now() - startTime,
+        result: { error: error.message }
+      };
+    }
+  }
+
+  /**
+   * Intelligent Text Generation
+   * Routes to best available service for text generation
+   */
+  async generateTextUnified(
+    prompt: string,
+    options?: {
+      model?: string;
+      temperature?: number;
+      maxTokens?: number;
+      priority?: UnifiedAIRequest['priority'];
+    }
+  ): Promise<UnifiedAIResponse> {
+    const request: UnifiedAIRequest = {
+      id: `gen_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      type: 'generation',
+      payload: {
+        prompt,
+        model: options?.model,
+        temperature: options?.temperature || 0.7,
+        maxTokens: options?.maxTokens || 1000
+      },
+      priority: options?.priority || 'medium',
+      preferredServices: ['vllm', 'openai', 'anthropic']
+    };
+
+    return this.processUnifiedRequest(request);
+  }
+
+  /**
+   * Intelligent Workflow Execution
+   * Routes to LangGraph or falls back to n8n
+   */
+  async executeWorkflowUnified(
+    workflowId: string,
+    input: Record<string, any>,
+    options?: {
+      useAI?: boolean;
+      priority?: UnifiedAIRequest['priority'];
+    }
+  ): Promise<UnifiedAIResponse> {
+    const useAI = options?.useAI !== false;
+
+    if (useAI) {
+      // Try LangGraph first
+      const langGraphResult = await this.langGraphService?.executeWorkflow(workflowId, input);
+      if (langGraphResult) {
+        return {
+          requestId: `wf_${Date.now()}`,
+          status: 'success',
+          result: langGraphResult,
+          service: 'langgraph',
+          latency: 0
+        };
+      }
+    }
+
+    // Fallback to existing workflow execution
+    try {
+      const result = await this.workflowStudioAI.executeWorkflow(workflowId, input);
+      return {
+        requestId: `wf_${Date.now()}`,
+        status: 'fallback',
+        result,
+        service: 'workflow-studio',
+        latency: 0
+      };
+    } catch (error: any) {
+      return {
+        requestId: `wf_${Date.now()}`,
+        status: 'error',
+        service: 'workflow-studio',
+        latency: 0,
+        result: { error: error.message }
+      };
+    }
+  }
+
+  /**
+   * Intelligent Crew Collaboration
+   * Routes to CrewAI for multi-agent tasks
+   */
+  async runCrewCollaborationUnified(
+    crewId: string,
+    task: string,
+    context?: Record<string, any>,
+    options?: {
+      priority?: UnifiedAIRequest['priority'];
+    }
+  ): Promise<UnifiedAIResponse> {
+    // Try CrewAI first
+    const crewResult = await this.crewAIService?.executeCrew(crewId, { task, context });
+    if (crewResult) {
+      return {
+        requestId: `crew_${Date.now()}`,
+        status: 'success',
+        result: crewResult,
+        service: 'crewai',
+        latency: 0
+      };
+    }
+
+    // Fallback to regular AI processing
+    return this.generateTextUnified(
+      `Process this collaborative task: ${task}\nContext: ${JSON.stringify(context)}`,
+      { priority: options?.priority }
+    );
+  }
+
+  /**
+   * Get Service Health Status
+   */
+  getServiceHealth(): ServiceHealth[] {
+    return Array.from(this.aiServiceHealth.values());
+  }
+
+  /**
+   * Get Available Services for Request Type
+   */
+  private getAvailableServices(requestType: string): string[] {
+    const serviceMap = {
+      generation: ['vllm', 'openai', 'anthropic', 'cohere'],
+      analysis: ['vllm', 'openai', 'anthropic', 'google'],
+      workflow: ['langgraph', 'n8n'],
+      collaboration: ['crewai', 'openai', 'anthropic']
+    };
+
+    return serviceMap[requestType as keyof typeof serviceMap] || ['openai'];
+  }
+
+  /**
+   * Try a specific service
+   */
+  private async tryService(serviceName: string, request: UnifiedAIRequest): Promise<UnifiedAIResponse | null> {
+    try {
+      let result = null;
+
+      switch (serviceName) {
+        case 'vllm':
+          if (request.type === 'generation') {
+            result = await this.vllmService?.generate(request.payload);
+          }
+          break;
+
+        case 'langgraph':
+          if (request.type === 'workflow') {
+            result = await this.langGraphService?.executeWorkflow(
+              request.payload.workflowId,
+              request.payload.input
+            );
+          }
+          break;
+
+        case 'crewai':
+          if (request.type === 'collaboration') {
+            result = await this.crewAIService?.executeCrew(
+              request.payload.crewId,
+              request.payload.input
+            );
+          }
+          break;
+
+        case 'openai':
+          result = await this.callOpenAI(request);
+          break;
+
+        case 'anthropic':
+          result = await this.callAnthropic(request);
+          break;
+
+        default:
+          return null;
+      }
+
+      if (result) {
+        return {
+          requestId: request.id,
+          status: 'success',
+          result,
+          service: serviceName,
+          latency: 0
+        };
+      }
+
+    } catch (error) {
+      console.warn(`Service ${serviceName} failed:`, error);
+    }
+
+    return null;
+  }
+
+  /**
+   * Call OpenAI API
+   */
+  private async callOpenAI(request: UnifiedAIRequest): Promise<any> {
+    const messages = [{
+      role: 'user',
+      content: request.payload.prompt || JSON.stringify(request.payload)
+    }];
+
+    const result = await generateText({
+      model: openai('gpt-4'),
+      messages,
+      temperature: request.payload.temperature || 0.7,
+      maxTokens: request.payload.maxTokens || 1000
+    });
+
+    return { text: result.text };
+  }
+
+  /**
+   * Call Anthropic API
+   */
+  private async callAnthropic(request: UnifiedAIRequest): Promise<any> {
+    const messages = [{
+      role: 'user',
+      content: request.payload.prompt || JSON.stringify(request.payload)
+    }];
+
+    const result = await generateText({
+      model: anthropic('claude-3-sonnet-20240229'),
+      messages,
+      temperature: request.payload.temperature || 0.7,
+      maxTokens: request.payload.maxTokens || 1000
+    });
+
+    return { text: result.text };
   }
 
   // Private helper methods leveraging existing patterns
@@ -304,6 +699,39 @@ interface CrossAppAnalysis {
   optimizationSuggestions: any[];
   riskAssessment: any;
   confidence: number;
+}
+
+interface ServiceHealth {
+  service: string;
+  status: 'healthy' | 'degraded' | 'unhealthy';
+  lastChecked: Date;
+  responseTime: number;
+  version?: string;
+  capabilities?: string[];
+}
+
+interface UnifiedAIRequest {
+  id: string;
+  type: 'generation' | 'analysis' | 'workflow' | 'collaboration';
+  payload: Record<string, any>;
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+  preferredServices?: string[];
+  fallbackServices?: string[];
+  timeout?: number;
+}
+
+interface UnifiedAIResponse {
+  requestId: string;
+  status: 'success' | 'error' | 'fallback';
+  result?: any;
+  service: string;
+  latency: number;
+  cost?: number;
+  suggestions?: Array<{
+    type: string;
+    description: string;
+    confidence: number;
+  }>;
 }
 
 interface TemplateContext {

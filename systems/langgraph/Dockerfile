@@ -43,3 +43,4 @@ EXPOSE 8002
 
 # Default command
 CMD ["python", "src/langgraph_service.py"]
+

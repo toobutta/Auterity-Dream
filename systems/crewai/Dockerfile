@@ -44,3 +44,4 @@ EXPOSE 8003
 
 # Default command
 CMD ["python", "src/crewai_service.py"]
+

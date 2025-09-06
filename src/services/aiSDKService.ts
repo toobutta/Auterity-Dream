@@ -17,6 +17,9 @@ import { google } from '@ai-sdk/google';
 import { cohere } from '@ai-sdk/cohere';
 import { z } from 'zod';
 
+// Import LangChain for integration
+import { ChatOpenAI, ChatAnthropic, ChatGoogleGenerativeAI } from "@langchain/core/language_models/chat_models";
+
 // Environment configuration
 const AI_CONFIG = {
   openai: {
@@ -74,6 +77,28 @@ const PROVIDERS = {
   azure: azure('gpt-4o'),
   google: google('gemini-1.5-pro'),
   cohere: cohere('command-r-plus')
+} as const;
+
+// LangChain Provider configuration for unified access
+const LANGCHAIN_PROVIDERS = {
+  openai: new ChatOpenAI({
+    openAIApiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    modelName: 'gpt-4',
+    temperature: 0.7,
+    maxTokens: 1000,
+  }),
+  anthropic: new ChatAnthropic({
+    anthropicApiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
+    modelName: 'claude-3-sonnet-20240229',
+    temperature: 0.7,
+    maxTokens: 1000,
+  }),
+  google: new ChatGoogleGenerativeAI({
+    apiKey: import.meta.env.VITE_GOOGLE_API_KEY,
+    modelName: 'gemini-pro',
+    temperature: 0.7,
+    maxTokens: 1000,
+  })
 } as const;
 
 // Ollama provider setup (dynamic based on environment)
@@ -167,10 +192,14 @@ export class AISDKService {
   private costTracker = new Map<string, number>();
   private ollamaProvider: any = null;
   private availableProviders: Record<string, any> = {};
+  private langChainProviders: Record<string, any> = {};
+  private frameworkMappings: Map<string, string> = new Map();
 
   constructor() {
     // Initialize providers
     this.initializeProviders();
+    this.initializeLangChainProviders();
+    this.initializeFrameworkMappings();
     // Set default provider
     this.setProvider('openai');
   }
@@ -178,12 +207,38 @@ export class AISDKService {
   private initializeProviders(): void {
     // Copy base providers
     this.availableProviders = { ...PROVIDERS };
-    
+
     // Initialize Ollama if available
     this.ollamaProvider = initializeOllama();
     if (this.ollamaProvider) {
       this.availableProviders.ollama = this.ollamaProvider('llama3.1:8b');
     }
+  }
+
+  private initializeLangChainProviders(): void {
+    // Initialize LangChain providers that are available
+    if (AI_CONFIG.openai.enabled) {
+      this.langChainProviders.openai = LANGCHAIN_PROVIDERS.openai;
+    }
+    if (AI_CONFIG.anthropic.enabled) {
+      this.langChainProviders.anthropic = LANGCHAIN_PROVIDERS.anthropic;
+    }
+    if (AI_CONFIG.google.enabled) {
+      this.langChainProviders.google = LANGCHAIN_PROVIDERS.google;
+    }
+  }
+
+  private initializeFrameworkMappings(): void {
+    // Map AI SDK providers to LangChain equivalents
+    this.frameworkMappings.set('ai-sdk-openai', 'langchain-openai');
+    this.frameworkMappings.set('ai-sdk-anthropic', 'langchain-anthropic');
+    this.frameworkMappings.set('ai-sdk-google', 'langchain-google');
+
+    // Map provider aliases
+    this.frameworkMappings.set('gpt-4', 'openai');
+    this.frameworkMappings.set('claude-3', 'anthropic');
+    this.frameworkMappings.set('gemini', 'google');
+    this.frameworkMappings.set('ollama', 'ollama');
   }
 
   /**
@@ -201,6 +256,95 @@ export class AISDKService {
    */
   getProviders(): ProviderKey[] {
     return Object.keys(this.availableProviders) as ProviderKey[];
+  }
+
+  /**
+   * Get available LangChain providers
+   */
+  getLangChainProviders(): string[] {
+    return Object.keys(this.langChainProviders);
+  }
+
+  /**
+   * Get a LangChain provider
+   */
+  getLangChainProvider(provider: string): any {
+    const mappedProvider = this.frameworkMappings.get(provider) || provider;
+    return this.langChainProviders[mappedProvider];
+  }
+
+  /**
+   * Check for framework conflicts
+   */
+  checkFrameworkConflicts(): { conflicts: string[], warnings: string[] } {
+    const conflicts: string[] = [];
+    const warnings: string[] = [];
+
+    // Check for duplicate provider configurations
+    const aiSdkProviders = new Set(Object.keys(this.availableProviders));
+    const langChainProviders = new Set(Object.keys(this.langChainProviders));
+
+    // Find providers that exist in both frameworks
+    const commonProviders = [...aiSdkProviders].filter(provider =>
+      langChainProviders.has(provider) || langChainProviders.has(this.frameworkMappings.get(provider) || '')
+    );
+
+    if (commonProviders.length > 0) {
+      warnings.push(`Providers configured in both AI SDK and LangChain: ${commonProviders.join(', ')}`);
+    }
+
+    // Check for missing API keys
+    const providersWithoutKeys = [];
+    if (AI_CONFIG.openai.enabled && !AI_CONFIG.openai.apiKey) {
+      providersWithoutKeys.push('openai');
+    }
+    if (AI_CONFIG.anthropic.enabled && !AI_CONFIG.anthropic.apiKey) {
+      providersWithoutKeys.push('anthropic');
+    }
+    if (AI_CONFIG.google.enabled && !AI_CONFIG.google.apiKey) {
+      providersWithoutKeys.push('google');
+    }
+
+    if (providersWithoutKeys.length > 0) {
+      conflicts.push(`Providers enabled but missing API keys: ${providersWithoutKeys.join(', ')}`);
+    }
+
+    return { conflicts, warnings };
+  }
+
+  /**
+   * Get unified provider status
+   */
+  getUnifiedProviderStatus(): Record<string, { aiSdk: boolean, langChain: boolean, conflicts: string[] }> {
+    const status: Record<string, { aiSdk: boolean, langChain: boolean, conflicts: string[] }> = {};
+
+    // Check all possible providers
+    const allProviders = ['openai', 'anthropic', 'google', 'azure', 'cohere', 'ollama'];
+
+    for (const provider of allProviders) {
+      const aiSdkAvailable = !!this.availableProviders[provider];
+      const langChainAvailable = !!this.langChainProviders[provider];
+      const conflicts: string[] = [];
+
+      // Check for configuration conflicts
+      if (aiSdkAvailable && langChainAvailable) {
+        conflicts.push('Duplicate configuration');
+      }
+
+      // Check for API key availability
+      const config = AI_CONFIG[provider as keyof typeof AI_CONFIG];
+      if (config && config.enabled && !config.apiKey) {
+        conflicts.push('Missing API key');
+      }
+
+      status[provider] = {
+        aiSdk: aiSdkAvailable,
+        langChain: langChainAvailable,
+        conflicts
+      };
+    }
+
+    return status;
   }
 
   /**
@@ -410,15 +554,82 @@ Generate a detailed workflow with appropriate nodes, connections, and metadata.`
    */
   getAvailableProviders(): string[] {
     const providers: string[] = [];
-    
+
     if (AI_CONFIG.openai.enabled) providers.push('openai');
     if (AI_CONFIG.anthropic.enabled) providers.push('anthropic');
     if (AI_CONFIG.google.enabled) providers.push('google');
     if (AI_CONFIG.azure.enabled) providers.push('azure');
     if (AI_CONFIG.cohere.enabled) providers.push('cohere');
     if (AI_CONFIG.ollama.enabled && this.isOllamaAvailable()) providers.push('ollama');
-    
+
     return providers;
+  }
+
+  /**
+   * Get comprehensive AI framework status
+   */
+  getAIFrameworkStatus(): {
+    aiSdk: { providers: string[], status: string, conflicts: string[] },
+    langChain: { providers: string[], status: string, conflicts: string[] },
+    unified: { recommendations: string[], warnings: string[], critical: string[] }
+  } {
+    const aiSdkProviders = this.getProviders();
+    const langChainProviders = this.getLangChainProviders();
+    const frameworkConflicts = this.checkFrameworkConflicts();
+    const unifiedStatus = this.getUnifiedProviderStatus();
+
+    // Determine overall status
+    const aiSdkStatus = aiSdkProviders.length > 0 ? 'operational' : 'no_providers';
+    const langChainStatus = langChainProviders.length > 0 ? 'operational' : 'no_providers';
+
+    // Generate recommendations
+    const recommendations: string[] = [];
+    const warnings: string[] = [];
+    const critical: string[] = [];
+
+    // Check for critical issues
+    if (aiSdkProviders.length === 0 && langChainProviders.length === 0) {
+      critical.push('No AI providers configured - system will not function');
+    }
+
+    // Check for provider conflicts
+    Object.entries(unifiedStatus).forEach(([provider, status]) => {
+      if (status.conflicts.includes('Missing API key')) {
+        critical.push(`Missing API key for ${provider}`);
+      }
+      if (status.conflicts.includes('Duplicate configuration')) {
+        warnings.push(`Duplicate configuration for ${provider} in both frameworks`);
+      }
+    });
+
+    // Recommendations
+    if (aiSdkProviders.length > 0 && langChainProviders.length === 0) {
+      recommendations.push('Consider adding LangChain providers for advanced workflow orchestration');
+    }
+    if (langChainProviders.length > 0 && aiSdkProviders.length === 0) {
+      recommendations.push('Consider adding AI SDK providers for unified streaming and cost tracking');
+    }
+    if (aiSdkProviders.length > 0 && langChainProviders.length > 0) {
+      recommendations.push('Both frameworks operational - use AI SDK for simple tasks, LangChain for complex workflows');
+    }
+
+    return {
+      aiSdk: {
+        providers: aiSdkProviders,
+        status: aiSdkStatus,
+        conflicts: frameworkConflicts.conflicts.filter(c => c.includes('AI SDK') || c.includes('Missing API key'))
+      },
+      langChain: {
+        providers: langChainProviders,
+        status: langChainStatus,
+        conflicts: frameworkConflicts.conflicts.filter(c => c.includes('LangChain'))
+      },
+      unified: {
+        recommendations,
+        warnings: frameworkConflicts.warnings,
+        critical
+      }
+    };
   }
 
   private trackCost(operation: string, cost: number): void {
