@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive documentation for integrating and utilizing Auterity's advanced AI services: CrewAI, LangGraph, vLLM, and NeuroWeaver. These services work together to provide sophisticated AI capabilities across the platform.
+This document provides comprehensive documentation for integrating and utilizing Auterity's advanced AI services: CrewAI, LangGraph, vLLM, NeuroWeaver, Intelligent Router, HumanLayer, MLflow, WorkflowAdapter, n8n AI Enhancements, and Cost Optimization Engine. These services work together to provide sophisticated AI capabilities across the platform.
 
 ## Table of Contents
 
@@ -11,9 +11,15 @@ This document provides comprehensive documentation for integrating and utilizing
 3. [LangGraph Integration](#langgraph-integration)
 4. [vLLM Integration](#vllm-integration)
 5. [NeuroWeaver Integration](#neuroweaver-integration)
-6. [Integration Patterns](#integration-patterns)
-7. [Performance Optimization](#performance-optimization)
-8. [Security Considerations](#security-considerations)
+6. [Intelligent Router Integration](#intelligent-router-integration)
+7. [HumanLayer Integration](#humanlayer-integration)
+8. [MLflow Integration](#mlflow-integration)
+9. [WorkflowAdapter Integration](#workflowadapter-integration)
+10. [n8n AI Enhancements](#n8n-ai-enhancements)
+11. [Cost Optimization Engine](#cost-optimization-engine)
+12. [Integration Patterns](#integration-patterns)
+13. [Performance Optimization](#performance-optimization)
+14. [Security Considerations](#security-considerations)
 
 ## Architecture Overview
 
@@ -21,17 +27,27 @@ This document provides comprehensive documentation for integrating and utilizing
 ```mermaid
 graph TD
     A[Client Request] --> B[API Gateway]
-    B --> C[RelayCore Router]
+    B --> C[Intelligent Router]
     C --> D[Model Selection]
     D --> E[CrewAI Service]
     D --> F[LangGraph Service]
     D --> G[vLLM Service]
     D --> H[NeuroWeaver Service]
-    E --> I[Result Aggregation]
-    F --> I
-    G --> I
-    H --> I
-    I --> J[Response]
+    D --> I[HumanLayer Service]
+    D --> J[MLflow Service]
+    D --> K[WorkflowAdapter]
+    D --> L[n8n AI Service]
+    D --> M[Cost Optimization]
+    E --> N[Result Aggregation]
+    F --> N
+    G --> N
+    H --> N
+    I --> N
+    J --> N
+    K --> N
+    L --> N
+    M --> N
+    N --> O[Response]
 ```
 
 ### Service Locations
@@ -39,6 +55,12 @@ graph TD
 - LangGraph: `systems/langgraph/` (Port: 8002)
 - vLLM: `systems/vllm/` (Port: 8001)
 - NeuroWeaver: `systems/neuroweaver/` (Port: 8004)
+- Intelligent Router: `services/intelligentRouter/` (Port: 8005)
+- HumanLayer: `services/humanLayerService/` (Port: 8006)
+- MLflow: `services/humanlayerMLflowIntegration/` (Port: 8007)
+- WorkflowAdapter: `services/WorkflowAdapter/` (Port: 8008)
+- n8n AI: `services/n8n-ai-enhancements/` (Port: 8009)
+- Cost Optimization: `services/costOptimizationEngine/` (Port: 8010)
 
 ## CrewAI Integration
 
@@ -265,6 +287,255 @@ response = await model.generate(
 - Transfer learning
 - Multi-task learning
 - Model compression
+
+## Intelligent Router Integration
+
+### Overview
+The Intelligent Router provides advanced AI model routing and load balancing capabilities, automatically selecting the optimal AI model for each task based on performance, cost, and availability.
+
+### Configuration
+```typescript
+// services/intelligentRouter/routerConfig.ts
+export const routerConfig = {
+  port: 8005,
+  models: {
+    'gpt-4': { priority: 1, cost: 0.03, performance: 9 },
+    'claude-3': { priority: 2, cost: 0.015, performance: 8 },
+    'llama-3': { priority: 3, cost: 0.001, performance: 7 }
+  },
+  routing: {
+    strategy: 'performance_first',
+    fallback_enabled: true,
+    metrics_collection: true
+  }
+};
+```
+
+### Basic Usage
+```typescript
+import { IntelligentRouter } from 'services/intelligentRouter';
+
+const router = new IntelligentRouter();
+
+// Route request to optimal model
+const result = await router.route({
+  task: 'code_generation',
+  complexity: 'high',
+  budget: 0.05
+});
+```
+
+### Advanced Features
+- Dynamic load balancing
+- Cost-performance optimization
+- Real-time metrics collection
+- Automatic fallback mechanisms
+
+## HumanLayer Integration
+
+### Overview
+HumanLayer provides human-in-the-loop AI workflows, enabling human oversight and approval for critical AI decisions.
+
+### Configuration
+```typescript
+// services/humanLayerService/humanLayerService.ts
+export const humanLayerConfig = {
+  port: 8006,
+  workflows: {
+    approval_required: ['financial_decisions', 'legal_matters'],
+    human_override: true,
+    audit_trail: true
+  },
+  notifications: {
+    email: true,
+    slack: true,
+    urgency_levels: ['low', 'medium', 'high']
+  }
+};
+```
+
+### Basic Usage
+```typescript
+import { HumanLayerService } from 'services/humanLayerService';
+
+const humanLayer = new HumanLayerService();
+
+// Submit for human approval
+const approval = await humanLayer.requestApproval({
+  task: 'contract_review',
+  content: contractText,
+  urgency: 'high',
+  approver: 'legal_team'
+});
+```
+
+### Advanced Features
+- Configurable approval workflows
+- Audit trail logging
+- Real-time notifications
+- Escalation procedures
+
+## MLflow Integration
+
+### Overview
+MLflow integration provides comprehensive machine learning lifecycle management, experiment tracking, and model versioning.
+
+### Configuration
+```python
+# services/humanlayerMLflowIntegration/mlflowClient.ts
+mlflow_config = {
+    'tracking_uri': 'http://localhost:8007',
+    'experiment_name': 'auterity_ai_models',
+    'model_registry': {
+        'staging': 'staging',
+        'production': 'production'
+    }
+}
+```
+
+### Basic Usage
+```python
+from mlflow_client import MLflowClient
+
+client = MLflowClient()
+
+# Track experiment
+with client.start_run():
+    client.log_param('model_type', 'transformer')
+    client.log_metric('accuracy', 0.95)
+    client.log_model(model, 'model')
+```
+
+### Advanced Features
+- Experiment tracking
+- Model registry
+- Performance metrics
+- Reproducibility
+
+## WorkflowAdapter Integration
+
+### Overview
+WorkflowAdapter provides enterprise-grade workflow orchestration and adaptation capabilities for complex business processes.
+
+### Configuration
+```typescript
+// services/WorkflowAdapter/workflowAdapter.ts
+export const workflowConfig = {
+  port: 8008,
+  orchestration: {
+    max_concurrent: 50,
+    timeout: 3600,
+    retry_policy: 'exponential_backoff'
+  },
+  adaptation: {
+    dynamic_scaling: true,
+    resource_optimization: true
+  }
+};
+```
+
+### Basic Usage
+```typescript
+import { WorkflowAdapter } from 'services/WorkflowAdapter';
+
+const adapter = new WorkflowAdapter();
+
+// Execute enterprise workflow
+const result = await adapter.execute({
+  workflow: 'order_processing',
+  data: orderData,
+  priority: 'high'
+});
+```
+
+### Advanced Features
+- Multi-tenant support
+- Dynamic scaling
+- Resource optimization
+- Enterprise integration
+
+## n8n AI Enhancements
+
+### Overview
+n8n AI Enhancements provide intelligent workflow generation and AI-powered automation capabilities.
+
+### Configuration
+```typescript
+// services/n8n-ai-enhancements/aiWorkflowGenerator.ts
+export const n8nConfig = {
+  port: 8009,
+  ai: {
+    model: 'gpt-4',
+    temperature: 0.7,
+    max_tokens: 2000
+  },
+  workflows: {
+    auto_generation: true,
+    optimization: true,
+    testing: true
+  }
+};
+```
+
+### Basic Usage
+```typescript
+import { AIWorkflowGenerator } from 'services/n8n-ai-enhancements';
+
+const generator = new AIWorkflowGenerator();
+
+// Generate workflow from description
+const workflow = await generator.generate({
+  description: 'Automate invoice processing with AI validation',
+  complexity: 'medium'
+});
+```
+
+### Advanced Features
+- Natural language processing
+- Smart node recommendations
+- Automated testing
+- Workflow optimization
+
+## Cost Optimization Engine
+
+### Overview
+The Cost Optimization Engine provides AI-powered cost analysis and optimization for cloud resources and AI operations.
+
+### Configuration
+```typescript
+// services/costOptimizationEngine/costAnalyzer.ts
+export const costConfig = {
+  port: 8010,
+  analysis: {
+    providers: ['aws', 'gcp', 'azure'],
+    metrics: ['compute', 'storage', 'networking'],
+    optimization: {
+      auto_scaling: true,
+      resource_rightsizing: true
+    }
+  }
+};
+```
+
+### Basic Usage
+```typescript
+import { CostAnalyzer } from 'services/costOptimizationEngine';
+
+const analyzer = new CostAnalyzer();
+
+// Analyze and optimize costs
+const optimization = await analyzer.optimize({
+  provider: 'aws',
+  resources: currentResources,
+  budget: monthlyBudget
+});
+```
+
+### Advanced Features
+- Real-time cost monitoring
+- Automated scaling recommendations
+- Resource utilization tracking
+- Budget forecasting
 
 ## Integration Patterns
 

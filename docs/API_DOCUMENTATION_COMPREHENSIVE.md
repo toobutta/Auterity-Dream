@@ -14,35 +14,50 @@ The Auterity platform consists of multiple specialized services:
 
 ### **Core Services**
 - **Main API** (`/api`): Primary REST API for application functionality (Port: 8000)
+- **Intelligent Router** (`/api/intelligent-router`): AI model routing and load balancing (Port: 8005)
+- **HumanLayer Service** (`/api/humanlayer`): Human-in-the-loop AI workflows (Port: 8006)
+- **MLflow Integration** (`/api/mlflow`): Machine learning lifecycle management (Port: 8007)
+- **WorkflowAdapter** (`/api/workflow-adapter`): Enterprise workflow orchestration (Port: 8008)
+- **n8n AI Enhancements** (`/api/n8n-ai`): AI-enhanced workflow platform (Port: 8009)
+- **Cost Optimization Engine** (`/api/cost-optimization`): AI-powered cost analysis (Port: 8010)
 - **LangGraph Service** (`/api/langgraph`): AI-powered workflow orchestration (Port: 8002)
 - **vLLM Service** (`/api/vllm`): High-throughput AI model serving (Port: 8001)
 - **RelayCore** (`/api/relaycore`): AI model routing and management (Port: 8001)
 - **CrewAI Service** (`/api/crewai`): Multi-agent collaborative systems (Port: 8003)
 - **NeuroWeaver** (`/api/neuroweaver`): Model specialization platform (Port: 8004)
 - **MCP Orchestrator** (`/api/mcp`): Model Context Protocol orchestrator (Port: 8005)
-- **n8n AI Enhancements** (`/api/n8n-ai`): AI-enhanced workflow platform (Port: 8006)
 - **Integration Layer** (`/api/integration`): Cross-system integration (Port: 8007)
 
 ### **Service Endpoints**
 | Service | Base URL | Purpose | Port |
 |---------|----------|---------|------|
 | **Main API** | `http://localhost:8000/api` | Core application functionality | 8000 |
+| **Intelligent Router** | `http://localhost:8005` | AI model routing and load balancing | 8005 |
+| **HumanLayer Service** | `http://localhost:8006` | Human-in-the-loop AI workflows | 8006 |
+| **MLflow Integration** | `http://localhost:8007` | Machine learning lifecycle management | 8007 |
+| **WorkflowAdapter** | `http://localhost:8008` | Enterprise workflow orchestration | 8008 |
+| **n8n AI Enhancements** | `http://localhost:8009` | AI-enhanced workflow platform | 8009 |
+| **Cost Optimization Engine** | `http://localhost:8010` | AI-powered cost analysis | 8010 |
 | **LangGraph** | `http://localhost:8002` | AI workflow orchestration | 8002 |
 | **vLLM** | `http://localhost:8001` | AI model inference | 8001 |
 | **RelayCore** | `http://localhost:8001/api/relaycore` | AI model routing | 8001 |
 | **CrewAI** | `http://localhost:8003` | Multi-agent collaboration | 8003 |
 | **NeuroWeaver** | `http://localhost:8004` | Model specialization | 8004 |
 | **MCP Orchestrator** | `http://localhost:8005` | Model context management | 8005 |
-| **n8n AI Enhancements** | `http://localhost:8006` | AI-enhanced workflows | 8006 |
 | **Integration Layer** | `http://localhost:8007` | Cross-system integration | 8007 |
 
 ### **AI Service Integration**
+- **Intelligent Router**: Advanced AI model routing and load balancing with cost-performance optimization
+- **HumanLayer**: Human-in-the-loop AI workflows with approval processes and audit trails
+- **MLflow Integration**: Comprehensive machine learning lifecycle management and experiment tracking
+- **WorkflowAdapter**: Enterprise-grade workflow orchestration with multi-tenant support
+- **n8n AI Enhancements**: Intelligent workflow generation and AI-powered automation
+- **Cost Optimization Engine**: AI-powered cost analysis and cloud resource optimization
 - **LangGraph**: Advanced workflow orchestration with AI-driven decision making
 - **vLLM**: GPU-accelerated AI model serving with intelligent caching
 - **CrewAI**: Multi-agent collaborative systems with hierarchical/democratic modes
 - **NeuroWeaver**: Automotive domain specialization with fine-tuning pipelines
 - **MCP Orchestrator**: Unified model context management across providers
-- **n8n AI Enhancements**: Intelligent workflow generation and optimization
 - **Multi-Model Support**: OpenAI, Anthropic, Google AI, Azure AI, and custom models
 
 ## 🔐 Authentication

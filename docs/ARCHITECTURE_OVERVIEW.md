@@ -32,13 +32,18 @@ Auterity Unified AI Platform
 │   └── Chrome DevTools Integration
 ├── 🔧 Backend Services
 │   ├── API Gateway (apps/api - Port: 8000)
+│   ├── Intelligent Router (services/intelligentRouter - Port: 8005)
+│   ├── HumanLayer Service (services/humanLayerService - Port: 8006)
+│   ├── MLflow Integration (services/humanlayerMLflowIntegration - Port: 8007)
+│   ├── WorkflowAdapter (services/WorkflowAdapter - Port: 8008)
+│   ├── n8n AI Enhancements (services/n8n-ai-enhancements - Port: 8009)
+│   ├── Cost Optimization Engine (services/costOptimizationEngine - Port: 8010)
 │   ├── RelayCore AI Router (systems/relaycore - Port: 8001)
 │   ├── LangGraph Service (systems/langgraph - Port: 8002)
 │   ├── vLLM Service (systems/vllm - Port: 8001)
 │   ├── CrewAI Service (systems/crewai - Port: 8003)
 │   ├── NeuroWeaver Platform (systems/neuroweaver - Port: 8004)
 │   ├── MCP Orchestrator (systems/mcp - Port: 8005)
-│   ├── n8n AI Enhancements (systems/n8n-ai-enhancements - Port: 8006)
 │   └── Integration Layer (systems/integration - Port: 8007)
 ├── 📦 Applications
 │   ├── API Application (apps/api - Port: 8000)

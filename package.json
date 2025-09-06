@@ -1,7 +1,7 @@
 {
   "name": "auterity-unified-platform",
-  "version": "1.0.0",
-  "description": "Unified AI Platform with 25+ integrated services",
+  "version": "1.2.0",
+  "description": "Unified AI Platform with 30+ integrated services including Intelligent Router, HumanLayer, MLflow, and Cost Optimization",
   "private": true,
   "workspaces": [
     "apps/workflow-studio",

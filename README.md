@@ -41,10 +41,10 @@ Auterity now includes a high-performance analytics stack for real-time data proc
 
 ## 🤖 AI & Automation Capabilities
 
-### **25+ Integrated AI Toolkits**
+### **30+ Integrated AI Toolkits** (Recently Enhanced)
 - **LangChain** - Advanced agent orchestration and conversation chains
 - **CrewAI** - Multi-agent collaborative systems with role-based agents
-- **LangGraph** - State-based AI workflow orchestration  
+- **LangGraph** - State-based AI workflow orchestration
 - **AutoGen** - Conversational multi-agent frameworks
 - **Hugging Face** - 100,000+ pre-trained models ecosystem
 - **Google Vertex AI** - Multimodal AI with Gemini models
@@ -52,21 +52,35 @@ Auterity now includes a high-performance analytics stack for real-time data proc
 - **Temporal** - Reliable workflow execution with fault tolerance
 - **vLLM** - High-performance GPU-accelerated model serving
 - **Postman Postbot** - API testing automation framework
+- **🤖 NEW: Intelligent Router** - AI-powered request routing with cost optimization
+- **🤖 NEW: HumanLayer Service** - Human-in-the-loop capabilities for critical AI operations
+- **🤖 NEW: MLflow Integration** - Unified workflow orchestration between human approvals and ML experiments
+- **🤖 NEW: WorkflowAdapter** - Enterprise-grade workflow orchestration with saga patterns
+- **🤖 NEW: n8n AI Enhancements** - Intelligent workflow assistance and AI-powered automation
+- **🤖 NEW: Cost Optimization Engine** - Real-time cost tracking and optimization
+- **🤖 NEW: Enterprise Integration Bus** - Unified cross-system communication and authentication
 
-### **200+ AI Models & Providers**
+### **200+ AI Models & Providers** (Enhanced)
 - **Multi-provider routing**: OpenAI, Anthropic, Google, Azure AI, Cohere
-- **Custom model training** and fine-tuning capabilities  
+- **Custom model training** and fine-tuning capabilities
 - **Intelligent cost optimization**: 35-45% savings through smart routing
 - **GPU compute support** for self-hosted deployments
 - **Real-time model performance monitoring** and optimization
+- **🤖 NEW: Intelligent Router Service** - AI-powered request routing between Temporal, n8n, vLLM, LangGraph, CrewAI
+- **🤖 NEW: HumanLayer Integration** - Human-in-the-loop capabilities for critical AI decisions
+- **🤖 NEW: MLflow Workflow Orchestration** - Unified human-AI workflow management
+- **🤖 NEW: Enterprise Workflow Adapters** - Saga patterns, event sourcing, distributed transactions
 
-### **Workflow Automation Engine**
+### **Workflow Automation Engine** (Enhanced)
 - **Visual drag-and-drop builder** with React Flow interface
-- **26 integrated services** (Communication, Document AI, Web Automation)
+- **30+ integrated services** (Communication, Document AI, Web Automation, Enterprise Integration)
 - **200+ workflow templates** across industries
 - **Multi-channel communication** (SMS, WhatsApp, Email, Voice)
 - **Browser automation** with Playwright and Puppeteer
 - **Real-time collaboration** and version control
+- **🤖 NEW: n8n AI Enhancements** - Intelligent workflow assistance and AI-powered automation
+- **🤖 NEW: WorkflowAdapter Integration** - Enterprise-grade workflow orchestration
+- **🤖 NEW: HumanLayer Workflows** - Human-in-the-loop workflow approvals
 
 ### 🏗️ Analytics Architecture
 ```
@@ -155,6 +169,11 @@ The **Auterity Unified AI Platform** is a comprehensive enterprise solution that
 - **Multi-Agent Systems**: CrewAI for collaborative AI agents with hierarchical/democratic modes
 - **Model Specialization**: NeuroWeaver platform for automotive domain-specific AI models
 - **AI Orchestration**: MCP (Model Context Protocol) orchestrator for unified model management
+- **🤖 Intelligent Router**: Advanced AI model routing and load balancing system
+- **🤖 HumanLayer Service**: Human-in-the-loop AI workflow approvals and oversight
+- **🤖 MLflow Integration**: Machine learning lifecycle management and experiment tracking
+- **🤖 WorkflowAdapter**: Enterprise-grade workflow orchestration and adaptation
+- **🤖 Cost Optimization Engine**: AI-powered cost analysis and optimization for cloud resources
 - **Enhanced Automation**: n8n AI enhancements for intelligent workflow generation
 - **RelayCore**: Advanced AI routing and model management system
 - **High-Performance Inference**: vLLM service for GPU-accelerated AI model serving
@@ -177,6 +196,12 @@ Auterity Unified AI Platform
 ├── 🔧 Backend Services
 │   ├── API Gateway (apps/api)
 │   ├── RelayCore (systems/relaycore)
+│   ├── 🤖 Intelligent Router (services/intelligentRouter)
+│   ├── 🤖 HumanLayer Service (services/humanLayerService)
+│   ├── 🤖 MLflow Integration (services/humanlayerMLflowIntegration)
+│   ├── 🤖 WorkflowAdapter (services/WorkflowAdapter)
+│   ├── 🤖 n8n AI Enhancements (services/n8n-ai-enhancements)
+│   ├── 🤖 Cost Optimization Engine (services/costOptimizationEngine)
 │   └── Workflow Engine
 ├── 📦 Shared Libraries
 │   ├── Design System (packages/design-system)
