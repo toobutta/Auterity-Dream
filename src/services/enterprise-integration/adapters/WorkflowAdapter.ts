@@ -414,7 +414,6 @@ export class WorkflowAdapter {
     };
 
     // Deploy to Temporal (simplified)
-    console.log('Deploying workflow to Temporal:', temporalWorkflow);
   }
 
   private async deployToN8n(definition: WorkflowDefinition): Promise<void> {
@@ -432,7 +431,6 @@ export class WorkflowAdapter {
     };
 
     // Deploy to n8n (simplified)
-    console.log('Deploying workflow to n8n:', n8nWorkflow);
   }
 
   private async startTemporalWorkflow(
@@ -465,8 +463,6 @@ export class WorkflowAdapter {
     definition: WorkflowDefinition
   ): Promise<void> {
     // Start n8n workflow execution
-    execution.context.engineExecutionId = `n8n_${execution.id}`;
-    console.log('Starting n8n workflow execution:', execution.context.engineExecutionId);
   }
 
   private async updateTemporalStatus(execution: WorkflowExecution): Promise<void> {
@@ -489,7 +485,6 @@ export class WorkflowAdapter {
 
   private async updateN8nStatus(execution: WorkflowExecution): Promise<void> {
     // Update n8n workflow status
-    console.log('Updating n8n workflow status:', execution.id);
   }
 
   private async executeWorkflowStep(
@@ -556,20 +551,14 @@ export class WorkflowAdapter {
 
   private async executeAIGenerationActivity(step: WorkflowStep, execution: WorkflowExecution): Promise<any> {
     // Implement AI generation activity
-    console.log('Executing AI generation activity:', step.config);
-    return { generated: 'AI response' };
   }
 
   private async executeDataProcessingActivity(step: WorkflowStep, execution: WorkflowExecution): Promise<any> {
     // Implement data processing activity
-    console.log('Executing data processing activity:', step.config);
-    return { processed: true };
   }
 
   private async executeExternalAPIActivity(step: WorkflowStep, execution: WorkflowExecution): Promise<any> {
     // Implement external API call activity
-    console.log('Executing external API activity:', step.config);
-    return { apiResponse: 'success' };
   }
 
   private mapStepTypeToN8n(stepType: WorkflowStep['type']): string {

@@ -1,29 +1,68 @@
-# Deployment & Subscription Management Guide
 
-## Auterity Error-IQ Multi-Deployment Architecture
 
-### How the System Detects Subscription Types
+# Deployment & Subscription Management Guid
 
-## 🔍 SUBSCRIPTION DETECTION ARCHITECTURE
+e
 
-### **1. Environment-Based Detection**
+#
+
+# Auterity Error-IQ Multi-Deployment Architectu
+
+r
+
+e
+
+#
+
+## How the System Detects Subscription Type
+
+s
+
+#
+
+# 🔍 SUBSCRIPTION DETECTION ARCHITECTUR
+
+E
+
+#
+
+## **
+
+1. Environment-Based Detectio
+
+n
+
+* *
+
 ```typescript
 // Environment Variable Detection
 const detectDeploymentFromEnv = (): DeploymentType => {
   const envType = import.meta.env.VITE_DEPLOYMENT_TYPE as DeploymentType;
 
   if (envType && ['saas', 'white-label', 'self-hosted'].includes(envType)) {
+
     return envType;
   }
 
   // Fallback detection methods
   return detectDeploymentFromContext();
 };
+
 ```
 
-### **2. License Key Validation**
-```typescript
+#
+
+## **
+
+2. License Key Validation
+
+* *
+
+```
+
+typescript
 // License Key Detection for White-label/Self-hosted
+
 const validateLicenseKey = (key: string) => {
   const licenseKey = Array.from(licenseKeys.values())
     .find(lk => lk.key === key);
@@ -43,33 +82,59 @@ const validateLicenseKey = (key: string) => {
     subscription: licenseKey.subscriptionId
   };
 };
+
 ```
 
-### **3. Domain-Based Detection**
-```typescript
+#
+
+## **
+
+3. Domain-Based Detectio
+
+n
+
+* *
+
+```
+
+typescript
 // Domain Pattern Detection for White-label
+
 const detectDeploymentFromDomain = (): DeploymentType => {
   const hostname = window.location.hostname;
 
   // SaaS domains
   if (hostname === 'app.auterity.com' ||
       hostname.includes('auterity-saas')) {
+
     return 'saas';
   }
 
   // White-label pattern (custom domains)
+
   if (hostname !== 'localhost' &&
       !hostname.includes('auterity.com')) {
     return 'white-label';
+
   }
 
   // Default to SaaS
   return 'saas';
 };
+
 ```
 
-### **4. Subscription Context Provider**
-```typescript
+#
+
+## **
+
+4. Subscription Context Provider
+
+* *
+
+```
+
+typescript
 // React Context for Subscription State
 const SubscriptionContext = React.createContext<SubscriptionContextType | null>(null);
 
@@ -81,10 +146,16 @@ export const FeatureGateProvider: React.FC<FeatureGateProviderProps> = ({ childr
   useEffect(() => {
     const loadSubscription = async () => {
       try {
-        // 1. Check environment variables
+        //
+
+ 1. Check environment variables
+
         const envType = import.meta.env.VITE_DEPLOYMENT_TYPE;
 
-        // 2. Check license key from localStorage/API
+        //
+
+ 2. Check license key from localStorage/API
+
         const licenseKey = localStorage.getItem('license_key');
         if (licenseKey) {
           const validation = subscriptionService.validateLicenseKey(licenseKey);
@@ -96,10 +167,18 @@ export const FeatureGateProvider: React.FC<FeatureGateProviderProps> = ({ childr
           }
         }
 
-        // 3. Check domain-based detection
+        //
+
+ 3. Check domain-based detectio
+
+n
+
         const domainType = detectDeploymentFromDomain();
 
-        // 4. Load appropriate subscription plan
+        //
+
+ 4. Load appropriate subscription plan
+
         const sub = subscriptionService.getCurrentSubscription();
         setSubscription(sub);
         setPlan(subscriptionService.getCurrentPlan());
@@ -116,14 +195,26 @@ export const FeatureGateProvider: React.FC<FeatureGateProviderProps> = ({ childr
 
   // ... rest of context implementation
 };
+
 ```
 
----
+--
 
-## 🌐 DEPLOYMENT TYPE CONFIGURATIONS
+- #
 
-### **SaaS Enterprise Deployment**
-```json
+# 🌐 DEPLOYMENT TYPE CONFIGURATION
+
+S
+
+#
+
+## **SaaS Enterprise Deployment
+
+* *
+
+```
+
+json
 // .env configuration
 {
   "VITE_DEPLOYMENT_TYPE": "saas",
@@ -134,10 +225,14 @@ export const FeatureGateProvider: React.FC<FeatureGateProviderProps> = ({ childr
     "whiteLabel": false
   }
 }
+
 ```
 
-```typescript
+```
+
+typescript
 // SaaS-specific features
+
 const saasFeatures = {
   multiTenant: true,
   sharedInfrastructure: true,
@@ -146,18 +241,34 @@ const saasFeatures = {
   complianceReporting: true,
   backupAndRecovery: true
 };
+
 ```
 
-### **White-label Deployment**
-```json
+#
+
+## **White-label Deployment
+
+* *
+
+```
+
+json
 // Client-specific configuration
+
 {
   "VITE_DEPLOYMENT_TYPE": "white-label",
+
   "VITE_CLIENT_NAME": "Acme Corp",
   "VITE_CLIENT_DOMAIN": "workflow.acme.com",
   "VITE_BRAND_COLORS": {
-    "primary": "#FF6B35",
-    "secondary": "#004E89"
+    "primary": "
+
+#FF6B35",
+
+    "secondary": "
+
+#004E89"
+
   },
   "VITE_CUSTOM_FEATURES": {
     "apiIntegrations": ["salesforce", "sap"],
@@ -165,36 +276,65 @@ const saasFeatures = {
     "whiteLabelSupport": true
   }
 }
+
 ```
 
-```typescript
+```
+
+typescript
 // White-label theme configuration
+
 const whiteLabelTheme = {
   logo: '/white-label/logo.png',
+
   favicon: '/white-label/favicon.ico',
+
   colors: {
-    primary: '#FF6B35',
-    secondary: '#004E89',
-    accent: '#00B4D8'
+    primary: '
+
+#FF6B35',
+
+    secondary: '
+
+#004E89',
+
+    accent: '
+
+#00B4D8'
+
   },
   fonts: {
     heading: 'CustomFont, sans-serif',
+
     body: 'CustomFont, sans-serif'
+
   },
   navigation: {
     hideAuterityBranding: true,
     customMenuItems: ['client-dashboard', 'client-reports']
+
   }
 };
+
 ```
 
-### **Self-hosted Deployment**
-```json
+#
+
+## **Self-hosted Deployment
+
+* *
+
+```
+
+json
 // Self-hosted configuration
+
 {
   "VITE_DEPLOYMENT_TYPE": "self-hosted",
+
   "VITE_API_BASE_URL": "http://localhost:3001",
   "VITE_LICENSE_KEY": "XXXX-XXXX-XXXX-XXXX",
+
   "VITE_OFFLINE_MODE": true,
   "VITE_CUSTOM_CONFIG": {
     "gpuSupport": true,
@@ -203,10 +343,14 @@ const whiteLabelTheme = {
     "airGapped": false
   }
 }
+
 ```
 
-```typescript
+```
+
+typescript
 // Self-hosted feature flags
+
 const selfHostedFeatures = {
   localDeployment: true,
   customIntegrations: true,
@@ -215,15 +359,28 @@ const selfHostedFeatures = {
   customSecurity: true,
   fullControl: true
 };
+
 ```
 
----
+--
 
-## 🔑 LICENSE KEY MANAGEMENT
+- #
 
-### **License Key Generation**
-```typescript
+# 🔑 LICENSE KEY MANAGEMEN
+
+T
+
+#
+
+## **License Key Generation
+
+* *
+
+```
+
+typescript
 // Server-side license generation
+
 const generateLicenseKey = (subscriptionData: SubscriptionData): string => {
   const payload = {
     subscriptionId: subscriptionData.id,
@@ -232,33 +389,54 @@ const generateLicenseKey = (subscriptionData: SubscriptionData): string => {
     expiresAt: subscriptionData.expiresAt,
     issuedAt: new Date(),
     version: '1.0'
+
   };
 
   // Encrypt payload
   const encrypted = encrypt(JSON.stringify(payload), process.env.LICENSE_SECRET);
 
   // Generate human-readable key
+
   const segments = [];
   for (let i = 0; i < 4; i++) {
+
     let segment = '';
     for (let j = 0; j < 5; j++) {
+
       segment += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(
-        Math.floor(Math.random() * 36)
+
+        Math.floor(Math.random()
+
+ * 36)
+
       );
     }
     segments.push(segment);
   }
 
   return segments.join('-');
+
 };
+
 ```
 
-### **License Validation Flow**
-```typescript
+#
+
+## **License Validation Flow
+
+* *
+
+```
+
+typescript
 // Client-side license validation
+
 const validateLicenseFlow = async (licenseKey: string) => {
   try {
-    // 1. Check local cache first
+    //
+
+ 1. Check local cache first
+
     const cached = localStorage.getItem(`license_${licenseKey}`);
     if (cached) {
       const parsed = JSON.parse(cached);
@@ -267,10 +445,14 @@ const validateLicenseFlow = async (licenseKey: string) => {
       }
     }
 
-    // 2. Validate with server
+    //
+
+ 2. Validate with server
+
     const response = await fetch('/api/license/validate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+
       body: JSON.stringify({ licenseKey })
     });
 
@@ -289,22 +471,44 @@ const validateLicenseFlow = async (licenseKey: string) => {
     throw error;
   }
 };
+
 ```
 
----
+--
 
-## 🎯 FEATURE GATING IMPLEMENTATION
+- #
 
-### **Component-Level Feature Gating**
-```tsx
+# 🎯 FEATURE GATING IMPLEMENTATIO
+
+N
+
+#
+
+## **Component-Level Feature Gating
+
+* *
+
+```
+
+tsx
 // Feature Gate Component Usage
 const MyComponent = () => {
   return (
     <div>
-      {/* Always available feature */}
+      {/
+
+* Always available feature */}
+
       <BasicWorkflowBuilder />
 
-      {/* Professional+ feature */}
+      {/
+
+* Professiona
+
+l
+
++ feature */}
+
       <FeatureGate
         feature="temporalWorkflows"
         fallback={
@@ -318,21 +522,35 @@ const MyComponent = () => {
         <TemporalWorkflowManager />
       </FeatureGate>
 
-      {/* Enterprise-only feature */}
+      {/
+
+* Enterprise-only feature */}
+
       <FeatureGate
         feature="novitaAI"
         showUpgradePrompt={true}
-        upgradeMessage="Access 200+ AI models with Novita AI"
+        upgradeMessage="Access 200
+
++ AI models with Novita AI"
+
       >
         <NovitaAIModelBrowser />
       </FeatureGate>
     </div>
   );
 };
+
 ```
 
-### **API-Level Feature Gating**
-```typescript
+#
+
+## **API-Level Feature Gating
+
+* *
+
+```
+
+typescript
 // Backend API feature gating
 const featureGatedAPI = (requiredFeature: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -363,35 +581,70 @@ app.post('/api/workflows/temporal',
   featureGatedAPI('temporalWorkflows'),
   createTemporalWorkflow
 );
+
 ```
 
-### **Database-Level Feature Gating**
-```sql
--- Feature-flagged database queries
-SELECT * FROM ai_models
+#
+
+## **Database-Level Feature Gating
+
+* *
+
+```
+
+sql
+- - Feature-flagged database queries
+
+SELECT
+
+ * FROM ai_models
+
 WHERE deployment_type = $1
   AND ($2 = 'enterprise' OR is_enterprise_only = false)
   AND ($2 = 'professional' OR NOT requires_professional)
 ORDER BY name;
 
--- Usage-based limits
+- - Usage-based limits
+
 SELECT COUNT(*) as usage_count
+
 FROM api_requests
 WHERE subscription_id = $1
-  AND created_at >= CURRENT_DATE - INTERVAL '30 days'
-HAVING COUNT(*) < (SELECT api_limit FROM subscriptions WHERE id = $1);
+  AND created_at >= CURRENT_DATE
+
+ - INTERVAL '30 days'
+
+HAVING COUNT(*) < (SELECT api_limit FROM subscriptions WHERE id = $1)
+
+;
+
 ```
 
----
+--
 
-## 🔄 SUBSCRIPTION MANAGEMENT WORKFLOWS
+- #
 
-### **Plan Upgrade Flow**
-```typescript
+# 🔄 SUBSCRIPTION MANAGEMENT WORKFLOW
+
+S
+
+#
+
+## **Plan Upgrade Flow
+
+* *
+
+```
+
+typescript
 // Client-side upgrade flow
+
 const handlePlanUpgrade = async (targetPlanId: string) => {
   try {
-    // 1. Validate upgrade eligibility
+    //
+
+ 1. Validate upgrade eligibility
+
     const currentPlan = subscriptionService.getCurrentPlan();
     const canUpgrade = validateUpgradePath(currentPlan.id, targetPlanId);
 
@@ -399,30 +652,48 @@ const handlePlanUpgrade = async (targetPlanId: string) => {
       throw new Error('Invalid upgrade path');
     }
 
-    // 2. Calculate prorated amount
+    //
+
+ 2. Calculate prorated amount
+
     const proration = calculateProration(currentPlan, targetPlanId);
 
-    // 3. Process payment (if required)
+    //
+
+ 3. Process payment (if required)
+
     const paymentIntent = await createPaymentIntent({
       amount: proration.amount,
       planId: targetPlanId
     });
 
-    // 4. Confirm upgrade
+    //
+
+ 4. Confirm upgrade
+
     const upgradeResult = await subscriptionService.upgradeSubscription(targetPlanId);
 
     if (upgradeResult) {
-      // 5. Update local state
+      //
+
+ 5. Update local state
+
       await refreshSubscription();
 
-      // 6. Show success message
+      //
+
+ 6. Show success message
+
       showNotification({
         type: 'success',
         title: 'Upgrade Successful',
         message: `Successfully upgraded to ${targetPlanId}`
       });
 
-      // 7. Redirect to new features
+      //
+
+ 7. Redirect to new features
+
       navigate('/welcome/upgrade');
     }
 
@@ -434,38 +705,68 @@ const handlePlanUpgrade = async (targetPlanId: string) => {
     });
   }
 };
+
 ```
 
-### **License Key Activation Flow**
-```typescript
+#
+
+## **License Key Activation Flow
+
+* *
+
+```
+
+typescript
 // White-label license activation
+
 const activateLicense = async (licenseKey: string) => {
   try {
-    // 1. Validate license key format
+    //
+
+ 1. Validate license key format
+
     if (!isValidLicenseFormat(licenseKey)) {
       throw new Error('Invalid license key format');
     }
 
-    // 2. Contact license server
+    //
+
+ 2. Contact license server
+
     const validation = await validateLicenseKey(licenseKey);
 
     if (!validation.isValid) {
       throw new Error(validation.error);
     }
 
-    // 3. Store license locally
+    //
+
+ 3. Store license locally
+
     localStorage.setItem('license_key', licenseKey);
     localStorage.setItem('license_data', JSON.stringify(validation));
 
-    // 4. Update subscription
+    //
+
+ 4. Update subscription
+
     await subscriptionService.loadSubscriptionByLicense(validation);
 
-    // 5. Apply white-label theming
+    //
+
+ 5. Apply white-label themin
+
+g
+
     if (validation.deploymentType === 'white-label') {
+
       await applyWhiteLabelTheme(validation.branding);
     }
 
-    // 6. Refresh application
+    //
+
+ 6. Refresh application
+
     window.location.reload();
 
   } catch (error) {
@@ -473,15 +774,28 @@ const activateLicense = async (licenseKey: string) => {
     throw error;
   }
 };
+
 ```
 
----
+--
 
-## 📊 USAGE TRACKING & BILLING
+- #
 
-### **Usage-Based Billing**
-```typescript
+# 📊 USAGE TRACKING & BILLIN
+
+G
+
+#
+
+## **Usage-Based Billing
+
+* *
+
+```
+
+typescript
 // Real-time usage tracking
+
 const trackUsage = (event: UsageEvent) => {
   const subscription = subscriptionService.getCurrentSubscription();
 
@@ -513,10 +827,18 @@ const trackUsage = (event: UsageEvent) => {
 setInterval(() => {
   syncUsageToServer();
 }, 60000); // Every minute
+
 ```
 
-### **Billing Integration**
-```typescript
+#
+
+## **Billing Integration
+
+* *
+
+```
+
+typescript
 // Stripe integration for SaaS billing
 const createSubscription = async (planId: string, paymentMethod: string) => {
   const plan = subscriptionService.getPlan(planId);
@@ -530,7 +852,10 @@ const createSubscription = async (planId: string, paymentMethod: string) => {
           name: plan.name,
           description: plan.description
         },
-        unit_amount: plan.pricing.monthly * 100, // Convert to cents
+        unit_amount: plan.pricing.monthly
+
+ * 100, // Convert to cents
+
         recurring: {
           interval: 'month'
         }
@@ -542,14 +867,26 @@ const createSubscription = async (planId: string, paymentMethod: string) => {
 
   return subscription;
 };
+
 ```
 
----
+--
 
-## 🚨 MONITORING & ALERTS
+- #
 
-### **Subscription Health Monitoring**
-```typescript
+# 🚨 MONITORING & ALERT
+
+S
+
+#
+
+## **Subscription Health Monitoring
+
+* *
+
+```
+
+typescript
 // Proactive subscription monitoring
 const monitorSubscriptionHealth = () => {
   const subscription = subscriptionService.getCurrentSubscription();
@@ -581,7 +918,22 @@ const monitorSubscriptionHealth = () => {
   // Check renewal dates
   if (health.nextRenewal) {
     const daysUntilRenewal = Math.ceil(
-      (health.nextRenewal.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      (health.nextRenewal.getTime()
+
+ - Date.now()) / (100
+
+0
+
+ * 6
+
+0
+
+ * 6
+
+0
+
+ * 24)
+
     );
 
     if (daysUntilRenewal <= 30) {
@@ -595,15 +947,39 @@ const monitorSubscriptionHealth = () => {
 };
 
 // Run health checks every 6 hours
-setInterval(monitorSubscriptionHealth, 6 * 60 * 60 * 1000);
+setInterval(monitorSubscriptionHealth, 6
+
+ * 6
+
+0
+
+ * 6
+
+0
+
+ * 1000)
+
+;
+
 ```
 
----
+--
 
-## 🔐 SECURITY CONSIDERATIONS
+- #
 
-### **License Key Security**
-```typescript
+# 🔐 SECURITY CONSIDERATION
+
+S
+
+#
+
+## **License Key Security
+
+* *
+
+```
+
+typescript
 // Secure license key storage
 const secureLicenseStorage = {
   store: (key: string, data: any) => {
@@ -628,11 +1004,20 @@ const secureLicenseStorage = {
     localStorage.removeItem(`license_${hash(key)}`);
   }
 };
+
 ```
 
-### **Feature Access Control**
-```typescript
+#
+
+## **Feature Access Control
+
+* *
+
+```
+
+typescript
 // Server-side access control
+
 const enforceFeatureAccess = (userId: string, feature: string) => {
   const subscription = getUserSubscription(userId);
   const plan = subscriptionService.getCurrentPlan();
@@ -654,18 +1039,32 @@ const enforceFeatureAccess = (userId: string, feature: string) => {
 
   return true;
 };
+
 ```
 
----
+--
 
-## 📱 DEPLOYMENT-SPECIFIC UI/UX
+- #
 
-### **SaaS Enterprise UI**
+# 📱 DEPLOYMENT-SPECIFIC UI/
+
+U
+
+X
+
+#
+
+## **SaaS Enterprise UI
+
+* *
+
 ```
+
 ┌─ SaaS Dashboard ──────────────────────────────────────┐
 │  🏢 Enterprise Features    ⚙️ Account Settings         │
 │                                                             │
 │  ┌─ Multi-tenant Overview ──────────────────────────────┐   │
+
 │  │  🏢 Organizations: 15    👥 Users: 450               │   │
 │  │  📊 Total Workflows: 2,340    🎯 Success Rate: 98%   │   │
 │  └─────────────────────────────────────────────────────┘   │
@@ -676,10 +1075,17 @@ const enforceFeatureAccess = (userId: string, feature: string) => {
 │  │  ✅ Novita AI            ✅ Advanced Analytics        │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
+
 ```
 
-### **White-label UI**
+#
+
+## **White-label UI
+
+* *
+
 ```
+
 ┌─ Acme Corp Workflow Studio ─────────────────────────────┐
 │  🏢 Acme Corp    ⚙️ Settings    📞 Support               │
 │                                                             │
@@ -690,14 +1096,24 @@ const enforceFeatureAccess = (userId: string, feature: string) => {
 │                                                             │
 │  ┌─ Branded Features ────────────────────────────────────┐   │
 │  │  ✅ Custom Integrations   ✅ White-label Support      │   │
+
 │  │  ✅ Client-specific Models ✅ Branded Analytics       │   │
+
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
+
 ```
 
-### **Self-hosted UI**
+#
+
+## **Self-hosted UI
+
+* *
+
 ```
+
 ┌─ Self-hosted Deployment ────────────────────────────────┐
+
 │  🏠 Local Instance    ⚙️ Admin    🔧 Maintenance         │
 │                                                             │
 │  ┌─ System Health ──────────────────────────────────────┐   │
@@ -710,6 +1126,9 @@ const enforceFeatureAccess = (userId: string, feature: string) => {
 │  │  ✅ Offline Mode        ✅ Full Data Control          │   │
 │  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
+
 ```
 
-This comprehensive deployment and subscription guide demonstrates how the Auterity Error-IQ platform intelligently detects and adapts to different deployment models while maintaining consistent feature availability and user experience across SaaS, white-label, and self-hosted environments.
+This comprehensive deployment and subscription guide demonstrates how the Auterity Error-IQ platform intelligently detects and adapts to different deployment models while maintaining consistent feature availability and user experience across SaaS, white-label, and self-hosted environments
+
+.

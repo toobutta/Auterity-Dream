@@ -1,98 +1,311 @@
-# Auterity Error-IQ Frontend
+
+
+# Auterity Error-IQ Fronte
+
+n
+
+d
 
 A modern React application for error intelligence and quality management, built with TypeScript, Tailwind CSS, and Vite.
 
-## 🚀 Features
+#
 
-- **Modern React 18** with TypeScript for type safety
-- **Tailwind CSS** for responsive, utility-first styling
-- **Vite** for fast development and optimized builds
-- **Comprehensive API client** with error handling and authentication
-- **Reusable UI components** with consistent design patterns
-- **Error boundary** for graceful error handling
-- **Custom hooks** for API calls and state management
-- **Development environment** with Docker and dev containers
+# 🚀 Feature
 
-## 📁 Project Structure
+s
+
+- **Modern React 18
+
+* * with TypeScript for type safet
+
+y
+
+- **Tailwind CSS
+
+* * for responsive, utility-first stylin
+
+g
+
+- **Vite
+
+* * for fast development and optimized build
+
+s
+
+- **Comprehensive API client
+
+* * with error handling and authenticatio
+
+n
+
+- **Reusable UI components
+
+* * with consistent design pattern
+
+s
+
+- **Error boundary
+
+* * for graceful error handlin
+
+g
+
+- **Custom hooks
+
+* * for API calls and state managemen
+
+t
+
+- **Development environment
+
+* * with Docker and dev container
+
+s
+
+#
+
+# 📁 Project Structur
+
+e
 
 ```
 frontend/
 ├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── templates/       # Page templates (Dashboard, Form, List)
-│   │   └── ErrorBoundary.tsx # Error boundary component
-│   ├── hooks/               # Custom React hooks
-│   │   └── useApi.ts        # API hooks (useApi, useAuth, useFileUpload)
-│   ├── lib/                 # Core libraries
-│   │   └── api-client.ts    # Standardized API client
-│   ├── config/              # Configuration files
-│   │   └── constants.ts     # App constants and configuration
-│   ├── utils/               # Utility functions
-│   │   └── common.ts        # Common helper functions
-│   └── types/               # TypeScript type definitions
-├── .devcontainer/           # Development container configuration
-├── .env.example            # Environment variables template
-└── package.json            # Dependencies and scripts
+│   ├── components/
+
+# Reusable UI components
+
+│   │   ├── templates/
+
+# Page templates (Dashboard, Form, List)
+
+│   │   └── ErrorBoundary.tsx
+
+# Error boundary component
+
+│   ├── hooks/
+
+# Custom React hooks
+
+│   │   └── useApi.ts
+
+# API hooks (useApi, useAuth, useFileUpload)
+
+│   ├── lib/
+
+# Core libraries
+
+│   │   └── api-client.ts
+
+
+
+# Standardized API client
+
+│   ├── config/
+
+# Configuration files
+
+│   │   └── constants.ts
+
+# App constants and configuration
+
+│   ├── utils/
+
+# Utility functions
+
+│   │   └── common.ts
+
+# Common helper functions
+
+│   └── types/
+
+# TypeScript type definitions
+
+├── .devcontainer/
+
+# Development container configuration
+
+├── .env.example
+
+# Environment variables template
+
+└── package.json
+
+# Dependencies and scripts
+
 ```
 
-## 🛠️ Development Setup
+#
 
-### Prerequisites
+# 🛠️ Development Setu
 
-- Node.js 18+
-- npm or yarn
-- Docker (for dev containers)
+p
 
-### Installation
+#
 
-1. **Clone the repository**
+## Prerequisite
 
-   ```bash
+s
+
+- Node.js 1
+
+8
+
++ - npm or yar
+
+n
+
+- Docker (for dev containers
+
+)
+
+#
+
+## Installatio
+
+n
+
+1. **Clone the repositor
+
+y
+
+* *
+
+
+
+```
+
+bash
    git clone <repository-url>
+
    cd auterity-error-iq/frontend
-   ```
 
-2. **Install dependencies**
 
-   ```bash
+
+```
+
+2. **Install dependencie
+
+s
+
+* *
+
+
+
+```
+
+bash
    npm install
-   ```
 
-3. **Environment setup**
 
-   ```bash
+```
+
+3. **Environment setu
+
+p
+
+* *
+
+
+
+```
+
+bash
    cp .env.example .env
-   # Edit .env with your configuration
-   ```
 
-4. **Start development server**
 
-   ```bash
+# Edit .env with your configuration
+
+
+
+```
+
+4. **Start development serve
+
+r
+
+* *
+
+
+
+```
+
+bash
    npm run dev
-   ```
 
-### Development with Dev Containers
+
+```
+
+#
+
+## Development with Dev Container
+
+s
 
 For a consistent development environment:
 
-1. **Open in VS Code**
-2. **Install Dev Containers extension**
-3. **Reopen in container** (Command Palette: "Dev Containers: Reopen in Container")
+1. **Open in VS Cod
 
-## 📚 Core Components
+e
 
-### API Client (`src/lib/api-client.ts`)
+* *
+
+2. **Install Dev Containers extensio
+
+n
+
+* *
+
+3. **Reopen in containe
+
+r
+
+* * (Command Palette: "Dev Containers: Reopen in Container"
+
+)
+
+#
+
+# 📚 Core Component
+
+s
+
+#
+
+## API Client (`src/lib/api-client.ts
+
+`
+
+)
 
 Standardized HTTP client with:
 
-- Automatic error handling
-- Authentication support
-- Request/response interceptors
-- TypeScript support
-- Timeout configuration
+- Automatic error handlin
 
-```typescript
-import { apiClient } from '../lib/api-client';
+g
+
+- Authentication suppor
+
+t
+
+- Request/response interceptor
+
+s
+
+- TypeScript suppor
+
+t
+
+- Timeout configuratio
+
+n
+
+```
+
+typescript
+import { apiClient } from '../lib/api-client'
+
+;
 
 // GET request
 const response = await apiClient.get('/users');
@@ -101,17 +314,44 @@ const response = await apiClient.get('/users');
 const newUser = await apiClient.post('/users', {
   body: { name: 'John Doe', email: 'john@example.com' }
 });
+
 ```
 
-### Custom Hooks (`src/hooks/useApi.ts`)
+#
+
+## Custom Hooks (`src/hooks/useApi.ts`
+
+)
 
 React hooks for API interactions:
 
-- `useApi` - Generic API hook with loading states
-- `useAuth` - Authentication management
-- `useFileUpload` - File upload handling
+- `useApi
 
-```typescript
+`
+
+ - Generic API hook with loading state
+
+s
+
+- `useAuth
+
+`
+
+ - Authentication managemen
+
+t
+
+- `useFileUpload
+
+`
+
+ - File upload handlin
+
+g
+
+```
+
+typescript
 import { useApi } from '../hooks/useApi';
 
 function UserList() {
@@ -130,18 +370,52 @@ function UserList() {
     </ul>
   );
 }
+
 ```
 
-### Page Templates (`src/components/templates/`)
+#
+
+## Page Templates (`src/components/templates/`
+
+)
 
 Reusable page layouts:
 
-- `PageTemplate` - Basic page structure
-- `DashboardTemplate` - Dashboard with stats cards
-- `FormTemplate` - Form layout with validation
-- `ListTemplate` - List/table layout
+- `PageTemplate
 
-```typescript
+`
+
+ - Basic page structur
+
+e
+
+- `DashboardTemplate
+
+`
+
+ - Dashboard with stats card
+
+s
+
+- `FormTemplate
+
+`
+
+ - Form layout with validatio
+
+n
+
+- `ListTemplate
+
+`
+
+ - List/table layou
+
+t
+
+```
+
+typescript
 import { DashboardTemplate } from '../components/templates/PageTemplates';
 
 function Dashboard() {
@@ -154,23 +428,47 @@ function Dashboard() {
         { label: 'Pending', value: '247' }
       ]}
     >
-      {/* Dashboard content */}
+      {/
+
+* Dashboard content */}
+
     </DashboardTemplate>
   );
 }
+
 ```
 
-### Error Boundary (`src/components/ErrorBoundary.tsx`)
+#
+
+## Error Boundary (`src/components/ErrorBoundary.tsx`
+
+)
 
 Comprehensive error handling:
 
-- Catches React errors
-- User-friendly error display
-- Development error details
-- Retry functionality
-- Error reporting integration
+- Catches React error
 
-```typescript
+s
+
+- User-friendly error displa
+
+y
+
+- Development error detail
+
+s
+
+- Retry functionalit
+
+y
+
+- Error reporting integratio
+
+n
+
+```
+
+typescript
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
 function App() {
@@ -180,95 +478,226 @@ function App() {
     </ErrorBoundary>
   );
 }
+
 ```
 
-## 🔧 Configuration
+#
 
-### Environment Variables
+# 🔧 Configuratio
+
+n
+
+#
+
+## Environment Variable
+
+s
 
 | Variable | Description | Default |
 |----------|-------------|---------|
+
 | `VITE_API_BASE_URL` | API base URL | `/api` |
 | `VITE_API_TIMEOUT` | Request timeout (ms) | `30000` |
 | `VITE_APP_NAME` | Application name | `Auterity Error-IQ` |
+
 | `VITE_ENABLE_DEBUG_MODE` | Enable debug features | `true` |
 
-### Constants (`src/config/constants.ts`)
+#
+
+## Constants (`src/config/constants.ts`
+
+)
 
 Centralized configuration for:
 
-- API endpoints
-- HTTP status codes
-- UI constants
-- Validation rules
-- File upload limits
+- API endpoint
 
-## 🧪 Testing
+s
 
-```bash
+- HTTP status code
+
+s
+
+- UI constant
+
+s
+
+- Validation rule
+
+s
+
+- File upload limit
+
+s
+
+#
+
+# 🧪 Testin
+
+g
+
+```
+
+bash
+
 # Run tests
+
 npm run test
 
 # Run tests with coverage
+
 npm run test:coverage
 
 # Run E2E tests
+
 npm run test:e2e
+
 ```
 
-## 📦 Build & Deployment
+#
 
-```bash
+# 📦 Build & Deploymen
+
+t
+
+```
+
+bash
+
 # Build for production
+
 npm run build
 
 # Preview production build
+
 npm run preview
 
 # Type checking
-npm run type-check
+
+npm run type-chec
+
+k
 
 # Linting
+
 npm run lint
+
 ```
 
-## 🔒 Security
+#
 
-- **Authentication**: JWT-based auth with refresh tokens
-- **API Security**: Request/response sanitization
-- **Error Handling**: Secure error messages (no sensitive data leakage)
-- **Input Validation**: Client and server-side validation
-- **HTTPS**: Enforced in production
+# 🔒 Securit
 
-## 📈 Performance
+y
 
-- **Code Splitting**: Route-based and component-based splitting
-- **Lazy Loading**: Components and routes loaded on demand
-- **Image Optimization**: Automatic image optimization and WebP support
-- **Bundle Analysis**: Webpack bundle analyzer integration
-- **Caching**: Aggressive caching strategies for static assets
+- **Authentication**: JWT-based auth with refresh token
 
-## 🤝 Contributing
+s
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Ensure linting passes
-6. Submit a pull request
+- **API Security**: Request/response sanitizatio
 
-## 📄 License
+n
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- **Error Handling**: Secure error messages (no sensitive data leakage
 
-## 🆘 Support
+)
+
+- **Input Validation**: Client and server-side validatio
+
+n
+
+- **HTTPS**: Enforced in productio
+
+n
+
+#
+
+# 📈 Performanc
+
+e
+
+- **Code Splitting**: Route-based and component-based splittin
+
+g
+
+- **Lazy Loading**: Components and routes loaded on deman
+
+d
+
+- **Image Optimization**: Automatic image optimization and WebP suppor
+
+t
+
+- **Bundle Analysis**: Webpack bundle analyzer integratio
+
+n
+
+- **Caching**: Aggressive caching strategies for static asset
+
+s
+
+#
+
+# 🤝 Contributin
+
+g
+
+1. Fork the repositor
+
+y
+
+2. Create a feature branc
+
+h
+
+3. Make your change
+
+s
+
+4. Add tests if applicabl
+
+e
+
+5. Ensure linting passe
+
+s
+
+6. Submit a pull reques
+
+t
+
+#
+
+# 📄 Licens
+
+e
+
+This project is licensed under the MIT License
+
+ - see the LICENSE file for details
+
+.
+
+#
+
+# 🆘 Suppor
+
+t
 
 For support and questions:
 
-- Create an issue in the repository
-- Check the documentation
-- Contact the development team
+- Create an issue in the repositor
 
----
+y
 
-Built with ❤️ using React, TypeScript, and modern web technologies.
+- Check the documentatio
+
+n
+
+- Contact the development tea
+
+m
+
+--
+
+- Built with ❤️ using React, TypeScript, and modern web technologies.

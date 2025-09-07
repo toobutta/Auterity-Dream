@@ -1,22 +1,58 @@
-# 🐙 GitHub Integration Documentation
 
-## Overview
+
+# 🐙 GitHub Integration Documentatio
+
+n
+
+#
+
+# Overvie
+
+w
 
 Documentation of authentication, PR automation, webhooks, and workflow integrations.
 
-## Components
+#
 
-- Frontend services: `src/services/githubIntegration.ts`
-- Backend: webhook handler, OAuth app, workflow triggers
+# Component
 
-## Capabilities
+s
 
-- OAuth-based sign-in and token storage
-- Repo listing and file operations
-- PR creation, comments, checks integration
-- Webhook ingestion for events (push, PR, issues)
+- Frontend services: `src/services/githubIntegration.ts
 
-## Flows
+`
+
+- Backend: webhook handler, OAuth app, workflow trigger
+
+s
+
+#
+
+# Capabilitie
+
+s
+
+- OAuth-based sign-in and token storag
+
+e
+
+- Repo listing and file operation
+
+s
+
+- PR creation, comments, checks integratio
+
+n
+
+- Webhook ingestion for events (push, PR, issues
+
+)
+
+#
+
+# Flow
+
+s
 
 ```mermaid
 sequenceDiagram
@@ -25,16 +61,32 @@ sequenceDiagram
   participant API as Backend
 
   UI->>GH: OAuth authorize
+
   GH-->>API: Code exchange
+
   API-->>UI: Access token (server-held)
+
   UI->>API: Create PR / comment / fetch repos
+
   GH->>API: Webhook events
-  API-->>UI: Realtime updates
+
+  API-->>UI: Realtime update
+
+s
+
 ```
 
-## Security
+#
 
-- Store tokens server-side; minimal scopes
-- Verify webhook signatures
+# Securit
 
+y
+
+- Store tokens server-side; minimal scope
+
+s
+
+- Verify webhook signature
+
+s
 

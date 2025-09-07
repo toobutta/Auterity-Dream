@@ -1,20 +1,57 @@
-# 🔌 **Model Hub API Specification**
 
-## **Overview**
+
+# 🔌 **Model Hub API Specificatio
+
+n
+
+* *
+
+#
+
+# **Overvie
+
+w
+
+* *
 
 This document defines the REST API endpoints and data models for the Auterity Model Hub. The API is built on REST principles with JSON payloads and follows standard HTTP status codes.
 
-**Base URL:** `/api/v1/modelhub`
+**Base URL:
 
-**Authentication:** JWT Bearer tokens required for all endpoints
+* * `/api/v1/modelhub
 
----
+`
 
-## **📋 Data Models**
+**Authentication:
 
-### **Core Models**
+* * JWT Bearer tokens required for all endpoint
 
-#### **Model Registry**
+s
+
+--
+
+- #
+
+# **📋 Data Model
+
+s
+
+* *
+
+#
+
+## **Core Model
+
+s
+
+* *
+
+#
+
+### **Model Registry
+
+* *
+
 ```typescript
 interface ModelRegistry {
   id: string;
@@ -59,10 +96,18 @@ interface ModelRegistry {
   updatedAt: Date;
   lastValidatedAt: Date;
 }
+
 ```
 
-#### **Deployment Configuration**
-```typescript
+#
+
+### **Deployment Configuration
+
+* *
+
+```
+
+typescript
 interface DeploymentConfig {
   id: string;
   modelId: string;
@@ -76,6 +121,7 @@ interface DeploymentConfig {
       cpu: string;        // e.g., "2", "500m"
       memory: string;     // e.g., "4Gi", "512Mi"
       gpu?: string;       // e.g., "1", "nvidia-tesla-t4"
+
     };
     scaling: {
       minReplicas: number;
@@ -123,10 +169,18 @@ interface DeploymentConfig {
     };
   };
 }
+
 ```
 
-#### **Performance Metrics**
-```typescript
+#
+
+### **Performance Metrics
+
+* *
+
+```
+
+typescript
 interface PerformanceMetrics {
   modelId: string;
   deploymentId: string;
@@ -204,23 +258,49 @@ interface PerformanceMetrics {
     errors: number;
   }>;
 }
+
 ```
 
----
+--
 
-## **🔗 API Endpoints**
+- #
 
-### **1. Model Catalog**
+# **🔗 API Endpoint
 
-#### **GET /models**
+s
+
+* *
+
+#
+
+## **
+
+1. Model Catalo
+
+g
+
+* *
+
+#
+
+### **GET /models
+
+* *
+
 Get paginated list of available models with filtering and search.
 
-**Query Parameters:**
-```typescript
+**Query Parameters:
+
+* *
+
+```
+
+typescript
 interface CatalogQuery {
   page?: number;              // Default: 1
   limit?: number;             // Default: 20, Max: 100
   search?: string;            // Full-text search
+
   provider?: string[];        // Filter by providers
   modelType?: string[];       // Filter by model types
   capabilities?: string[];    // Filter by capabilities
@@ -232,10 +312,16 @@ interface CatalogQuery {
   maxCost?: number;           // Maximum cost per 1k tokens
   maxLatency?: number;        // Maximum latency in ms
 }
+
 ```
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface CatalogResponse {
   models: ModelRegistry[];
   pagination: {
@@ -257,13 +343,24 @@ interface CatalogResponse {
     };
   };
 }
+
 ```
 
-#### **GET /models/{modelId}**
+#
+
+### **GET /models/{modelId}
+
+* *
+
 Get detailed information about a specific model.
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface ModelDetailResponse {
   model: ModelRegistry;
   deployments: Array<{
@@ -285,13 +382,24 @@ interface ModelDetailResponse {
     popularUseCases: string[];
   };
 }
+
 ```
 
-#### **POST /models**
+#
+
+### **POST /models
+
+* *
+
 Register a new custom model (admin only).
 
-**Request Body:**
-```typescript
+**Request Body:
+
+* *
+
+```
+
+typescript
 interface CreateModelRequest {
   name: string;
   version: string;
@@ -311,15 +419,34 @@ interface CreateModelRequest {
   category: string;
   documentation?: string;
 }
+
 ```
 
-### **2. Deployments**
+#
 
-#### **GET /deployments**
+## **
+
+2. Deployment
+
+s
+
+* *
+
+#
+
+### **GET /deployments
+
+* *
+
 Get list of model deployments.
 
-**Query Parameters:**
-```typescript
+**Query Parameters:
+
+* *
+
+```
+
+typescript
 interface DeploymentQuery {
   page?: number;
   limit?: number;
@@ -329,10 +456,16 @@ interface DeploymentQuery {
   sortBy?: 'createdAt' | 'updatedAt' | 'name';
   sortOrder?: 'asc' | 'desc';
 }
+
 ```
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface DeploymentListResponse {
   deployments: Array<{
     id: string;
@@ -352,13 +485,24 @@ interface DeploymentListResponse {
     total: number;
   };
 }
+
 ```
 
-#### **POST /deployments**
+#
+
+### **POST /deployments
+
+* *
+
 Create a new model deployment.
 
-**Request Body:**
-```typescript
+**Request Body:
+
+* *
+
+```
+
+typescript
 interface CreateDeploymentRequest {
   modelId: string;
   version: string;
@@ -369,10 +513,16 @@ interface CreateDeploymentRequest {
                  DeploymentConfig['monitoring'] &
                  DeploymentConfig['security'];
 }
+
 ```
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface DeploymentResponse {
   deployment: {
     id: string;
@@ -383,32 +533,72 @@ interface DeploymentResponse {
     createdAt: Date;
   };
 }
+
 ```
 
-#### **PUT /deployments/{deploymentId}**
+#
+
+### **PUT /deployments/{deploymentId}
+
+* *
+
 Update deployment configuration.
 
-#### **DELETE /deployments/{deploymentId}**
+#
+
+### **DELETE /deployments/{deploymentId}
+
+* *
+
 Stop and remove a deployment.
 
-#### **POST /deployments/{deploymentId}/scale**
+#
+
+### **POST /deployments/{deploymentId}/scale
+
+* *
+
 Scale a deployment.
 
-**Request Body:**
-```typescript
+**Request Body:
+
+* *
+
+```
+
+typescript
 interface ScaleRequest {
   replicas: number;
   reason?: string;
 }
+
 ```
 
-### **3. Performance Analytics**
+#
 
-#### **GET /analytics/models/{modelId}/performance**
+## **
+
+3. Performance Analytic
+
+s
+
+* *
+
+#
+
+### **GET /analytics/models/{modelId}/performance
+
+* *
+
 Get performance metrics for a specific model.
 
-**Query Parameters:**
-```typescript
+**Query Parameters:
+
+* *
+
+```
+
+typescript
 interface PerformanceQuery {
   from: Date;
   to: Date;
@@ -416,10 +606,16 @@ interface PerformanceQuery {
   deploymentId?: string;
   environment?: string;
 }
+
 ```
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface PerformanceResponse {
   modelId: string;
   deploymentId?: string;
@@ -437,13 +633,24 @@ interface PerformanceResponse {
     recommendation?: string;
   }>;
 }
+
 ```
 
-#### **GET /analytics/dashboard**
+#
+
+### **GET /analytics/dashboard
+
+* *
+
 Get dashboard data for overview.
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface DashboardResponse {
   summary: {
     totalModels: number;
@@ -474,18 +681,42 @@ interface DashboardResponse {
     timestamp: Date;
   }>;
 }
+
 ```
 
-### **4. A/B Testing**
+#
 
-#### **GET /experiments**
+## **
+
+4. A/B Testin
+
+g
+
+* *
+
+#
+
+### **GET /experiments
+
+* *
+
 Get list of A/B tests.
 
-#### **POST /experiments**
+#
+
+### **POST /experiments
+
+* *
+
 Create a new A/B test.
 
-**Request Body:**
-```typescript
+**Request Body:
+
+* *
+
+```
+
+typescript
 interface CreateExperimentRequest {
   name: string;
   description: string;
@@ -495,12 +726,15 @@ interface CreateExperimentRequest {
     name: string;
     version: string;
     weight: number;  // Percentage of traffic (0-100)
+
     configuration: Record<string, any>;
   }>;
 
   traffic: {
     type: 'percentage' | 'rules-based';
+
     totalPercentage: number;  // Total traffic to experiment (0-100)
+
     rules?: Array<{
       condition: string;  // e.g., "user.tier == 'premium'"
       variantName: string;
@@ -516,6 +750,7 @@ interface CreateExperimentRequest {
     primary: string;     // e.g., "user_rating", "response_time"
     secondary: string[];
     statisticalSignificance: number;  // Default: 0.95
+
   };
 
   audience: {
@@ -523,13 +758,24 @@ interface CreateExperimentRequest {
     filters?: Record<string, any>;  // User segment filters
   };
 }
+
 ```
 
-#### **GET /experiments/{experimentId}/results**
+#
+
+### **GET /experiments/{experimentId}/results
+
+* *
+
 Get A/B test results.
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface ExperimentResults {
   experimentId: string;
   status: 'running' | 'completed' | 'stopped';
@@ -575,15 +821,34 @@ interface ExperimentResults {
     action?: string;
   }>;
 }
+
 ```
 
-### **5. Cost Optimization**
+#
 
-#### **GET /cost/analysis**
+## **
+
+5. Cost Optimizatio
+
+n
+
+* *
+
+#
+
+### **GET /cost/analysis
+
+* *
+
 Get cost analysis and optimization opportunities.
 
-**Response:**
-```typescript
+**Response:
+
+* *
+
+```
+
+typescript
 interface CostAnalysisResponse {
   currentUsage: {
     period: {
@@ -633,13 +898,24 @@ interface CostAnalysisResponse {
     }>;
   };
 }
+
 ```
 
-#### **POST /cost/budgets**
+#
+
+### **POST /cost/budgets
+
+* *
+
 Set cost budgets.
 
-**Request Body:**
-```typescript
+**Request Body:
+
+* *
+
+```
+
+typescript
 interface BudgetRequest {
   monthlyBudget: number;
   alerts: Array<{
@@ -653,38 +929,83 @@ interface BudgetRequest {
     environments?: Record<string, number>;
   };
 }
+
 ```
 
-### **6. Marketplace**
+#
 
-#### **GET /marketplace/models**
+## **
+
+6. Marketplac
+
+e
+
+* *
+
+#
+
+### **GET /marketplace/models
+
+* *
+
 Get available marketplace models.
 
-#### **POST /marketplace/models/{modelId}/purchase**
+#
+
+### **POST /marketplace/models/{modelId}/purchase
+
+* *
+
 Purchase a marketplace model.
 
-#### **GET /marketplace/my-models**
+#
+
+### **GET /marketplace/my-models
+
+* *
+
 Get user's purchased models.
 
----
+--
 
-## **🔐 Authentication & Authorization**
+- #
 
-### **Authentication**
+# **🔐 Authentication & Authorizatio
+
+n
+
+* *
+
+#
+
+## **Authentication
+
+* *
+
 All API requests require authentication via JWT Bearer tokens:
 
 ```
+
 Authorization: Bearer <jwt_token>
+
 ```
 
-### **Roles & Permissions**
-```typescript
+#
+
+## **Roles & Permissions
+
+* *
+
+```
+
+typescript
 enum Role {
   ADMIN = 'admin',           // Full access to all resources
   MANAGER = 'manager',       // Manage deployments and users
   DEVELOPER = 'developer',   // Create deployments and experiments
   ANALYST = 'analyst',       // View analytics and reports
   VIEWER = 'viewer'          // Read-only access
+
 }
 
 interface Permissions {
@@ -716,10 +1037,18 @@ interface Permissions {
     purchase: boolean;
   };
 }
+
 ```
 
-### **Rate Limiting**
-```typescript
+#
+
+## **Rate Limiting
+
+* *
+
+```
+
+typescript
 interface RateLimits {
   requestsPerMinute: number;
   requestsPerHour: number;
@@ -732,32 +1061,69 @@ interface RateLimits {
     burstLimit: number;
   }>;
 }
+
 ```
 
----
+--
 
-## **📊 WebSocket Real-time Updates**
+- #
 
-### **Connection**
-```typescript
+# **📊 WebSocket Real-time Update
+
+s
+
+* *
+
+#
+
+## **Connection
+
+* *
+
+```
+
+typescript
 const socket = io('/modelhub/realtime', {
   auth: {
     token: jwtToken
   }
 });
+
 ```
 
-### **Events**
+#
 
-#### **Dashboard Updates**
-```typescript
+## **Event
+
+s
+
+* *
+
+#
+
+### **Dashboard Updates
+
+* *
+
+```
+
+typescript
 socket.on('dashboard:update', (data: DashboardResponse) => {
   // Update dashboard with real-time data
+
 });
+
 ```
 
-#### **Deployment Status**
-```typescript
+#
+
+### **Deployment Status
+
+* *
+
+```
+
+typescript
 socket.on('deployment:status', (data: {
   deploymentId: string;
   status: string;
@@ -766,10 +1132,18 @@ socket.on('deployment:status', (data: {
 }) => {
   // Update deployment status
 });
+
 ```
 
-#### **Performance Alerts**
-```typescript
+#
+
+### **Performance Alerts
+
+* *
+
+```
+
+typescript
 socket.on('alert:new', (data: {
   id: string;
   type: string;
@@ -780,10 +1154,18 @@ socket.on('alert:new', (data: {
 }) => {
   // Show alert notification
 });
+
 ```
 
-#### **Experiment Results**
-```typescript
+#
+
+### **Experiment Results
+
+* *
+
+```
+
+typescript
 socket.on('experiment:update', (data: {
   experimentId: string;
   status: string;
@@ -791,14 +1173,28 @@ socket.on('experiment:update', (data: {
 }) => {
   // Update experiment status
 });
+
 ```
 
----
+--
 
-## **⚠️ Error Handling**
+- #
 
-### **Standard Error Response**
-```typescript
+# **⚠️ Error Handlin
+
+g
+
+* *
+
+#
+
+## **Standard Error Response
+
+* *
+
+```
+
+typescript
 interface ErrorResponse {
   error: {
     code: string;
@@ -808,10 +1204,18 @@ interface ErrorResponse {
     requestId: string;
   };
 }
+
 ```
 
-### **Common Error Codes**
-```typescript
+#
+
+## **Common Error Codes
+
+* *
+
+```
+
+typescript
 enum ErrorCode {
   // Authentication & Authorization
   UNAUTHORIZED = 'UNAUTHORIZED',
@@ -838,44 +1242,135 @@ enum ErrorCode {
   SERVICE_UNAVAILABLE = 'SERVICE_UNAVAILABLE',
   RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED'
 }
+
 ```
 
----
+--
 
-## **📈 Monitoring & Metrics**
+- #
 
-### **API Metrics**
-- Request count by endpoint
-- Response time percentiles
-- Error rate by endpoint
-- Rate limiting hits
+# **📈 Monitoring & Metric
 
-### **Business Metrics**
-- Model usage by type/provider
-- Cost by model and time period
-- User adoption and engagement
-- Performance improvements
+s
 
-### **System Health**
-- API availability and uptime
-- Database connection health
-- Cache hit rates
-- Queue processing times
+* *
 
----
+#
 
-## **🔄 Versioning & Migration**
+## **API Metrics
 
-### **API Versioning**
-- URL-based versioning: `/api/v1/modelhub/...`
-- Backward compatibility maintained for 2 major versions
-- Deprecation warnings in response headers
+* *
 
-### **Data Migration**
-- Automatic migration for model registry updates
-- Deployment configuration migration support
-- Performance data aggregation migration
+- Request count by endpoin
 
----
+t
 
-*This API specification provides a comprehensive foundation for the Model Hub implementation, ensuring consistency, scalability, and maintainability across all endpoints and data models.*
+- Response time percentile
+
+s
+
+- Error rate by endpoin
+
+t
+
+- Rate limiting hit
+
+s
+
+#
+
+## **Business Metrics
+
+* *
+
+- Model usage by type/provide
+
+r
+
+- Cost by model and time perio
+
+d
+
+- User adoption and engagemen
+
+t
+
+- Performance improvement
+
+s
+
+#
+
+## **System Health
+
+* *
+
+- API availability and uptim
+
+e
+
+- Database connection healt
+
+h
+
+- Cache hit rate
+
+s
+
+- Queue processing time
+
+s
+
+--
+
+- #
+
+# **🔄 Versioning & Migratio
+
+n
+
+* *
+
+#
+
+## **API Versioning
+
+* *
+
+- URL-based versioning: `/api/v1/modelhub/...
+
+`
+
+- Backward compatibility maintained for 2 major version
+
+s
+
+- Deprecation warnings in response header
+
+s
+
+#
+
+## **Data Migration
+
+* *
+
+- Automatic migration for model registry update
+
+s
+
+- Deployment configuration migration suppor
+
+t
+
+- Performance data aggregation migratio
+
+n
+
+--
+
+- *This API specification provides a comprehensive foundation for the Model Hub implementation, ensuring consistency, scalability, and maintainability across all endpoints and data models
+
+.
+
+*

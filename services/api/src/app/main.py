@@ -26,9 +26,11 @@ from app.api import (
     kafka,
     logs,
     management,
+    metrics,
     modelhub,
     monitoring,
     process_mining,
+    routing,
     service_status_enhanced,
     simulation,
     sso,
@@ -168,6 +170,7 @@ app.include_router(ai_advanced.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(enhanced_analytics.router, prefix="/api")
 app.include_router(modelhub.router, prefix="/api")
+app.include_router(routing.router, prefix="/api")
 app.include_router(unified.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(collaboration.router, prefix="/api")
@@ -182,6 +185,7 @@ app.include_router(templates.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 app.include_router(logs.router, prefix="/api")
 app.include_router(management.router, prefix="/api")
+app.include_router(metrics.router, prefix="/api")
 app.include_router(monitoring.router, prefix="/api")
 app.include_router(kafka.router, prefix="/api")
 app.include_router(process_mining.router)

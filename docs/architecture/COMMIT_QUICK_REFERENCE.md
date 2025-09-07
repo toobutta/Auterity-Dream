@@ -1,82 +1,320 @@
-# 🤖 AI Commit Message Quick Reference
 
-## Format Template
+
+# 🤖 AI Commit Message Quick Referenc
+
+e
+
+#
+
+# Format Templat
+
+e
 
 ```text
 <type>(<scope>): <description>
 
-- What: <what changed>
-- Why: <business reason> 
-- How: <technical approach>
+- What: <what changed
 
-Refs: #<issue>
+>
+
+- Why: <business reason
+
+>
+
+
+- How: <technical approach
+
+>
+
+Refs:
+
+#<issue>
+
 Tested: <evidence>
+
 ```
 
-## Types 🏷️
+#
 
-- `feat` - New feature
-- `fix` - Bug fix  
-- `docs` - Documentation
-- `style` - Formatting
-- `refactor` - Code restructure
-- `perf` - Performance
-- `test` - Tests
-- `build` - Dependencies
-- `ci` - CI/CD
-- `chore` - Maintenance
+# Types 🏷
 
-## Scopes 📁
+️
 
-- `backend` - Python/FastAPI
-- `frontend` - React/TypeScript  
-- `api` - Endpoints
-- `auth` - Authentication
-- `workflow` - Execution engine
-- `agent` - AI framework
-- `db` - Database
-- `ui` - Components
-- `config` - Settings
-- `test` - Test files
+- `feat
 
-## Examples 💡
+`
 
-### Simple Fix
+ - New featur
 
-```text
+e
+
+- `fix
+
+`
+
+ - Bug fi
+
+x
+
+
+- `docs
+
+`
+
+ - Documentatio
+
+n
+
+- `style
+
+`
+
+ - Formattin
+
+g
+
+- `refactor
+
+`
+
+ - Code restructur
+
+e
+
+- `perf
+
+`
+
+ - Performanc
+
+e
+
+- `test
+
+`
+
+ - Test
+
+s
+
+- `build
+
+`
+
+ - Dependencie
+
+s
+
+- `ci
+
+`
+
+ - CI/C
+
+D
+
+- `chore
+
+`
+
+ - Maintenanc
+
+e
+
+#
+
+# Scopes
+
+📁
+
+- `backend
+
+`
+
+ - Python/FastAP
+
+I
+
+- `frontend
+
+`
+
+ - React/TypeScrip
+
+t
+
+
+- `api
+
+`
+
+ - Endpoint
+
+s
+
+- `auth
+
+`
+
+ - Authenticatio
+
+n
+
+- `workflow
+
+`
+
+ - Execution engin
+
+e
+
+- `agent
+
+`
+
+ - AI framewor
+
+k
+
+- `db
+
+`
+
+ - Databas
+
+e
+
+- `ui
+
+`
+
+ - Component
+
+s
+
+- `config
+
+`
+
+ - Setting
+
+s
+
+- `test
+
+`
+
+ - Test file
+
+s
+
+#
+
+# Examples
+
+💡
+
+#
+
+## Simple Fi
+
+x
+
+```
+
+text
 fix(auth): handle expired token edge case
+
 ```
 
-### Full Feature
+#
 
-```text
+## Full Featur
+
+e
+
+```
+
+text
 feat(workflow): add parallel execution engine
 
-- What: Implemented concurrent step processing with dependency resolution
-- Why: Improve workflow performance for complex automation tasks
-- How: Added TopologicalExecutor with async batch processing
+- What: Implemented concurrent step processing with dependency resolutio
 
-Refs: #147
+n
+
+- Why: Improve workflow performance for complex automation task
+
+s
+
+- How: Added TopologicalExecutor with async batch processin
+
+g
+
+Refs:
+
+#147
+
 Tested: Unit tests, integration tests, performance benchmarks
+
 ```
 
-## Rules ✅
+#
 
-- Subject ≤ 50 chars
-- Lowercase, imperative
-- No ending period
-- Body for changes >5 files
-- Test evidence required
-- Reference issues for bugs
+# Rules
 
-## AI Context 🧠
+✅
+
+- Subject ≤ 50 char
+
+s
+
+- Lowercase, imperativ
+
+e
+
+- No ending perio
+
+d
+
+- Body for changes >5 file
+
+s
+
+- Test evidence require
+
+d
+
+- Reference issues for bug
+
+s
+
+#
+
+# AI Context
+
+🧠
 
 ✅ Include: Changed files, diff stats, test changes
 ❌ Exclude: Temp files, logs, cache, node_modules
 
-## Quality Gates 🚪
+#
 
-- Conventional format enforced
-- Scope validation required
-- Breaking changes flagged
-- Security changes reviewed
+# Quality Gates
+
+🚪
+
+- Conventional format enforce
+
+d
+
+- Scope validation require
+
+d
+
+- Breaking changes flagge
+
+d
+
+- Security changes reviewe
+
+d

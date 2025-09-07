@@ -1,23 +1,66 @@
-# 🧠 Vector DB Integration (Weaviate)
 
-## Overview
 
-Vector database usage for embeddings, semantic search, retrieval-augmented workflows.
+# 🧠 Vector DB Integration (Weaviate
 
-## Components
+)
 
-- Backend: embedding pipelines, persistence, schema mgmt
-- Frontend: AI SDK, assistants using retrieval
+#
 
-## Patterns
+# Overvie
 
-- Schema design: classes, properties, vectorizer
-- Ingestion: batching, idempotency, dedupe
-- Querying: hybrid (keyword + vector), filters
+w
 
-## Performance
+Vector database usage for embeddings, semantic search, retrieval-augmented workflows
 
-- Sharding, replication, HNSW params
-- Cache recent queries
+.
 
+#
+
+# Component
+
+s
+
+- Backend: embedding pipelines, persistence, schema mgm
+
+t
+
+- Frontend: AI SDK, assistants using retrieva
+
+l
+
+#
+
+# Pattern
+
+s
+
+- Schema design: classes, properties, vectorize
+
+r
+
+- Ingestion: batching, idempotency, dedup
+
+e
+
+- Querying: hybrid (keywor
+
+d
+
+ + vector), filter
+
+s
+
+#
+
+# Performanc
+
+e
+
+- Sharding, replication, HNSW param
+
+s
+
+- Cache recent querie
+
+s
 

@@ -1,23 +1,56 @@
-# 🎨 Frontend UX Guide
 
-## Styleguide & Writing
 
-- Tone, terminology, capitalization; microcopy patterns
+# 🎨 Frontend UX Guid
 
-## Component Inventory
+e
 
-- Storybook ownership matrix; reuse rules; deprecation policy
+#
 
-## i18n/l10n
+# Styleguide & Writin
 
-- Message catalogs, RTL support, date/number formats
+g
 
-## Accessibility
+- Tone, terminology, capitalization; microcopy pattern
 
-- WCAG checklist; audits & remediation tracker
+s
 
-## States
+#
 
-- Error/empty/loading/skeleton patterns with examples
+# Component Inventor
 
+y
+
+- Storybook ownership matrix; reuse rules; deprecation polic
+
+y
+
+#
+
+# i18n/l10
+
+n
+
+- Message catalogs, RTL support, date/number format
+
+s
+
+#
+
+# Accessibilit
+
+y
+
+- WCAG checklist; audits & remediation tracke
+
+r
+
+#
+
+# State
+
+s
+
+- Error/empty/loading/skeleton patterns with example
+
+s
 

@@ -1,24 +1,60 @@
-# 🔐 Security & Compliance Handbook
 
-## Threat Model (STRIDE)
 
-- Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege
-- Mitigations mapped to controls (authn, integrity checks, audit, encryption, rate limits, RBAC)
+# 🔐 Security & Compliance Handboo
 
-## RBAC Matrix
+k
 
-- Roles → permissions across UI and APIs; least privilege; break‑glass accounts
+#
 
-## Data Protection
+# Threat Model (STRIDE
 
-- PII/PHI map, DPIA summaries, retention & deletion policies, encryption (in transit, at rest), redaction
+)
 
-## Secrets & Key Management (Vault)
+- Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privileg
 
-- Rotation, leasing, audit, break‑glass, key custodians
+e
 
-## Incident Response
+- Mitigations mapped to controls (authn, integrity checks, audit, encryption, rate limits, RBAC
 
-- Sev tiers, RACI, comms templates, forensics checklist, postmortem template
+)
 
+#
+
+# RBAC Matri
+
+x
+
+- Roles → permissions across UI and APIs; least privilege; break‑glass account
+
+s
+
+#
+
+# Data Protectio
+
+n
+
+- PII/PHI map, DPIA summaries, retention & deletion policies, encryption (in transit, at rest), redactio
+
+n
+
+#
+
+# Secrets & Key Management (Vault
+
+)
+
+- Rotation, leasing, audit, break‑glass, key custodian
+
+s
+
+#
+
+# Incident Respons
+
+e
+
+- Sev tiers, RACI, comms templates, forensics checklist, postmortem templat
+
+e
 

@@ -1,46 +1,80 @@
-# AutoMatrix AI Hub – Terraform Starter
 
-## Provider Setup
+
+# AutoMatrix AI Hub – Terraform Starte
+
+r
+
+#
+
+# Provider Setu
+
+p
 
 ```hcl
 provider "aws" {
   region = "us-west-2"
+
 }
 
 terraform {
   required_version = ">= 1.3.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 5.0"
+
     }
   }
 }
+
 ```
 
-## VPC
+#
 
-```hcl
+# VP
+
+C
+
+```
+
+hcl
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
+
   name    = "automatrix-vpc"
-  cidr    = "10.0.0.0/16"
+
+  cidr    = "10.0.0.0/16
+
+"
 
   azs             = ["us-west-2a", "us-west-2b"]
+
   public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
+
+  private_subnets = ["10.0.3.0/24", "10.0.4.0/24"
+
+]
 
   enable_nat_gateway = true
   single_nat_gateway = true
 }
+
 ```
 
-## RDS PostgreSQL
+#
 
-```hcl
+# RDS PostgreSQ
+
+L
+
+```
+
+hcl
 resource "aws_db_instance" "automatrix_postgres" {
   engine         = "postgres"
   instance_class = "db.t3.medium"
+
   name           = "automatrixdb"
   username       = "admin"
   password       = "secure_password"
@@ -51,12 +85,20 @@ resource "aws_db_instance" "automatrix_postgres" {
 
   skip_final_snapshot = true
 }
+
 ```
 
-## Output
+#
 
-```hcl
+# Outpu
+
+t
+
+```
+
+hcl
 output "db_endpoint" {
   value = aws_db_instance.automatrix_postgres.endpoint
 }
+
 ```

@@ -1,23 +1,62 @@
-# 🔔 Notifications & Proactive Alerts
 
-## Overview
 
-End-user and system notifications: toasts, notification center, and proactive alerting.
+# 🔔 Notifications & Proactive Alert
 
-## Components
+s
 
-- Frontend: `frontend/src/components/notifications/NotificationSystem.tsx`, `NotificationCenter.tsx`
-- Hooks/services: push channels, WS topics
+#
 
-## Patterns
+# Overvie
 
-- Levels: info, success, warning, error
-- Deduplication and rate limiting
-- Inbox vs transient toasts
+w
 
-## Proactive Alerts
+End-user and system notifications: toasts, notification center, and proactive alerting
 
-- Define rules from metrics/events (SLOs, anomalies)
-- Deliver via email, Slack, in-app notifications
+.
 
+#
+
+# Component
+
+s
+
+- Frontend: `frontend/src/components/notifications/NotificationSystem.tsx`, `NotificationCenter.tsx
+
+`
+
+- Hooks/services: push channels, WS topic
+
+s
+
+#
+
+# Pattern
+
+s
+
+- Levels: info, success, warning, erro
+
+r
+
+- Deduplication and rate limitin
+
+g
+
+- Inbox vs transient toast
+
+s
+
+#
+
+# Proactive Alert
+
+s
+
+- Define rules from metrics/events (SLOs, anomalies
+
+)
+
+- Deliver via email, Slack, in-app notification
+
+s
 

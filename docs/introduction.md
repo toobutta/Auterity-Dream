@@ -1,74 +1,308 @@
-# Welcome to Auterity
 
-Auterity is a comprehensive AI-powered workflow automation platform that transforms manual business processes across healthcare, financial services, e-commerce, manufacturing, and other industries into intelligent, automated workflows.
 
-## 🎯 What is Auterity?
+# Welcome to Auterit
 
-Auterity provides an **enterprise-grade AI automation platform** featuring:
+y
 
-### **Three-System Architecture**
-- **AutoMatrix** (Core Engine) - Visual workflow automation platform
-- **RelayCore** (AI Router) - AI request routing and cost optimization  
-- **NeuroWeaver** (Model Management) - Specialized AI model training and deployment
+Auterity is a comprehensive AI-powered workflow automation platform that transforms manual business processes across healthcare, financial services, e-commerce, manufacturing, and other industries into intelligent, automated workflows
 
-### **Core Platform Features**
-- **25+ AI Toolkits** integrated (LangChain, CrewAI, Hugging Face, Google Vertex AI, etc.)
-- **200+ AI Models** accessible through unified interface
-- **Visual workflow builder** with drag-and-drop interface
-- **Multi-channel communication** (SMS, WhatsApp, Email, Voice)
-- **Enterprise security** with SOC2/HIPAA compliance
-- **Real-time collaboration** and version control
-- **Intelligent cost optimization** (35-45% savings through AI routing)
+.
 
-## 🚀 Quick Start
+#
+
+# 🎯 What is Auterity
+
+?
+
+Auterity provides an **enterprise-grade AI automation platform
+
+* * featuring
+
+:
+
+#
+
+## **Three-System Architecture
+
+* *
+
+- **AutoMatrix
+
+* * (Core Engine
+
+)
+
+ - Visual workflow automation platfor
+
+m
+
+- **RelayCore
+
+* * (AI Router
+
+)
+
+ - AI request routing and cost optimizatio
+
+n
+
+
+- **NeuroWeaver
+
+* * (Model Management
+
+)
+
+ - Specialized AI model training and deploymen
+
+t
+
+#
+
+## **Core Platform Features
+
+* *
+
+- **2
+
+5
+
++ AI Toolkits
+
+* * integrated (LangChain, CrewAI, Hugging Face, Google Vertex AI, etc.
+
+)
+
+- **20
+
+0
+
++ AI Models
+
+* * accessible through unified interfac
+
+e
+
+- **Visual workflow builder
+
+* * with drag-and-drop interfac
+
+e
+
+- **Multi-channel communication
+
+* * (SMS, WhatsApp, Email, Voice
+
+)
+
+- **Enterprise security
+
+* * with SOC2/HIPAA complianc
+
+e
+
+- **Real-time collaboration
+
+* * and version contro
+
+l
+
+- **Intelligent cost optimization
+
+* * (35-45% savings through AI routing
+
+)
+
+#
+
+# 🚀 Quick Star
+
+t
 
 Get started with Auterity in minutes:
 
 ```bash
+
 # Clone the repository
+
 git clone https://github.com/toobutta/auterity-error-iq.git
-cd auterity-error-iq
+
+cd auterity-error-i
+
+q
 
 # Backend setup
-cd backend && pip install -r requirements.txt && python -m app.main
+
+cd backend && pip install -r requirements.txt && python -m app.mai
+
+n
 
 # Frontend setup
+
 cd frontend && npm install && npm run dev
 
 # Full stack with Docker
-docker-compose up
+
+docker-compose u
+
+p
+
 ```
 
-## 🛠 Enterprise Tech Stack
+#
 
-### **Frontend Technologies**
-- **React 18** with TypeScript and Vite
-- **Visual Workflow Builder** with React Flow and PixiJS
-- **Design System** with Tailwind CSS and component library
-- **Real-time Collaboration** with WebSocket integration
+# 🛠 Enterprise Tech Stac
 
-### **Backend & AI Services**  
-- **AutoMatrix**: FastAPI, SQLAlchemy, PostgreSQL
-- **RelayCore**: Node.js, TypeScript, Redis  
-- **NeuroWeaver**: Python, FastAPI, ML Pipeline
-- **AI Integration**: 25+ toolkits including LangChain, CrewAI, LangGraph
+k
 
-### **Infrastructure & Deployment**
-- **30+ Services**: Kubernetes, Docker, Prometheus, Grafana
-- **Databases**: PostgreSQL, Redis, Weaviate, ClickHouse  
-- **Message Queue**: RabbitMQ, Kafka
-- **Security**: Vault, Kong Gateway, JWT authentication
-- **Cloud Support**: AWS, Azure, Google Cloud, self-hosted
+#
 
-## 📋 Current Status
+## **Frontend Technologies
 
-✅ **Production Ready** - Backend codebase passes all critical quality checks
-✅ **Security Patched** - Frontend vulnerabilities addressed
-✅ **Containerized** - Docker deployment complete
-✅ **Infrastructure Ready** - Terraform IaC prepared
+* *
 
-## Next Steps
+- **React 18
 
-- [Quickstart Guide](/quickstart) - Get up and running
-- [System Architecture](/architecture/system-architecture) - Understand the platform
-- [Production Deployment](/deployment/production-deployment) - Deploy to production
+* * with TypeScript and Vit
+
+e
+
+- **Visual Workflow Builder
+
+* * with React Flow and PixiJ
+
+S
+
+- **Design System
+
+* * with Tailwind CSS and component librar
+
+y
+
+- **Real-time Collaboration
+
+* * with WebSocket integratio
+
+n
+
+#
+
+## **Backend & AI Services
+
+* *
+
+
+
+- **AutoMatrix**: FastAPI, SQLAlchemy, PostgreSQ
+
+L
+
+- **RelayCore**: Node.js, TypeScript, Redi
+
+s
+
+
+- **NeuroWeaver**: Python, FastAPI, ML Pipelin
+
+e
+
+- **AI Integration**: 2
+
+5
+
++ toolkits including LangChain, CrewAI, LangGrap
+
+h
+
+#
+
+## **Infrastructure & Deployment
+
+* *
+
+- **3
+
+0
+
++ Services**: Kubernetes, Docker, Prometheus, Grafan
+
+a
+
+- **Databases**: PostgreSQL, Redis, Weaviate, ClickHous
+
+e
+
+
+- **Message Queue**: RabbitMQ, Kafk
+
+a
+
+- **Security**: Vault, Kong Gateway, JWT authenticatio
+
+n
+
+- **Cloud Support**: AWS, Azure, Google Cloud, self-hoste
+
+d
+
+#
+
+# 📋 Current Statu
+
+s
+
+✅ **Production Ready
+
+* *
+
+- Backend codebase passes all critical quality checks
+
+✅ **Security Patched
+
+* *
+
+- Frontend vulnerabilities addressed
+
+✅ **Containerized
+
+* *
+
+- Docker deployment complete
+
+✅ **Infrastructure Ready
+
+* *
+
+- Terraform IaC prepare
+
+d
+
+#
+
+# Next Step
+
+s
+
+- [Quickstart Guide](/quickstart
+
+)
+
+ - Get up and runnin
+
+g
+
+- [System Architecture](/architecture/system-architecture
+
+)
+
+ - Understand the platfor
+
+m
+
+- [Production Deployment](/deployment/production-deployment
+
+)
+
+ - Deploy to productio
+
+n

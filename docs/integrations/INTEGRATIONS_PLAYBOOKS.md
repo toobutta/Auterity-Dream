@@ -1,15 +1,36 @@
-# 🤝 Integrations Playbooks
 
-## Partner Integrations
 
-- Auth patterns, retries/backoff, circuit breakers
+# 🤝 Integrations Playbook
 
-## Webhook Catalog
+s
 
-- Event types, payloads, retries, signatures
+#
 
-## Sandbox & Fixtures
+# Partner Integration
 
-- Test environments, seeded data, contract test kits
+s
 
+- Auth patterns, retries/backoff, circuit breaker
+
+s
+
+#
+
+# Webhook Catalo
+
+g
+
+- Event types, payloads, retries, signature
+
+s
+
+#
+
+# Sandbox & Fixture
+
+s
+
+- Test environments, seeded data, contract test kit
+
+s
 

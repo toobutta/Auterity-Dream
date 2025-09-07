@@ -166,7 +166,8 @@ export const UnifiedIDE: React.FC<UnifiedIDEProps> = ({
         }
         break;
       default:
-        console.log(`Executing command: ${command}`);
+        // Unknown command
+        break;
     }
   }, [handleFileCreate, handleCodeGeneration, currentRepository]);
 
@@ -305,7 +306,7 @@ export const UnifiedIDE: React.FC<UnifiedIDEProps> = ({
             <div
               key={panel.id}
               className="panel-container"
-              style={{ width: panel.size }}
+              style={{ width: `${panel.size}px` }}
             >
               <div className="panel-header flex items-center justify-between p-2 bg-gray-700 text-white">
                 <div className="flex items-center space-x-2">

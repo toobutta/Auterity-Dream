@@ -881,7 +881,6 @@ export class CostOptimizationEngine {
   }> {
     // Implementation would depend on the specific action
     // This is a placeholder for the actual implementation
-    console.log(`Applying action: ${action.action}`);
 
     return {
       success: true,
@@ -891,7 +890,6 @@ export class CostOptimizationEngine {
 
   private async storeOptimizationApplication(recommendation: CostRecommendation, appliedChanges: string[]): Promise<void> {
     // Store for rollback capability
-    console.log(`Applied optimization ${recommendation.id}: ${appliedChanges.join(', ')}`);
   }
 
   private generateRollbackPlan(recommendation: CostRecommendation, appliedChanges: string[]): string {

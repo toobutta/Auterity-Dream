@@ -1,23 +1,56 @@
-# 🛡️ Reliability & Operations Handbook
 
-## SLO/SLA
 
-- Availability/latency SLOs per service; error budgets; alerting thresholds
+# 🛡️ Reliability & Operations Handboo
 
-## Runbooks
+k
 
-- Top incidents: steps, verification, rollback, dashboards
+#
 
-## DR/BCP
+# SLO/SL
 
-- RPO/RTO targets; backup/restore drills; region failover
+A
 
-## Capacity & Scalability
+- Availability/latency SLOs per service; error budgets; alerting threshold
 
-- Load/soak plans; autoscaling policies; resource budgets
+s
 
-## Cost Governance
+#
 
-- Budgets, anomaly alerts, chargeback/showback
+# Runbook
 
+s
+
+- Top incidents: steps, verification, rollback, dashboard
+
+s
+
+#
+
+# DR/BC
+
+P
+
+- RPO/RTO targets; backup/restore drills; region failove
+
+r
+
+#
+
+# Capacity & Scalabilit
+
+y
+
+- Load/soak plans; autoscaling policies; resource budget
+
+s
+
+#
+
+# Cost Governanc
+
+e
+
+- Budgets, anomaly alerts, chargeback/showbac
+
+k
 

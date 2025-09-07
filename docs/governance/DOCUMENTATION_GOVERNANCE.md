@@ -1,15 +1,36 @@
-# 📚 Documentation Governance
 
-## Style Guide & IA
 
-- Formatting, tone, structure; where docs live (by audience)
+# 📚 Documentation Governanc
 
-## Ownership & Cadence
+e
 
-- Doc owners per area; quarterly audits; review SLAs
+#
 
-## Tooling
+# Style Guide & I
 
-- Linting, link checks, diagrams, changelog automation
+A
 
+- Formatting, tone, structure; where docs live (by audience
+
+)
+
+#
+
+# Ownership & Cadenc
+
+e
+
+- Doc owners per area; quarterly audits; review SLA
+
+s
+
+#
+
+# Toolin
+
+g
+
+- Linting, link checks, diagrams, changelog automatio
+
+n
 

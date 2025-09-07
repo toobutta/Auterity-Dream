@@ -1,28 +1,61 @@
-# CrewAI API Documentation
 
-## Overview
 
-CrewAI is a framework for orchestrating role-playing autonomous AI agents. This documentation covers the integration of CrewAI within the Auterity Unified AI Platform, providing comprehensive API documentation for building and managing multi-agent systems.
+# CrewAI API Documentatio
 
-## Architecture
+n
 
-### Core Components
+#
+
+# Overvie
+
+w
+
+CrewAI is a framework for orchestrating role-playing autonomous AI agents. This documentation covers the integration of CrewAI within the Auterity Unified AI Platform, providing comprehensive API documentation for building and managing multi-agent systems
+
+.
+
+#
+
+# Architectur
+
+e
+
+#
+
+## Core Component
+
+s
 
 ```mermaid
 graph TD
     A[Frontend App] --> B[CrewAI Service]
+
     B --> C[CrewAI Engine]
+
     C --> D[Agent Manager]
+
     C --> E[Task Manager]
+
     C --> F[Collaboration Hub]
+
     D --> G[Individual Agents]
+
     E --> H[Task Queue]
-    F --> I[Communication Layer]
+
+    F --> I[Communication Layer
+
+]
+
 ```
 
-### Service Architecture
+#
+
+## Service Architectur
+
+e
 
 ```
+
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   CrewAI        │    │   Backend       │
 │   Components    │◄──►│   Service       │◄──►│   Services      │
@@ -33,31 +66,56 @@ graph TD
                     ┌─────────────────┐
                     │   CrewAI        │
                     │   Multi-Agent   │
+
                     │   System        │
                     └─────────────────┘
-```
-
-## API Reference
-
-### Base URL
 
 ```
+
+#
+
+# API Referenc
+
+e
+
+#
+
+## Base UR
+
+L
+
+```
+
 https://api.auterity.com/v1/ai/crewai
+
 ```
 
-### Authentication
+#
+
+## Authenticatio
+
+n
 
 All API requests require authentication using Bearer tokens:
 
-```bash
-Authorization: Bearer <your_api_token>
 ```
 
-### Error Handling
+bash
+Authorization: Bearer <your_api_token>
+
+```
+
+#
+
+## Error Handlin
+
+g
 
 All endpoints return standard HTTP status codes with detailed error messages:
 
-```json
+```
+
+json
 {
   "error": {
     "code": "VALIDATION_ERROR",
@@ -68,36 +126,61 @@ All endpoints return standard HTTP status codes with detailed error messages:
     }
   },
   "timestamp": "2024-01-15T10:30:00Z",
+
   "request_id": "req_123456789"
 }
+
 ```
 
-## Crew Management APIs
+#
 
-### Create Crew
+# Crew Management API
 
-Create a new multi-agent crew with specified configuration.
+s
 
-```http
+#
+
+## Create Cre
+
+w
+
+Create a new multi-agent crew with specified configuration
+
+.
+
+```
+
+http
 POST /crews
+
 ```
 
-**Request Body:**
+**Request Body:
 
-```json
+* *
+
+```
+
+json
 {
   "name": "Content Creation Team",
   "description": "A collaborative team for creating marketing content",
   "version": "1.0.0",
+
   "agents": [
     {
       "name": "Research Analyst",
       "role": "Senior Research Analyst",
       "goal": "Conduct thorough research and provide comprehensive analysis",
-      "backstory": "You are an experienced research analyst with 10+ years in market research...",
+      "backstory": "You are an experienced research analyst with 10
+
++ years in market research...",
+
       "llm": {
         "model": "gpt-4",
+
         "temperature": 0.3,
+
         "max_tokens": 2000
       },
       "tools": [
@@ -132,7 +215,9 @@ POST /crews
       "backstory": "You are a skilled content writer with expertise in marketing copy...",
       "llm": {
         "model": "gpt-4",
+
         "temperature": 0.7,
+
         "max_tokens": 3000
       },
       "tools": [
@@ -156,7 +241,9 @@ POST /crews
       "backstory": "You are an experienced editor with expertise in content quality...",
       "llm": {
         "model": "gpt-4",
+
         "temperature": 0.2,
+
         "max_tokens": 1500
       },
       "tools": [
@@ -197,11 +284,13 @@ POST /crews
     {
       "description": "Create engaging blog post about AI trends based on research findings",
       "expected_output": "Well-written, SEO-optimized blog post ready for publication",
+
       "agent": "Content Writer",
       "async_execution": false,
       "context": [
         "Use research findings from previous task",
         "Target audience: tech-savvy business professionals",
+
         "Tone: informative and engaging",
         "Include actionable insights"
       ],
@@ -210,6 +299,7 @@ POST /crews
     {
       "description": "Review and edit the blog post for quality, accuracy, and engagement",
       "expected_output": "Polished, publication-ready blog post with editorial feedback",
+
       "agent": "Editor",
       "async_execution": false,
       "context": [
@@ -228,28 +318,39 @@ POST /crews
   "max_rpm": 10,
   "manager_llm": {
     "model": "gpt-4",
+
     "temperature": 0.1
+
   },
   "function_calling_llm": {
     "model": "gpt-4",
+
     "temperature": 0.1
+
   },
   "metadata": {
     "created_by": "user123",
     "tags": ["content-creation", "marketing", "ai"],
+
     "business_unit": "marketing",
     "priority": "high"
   }
 }
+
 ```
 
-**Response:**
+**Response:
 
-```json
+* *
+
+```
+
+json
 {
   "crew_id": "crew_123456789",
   "status": "created",
   "created_at": "2024-01-15T10:30:00Z",
+
   "crew_url": "/crews/crew_123456789",
   "execution_url": "/crews/crew_123456789/execute",
   "configuration": {
@@ -258,27 +359,42 @@ POST /crews
     "process": "sequential"
   }
 }
+
 ```
 
-### Get Crew
+#
+
+## Get Cre
+
+w
 
 Retrieve a specific crew configuration and metadata.
 
-```http
-GET /crews/{crew_id}
 ```
 
-**Response:**
+http
+GET /crews/{crew_id}
 
-```json
+```
+
+**Response:
+
+* *
+
+```
+
+json
 {
   "crew_id": "crew_123456789",
   "name": "Content Creation Team",
   "description": "A collaborative team for creating marketing content",
   "version": "1.0.0",
+
   "status": "active",
   "created_at": "2024-01-15T10:30:00Z",
+
   "updated_at": "2024-01-15T10:35:00Z",
+
   "agents": [ ... ],
   "tasks": [ ... ],
   "process": "sequential",
@@ -288,49 +404,100 @@ GET /crews/{crew_id}
     "successful_executions": 42,
     "failed_executions": 3,
     "average_execution_time": 125.8,
+
     "last_execution": "2024-01-15T10:25:00Z"
+
   }
 }
+
 ```
 
-### Update Crew
+#
+
+## Update Cre
+
+w
 
 Update an existing crew's configuration.
 
-```http
-PUT /crews/{crew_id}
 ```
 
-**Request Body:** (same as create, but all fields optional)
+http
+PUT /crews/{crew_id}
 
-### Delete Crew
+```
+
+**Request Body:
+
+* * (same as create, but all fields optional
+
+)
+
+#
+
+## Delete Cre
+
+w
 
 Delete a crew and all its associated data.
 
-```http
-DELETE /crews/{crew_id}
 ```
 
-### List Crews
+http
+DELETE /crews/{crew_id}
+
+```
+
+#
+
+## List Crew
+
+s
 
 Retrieve a paginated list of crews.
 
-```http
-GET /crews
 ```
 
-**Query Parameters:**
+http
+GET /crews
 
-- `page`: Page number (default: 1)
-- `limit`: Items per page (default: 20, max: 100)
-- `status`: Filter by status (active, inactive, archived)
-- `tags`: Filter by tags (comma-separated)
-- `created_by`: Filter by creator
-- `search`: Search in name and description
+```
 
-**Response:**
+**Query Parameters:
 
-```json
+* *
+
+- `page`: Page number (default: 1
+
+)
+
+- `limit`: Items per page (default: 20, max: 100
+
+)
+
+- `status`: Filter by status (active, inactive, archived
+
+)
+
+- `tags`: Filter by tags (comma-separated
+
+)
+
+- `created_by`: Filter by creato
+
+r
+
+- `search`: Search in name and descriptio
+
+n
+
+**Response:
+
+* *
+
+```
+
+json
 {
   "crews": [
     {
@@ -338,8 +505,11 @@ GET /crews
       "name": "Content Creation Team",
       "status": "active",
       "created_at": "2024-01-15T10:30:00Z",
+
       "updated_at": "2024-01-15T10:35:00Z",
+
       "tags": ["content-creation", "marketing", "ai"],
+
       "agents_count": 3,
       "tasks_count": 3
     }
@@ -351,21 +521,37 @@ GET /crews
     "total_pages": 1
   }
 }
+
 ```
 
-## Execution APIs
+#
 
-### Execute Crew
+# Execution API
+
+s
+
+#
+
+## Execute Cre
+
+w
 
 Execute a crew with the provided input and tasks.
 
-```http
-POST /crews/{crew_id}/execute
 ```
 
-**Request Body:**
+http
+POST /crews/{crew_id}/execute
 
-```json
+```
+
+**Request Body:
+
+* *
+
+```
+
+json
 {
   "input": {
     "topic": "The Future of AI in Healthcare",
@@ -375,6 +561,7 @@ POST /crews/{crew_id}/execute
     "keywords": ["AI healthcare", "medical diagnosis", "patient care", "technology adoption"],
     "tone": "professional_informative",
     "deadline": "2024-01-20T00:00:00Z"
+
   },
   "config": {
     "max_iterations": 10,
@@ -390,22 +577,31 @@ POST /crews/{crew_id}/execute
     "priority": "high"
   }
 }
+
 ```
 
-**Response:**
+**Response:
 
-```json
+* *
+
+```
+
+json
 {
   "execution_id": "exec_987654321",
   "status": "completed",
   "output": {
-    "final_result": "# The Future of AI in Healthcare\n\n## Executive Summary\n\nArtificial Intelligence is revolutionizing healthcare delivery...",
+    "final_result": "
+
+# The Future of AI in Healthcare\n\n## Executive Summary\n\nArtificial Intelligence is revolutionizing healthcare delivery...",
+
     "task_outputs": [
       {
         "task_id": "research_task",
         "agent": "Research Analyst",
         "output": "Research findings on AI in healthcare...",
         "duration": 45.2,
+
         "tokens_used": 1250
       },
       {
@@ -413,6 +609,7 @@ POST /crews/{crew_id}/execute
         "agent": "Content Writer",
         "output": "Draft blog post content...",
         "duration": 67.8,
+
         "tokens_used": 2100
       },
       {
@@ -420,37 +617,59 @@ POST /crews/{crew_id}/execute
         "agent": "Editor",
         "output": "Edited and polished final content...",
         "duration": 23.4,
+
         "tokens_used": 890
       }
     ],
     "usage_metrics": {
       "total_tokens": 4240,
       "total_cost": 0.021,
+
       "execution_time": 136.4
+
     }
   },
   "execution_time": 136.4,
+
   "completed_at": "2024-01-15T10:32:16Z"
+
 }
+
 ```
 
-### Execute Crew Streaming
+#
 
-Execute a crew with real-time streaming of agent activities and results.
+## Execute Crew Streamin
 
-```http
+g
+
+Execute a crew with real-time streaming of agent activities and results
+
+.
+
+```
+
+http
 POST /crews/{crew_id}/execute/stream
+
 ```
 
-**Response:** Server-Sent Events (SSE) stream
+**Response:
 
-```javascript
+* * Server-Sent Events (SSE) strea
+
+m
+
+```
+
+javascript
 // Event: crew_start
 {
   "event": "crew_start",
   "execution_id": "exec_987654321",
   "crew_id": "crew_123456789",
   "timestamp": "2024-01-15T10:30:00Z"
+
 }
 
 // Event: task_start
@@ -460,6 +679,7 @@ POST /crews/{crew_id}/execute/stream
   "task_id": "research_task",
   "agent": "Research Analyst",
   "timestamp": "2024-01-15T10:30:01Z"
+
 }
 
 // Event: agent_action
@@ -473,6 +693,7 @@ POST /crews/{crew_id}/execute/stream
     "num_results": 10
   },
   "timestamp": "2024-01-15T10:30:05Z"
+
 }
 
 // Event: agent_thought
@@ -482,6 +703,7 @@ POST /crews/{crew_id}/execute/stream
   "agent": "Research Analyst",
   "thought": "I found several recent studies on AI adoption in healthcare...",
   "timestamp": "2024-01-15T10:30:12Z"
+
 }
 
 // Event: task_complete
@@ -492,7 +714,9 @@ POST /crews/{crew_id}/execute/stream
   "agent": "Research Analyst",
   "output": "Research findings...",
   "duration": 45.2,
+
   "timestamp": "2024-01-15T10:30:46Z"
+
 }
 
 // Event: crew_complete
@@ -501,21 +725,35 @@ POST /crews/{crew_id}/execute/stream
   "execution_id": "exec_987654321",
   "final_output": "Final blog post content...",
   "execution_time": 136.4,
+
   "timestamp": "2024-01-15T10:32:16Z"
+
 }
+
 ```
 
-### Get Execution Status
+#
+
+## Get Execution Statu
+
+s
 
 Check the status of a running crew execution.
 
-```http
-GET /executions/{execution_id}
 ```
 
-**Response:**
+http
+GET /executions/{execution_id}
 
-```json
+```
+
+**Response:
+
+* *
+
+```
+
+json
 {
   "execution_id": "exec_987654321",
   "crew_id": "crew_123456789",
@@ -523,54 +761,102 @@ GET /executions/{execution_id}
   "current_task": "writing_task",
   "current_agent": "Content Writer",
   "progress": 0.67,
+
   "started_at": "2024-01-15T10:30:00Z",
+
   "estimated_completion": "2024-01-15T10:32:00Z",
+
   "completed_tasks": 1,
   "total_tasks": 3,
   "usage_metrics": {
     "tokens_used": 1250,
     "cost_so_far": 0.006,
+
     "execution_time": 46.2
+
   }
 }
+
 ```
 
-### Cancel Execution
+#
+
+## Cancel Executio
+
+n
 
 Cancel a running crew execution.
 
-```http
-POST /executions/{execution_id}/cancel
 ```
 
-### List Executions
+http
+POST /executions/{execution_id}/cancel
+
+```
+
+#
+
+## List Execution
+
+s
 
 Get execution history for a crew.
 
-```http
-GET /crews/{crew_id}/executions
 ```
 
-**Query Parameters:**
+http
+GET /crews/{crew_id}/executions
 
-- `status`: Filter by status (completed, failed, running, cancelled)
-- `start_date`: Filter by start date
-- `end_date`: Filter by end date
-- `user_id`: Filter by user who initiated execution
+```
 
-## Agent Management APIs
+**Query Parameters:
 
-### Create Agent
+* *
+
+- `status`: Filter by status (completed, failed, running, cancelled
+
+)
+
+- `start_date`: Filter by start dat
+
+e
+
+- `end_date`: Filter by end dat
+
+e
+
+- `user_id`: Filter by user who initiated executio
+
+n
+
+#
+
+# Agent Management API
+
+s
+
+#
+
+## Create Agen
+
+t
 
 Create a new agent for use in crews.
 
-```http
-POST /agents
 ```
 
-**Request Body:**
+http
+POST /agents
 
-```json
+```
+
+**Request Body:
+
+* *
+
+```
+
+json
 {
   "name": "Data Scientist",
   "role": "Senior Data Science Analyst",
@@ -578,7 +864,9 @@ POST /agents
   "backstory": "You are an experienced data scientist with expertise in machine learning...",
   "llm": {
     "model": "gpt-4",
+
     "temperature": 0.2,
+
     "max_tokens": 2000
   },
   "tools": [
@@ -608,58 +896,103 @@ POST /agents
   "max_iter": 5,
   "max_rpm": 10,
   "tags": ["data-science", "analytics", "ml"],
+
   "metadata": {
     "created_by": "user123",
     "department": "data_science"
   }
 }
+
 ```
 
-### Get Agent
+#
+
+## Get Agen
+
+t
 
 Get details of a specific agent.
 
-```http
-GET /agents/{agent_id}
 ```
 
-### Update Agent
+http
+GET /agents/{agent_id}
+
+```
+
+#
+
+## Update Agen
+
+t
 
 Update an agent's configuration.
 
-```http
-PUT /agents/{agent_id}
 ```
 
-### Delete Agent
+http
+PUT /agents/{agent_id}
+
+```
+
+#
+
+## Delete Agen
+
+t
 
 Delete an agent.
 
-```http
-DELETE /agents/{agent_id}
 ```
 
-### List Agents
+http
+DELETE /agents/{agent_id}
+
+```
+
+#
+
+## List Agent
+
+s
 
 Get all available agents.
 
-```http
-GET /agents
 ```
 
-## Tool Management APIs
+http
+GET /agents
 
-### Register Tool
+```
+
+#
+
+# Tool Management API
+
+s
+
+#
+
+## Register Too
+
+l
 
 Register a custom tool for use by agents.
 
-```http
-POST /tools
 ```
 
-**Request Body:**
+http
+POST /tools
 
-```json
+```
+
+**Request Body:
+
+* *
+
+```
+
+json
 {
   "name": "web_scraper",
   "description": "Scrape web pages and extract structured data",
@@ -696,58 +1029,104 @@ POST /tools
   },
   "metadata": {
     "tags": ["web", "scraping", "data-collection"],
+
     "cost_per_call": 0.005,
+
     "rate_limit": 10,
     "timeout": 30
   }
 }
+
 ```
 
-### List Tools
+#
+
+## List Tool
+
+s
 
 Get all available tools.
 
-```http
-GET /tools
 ```
 
-### Get Tool
+http
+GET /tools
+
+```
+
+#
+
+## Get Too
+
+l
 
 Get details of a specific tool.
 
-```http
-GET /tools/{tool_id}
 ```
 
-### Update Tool
+http
+GET /tools/{tool_id}
+
+```
+
+#
+
+## Update Too
+
+l
 
 Update a tool's configuration.
 
-```http
-PUT /tools/{tool_id}
 ```
 
-### Delete Tool
+http
+PUT /tools/{tool_id}
+
+```
+
+#
+
+## Delete Too
+
+l
 
 Delete a tool.
 
-```http
-DELETE /tools/{tool_id}
 ```
 
-## Task Management APIs
+http
+DELETE /tools/{tool_id}
 
-### Create Task
+```
+
+#
+
+# Task Management API
+
+s
+
+#
+
+## Create Tas
+
+k
 
 Create a reusable task template.
 
-```http
-POST /tasks
 ```
 
-**Request Body:**
+http
+POST /tasks
 
-```json
+```
+
+**Request Body:
+
+* *
+
+```
+
+json
 {
   "name": "Market Research Analysis",
   "description": "Conduct comprehensive market research and analysis",
@@ -767,58 +1146,104 @@ POST /tasks
     "department": "research"
   }
 }
+
 ```
 
-### Get Task
+#
+
+## Get Tas
+
+k
 
 Get details of a specific task template.
 
-```http
-GET /tasks/{task_id}
 ```
 
-### Update Task
+http
+GET /tasks/{task_id}
+
+```
+
+#
+
+## Update Tas
+
+k
 
 Update a task template.
 
-```http
-PUT /tasks/{task_id}
 ```
 
-### Delete Task
+http
+PUT /tasks/{task_id}
+
+```
+
+#
+
+## Delete Tas
+
+k
 
 Delete a task template.
 
-```http
-DELETE /tasks/{task_id}
 ```
 
-### List Tasks
+http
+DELETE /tasks/{task_id}
+
+```
+
+#
+
+## List Task
+
+s
 
 Get all available task templates.
 
-```http
-GET /tasks
 ```
 
-## Process Types
+http
+GET /tasks
 
-### Sequential Process
+```
+
+#
+
+# Process Type
+
+s
+
+#
+
+## Sequential Proces
+
+s
 
 Tasks are executed one after another in order.
 
-```json
+```
+
+json
 {
   "process": "sequential",
   "task_order": ["research", "analysis", "reporting"]
 }
+
 ```
 
-### Hierarchical Process
+#
+
+## Hierarchical Proces
+
+s
 
 Tasks are organized in a hierarchical structure with a manager agent.
 
-```json
+```
+
+json
 {
   "process": "hierarchical",
   "manager_agent": "Project Manager",
@@ -833,26 +1258,46 @@ Tasks are organized in a hierarchical structure with a manager agent.
     }
   }
 }
+
 ```
 
-### Collaborative Process
+#
+
+## Collaborative Proces
+
+s
 
 All agents work together on all tasks simultaneously.
 
-```json
+```
+
+json
 {
   "process": "collaborative",
   "communication_channels": ["shared_memory", "direct_messaging"],
   "consensus_mechanism": "majority_vote"
 }
+
 ```
 
-## SDK Integration
+#
 
-### JavaScript/TypeScript SDK
+# SDK Integratio
 
-```typescript
-import { CrewAIClient } from '@auterity/crewai-sdk';
+n
+
+#
+
+## JavaScript/TypeScript SD
+
+K
+
+```
+
+typescript
+import { CrewAIClient } from '@auterity/crewai-sdk'
+
+;
 
 const client = new CrewAIClient({
   apiKey: 'your_api_key',
@@ -880,11 +1325,18 @@ const stream = await client.crews.executeStream(crew.id, {
 for await (const event of stream) {
   console.log(event.event, event.data);
 }
+
 ```
 
-### Python SDK
+#
 
-```python
+## Python SD
+
+K
+
+```
+
+python
 from auterity_crewai import CrewAIClient
 
 client = CrewAIClient(
@@ -893,6 +1345,7 @@ client = CrewAIClient(
 )
 
 # Create a crew
+
 crew = client.crews.create(
     name='Research Team',
     agents=[...],
@@ -901,52 +1354,79 @@ crew = client.crews.create(
 )
 
 # Execute the crew
+
 result = client.crews.execute(
     crew_id=crew.id,
     input={'topic': 'AI in Healthcare'}
 )
 
 # Stream execution results
+
 for event in client.crews.execute_stream(
     crew_id=crew.id,
     input={'topic': 'AI in Healthcare'}
 ):
     print(event['event'], event['data'])
+
 ```
 
-## Monitoring and Analytics
+#
 
-### Get Crew Analytics
+# Monitoring and Analytic
 
-```http
+s
+
+#
+
+## Get Crew Analytic
+
+s
+
+```
+
+http
 GET /crews/{crew_id}/analytics
+
 ```
 
-**Response:**
+**Response:
 
-```json
+* *
+
+```
+
+json
 {
   "crew_id": "crew_123456789",
   "time_range": {
     "start": "2024-01-01T00:00:00Z",
+
     "end": "2024-01-15T23:59:59Z"
+
   },
   "metrics": {
     "total_executions": 45,
     "successful_executions": 42,
     "failed_executions": 3,
     "average_execution_time": 125.8,
+
     "median_execution_time": 118.5,
+
     "p95_execution_time": 200.0,
+
     "success_rate": 0.933,
+
     "error_rate": 0.067
+
   },
   "agent_metrics": [
     {
       "agent_name": "Research Analyst",
       "executions": 45,
       "average_time": 42.3,
+
       "success_rate": 0.98,
+
       "tools_used": ["web_search", "data_analyzer"],
       "tokens_used": 12500
     },
@@ -954,7 +1434,9 @@ GET /crews/{crew_id}/analytics
       "agent_name": "Content Writer",
       "executions": 42,
       "average_time": 65.8,
+
       "success_rate": 0.95,
+
       "tools_used": ["content_generator"],
       "tokens_used": 21000
     }
@@ -964,34 +1446,54 @@ GET /crews/{crew_id}/analytics
       "task_description": "Research Analysis",
       "executions": 45,
       "average_time": 42.3,
+
       "success_rate": 0.98,
+
       "assigned_agents": ["Research Analyst"]
     }
   ],
   "cost_metrics": {
     "total_cost": 45.50,
+
     "average_cost_per_execution": 1.011,
+
     "cost_by_agent": {
       "Research Analyst": 18.30,
+
       "Content Writer": 22.20,
+
       "Editor": 5.00
+
     }
   }
 }
+
 ```
 
-### Get System Health
+#
 
-```http
+## Get System Healt
+
+h
+
+```
+
+http
 GET /health
+
 ```
 
-**Response:**
+**Response:
 
-```json
+* *
+
+```
+
+json
 {
   "status": "healthy",
   "version": "1.0.0",
+
   "uptime": 86400,
   "services": {
     "crew_execution": "healthy",
@@ -1007,38 +1509,75 @@ GET /health
     "total_tools": 23
   }
 }
+
 ```
 
-## Rate Limiting
+#
+
+# Rate Limitin
+
+g
 
 API rate limits are enforced per organization:
 
-- **Free Tier**: 50 requests/hour, 500 executions/month
-- **Pro Tier**: 500 requests/hour, 5,000 executions/month
-- **Enterprise Tier**: 5,000 requests/hour, unlimited executions
+- **Free Tier**: 50 requests/hour, 500 executions/mont
+
+h
+
+- **Pro Tier**: 500 requests/hour, 5,000 executions/mont
+
+h
+
+- **Enterprise Tier**: 5,000 requests/hour, unlimited execution
+
+s
 
 Rate limit headers are included in all responses:
 
-```http
+```
+
+http
 X-RateLimit-Limit: 500
+
 X-RateLimit-Remaining: 450
+
 X-RateLimit-Reset: 1640995200
-X-RateLimit-Retry-After: 60
+
+X-RateLimit-Retry-After: 6
+
+0
+
 ```
 
-## Webhook Integration
+#
 
-### Register Webhook
+# Webhook Integratio
 
-```http
+n
+
+#
+
+## Register Webhoo
+
+k
+
+```
+
+http
 POST /webhooks
+
 ```
 
-**Request Body:**
+**Request Body:
 
-```json
+* *
+
+```
+
+json
 {
   "url": "https://your-app.com/webhooks/crewai",
+
   "events": [
     "execution.completed",
     "execution.failed",
@@ -1048,30 +1587,45 @@ POST /webhooks
   "secret": "your_webhook_secret",
   "active": true
 }
+
 ```
 
-### Webhook Payload
+#
 
-```json
+## Webhook Payloa
+
+d
+
+```
+
+json
 {
   "event": "execution.completed",
   "timestamp": "2024-01-15T10:32:16Z",
+
   "data": {
     "execution_id": "exec_987654321",
     "crew_id": "crew_123456789",
     "status": "completed",
     "output": { ... },
     "execution_time": 136.4,
+
     "metadata": { ... }
   },
   "signature": "sha256=..."
 }
+
 ```
 
-## Error Codes
+#
+
+# Error Code
+
+s
 
 | Code | Description | HTTP Status |
 |------|-------------|-------------|
+
 | `VALIDATION_ERROR` | Invalid request parameters | 400 |
 | `CREW_NOT_FOUND` | Crew does not exist | 404 |
 | `AGENT_NOT_FOUND` | Agent does not exist | 404 |
@@ -1082,43 +1636,145 @@ POST /webhooks
 | `AUTHORIZATION_ERROR` | Insufficient permissions | 403 |
 | `SERVICE_UNAVAILABLE` | Service temporarily unavailable | 503 |
 
-## Best Practices
+#
 
-### Crew Design
+# Best Practice
 
-1. **Define clear roles**: Each agent should have a well-defined role and expertise area
-2. **Use appropriate tools**: Select tools that match each agent's capabilities
-3. **Design task dependencies**: Structure tasks to maximize collaboration efficiency
-4. **Set realistic expectations**: Define clear expected outputs for each task
+s
 
-### Agent Configuration
+#
 
-1. **Craft detailed backstories**: Provide rich context for agent personalities and expertise
-2. **Balance temperature settings**: Use lower temperatures for analytical tasks, higher for creative tasks
-3. **Configure memory appropriately**: Set memory limits based on task complexity
-4. **Enable delegation selectively**: Allow delegation for complex multi-step tasks
+## Crew Desig
 
-### Process Selection
+n
 
-1. **Sequential for linear workflows**: Use when tasks have clear dependencies
-2. **Hierarchical for complex projects**: Use when tasks require different expertise levels
-3. **Collaborative for creative tasks**: Use when agents need to work together simultaneously
+1. **Define clear roles**: Each agent should have a well-defined role and expertise ar
 
-### Performance Optimization
+e
 
-1. **Use caching**: Enable caching for repeated tasks and tool calls
-2. **Set iteration limits**: Prevent infinite loops with reasonable iteration limits
-3. **Monitor resource usage**: Track token usage and execution times
-4. **Optimize prompts**: Craft clear, specific prompts for better results
+a
 
-## Examples
+2. **Use appropriate tools**: Select tools that match each agent's capabiliti
 
-### Content Creation Crew
+e
 
-```json
+s
+
+3. **Design task dependencies**: Structure tasks to maximize collaboration efficien
+
+c
+
+y
+
+4. **Set realistic expectations**: Define clear expected outputs for each ta
+
+s
+
+k
+
+#
+
+## Agent Configuratio
+
+n
+
+1. **Craft detailed backstories**: Provide rich context for agent personalities and experti
+
+s
+
+e
+
+2. **Balance temperature settings**: Use lower temperatures for analytical tasks, higher for creative tas
+
+k
+
+s
+
+3. **Configure memory appropriately**: Set memory limits based on task complexi
+
+t
+
+y
+
+4. **Enable delegation selectively**: Allow delegation for complex multi-step tas
+
+k
+
+s
+
+#
+
+## Process Selectio
+
+n
+
+1. **Sequential for linear workflows**: Use when tasks have clear dependenci
+
+e
+
+s
+
+2. **Hierarchical for complex projects**: Use when tasks require different expertise leve
+
+l
+
+s
+
+3. **Collaborative for creative tasks**: Use when agents need to work together simultaneous
+
+l
+
+y
+
+#
+
+## Performance Optimizatio
+
+n
+
+1. **Use caching**: Enable caching for repeated tasks and tool cal
+
+l
+
+s
+
+2. **Set iteration limits**: Prevent infinite loops with reasonable iteration limi
+
+t
+
+s
+
+3. **Monitor resource usage**: Track token usage and execution tim
+
+e
+
+s
+
+4. **Optimize prompts**: Craft clear, specific prompts for better resul
+
+t
+
+s
+
+#
+
+# Example
+
+s
+
+#
+
+## Content Creation Cre
+
+w
+
+```
+
+json
 {
   "name": "Content Creation Crew",
   "description": "Multi-agent team for creating high-quality content",
+
   "agents": [
     {
       "name": "Researcher",
@@ -1155,11 +1811,18 @@ POST /webhooks
   ],
   "process": "sequential"
 }
+
 ```
 
-### Data Analysis Crew
+#
 
-```json
+## Data Analysis Cre
+
+w
+
+```
+
+json
 {
   "name": "Data Analysis Crew",
   "description": "Collaborative team for data analysis and insights",
@@ -1199,18 +1862,37 @@ POST /webhooks
   ],
   "process": "hierarchical"
 }
+
 ```
 
-## Support
+#
+
+# Suppor
+
+t
 
 For additional support:
 
-- **Documentation**: https://docs.auterity.com/crewai
-- **API Reference**: https://api.auterity.com/docs/crewai
-- **Community Forum**: https://community.auterity.com/crewai
-- **Support Email**: support@auterity.com
+- **Documentation**: https://docs.auterity.com/crewa
 
----
+i
 
-*Last updated: January 15, 2024*
+- **API Reference**: https://api.auterity.com/docs/crewa
 
+i
+
+- **Community Forum**: https://community.auterity.com/crewa
+
+i
+
+- **Support Email**: support@auterity.co
+
+m
+
+--
+
+- *Last updated: January 15, 202
+
+4
+
+* 

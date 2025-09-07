@@ -1,31 +1,92 @@
-# Services Documentation
 
-## Message Queue Service
 
-### Overview
+# Services Documentatio
 
-Redis-based message queue service providing reliable message delivery with persistence and delivery guarantees for multi-agent workflow orchestration.
+n
 
-### Location
+#
+
+# Message Queue Servic
+
+e
+
+#
+
+## Overvie
+
+w
+
+Redis-based message queue service providing reliable message delivery with persistence and delivery guarantees for multi-agent workflow orchestration
+
+.
+
+#
+
+## Locatio
+
+n
 
 `/backend/app/services/message_queue.py`
 
-### Key Features
+#
 
-#### Message Persistence
+## Key Feature
 
-- Messages stored in Redis with configurable TTL
-- Survives Redis restarts when persistence enabled
-- Automatic cleanup of expired messages
+s
 
-#### Delivery Guarantees
+#
 
-- **At-least-once delivery** through acknowledgment system
-- **Automatic retry** with exponential backoff (max 3 retries)
-- **Dead letter queue** for permanently failed messages
-- **Processing timeout recovery** for stale messages
+### Message Persistenc
 
-#### Core Operations
+e
+
+- Messages stored in Redis with configurable TT
+
+L
+
+- Survives Redis restarts when persistence enable
+
+d
+
+- Automatic cleanup of expired message
+
+s
+
+#
+
+### Delivery Guarantee
+
+s
+
+- **At-least-once delivery
+
+* * through acknowledgment syste
+
+m
+
+- **Automatic retry
+
+* * with exponential backoff (max 3 retries
+
+)
+
+- **Dead letter queue
+
+* * for permanently failed message
+
+s
+
+- **Processing timeout recovery
+
+* * for stale message
+
+s
+
+#
+
+### Core Operation
+
+s
 
 ```python
 from app.services.message_queue import get_message_queue
@@ -33,6 +94,7 @@ from app.services.message_queue import get_message_queue
 mq = get_message_queue()
 
 # Enqueue message
+
 message_id = mq.enqueue(
     queue_name="workflow_tasks",
     payload={"task": "process_data", "data": {...}},
@@ -42,127 +104,292 @@ message_id = mq.enqueue(
 )
 
 # Dequeue and process
+
 message = mq.dequeue("workflow_tasks", timeout=10)
 if message:
     try:
-        # Process message
+
+
+# Process message
+
         result = process_workflow_task(message.payload)
-        mq.ack(message)  # Success
+        mq.ack(message)
+
+# Success
+
     except Exception as e:
-        mq.nack(message, str(e))  # Retry or dead letter
+        mq.nack(message, str(e))
+
+# Retry or dead letter
+
 ```
 
-#### Message Model
+#
 
-```python
+### Message Mode
+
+l
+
+```
+
+python
 class QueueMessage(BaseModel):
-    id: str                    # Unique message ID
-    queue_name: str           # Target queue
-    payload: Dict[str, Any]   # Message data
-    priority: int             # 0-10 priority
-    retry_count: int          # Current retry attempt
-    max_retries: int          # Maximum retries (default: 3)
-    created_at: datetime      # Creation timestamp
-    scheduled_at: datetime    # Delayed execution time
-    expires_at: datetime      # Message expiration
-    status: MessageStatus     # PENDING/PROCESSING/COMPLETED/FAILED/DEAD_LETTER
-    error_message: str        # Last error details
+    id: str
+
+# Unique message ID
+
+    queue_name: str
+
+# Target queue
+
+    payload: Dict[str, Any]
+
+# Message data
+
+    priority: int
+
+# 0-10 priorit
+
+y
+
+    retry_count: int
+
+# Current retry attempt
+
+    max_retries: int
+
+# Maximum retries (default: 3)
+
+    created_at: datetime
+
+# Creation timestamp
+
+    scheduled_at: datetime
+
+# Delayed execution time
+
+    expires_at: datetime
+
+# Message expiration
+
+    status: MessageStatus
+
+# PENDING/PROCESSING/COMPLETED/FAILED/DEAD_LETTER
+
+    error_message: str
+
+# Last error details
+
 ```
 
-#### Advanced Features
+#
 
-**Scheduled Messages**
+### Advanced Feature
 
-```python
+s
+
+**Scheduled Messages
+
+* *
+
+```
+
+python
+
 # Process scheduled messages (run periodically)
+
 processed = mq.process_scheduled_messages()
+
 ```
 
-**Recovery Operations**
+**Recovery Operations
 
-```python
+* *
+
+```
+
+python
+
 # Recover stale processing messages
+
 recovered = mq.recover_stale_messages()
+
 ```
 
-**Monitoring**
+**Monitoring
 
-```python
+* *
+
+```
+
+python
+
 # Queue statistics
+
 stats = mq.get_queue_stats("workflow_tasks")
-# Returns: {"pending": 5, "processing": 2, "dead_letter": 1}
+
+# Returns: {"pending": 5, "processing": 2, "dead_letter": 1
+
+}
 
 # Health check
+
 health = mq.health_check()
+
 # Returns Redis connection status and metrics
+
 ```
 
-### Configuration
+#
+
+## Configuratio
+
+n
 
 Uses Redis connection from application settings:
 
-- Default: `redis://localhost:6379`
-- Configurable via `REDIS_URL` environment variable
+- Default: `redis://localhost:6379
 
-### Usage in MCP Architecture
+`
 
-- **Agent Communication**: Reliable message passing between agents
-- **Workflow Orchestration**: Task distribution and coordination
-- **Error Recovery**: Automatic retry and failure handling
-- **Monitoring**: Real-time queue metrics and health status
+- Configurable via `REDIS_URL` environment variabl
 
-### Integration Points
+e
 
-- **Workflow Engine**: Task execution and coordination
-- **Protocol Manager**: Inter-agent message routing
-- **Context Manager**: State synchronization messages
-- **Monitoring Dashboard**: Queue metrics visualization
+#
 
-## Storage Service
+## Usage in MCP Architectur
 
-### Overview
+e
 
-MinIO-based S3-compatible object storage for workflow artifacts, agent outputs, and file management.
+- **Agent Communication**: Reliable message passing between agent
 
-### Location
+s
+
+- **Workflow Orchestration**: Task distribution and coordinatio
+
+n
+
+- **Error Recovery**: Automatic retry and failure handlin
+
+g
+
+- **Monitoring**: Real-time queue metrics and health statu
+
+s
+
+#
+
+## Integration Point
+
+s
+
+- **Workflow Engine**: Task execution and coordinatio
+
+n
+
+- **Protocol Manager**: Inter-agent message routin
+
+g
+
+- **Context Manager**: State synchronization message
+
+s
+
+- **Monitoring Dashboard**: Queue metrics visualizatio
+
+n
+
+#
+
+# Storage Servic
+
+e
+
+#
+
+## Overvie
+
+w
+
+MinIO-based S3-compatible object storage for workflow artifacts, agent outputs, and file management
+
+.
+
+#
+
+## Locatio
+
+n
 
 `/backend/app/services/storage_service.py`
 
-### Usage
+#
 
-```python
+## Usag
+
+e
+
+```
+
+python
 from app.services.storage_service import get_storage_service
 
 storage = get_storage_service()
 
 # Upload workflow result
+
 file_path = storage.upload_text("workflows", "result.json", json_data)
 
 # Download file
+
 content = storage.download_file("workflows", "result.json")
 
 # Get shareable URL
+
 url = storage.get_presigned_url("workflows", "result.json")
+
 ```
 
-## Vector Service
+#
 
-### Overview
+# Vector Servic
 
-Qdrant vector database for semantic search, context similarity, and AI-powered workflow recommendations.
+e
 
-### Location
+#
+
+## Overvie
+
+w
+
+Qdrant vector database for semantic search, context similarity, and AI-powered workflow recommendations
+
+.
+
+#
+
+## Locatio
+
+n
 
 `/backend/app/services/vector_service.py`
 
-### Usage
+#
 
-```python
+## Usag
+
+e
+
+```
+
+python
 from app.services.vector_service import get_vector_service
 
 vector_db = get_vector_service()
 
 # Store workflow context
+
 vector_db.store_vector(
     "workflow_contexts",
     "Process customer data and generate report",
@@ -170,31 +397,54 @@ vector_db.store_vector(
 )
 
 # Find similar workflows
+
 similar = vector_db.search_similar(
     "workflow_contexts",
     "Generate customer analytics",
     limit=3
 )
+
 ```
 
-## Search Service
+#
 
-### Overview
+# Search Servic
 
-Elasticsearch-based search and analytics for workflows, executions, and logs with Kibana visualization.
+e
 
-### Location
+#
+
+## Overvie
+
+w
+
+Elasticsearch-based search and analytics for workflows, executions, and logs with Kibana visualization
+
+.
+
+#
+
+## Locatio
+
+n
 
 `/backend/app/services/search_service.py`
 
-### Usage
+#
 
-```python
+## Usag
+
+e
+
+```
+
+python
 from app.services.search_service import get_search_service
 
 search = get_search_service()
 
 # Index workflow
+
 search.index_workflow("workflow_123", {
     "name": "Data Processing",
     "description": "Process customer data",
@@ -202,55 +452,104 @@ search.index_workflow("workflow_123", {
 })
 
 # Search workflows
+
 results = search.search_workflows("customer data", tags=["etl"])
 
 # Search logs
+
 logs = search.search_logs(
     query="error",
     level="ERROR",
     time_range={"from": "2024-01-01", "to": "2024-01-31"}
+
 )
+
 ```
 
-## ML Monitoring Service
+#
 
-### Overview
+# ML Monitoring Servic
 
-Evidently.ai-based ML model monitoring for data drift detection, model performance tracking, and data quality validation.
+e
 
-### Location
+#
+
+## Overvie
+
+w
+
+Evidently.ai-based ML model monitoring for data drift detection, model performance tracking, and data quality validation
+
+.
+
+#
+
+## Locatio
+
+n
 
 `/backend/app/services/ml_monitoring_service.py`
 
-### Usage
+#
 
-```python
+## Usag
+
+e
+
+```
+
+python
 from app.services.ml_monitoring_service import get_ml_monitoring_service
 import pandas as pd
 
 ml_monitor = get_ml_monitoring_service()
 
 # Monitor data drift
+
 drift_report = ml_monitor.create_drift_report(
     reference_data=reference_df,
     current_data=current_df
 )
 
 # Monitor model performance
+
 perf_report = ml_monitor.create_model_performance_report(
     reference_data=reference_df,
     current_data=current_df
 )
 
 # Run data quality tests
+
 quality_tests = ml_monitor.run_data_quality_tests(data_df)
+
 ```
 
-## Service Access
+#
 
-- **MinIO Console**: http://localhost:9001 (minioadmin/minioadmin123)
-- **Qdrant Dashboard**: http://localhost:6333/dashboard
-- **Ollama API**: http://localhost:11434
-- **Elasticsearch**: http://localhost:9200
-- **Kibana**: http://localhost:5601
-- **Evidently Dashboard**: http://localhost:8085
+# Service Acces
+
+s
+
+- **MinIO Console**: http://localhost:9001 (minioadmin/minioadmin123
+
+)
+
+- **Qdrant Dashboard**: http://localhost:6333/dashboar
+
+d
+
+- **Ollama API**: http://localhost:1143
+
+4
+
+- **Elasticsearch**: http://localhost:920
+
+0
+
+- **Kibana**: http://localhost:560
+
+1
+
+- **Evidently Dashboard**: http://localhost:808
+
+5

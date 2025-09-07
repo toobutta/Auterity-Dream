@@ -1,75 +1,235 @@
-# 🧰 DevEx & Release Guide
 
-## Developer Onboarding
 
-### 90-Minute Setup
+# 🧰 DevEx & Release Guid
+
+e
+
+#
+
+# Developer Onboardin
+
+g
+
+#
+
+## 90-Minute Setu
+
+p
+
 1. Clone repo & install dependencies
-   ```bash
+
+
+
+```bash
    git clone ...
    npm install
-   ```
-2. Configure env vars (copy .env.example)
-3. Start services with docker-compose
-4. Run migrations & seed data
 
-### First PR Checklist
-- [ ] Local dev environment running
-- [ ] Linting/formatting configured
-- [ ] Tests passing locally
-- [ ] PR template reviewed
-- [ ] Branch naming convention followed
 
-### Local Environment Tips
-- Use `npm run dev` for hot reload
-- Debug configuration in .vscode/
-- Common issues & solutions
-- Performance optimization flags
+```
 
-## CI/CD Pipeline
+2. Configure env vars (copy .env.example
 
-### Build Pipeline
+)
+
+3. Start services with docker-compo
+
+s
+
+e
+
+4. Run migrations & seed dat
+
+a
+
+#
+
+## First PR Checklist
+
+- [ ] Local dev environment runnin
+
+g
+
+- [ ] Linting/formatting configure
+
+d
+
+- [ ] Tests passing locall
+
+y
+
+- [ ] PR template reviewe
+
+d
+
+- [ ] Branch naming convention followe
+
+d
+
+#
+
+## Local Environment Tips
+
+- Use `npm run dev` for hot reloa
+
+d
+
+- Debug configuration in .vscode
+
+/
+
+- Common issues & solution
+
+s
+
+- Performance optimization flag
+
+s
+
+#
+
+# CI/CD Pipelin
+
+e
+
+#
+
+## Build Pipeline
+
 ```mermaid
 graph TD
     A[PR Created] --> B[Lint/Format]
+
     B --> C[Unit Tests]
+
     C --> D[Integration Tests]
+
     D --> E[Build/Package]
-    E --> F[Security Scan]
+
+    E --> F[Security Scan
+
+]
+
 ```
 
-### Quality Gates
-- Code coverage >= 80%
-- No high/critical security findings
-- Performance regression checks
-- API contract validation
+#
 
-### Environments
-- Development (auto-deploy)
-- Staging (manual approval)
-- Production (change window)
+## Quality Gates
 
-## Release Management
+- Code coverage >= 80
 
-### Semantic Versioning
-- Major: Breaking changes
-- Minor: New features
-- Patch: Bug fixes
+%
 
-### Changelog Process
-1. PR description template
-2. Auto-generated from commits
-3. Release notes review
-4. Customer-facing updates
+- No high/critical security finding
 
-### Deployment Strategy
-- Blue/green deployment
-- Feature flags for risky changes
-- Automated smoke tests
-- Rollback procedures
+s
 
-### Monitoring
-- Deploy-time metrics
-- Error rate tracking
-- Performance impact
-- User-facing issues
+- Performance regression check
+
+s
+
+- API contract validatio
+
+n
+
+#
+
+## Environments
+
+- Development (auto-deploy
+
+)
+
+- Staging (manual approval
+
+)
+
+- Production (change window
+
+)
+
+#
+
+# Release Managemen
+
+t
+
+#
+
+## Semantic Versioning
+
+- Major: Breaking change
+
+s
+
+- Minor: New feature
+
+s
+
+- Patch: Bug fixe
+
+s
+
+#
+
+## Changelog Process
+
+1. PR description templat
+
+e
+
+2. Auto-generated from commi
+
+t
+
+s
+
+3. Release notes revie
+
+w
+
+4. Customer-facing updat
+
+e
+
+s
+
+#
+
+## Deployment Strategy
+
+- Blue/green deploymen
+
+t
+
+- Feature flags for risky change
+
+s
+
+- Automated smoke test
+
+s
+
+- Rollback procedure
+
+s
+
+#
+
+## Monitoring
+
+- Deploy-time metric
+
+s
+
+- Error rate trackin
+
+g
+
+- Performance impac
+
+t
+
+- User-facing issue
+
+s
 

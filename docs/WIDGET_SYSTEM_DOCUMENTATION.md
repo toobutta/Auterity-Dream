@@ -1,53 +1,155 @@
-# 🧩 Widget System Documentation
 
-## Overview
+
+# 🧩 Widget System Documentatio
+
+n
+
+#
+
+# Overvie
+
+w
 
 This document provides comprehensive documentation for Auterity's widget system, a flexible and extensible framework for building customizable dashboard components. The widget system enables users to create, configure, and interact with various data visualization and content display elements across the platform.
 
-## Table of Contents
+#
 
-1. [Widget Architecture](#widget-architecture)
-2. [Core Widget Components](#core-widget-components)
-3. [Widget Types](#widget-types)
-4. [Data Integration](#data-integration)
-5. [Customization & Styling](#customization--styling)
-6. [Widget Lifecycle](#widget-lifecycle)
-7. [Advanced Features](#advanced-features)
-8. [Developer Guide](#developer-guide)
+# Table of Content
 
-## Widget Architecture
+s
 
-### System Overview
+1. [Widget Architecture]
+
+(
+
+#widget-architecture
+
+)
+
+2. [Core Widget Components]
+
+(
+
+#core-widget-components
+
+)
+
+3. [Widget Types]
+
+(
+
+#widget-types
+
+)
+
+4. [Data Integration]
+
+(
+
+#data-integration
+
+)
+
+5. [Customization & Styling]
+
+(
+
+#customization--styling
+
+)
+
+6. [Widget Lifecycle]
+
+(
+
+#widget-lifecycle
+
+)
+
+7. [Advanced Features]
+
+(
+
+#advanced-features
+
+)
+
+8. [Developer Guide]
+
+(
+
+#developer-guid
+
+e
+
+)
+
+#
+
+# Widget Architectur
+
+e
+
+#
+
+## System Overview
+
 ```mermaid
 graph TD
     A[Widget System] --> B[Core Components]
+
     A --> C[Widget Types]
+
     A --> D[Data Integration]
+
     A --> E[Layout System]
-    
+
+
     B --> B1[BaseWidget]
+
     B --> B2[WidgetHeader]
+
     B --> B3[WidgetLoading]
+
     B --> B4[WidgetError]
-    
+
+
     C --> C1[ChartWidget]
+
     C --> C2[MetricWidget]
+
     C --> C3[TableWidget]
+
     C --> C4[TextWidget]
+
     C --> C5[Custom Widgets]
-    
+
+
     D --> D1[REST API]
+
     D --> D2[Database]
+
     D --> D3[Static Data]
+
     D --> D4[Real-time Streams]
-    
+
+
     E --> E1[Grid Layout]
+
     E --> E2[Masonry Layout]
-    E --> E3[Responsive Behavior]
+
+    E --> E3[Responsive Behavior
+
+]
+
 ```
 
-### Component Locations
+#
+
+## Component Locations
+
 ```
+
 frontend/
 ├── src/
 │   ├── components/
@@ -64,30 +166,78 @@ frontend/
 │   │       │   └── index.ts
 │   ├── types/
 │   │   └── dashboard.ts
+
 ```
 
-## Core Widget Components
+#
 
-### BaseWidget
+# Core Widget Component
+
+s
+
+#
+
+## BaseWidget
+
 The foundation for all widget types, providing common functionality and structure.
 
-**Key Features**:
-- Consistent layout and styling
-- Error handling
-- Loading states
-- Configuration management
+**Key Features**
 
-### WidgetHeader
-**Location**: `frontend/src/components/widgets/core/WidgetHeader.tsx`
-**Purpose**: Standard header for all widgets
-**Features**:
-- Title display
-- Loading indicator
-- Error notification
-- Refresh button
-- Action menu
+:
 
-```typescript
+- Consistent layout and stylin
+
+g
+
+- Error handlin
+
+g
+
+- Loading state
+
+s
+
+- Configuration managemen
+
+t
+
+#
+
+## WidgetHeader
+
+**Location**: `frontend/src/components/widgets/core/WidgetHeader.tsx
+
+`
+**Purpose**: Standard header for all widget
+
+s
+**Features**
+
+:
+
+- Title displa
+
+y
+
+- Loading indicato
+
+r
+
+- Error notificatio
+
+n
+
+- Refresh butto
+
+n
+
+- Action men
+
+u
+
+```
+
+typescript
 // Widget Header Component
 export const WidgetHeader: React.FC<WidgetHeaderProps> = ({
   title,
@@ -98,38 +248,63 @@ export const WidgetHeader: React.FC<WidgetHeaderProps> = ({
 }) => {
   return (
     <div className="widget-header">
+
       <div className="widget-title">{title}</div>
-      
+
+
       <div className="widget-actions">
+
         {isLoading && <Spinner size="small" />}
         {error && <ErrorIcon color="error" />}
-        
+
         {onRefresh && (
-          <IconButton 
+          <IconButton
             onClick={onRefresh}
             disabled={isLoading}
             aria-label="Refresh widget"
+
           >
             <RefreshIcon />
           </IconButton>
         )}
-        
+
         {actions}
       </div>
     </div>
   );
 };
+
 ```
 
-### WidgetError
-**Location**: `frontend/src/components/widgets/core/WidgetError.tsx`
-**Purpose**: Error display for widgets
-**Features**:
-- Error message display
-- Retry functionality
-- Visual error indication
+#
 
-```typescript
+## WidgetError
+
+**Location**: `frontend/src/components/widgets/core/WidgetError.tsx
+
+`
+**Purpose**: Error display for widget
+
+s
+**Features**
+
+:
+
+- Error message displa
+
+y
+
+- Retry functionalit
+
+y
+
+- Visual error indicatio
+
+n
+
+```
+
+typescript
 // Widget Error Component
 export const WidgetError: React.FC<WidgetErrorProps> = ({
   message,
@@ -137,11 +312,13 @@ export const WidgetError: React.FC<WidgetErrorProps> = ({
 }) => {
   return (
     <div className="widget-error">
+
       <ErrorIcon size="large" color="error" />
       <p className="error-message">{message}</p>
-      
+
+
       {onRetry && (
-        <Button 
+        <Button
           variant="outlined"
           onClick={onRetry}
           startIcon={<RefreshIcon />}
@@ -152,41 +329,89 @@ export const WidgetError: React.FC<WidgetErrorProps> = ({
     </div>
   );
 };
+
 ```
 
-### WidgetLoading
-**Location**: `frontend/src/components/widgets/core/WidgetLoading.tsx`
-**Purpose**: Loading state for widgets
-**Features**:
-- Loading animation
-- Optional loading message
+#
 
-```typescript
+## WidgetLoading
+
+**Location**: `frontend/src/components/widgets/core/WidgetLoading.tsx
+
+`
+**Purpose**: Loading state for widget
+
+s
+**Features**
+
+:
+
+- Loading animatio
+
+n
+
+- Optional loading messag
+
+e
+
+```
+
+typescript
 // Widget Loading Component
 export const WidgetLoading: React.FC<WidgetLoadingProps> = ({
   message = 'Loading widget data...'
 }) => {
   return (
     <div className="widget-loading">
+
       <Spinner size="large" />
       <p className="loading-message">{message}</p>
+
     </div>
   );
 };
+
 ```
 
-## Widget Types
+#
 
-### ChartWidget
-**Location**: `frontend/src/components/widgets/core/ChartWidget.tsx`
-**Purpose**: Data visualization through various chart types
-**Features**:
-- Multiple chart types (line, bar, pie, area)
-- Customizable axes
-- Legend support
-- Color customization
+# Widget Type
 
-```typescript
+s
+
+#
+
+## ChartWidget
+
+**Location**: `frontend/src/components/widgets/core/ChartWidget.tsx
+
+`
+**Purpose**: Data visualization through various chart type
+
+s
+**Features**
+
+:
+
+- Multiple chart types (line, bar, pie, area
+
+)
+
+- Customizable axe
+
+s
+
+- Legend suppor
+
+t
+
+- Color customizatio
+
+n
+
+```
+
+typescript
 // Chart Widget Component
 export const ChartWidget: React.FC<ChartWidgetProps> = ({
   id,
@@ -207,23 +432,25 @@ export const ChartWidget: React.FC<ChartWidgetProps> = ({
   if (isLoading) {
     return <WidgetLoading />;
   }
-  
+
   if (error) {
     return <WidgetError message={error} onRetry={onRefresh} />;
   }
-  
+
   return (
     <div className="chart-widget">
-      <WidgetHeader 
+
+      <WidgetHeader
         title={title}
         isLoading={isLoading}
         error={error}
         onRefresh={onRefresh}
       />
-      
+
       <div className="chart-container">
+
         {chartType === 'line' && (
-          <LineChart 
+          <LineChart
             data={data}
             xAxis={xAxis}
             yAxis={yAxis}
@@ -231,9 +458,9 @@ export const ChartWidget: React.FC<ChartWidgetProps> = ({
             showLegend={showLegend}
           />
         )}
-        
+
         {chartType === 'bar' && (
-          <BarChart 
+          <BarChart
             data={data}
             xAxis={xAxis}
             yAxis={yAxis}
@@ -241,17 +468,17 @@ export const ChartWidget: React.FC<ChartWidgetProps> = ({
             showLegend={showLegend}
           />
         )}
-        
+
         {chartType === 'pie' && (
-          <PieChart 
+          <PieChart
             data={data}
             colors={colors}
             showLegend={showLegend}
           />
         )}
-        
+
         {chartType === 'area' && (
-          <AreaChart 
+          <AreaChart
             data={data}
             xAxis={xAxis}
             yAxis={yAxis}
@@ -263,18 +490,42 @@ export const ChartWidget: React.FC<ChartWidgetProps> = ({
     </div>
   );
 };
+
 ```
 
-### MetricWidget
-**Location**: `frontend/src/components/widgets/core/MetricWidget.tsx`
-**Purpose**: Display key performance indicators and metrics
-**Features**:
-- Numeric value display
-- Trend indicators
-- Formatting options
-- Prefix/suffix support
+#
 
-```typescript
+## MetricWidget
+
+**Location**: `frontend/src/components/widgets/core/MetricWidget.tsx
+
+`
+**Purpose**: Display key performance indicators and metric
+
+s
+**Features**
+
+:
+
+- Numeric value displa
+
+y
+
+- Trend indicator
+
+s
+
+- Formatting option
+
+s
+
+- Prefix/suffix suppor
+
+t
+
+```
+
+typescript
 // Metric Widget Component
 export const MetricWidget: React.FC<MetricWidgetProps> = ({
   id,
@@ -300,43 +551,50 @@ export const MetricWidget: React.FC<MetricWidgetProps> = ({
       return formatNumber(value);
     }
   }, [value, format]);
-  
+
   const trendPercentage = useMemo(() => {
     if (previousValue && typeof value === 'number' && typeof previousValue === 'number') {
       return calculatePercentageChange(value, previousValue);
     }
     return null;
   }, [value, previousValue]);
-  
+
   return (
     <div className="metric-widget">
-      <WidgetHeader 
+
+      <WidgetHeader
         title={title}
         isLoading={isLoading}
         error={error}
         onRefresh={onRefresh}
       />
-      
+
       {isLoading ? (
         <WidgetLoading />
       ) : error ? (
         <WidgetError message={error} onRetry={onRefresh} />
       ) : (
         <div className="metric-content">
+
           <div className="metric-value">
+
             {prefix && <span className="metric-prefix">{prefix}</span>}
+
             <span className="value">{formattedValue}</span>
             {suffix && <span className="metric-suffix">{suffix}</span>}
+
           </div>
-          
+
           {trend && (
             <div className={`metric-trend trend-${trend}`}>
+
               {trend === 'up' && <TrendUpIcon />}
               {trend === 'down' && <TrendDownIcon />}
               {trend === 'neutral' && <TrendNeutralIcon />}
-              
+
               {trendPercentage && (
                 <span className="trend-percentage">
+
                   {formatPercentage(Math.abs(trendPercentage))}
                 </span>
               )}
@@ -347,18 +605,42 @@ export const MetricWidget: React.FC<MetricWidgetProps> = ({
     </div>
   );
 };
+
 ```
 
-### TableWidget
-**Location**: `frontend/src/components/widgets/core/TableWidget.tsx`
-**Purpose**: Tabular data display
-**Features**:
-- Sortable columns
-- Pagination
-- Column types
-- Customizable widths
+#
 
-```typescript
+## TableWidget
+
+**Location**: `frontend/src/components/widgets/core/TableWidget.tsx
+
+`
+**Purpose**: Tabular data displa
+
+y
+**Features**
+
+:
+
+- Sortable column
+
+s
+
+- Paginatio
+
+n
+
+- Column type
+
+s
+
+- Customizable width
+
+s
+
+```
+
+typescript
 // Table Widget Component
 export const TableWidget: React.FC<TableWidgetProps> = ({
   id,
@@ -376,7 +658,7 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
 }) => {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  
+
   const handleSort = (key: string) => {
     if (sortKey === key) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -384,21 +666,22 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
       setSortKey(key);
       setSortOrder('asc');
     }
-    
+
     if (onSort) {
       onSort(key, sortOrder === 'asc' ? 'desc' : 'asc');
     }
   };
-  
+
   return (
     <div className="table-widget">
-      <WidgetHeader 
+
+      <WidgetHeader
         title={title}
         isLoading={isLoading}
         error={error}
         onRefresh={onRefresh}
       />
-      
+
       {isLoading ? (
         <WidgetLoading />
       ) : error ? (
@@ -406,10 +689,11 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
       ) : (
         <>
           <table className="data-table">
+
             <thead>
               <tr>
                 {columns.map(column => (
-                  <th 
+                  <th
                     key={column.key}
                     style={{ width: column.width }}
                     className={column.sortable ? 'sortable' : ''}
@@ -418,6 +702,7 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
                     {column.title}
                     {sortKey === column.key && (
                       <span className="sort-indicator">
+
                         {sortOrder === 'asc' ? '▲' : '▼'}
                       </span>
                     )}
@@ -437,9 +722,10 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
               ))}
             </tbody>
           </table>
-          
+
           {pagination && (
             <div className="table-pagination">
+
               <Pagination
                 current={pagination.current}
                 pageSize={pagination.pageSize}
@@ -453,17 +739,38 @@ export const TableWidget: React.FC<TableWidgetProps> = ({
     </div>
   );
 };
+
 ```
 
-### TextWidget
-**Location**: `frontend/src/components/widgets/core/TextWidget.tsx`
-**Purpose**: Rich text content display
-**Features**:
-- Multiple format support (plain, markdown, HTML)
-- Editable content
-- Text formatting
+#
 
-```typescript
+## TextWidget
+
+**Location**: `frontend/src/components/widgets/core/TextWidget.tsx
+
+`
+**Purpose**: Rich text content displa
+
+y
+**Features**
+
+:
+
+- Multiple format support (plain, markdown, HTML
+
+)
+
+- Editable conten
+
+t
+
+- Text formattin
+
+g
+
+```
+
+typescript
 // Text Widget Component
 export const TextWidget: React.FC<TextWidgetProps> = ({
   id,
@@ -480,23 +787,23 @@ export const TextWidget: React.FC<TextWidgetProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableContent, setEditableContent] = useState(content);
-  
+
   const handleEdit = () => {
     setIsEditing(true);
   };
-  
+
   const handleSave = () => {
     setIsEditing(false);
     if (onContentChange) {
       onContentChange(editableContent);
     }
   };
-  
+
   const handleCancel = () => {
     setIsEditing(false);
     setEditableContent(content);
   };
-  
+
   const renderContent = () => {
     if (format === 'markdown') {
       return <MarkdownRenderer content={content} />;
@@ -504,12 +811,14 @@ export const TextWidget: React.FC<TextWidgetProps> = ({
       return <div dangerouslySetInnerHTML={{ __html: content }} />;
     } else {
       return <div className="plain-text">{content}</div>;
+
     }
   };
-  
+
   return (
     <div className="text-widget">
-      <WidgetHeader 
+
+      <WidgetHeader
         title={title}
         isLoading={isLoading}
         error={error}
@@ -522,39 +831,52 @@ export const TextWidget: React.FC<TextWidgetProps> = ({
           ) : null
         }
       />
-      
+
       {isLoading ? (
         <WidgetLoading />
       ) : error ? (
         <WidgetError message={error} onRetry={onRefresh} />
       ) : isEditing ? (
         <div className="text-editor">
+
           <TextEditor
             value={editableContent}
             onChange={setEditableContent}
             format={format}
           />
           <div className="editor-actions">
+
             <Button onClick={handleCancel}>Cancel</Button>
             <Button variant="primary" onClick={handleSave}>Save</Button>
           </div>
         </div>
       ) : (
         <div className="text-content">
+
           {renderContent()}
         </div>
       )}
     </div>
   );
 };
+
 ```
 
-## Data Integration
+#
 
-### Data Source Configuration
+# Data Integratio
+
+n
+
+#
+
+## Data Source Configuration
+
 The widget system supports multiple data source types through a flexible configuration system.
 
-```typescript
+```
+
+typescript
 // Data Source Configuration
 export interface DataSourceConfig {
   type: DataSourceType;
@@ -565,6 +887,7 @@ export interface DataSourceConfig {
   body?: any;
   auth?: {
     type: 'bearer' | 'basic' | 'api-key' | 'oauth2';
+
     credentials: Record<string, any>;
   };
   cache?: {
@@ -572,10 +895,16 @@ export interface DataSourceConfig {
     ttl: number;
   };
 }
+
 ```
 
-### Data Fetching Hook
-```typescript
+#
+
+## Data Fetching Hook
+
+```
+
+typescript
 // Widget Data Hook
 export const useWidgetData = <T>(
   dataSource: DataSourceConfig,
@@ -589,11 +918,11 @@ export const useWidgetData = <T>(
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Handle different data source types
       if (dataSource.type === 'rest') {
@@ -614,30 +943,39 @@ export const useWidgetData = <T>(
       setIsLoading(false);
     }
   }, [dataSource]);
-  
+
   useEffect(() => {
     fetchData();
-    
+
     // Set up refresh interval if specified
     if (refreshInterval && refreshInterval > 0) {
       const intervalId = setInterval(fetchData, refreshInterval);
       return () => clearInterval(intervalId);
     }
   }, [fetchData, refreshInterval]);
-  
+
   return { data, isLoading, error, refresh: fetchData };
 };
+
 ```
 
-### Real-time Data Integration
-```typescript
+#
+
+## Real-time Data Integratio
+
+n
+
+```
+
+typescript
 // Real-time Data Integration
+
 const setupStreamData = <T>(
   dataSource: DataSourceConfig,
   setData: (data: T) => void
 ) => {
   const ws = new WebSocket(dataSource.endpoint as string);
-  
+
   ws.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
@@ -646,21 +984,31 @@ const setupStreamData = <T>(
       console.error('Failed to parse WebSocket data', error);
     }
   };
-  
+
   ws.onerror = (error) => {
     console.error('WebSocket error', error);
   };
-  
+
   return () => {
     ws.close();
   };
 };
+
 ```
 
-## Customization & Styling
+#
 
-### Widget Styling System
-```typescript
+# Customization & Stylin
+
+g
+
+#
+
+## Widget Styling System
+
+```
+
+typescript
 // Widget Style System
 export interface WidgetStyle {
   backgroundColor?: string;
@@ -682,67 +1030,74 @@ export const applyWidgetStyle = (
   if (style.backgroundColor) {
     element.style.backgroundColor = style.backgroundColor;
   }
-  
+
   if (style.textColor) {
     element.style.color = style.textColor;
   }
-  
+
   if (style.borderColor) {
     element.style.borderColor = style.borderColor;
   }
-  
+
   if (style.borderRadius !== undefined) {
     element.style.borderRadius = `${style.borderRadius}px`;
   }
-  
+
   if (style.padding !== undefined) {
     element.style.padding = typeof style.padding === 'number'
       ? `${style.padding}px`
       : style.padding;
   }
-  
+
   if (style.margin !== undefined) {
     element.style.margin = typeof style.margin === 'number'
       ? `${style.margin}px`
       : style.margin;
   }
-  
+
   if (style.boxShadow) {
     element.style.boxShadow = style.boxShadow;
   }
-  
+
   if (style.height !== undefined) {
     element.style.height = typeof style.height === 'number'
       ? `${style.height}px`
       : style.height;
   }
-  
+
   if (style.maxHeight !== undefined) {
     element.style.maxHeight = typeof style.maxHeight === 'number'
       ? `${style.maxHeight}px`
       : style.maxHeight;
   }
-  
+
   if (style.overflow) {
     element.style.overflow = style.overflow;
   }
 };
+
 ```
 
-### Theme Integration
-```typescript
+#
+
+## Theme Integration
+
+```
+
+typescript
 // Widget Theme Integration
 export const useWidgetTheme = (
   widgetConfig: WidgetConfig,
   dashboardTheme: string
 ) => {
   const theme = useTheme();
-  
+
   return useMemo(() => {
     // Start with dashboard theme
     const baseTheme = theme.dashboards[dashboardTheme] || theme.dashboards.default;
-    
+
     // Override with widget-specific settings
+
     return {
       backgroundColor: widgetConfig.backgroundColor || baseTheme.widgetBackgroundColor,
       textColor: widgetConfig.textColor || baseTheme.widgetTextColor,
@@ -753,12 +1108,22 @@ export const useWidgetTheme = (
     };
   }, [theme, dashboardTheme, widgetConfig]);
 };
+
 ```
 
-## Widget Lifecycle
+#
 
-### Widget Creation
-```typescript
+# Widget Lifecycl
+
+e
+
+#
+
+## Widget Creation
+
+```
+
+typescript
 // Widget Creation
 export const createWidget = async (
   dashboardId: string,
@@ -771,10 +1136,16 @@ export const createWidget = async (
     throw new Error('Failed to create widget');
   }
 };
+
 ```
 
-### Widget Update
-```typescript
+#
+
+## Widget Update
+
+```
+
+typescript
 // Widget Update
 export const updateWidget = async (
   dashboardId: string,
@@ -791,10 +1162,16 @@ export const updateWidget = async (
     throw new Error('Failed to update widget');
   }
 };
+
 ```
 
-### Widget Deletion
-```typescript
+#
+
+## Widget Deletion
+
+```
+
+typescript
 // Widget Deletion
 export const deleteWidget = async (
   dashboardId: string,
@@ -806,12 +1183,22 @@ export const deleteWidget = async (
     throw new Error('Failed to delete widget');
   }
 };
+
 ```
 
-## Advanced Features
+#
 
-### Widget Interactions
-```typescript
+# Advanced Feature
+
+s
+
+#
+
+## Widget Interactions
+
+```
+
+typescript
 // Widget Interactions
 export const useWidgetInteractions = (
   dashboardId: string,
@@ -823,6 +1210,7 @@ export const useWidgetInteractions = (
   ) => {
     try {
       await api.post(`/api/v1/analytics/widget-interactions`, {
+
         dashboard_id: dashboardId,
         widget_id: widgetId,
         interaction_type: interactionType,
@@ -833,13 +1221,19 @@ export const useWidgetInteractions = (
       console.error('Failed to log widget interaction', error);
     }
   }, [dashboardId, widgetId]);
-  
+
   return { logInteraction };
 };
+
 ```
 
-### Widget Export
-```typescript
+#
+
+## Widget Export
+
+```
+
+typescript
 // Widget Export
 export const exportWidgetData = async (
   dashboardId: string,
@@ -859,23 +1253,29 @@ export const exportWidgetData = async (
     throw new Error('Failed to export widget data');
   }
 };
+
 ```
 
-### Widget Filtering
-```typescript
+#
+
+## Widget Filtering
+
+```
+
+typescript
 // Widget Filtering
 export const useWidgetFilters = (
   initialFilters: Record<string, any> = {}
 ) => {
   const [filters, setFilters] = useState(initialFilters);
-  
+
   const updateFilter = useCallback((key: string, value: any) => {
     setFilters(prev => ({
       ...prev,
       [key]: value
     }));
   }, []);
-  
+
   const removeFilter = useCallback((key: string) => {
     setFilters(prev => {
       const newFilters = { ...prev };
@@ -883,11 +1283,11 @@ export const useWidgetFilters = (
       return newFilters;
     });
   }, []);
-  
+
   const clearFilters = useCallback(() => {
     setFilters({});
   }, []);
-  
+
   return {
     filters,
     updateFilter,
@@ -895,12 +1295,22 @@ export const useWidgetFilters = (
     clearFilters
   };
 };
+
 ```
 
-## Developer Guide
+#
 
-### Creating Custom Widgets
-```typescript
+# Developer Guid
+
+e
+
+#
+
+## Creating Custom Widgets
+
+```
+
+typescript
 // Custom Widget Example
 import { BaseWidgetProps, WidgetHeader, WidgetLoading, WidgetError } from '../core';
 
@@ -928,33 +1338,44 @@ export const CustomWidget: React.FC<CustomWidgetProps> = ({
     // Process custom data
     return transformData(customData, customConfig);
   }, [customData, customConfig]);
-  
+
   return (
     <div className="custom-widget">
-      <WidgetHeader 
+
+      <WidgetHeader
         title={title}
         isLoading={isLoading}
         error={error}
         onRefresh={onRefresh}
       />
-      
+
       {isLoading ? (
         <WidgetLoading />
       ) : error ? (
         <WidgetError message={error} onRetry={onRefresh} />
       ) : (
         <div className="custom-widget-content">
-          {/* Custom widget rendering */}
+
+          {/
+
+* Custom widget rendering */}
+
           <CustomVisualization data={processedData} />
         </div>
       )}
     </div>
   );
 };
+
 ```
 
-### Widget Registration
-```typescript
+#
+
+## Widget Registration
+
+```
+
+typescript
 // Widget Registration
 export const registerWidgetType = (
   type: string,
@@ -964,7 +1385,7 @@ export const registerWidgetType = (
   if (widgetRegistry[type]) {
     console.warn(`Widget type '${type}' is already registered. Overwriting.`);
   }
-  
+
   widgetRegistry[type] = {
     component,
     defaultConfig
@@ -976,24 +1397,32 @@ registerWidgetType('custom', CustomWidget, {
   option1: 'default',
   option2: 100
 });
+
 ```
 
-### Widget Factory
-```typescript
+#
+
+## Widget Factory
+
+```
+
+typescript
 // Widget Factory
 export const WidgetFactory: React.FC<{
   type: string;
   props: Record<string, any>;
 }> = ({ type, props }) => {
   const registry = useWidgetRegistry();
-  
+
   if (!registry[type]) {
     return <div className="widget-error">Unknown widget type: {type}</div>;
+
   }
-  
+
   const { component: WidgetComponent } = registry[type];
   return <WidgetComponent {...props} />;
 };
+
 ```
 
 This comprehensive documentation provides a detailed overview of Auterity's widget system, including its architecture, components, data integration capabilities, and customization options. Developers can use this guide to understand, extend, and customize the widget system to meet specific requirements.

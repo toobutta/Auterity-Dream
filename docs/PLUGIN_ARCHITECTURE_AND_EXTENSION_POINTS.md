@@ -1,73 +1,182 @@
-# 🧩 Plugin Architecture & Extension Points
 
-## Overview
+
+# 🧩 Plugin Architecture & Extension Point
+
+s
+
+#
+
+# Overvie
+
+w
 
 Defines a modular plugin system enabling safe extension of IDE, AI, workflow, and UI capabilities without modifying core services.
 
-## Architecture
+#
+
+# Architectur
+
+e
 
 ```mermaid
 graph TD
   A[Core Platform] --> B[Plugin Manager]
+
   B --> C[Registry]
+
   B --> D[Loader]
+
   B --> E[Sandbox]
+
   C --> F[IDE Plugins]
+
   C --> G[AI Plugins]
+
   C --> H[Workflow Plugins]
-  C --> I[UI Plugins]
+
+  C --> I[UI Plugins
+
+]
+
 ```
 
-## Plugin Manifest
+#
 
-```json
+# Plugin Manifes
+
+t
+
+```
+
+json
 {
   "name": "example-plugin",
+
   "version": "1.0.0",
+
   "type": "workflow",
   "entry": "dist/index.js",
   "permissions": ["network", "filesystem:read"],
   "capabilities": {"steps": ["custom.step"], "tools": ["http.request"]}
 }
+
 ```
 
-## Lifecycle
+#
 
-- Registration -> Validation -> Installation -> Activation -> Deactivation -> Removal
-- Version checks and capability negotiation at activation
+# Lifecycl
 
-## Security & Sandboxing
+e
 
-- Capability-scoped permissions
-- Network and filesystem guards
-- Resource quotas and timeouts
-- Structured error boundaries
+- Registration -> Validation -> Installation -> Activation -> Deactivation -> Remova
 
-## Extension Points
+l
 
-### IDE
-- Panels (Explorer, Git, Terminal)
-- Commands and keybindings
-- Code actions and diagnostics
+- Version checks and capability negotiation at activatio
 
-### AI
-- Tool adapters (HTTP, SQL, files, vector stores)
-- Prompt templates and chains
-- Result post-processors
+n
 
-### Workflow
-- Custom steps and executors
-- Triggers and event handlers
-- Validators and policy hooks
+#
 
-### UI
-- Widgets and dashboards
-- Routes and navigation
-- Theming tokens and components
+# Security & Sandboxin
 
-## Plugin API (TypeScript)
+g
 
-```typescript
+- Capability-scoped permission
+
+s
+
+- Network and filesystem guard
+
+s
+
+- Resource quotas and timeout
+
+s
+
+- Structured error boundarie
+
+s
+
+#
+
+# Extension Point
+
+s
+
+#
+
+## IDE
+
+- Panels (Explorer, Git, Terminal
+
+)
+
+- Commands and keybinding
+
+s
+
+- Code actions and diagnostic
+
+s
+
+#
+
+## AI
+
+- Tool adapters (HTTP, SQL, files, vector stores
+
+)
+
+- Prompt templates and chain
+
+s
+
+- Result post-processor
+
+s
+
+#
+
+## Workflow
+
+- Custom steps and executor
+
+s
+
+- Triggers and event handler
+
+s
+
+- Validators and policy hook
+
+s
+
+#
+
+## UI
+
+- Widgets and dashboard
+
+s
+
+- Routes and navigatio
+
+n
+
+- Theming tokens and component
+
+s
+
+#
+
+# Plugin API (TypeScript
+
+)
+
+```
+
+typescript
 export interface PluginContext {
   logger: Logger;
   storage: KeyValueStore;
@@ -80,37 +189,101 @@ export interface AuterityPlugin {
   activate(ctx: PluginContext): Promise<void>;
   deactivate(): Promise<void>;
 }
+
 ```
 
-## Packaging & Distribution
+#
 
-- Package as npm tarballs or OCI artifacts
-- Signed manifests; integrity checks on install
-- Private registry support with scopes
+# Packaging & Distributio
 
-## Versioning & Compatibility
+n
 
-- SemVer; peerDependency ranges for platform APIs
-- Feature flags for preview capabilities
+- Package as npm tarballs or OCI artifact
 
-## Testing & QA
+s
 
-- Contract tests for extension points
-- Sandbox tests for permission enforcement
-- Performance budgets and memory leak checks
+- Signed manifests; integrity checks on instal
 
-## Observability
+l
 
-- Per-plugin metrics: activation time, errors, resource usage
-- Event logs with correlation ids
+- Private registry support with scope
 
-## Governance
+s
 
-- Review and approval workflow for publishing
-- Security scans and automatic revocation on CVEs
+#
 
-## Related Documentation
+# Versioning & Compatibilit
 
-- Plugin System Documentation
-- IDE Documentation
-- Workflow Engine Documentation
+y
+
+- SemVer; peerDependency ranges for platform API
+
+s
+
+- Feature flags for preview capabilitie
+
+s
+
+#
+
+# Testing & Q
+
+A
+
+- Contract tests for extension point
+
+s
+
+- Sandbox tests for permission enforcemen
+
+t
+
+- Performance budgets and memory leak check
+
+s
+
+#
+
+# Observabilit
+
+y
+
+- Per-plugin metrics: activation time, errors, resource usag
+
+e
+
+- Event logs with correlation id
+
+s
+
+#
+
+# Governanc
+
+e
+
+- Review and approval workflow for publishin
+
+g
+
+- Security scans and automatic revocation on CVE
+
+s
+
+#
+
+# Related Documentatio
+
+n
+
+- Plugin System Documentatio
+
+n
+
+- IDE Documentatio
+
+n
+
+- Workflow Engine Documentatio
+
+n

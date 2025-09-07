@@ -1,197 +1,757 @@
-# Contributing to Auterity Platform
+
+
+# Contributing to Auterity Platfor
+
+m
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/toobutta/auterity-error-iq/issues)
-[![GitHub Issues](https://img.shields.io/github/issues/toobutta/auterity-error-iq)](https://github.com/toobutta/auterity-error-iq/issues)
 
-We welcome contributions to the Auterity platform! This guide will help you get started with contributing to our open-source components.
+[![GitHub Issues](https://img.shields.io/github/issues/toobutta/auterity-error-iq)](https://github.com/toobutta/auterity-error-iq/issues
 
-## 🎯 **Component-Specific Guidelines**
+)
 
-The Auterity platform consists of several open-source components. Choose the component you'd like to contribute to:
+We welcome contributions to the Auterity platform! This guide will help you get started with contributing to our open-source components
+
+.
+
+#
+
+# 🎯 **Component-Specific Guideline
+
+s
+
+* *
+
+The Auterity platform consists of several open-source components. Choose the component you'd like to contribute to
+
+:
 
 | Component          | Focus Area                     | Language     | Guidelines                                                              |
-| ------------------ | ------------------------------ | ------------ | ----------------------------------------------------------------------- |
-| **RelayCore**      | AI routing & cost optimization | TypeScript   | [RelayCore Contributing](docs/components/relaycore/CONTRIBUTING.md)     |
-| **NeuroWeaver**    | ML model management            | Python/React | [NeuroWeaver Contributing](docs/components/neuroweaver/CONTRIBUTING.md) |
-| **AutoMatrix**     | Workflow automation            | Python/React | [AutoMatrix Contributing](docs/components/autmatrix/CONTRIBUTING.md)    |
-| **Shared Library** | UI components & utilities      | TypeScript   | [Shared Contributing](docs/components/shared/CONTRIBUTING.md)           |
+| ----------------
 
-## 🚀 **Quick Start for Contributors**
+- - | ----------------------------
 
-### **1. Fork and Clone**
+- - | ----------
+
+- - | ---------------------------------------------------------------------
+
+- - |
+
+| **RelayCore
+
+* *      | AI routing & cost optimization | TypeScript   | [RelayCore Contributing](docs/components/relaycore/CONTRIBUTING.md)     |
+
+| **NeuroWeaver
+
+* *    | ML model management            | Python/React | [NeuroWeaver Contributing](docs/components/neuroweaver/CONTRIBUTING.md) |
+
+| **AutoMatrix
+
+* *     | Workflow automation            | Python/React | [AutoMatrix Contributing](docs/components/autmatrix/CONTRIBUTING.md)    |
+
+| **Shared Library
+
+* * | UI components & utilities      | TypeScript   | [Shared Contributing](docs/components/shared/CONTRIBUTING.md)
+
+|
+
+#
+
+# 🚀 **Quick Start for Contributor
+
+s
+
+* *
+
+#
+
+## **
+
+1. Fork and Clon
+
+e
+
+* *
 
 ```bash
-# Fork the repository on GitHub
+
+# Fork the repository on GitHu
+
+b
+
 # Then clone your fork
+
 git clone https://github.com/YOUR_USERNAME/auterity-error-iq.git
-cd auterity-error-iq
+
+cd auterity-error-i
+
+q
+
 ```
 
-### **2. Set Up Development Environment**
+#
 
-```bash
+## **
+
+2. Set Up Development Environmen
+
+t
+
+* *
+
+```
+
+bash
+
 # Install dependencies for all components
-npm install                    # Root dependencies
-cd frontend && npm install     # Frontend dependencies
-cd ../systems/relaycore && npm install  # RelayCore dependencies
-cd ../../backend && pip install -r requirements.txt  # Backend dependencies
+
+npm install
+
+# Root dependencies
+
+cd frontend && npm install
+
+# Frontend dependencies
+
+cd ../systems/relaycore && npm install
+
+# RelayCore dependencies
+
+cd ../../backend && pip install -r requirements.txt
+
+
+
+# Backend dependencies
+
 ```
 
-### **3. Create Feature Branch**
+#
 
-```bash
-# Use component-specific branch naming
+## **
+
+3. Create Feature Branc
+
+h
+
+* *
+
+```
+
+bash
+
+# Use component-specific branch namin
+
+g
+
 git checkout -b feature/relaycore-cost-optimization
+
 git checkout -b feature/neuroweaver-automotive-templates
+
 git checkout -b feature/autmatrix-workflow-builder
-git checkout -b feature/shared-component-library
+
+git checkout -b feature/shared-component-librar
+
+y
+
 ```
 
-## 📋 **Contribution Types**
+#
 
-### **🐛 Bug Fixes**
+# 📋 **Contribution Type
 
-- Fix existing functionality issues
-- Improve error handling
-- Resolve performance problems
-- **Label**: `bug`, `component:name`
+s
 
-### **✨ New Features**
+* *
 
-- Add new functionality
-- Enhance existing features
-- Implement feature requests
-- **Label**: `enhancement`, `component:name`
+#
 
-### **📚 Documentation**
+## **🐛 Bug Fixe
 
-- Improve component documentation
-- Add code examples
-- Update API references
-- **Label**: `documentation`, `component:name`
+s
 
-### **🧪 Testing**
+* *
 
-- Add unit tests
-- Improve test coverage
-- Add integration tests
-- **Label**: `testing`, `component:name`
+- Fix existing functionality issue
 
-### **🔧 Infrastructure**
+s
 
-- Improve build processes
-- Enhance CI/CD pipelines
-- Update deployment configurations
-- **Label**: `infrastructure`, `component:name`
+- Improve error handlin
 
-## 🏷️ **Issue Labels and Component Tags**
+g
+
+- Resolve performance problem
+
+s
+
+- **Label**: `bug`, `component:name
+
+`
+
+#
+
+## **✨ New Feature
+
+s
+
+* *
+
+- Add new functionalit
+
+y
+
+- Enhance existing feature
+
+s
+
+- Implement feature request
+
+s
+
+- **Label**: `enhancement`, `component:name
+
+`
+
+#
+
+## **📚 Documentatio
+
+n
+
+* *
+
+- Improve component documentatio
+
+n
+
+- Add code example
+
+s
+
+- Update API reference
+
+s
+
+- **Label**: `documentation`, `component:name
+
+`
+
+#
+
+## **🧪 Testin
+
+g
+
+* *
+
+- Add unit test
+
+s
+
+- Improve test coverag
+
+e
+
+- Add integration test
+
+s
+
+- **Label**: `testing`, `component:name
+
+`
+
+#
+
+## **🔧 Infrastructur
+
+e
+
+* *
+
+- Improve build processe
+
+s
+
+- Enhance CI/CD pipeline
+
+s
+
+- Update deployment configuration
+
+s
+
+- **Label**: `infrastructure`, `component:name
+
+`
+
+#
+
+# 🏷️ **Issue Labels and Component Tag
+
+s
+
+* *
 
 When creating issues or pull requests, use these labels:
 
-### **Component Labels** (Required)
+#
 
-- `component:relaycore` - RelayCore AI router
-- `component:neuroweaver` - NeuroWeaver ML platform
-- `component:autmatrix` - AutoMatrix workflow engine
-- `component:shared` - Shared library components
-- `component:integration` - Cross-system integration
+## **Component Labels
 
-### **Type Labels**
+* * (Require
 
-- `bug` - Something isn't working
-- `enhancement` - New feature or request
-- `documentation` - Improvements or additions to docs
-- `testing` - Related to testing
-- `infrastructure` - Build, CI/CD, deployment
-- `security` - Security-related issues
+d
 
-### **Priority Labels**
+)
 
-- `priority:critical` - Critical issues blocking functionality
-- `priority:high` - Important issues affecting users
-- `priority:medium` - Standard improvements
-- `priority:low` - Nice-to-have enhancements
+- `component:relaycore
 
-### **Status Labels**
+`
 
-- `status:needs-review` - Ready for review
-- `status:in-progress` - Currently being worked on
-- `status:blocked` - Blocked by dependencies
-- `status:ready-to-merge` - Approved and ready
+ - RelayCore AI route
 
-## 🔄 **Development Workflow**
+r
 
-### **1. Issue Creation**
+- `component:neuroweaver
 
-```markdown
-# Use issue templates
+`
 
-- Bug Report Template
-- Feature Request Template
-- Documentation Improvement Template
-- Component-Specific Templates
+ - NeuroWeaver ML platfor
+
+m
+
+- `component:autmatrix
+
+`
+
+ - AutoMatrix workflow engin
+
+e
+
+- `component:shared
+
+`
+
+ - Shared library component
+
+s
+
+- `component:integration
+
+`
+
+ - Cross-system integratio
+
+n
+
+#
+
+## **Type Label
+
+s
+
+* *
+
+- `bug
+
+`
+
+ - Something isn't workin
+
+g
+
+- `enhancement
+
+`
+
+ - New feature or reques
+
+t
+
+- `documentation
+
+`
+
+ - Improvements or additions to doc
+
+s
+
+- `testing
+
+`
+
+ - Related to testin
+
+g
+
+- `infrastructure
+
+`
+
+ - Build, CI/CD, deploymen
+
+t
+
+- `security
+
+`
+
+ - Security-related issue
+
+s
+
+#
+
+## **Priority Label
+
+s
+
+* *
+
+- `priority:critical
+
+`
+
+ - Critical issues blocking functionalit
+
+y
+
+- `priority:high
+
+`
+
+ - Important issues affecting user
+
+s
+
+- `priority:medium
+
+`
+
+ - Standard improvement
+
+s
+
+- `priority:low
+
+`
+
+ - Nice-to-have enhancement
+
+s
+
+#
+
+## **Status Label
+
+s
+
+* *
+
+- `status:needs-review
+
+`
+
+ - Ready for revie
+
+w
+
+- `status:in-progress
+
+`
+
+ - Currently being worked o
+
+n
+
+- `status:blocked
+
+`
+
+ - Blocked by dependencie
+
+s
+
+- `status:ready-to-merge
+
+`
+
+ - Approved and read
+
+y
+
+#
+
+# 🔄 **Development Workflo
+
+w
+
+* *
+
+#
+
+## **
+
+1. Issue Creatio
+
+n
+
+* *
+
 ```
 
-### **2. Development Process**
+markdown
 
-```bash
-# 1. Assign yourself to the issue
-# 2. Create feature branch
-git checkout -b feature/component-description
+# Use issue template
 
-# 3. Make changes following component guidelines
-# 4. Add tests for your changes
-# 5. Update documentation
-# 6. Run quality checks
+s
+
+- Bug Report Templat
+
+e
+
+- Feature Request Templat
+
+e
+
+- Documentation Improvement Templat
+
+e
+
+- Component-Specific Template
+
+s
+
 ```
 
-### **3. Quality Checks**
+#
 
-```bash
+## **
+
+2. Development Proces
+
+s
+
+* *
+
+```
+
+bash
+
+#
+
+ 1. Assign yourself to the iss
+
+u
+
+e
+
+#
+
+ 2. Create feature branc
+
+h
+
+git checkout -b feature/component-descriptio
+
+n
+
+#
+
+ 3. Make changes following component guidelin
+
+e
+
+s
+
+#
+
+ 4. Add tests for your chang
+
+e
+
+s
+
+#
+
+ 5. Update documentati
+
+o
+
+n
+
+#
+
+ 6. Run quality check
+
+s
+
+```
+
+#
+
+## **
+
+3. Quality Check
+
+s
+
+* *
+
+```
+
+bash
+
 # Frontend (AutoMatrix, NeuroWeaver frontend, Shared)
-npm run lint                   # ESLint checks
-npm run type-check            # TypeScript validation
-npm test                      # Unit tests
-npm run test:coverage         # Coverage report
+
+npm run lint
+
+# ESLint checks
+
+npm run type-check
+
+
+
+# TypeScript validation
+
+npm test
+
+# Unit tests
+
+npm run test:coverage
+
+# Coverage repor
+
+t
 
 # Backend (AutoMatrix, NeuroWeaver backend)
-black .                       # Code formatting
-isort .                       # Import organization
-flake8 .                      # Linting
-pytest                        # Unit tests
+
+black .
+
+# Code formatting
+
+isort .
+
+# Import organization
+
+flake8 .
+
+# Linting
+
+pytest
+
+# Unit test
+
+s
 
 # RelayCore (TypeScript/Node.js)
-npm run lint                  # ESLint checks
-npm run type-check           # TypeScript validation
-npm test                     # Unit tests
-npm run test:integration     # Integration tests
+
+npm run lint
+
+# ESLint checks
+
+npm run type-check
+
+
+
+# TypeScript validation
+
+npm test
+
+# Unit tests
+
+npm run test:integration
+
+# Integration tests
+
 ```
 
-### **4. Pull Request Process**
+#
 
-```markdown
-# PR Template includes:
+## **
 
-- Component affected
-- Description of changes
-- Testing performed
-- Breaking changes (if any)
-- Related issues
+4. Pull Request Proces
+
+s
+
+* *
+
 ```
 
-## 📝 **Code Standards**
+markdown
 
-### **General Standards**
+# PR Template includes
 
-- **Clear, descriptive commit messages**
-- **Comprehensive test coverage (>90%)**
-- **Updated documentation for changes**
-- **No breaking changes without discussion**
-- **Security-first approach**
+:
 
-### **TypeScript/JavaScript (RelayCore, Frontend)**
+- Component affecte
 
-```typescript
+d
+
+- Description of change
+
+s
+
+- Testing performe
+
+d
+
+- Breaking changes (if any
+
+)
+
+- Related issue
+
+s
+
+```
+
+#
+
+# 📝 **Code Standard
+
+s
+
+* *
+
+#
+
+## **General Standard
+
+s
+
+* *
+
+- **Clear, descriptive commit messages
+
+* *
+
+- **Comprehensive test coverage (>90%)
+
+* *
+
+- **Updated documentation for changes
+
+* *
+
+- **No breaking changes without discussion
+
+* *
+
+- **Security-first approach
+
+* *
+
+#
+
+## **TypeScript/JavaScript (RelayCore, Frontend
+
+)
+
+* *
+
+```
+
+typescript
 // Use strict TypeScript
 interface ComponentProps {
   id: string;
@@ -216,12 +776,23 @@ try {
   logger.error("API call failed", { error, context });
   throw new ComponentError("Failed to process request", error);
 }
+
 ```
 
-### **Python (Backend, NeuroWeaver)**
+#
 
-```python
+## **Python (Backend, NeuroWeaver
+
+)
+
+* *
+
+```
+
+python
+
 # Use type hints
+
 from typing import List, Optional, Dict, Any
 
 def process_workflow(
@@ -229,11 +800,16 @@ def process_workflow(
     steps: List[Dict[str, Any]],
     context: Optional[Dict[str, Any]] = None
 ) -> Dict[str, Any]:
+
     """Process workflow with given steps and context."""
-    # Implementation
+
+
+# Implementation
+
     pass
 
 # Use proper error handling
+
 try:
     result = await process_request(data)
     return result
@@ -243,28 +819,50 @@ except ValidationError as e:
 except Exception as e:
     logger.error(f"Unexpected error: {e}")
     raise HTTPException(status_code=500, detail="Internal server error")
+
 ```
 
-## 🧪 **Testing Guidelines**
+#
 
-### **Unit Tests**
+# 🧪 **Testing Guideline
 
-```typescript
+s
+
+* *
+
+#
+
+## **Unit Test
+
+s
+
+* *
+
+```
+
+typescript
 // Frontend/RelayCore
 describe("ComponentName", () => {
   it("should handle valid input correctly", () => {
     const result = processInput("valid-input");
+
     expect(result).toBe("expected-output");
+
   });
 
   it("should throw error for invalid input", () => {
     expect(() => processInput("invalid")).toThrow("Invalid input");
   });
 });
+
 ```
 
-```python
+```
+
+python
+
 # Backend/NeuroWeaver
+
 import pytest
 
 def test_workflow_execution():
@@ -278,54 +876,150 @@ def test_workflow_validation_error():
     """Test workflow validation with invalid data."""
     with pytest.raises(ValidationError):
         create_workflow({'invalid': 'data'})
+
 ```
 
-### **Integration Tests**
+#
 
-```bash
-# Test cross-component integration
-npm run test:integration        # Frontend integration
-pytest tests/integration/      # Backend integration
+## **Integration Test
+
+s
+
+* *
+
 ```
 
-## 📚 **Documentation Standards**
+bash
 
-### **Code Documentation**
+# Test cross-component integratio
 
-````typescript
-/**
- * Routes AI requests to optimal providers based on cost and performance.
- *
- * @param request - The AI request containing prompt and context
- * @param options - Routing options including budget constraints
- * @returns Promise resolving to AI response with metadata
- *
- * @example
+n
+
+npm run test:integration
+
+# Frontend integration
+
+pytest tests/integration/
+
+# Backend integration
+
+```
+
+#
+
+# 📚 **Documentation Standard
+
+s
+
+* *
+
+#
+
+## **Code Documentatio
+
+n
+
+* *
+
+`
+
+```
+
+typescript
+/*
+
+* * Routes AI requests to optimal providers based on cost and performance
+
+.
+
+ * * @param reques
+
+t
+
+ - The AI request containing prompt and contex
+
+t
+
+ * @param option
+
+s
+
+ - Routing options including budget constraint
+
+s
+
+ * @returns Promise resolving to AI response with metadat
+
+a
+
+ * * @exampl
+
+e
+
  * ```typescript
- * const response = await routeAIRequest({
- *   prompt: "Explain quantum computing",
- *   taskType: "explanation"
- * }, {
- *   budgetLimit: 0.10
- * });
+
+ * const response = await routeAIRequest(
+
+{
+
+ * prompt: "Explain quantum computing"
+
+,
+
+ * taskType: "explanation
+
+"
+
+ * },
+
+{
+
+ * budgetLimit: 0.1
+
+0
+
+ * })
+
+;
+
  * ```
+
  */
+
 async function routeAIRequest(
   request: AIRequest,
   options: RoutingOptions,
 ): Promise<AIResponse> {
   // Implementation
 }
+
 ````
 
-### **API Documentation**
+#
 
-````markdown
-## POST /api/v1/ai/route
+## **API Documentatio
+
+n
+
+* *
+
+`
+
+```
+
+markdown
+
+## POST /api/v1/ai/rout
+
+e
 
 Routes an AI request to the optimal provider.
 
-### Request Body
+#
+
+## Request Bod
+
+y
 
 ```json
 {
@@ -336,110 +1030,333 @@ Routes an AI request to the optimal provider.
     "userId": "user123"
   }
 }
-```
-````
 
-### Response
+```
+
+```
+
+`
+
+#
+
+## Respons
+
+e
 
 ```json
 {
   "response": "AI generated response...",
   "metadata": {
-    "modelUsed": "gpt-3.5-turbo",
+    "modelUsed": "gpt-3.5-turbo"
+
+,
+
     "cost": 0.002,
+
     "latencyMs": 1250
   }
 }
+
 ```
 
-````
+`
 
-## 🔒 **Security Guidelines**
+```
 
-### **Security Requirements**
-- **No hardcoded secrets or API keys**
-- **Input validation for all user data**
-- **Proper error handling without information leakage**
-- **Secure authentication and authorization**
-- **Regular dependency updates**
+#
 
-### **Security Review Process**
-```bash
+# 🔒 **Security Guideline
+
+s
+
+* *
+
+#
+
+## **Security Requirements
+
+* *
+
+- **No hardcoded secrets or API keys
+
+* *
+
+- **Input validation for all user data
+
+* *
+
+- **Proper error handling without information leakage
+
+* *
+
+- **Secure authentication and authorization
+
+* *
+
+- **Regular dependency updates
+
+* *
+
+#
+
+## **Security Review Process
+
+* *
+
+```
+
+bash
+
 # Run security scans
-npm audit                      # Frontend security scan
-safety check                  # Python security scan
-bandit -r backend/            # Python security linting
-````
 
-## 🎯 **Component-Specific Contribution Areas**
+npm audit
 
-### **RelayCore Contributions**
+# Frontend security scan
 
-- **AI Provider Integrations**: Add new AI providers
-- **Cost Optimization**: Improve routing algorithms
-- **Performance Monitoring**: Enhance metrics collection
-- **Plugin Development**: Create IDE integrations
+safety check
 
-### **NeuroWeaver Contributions**
+# Python security scan
 
-- **Training Pipelines**: Improve AutoRLAIF implementation
-- **Vertical Kits**: Add industry-specific templates
-- **Model Registry**: Enhance model management
-- **Performance Monitoring**: Add ML-specific metrics
+bandit -r backend/
 
-### **AutoMatrix Contributions**
 
-- **Workflow Builder**: Enhance visual editor
-- **Template System**: Add workflow templates
-- **Execution Engine**: Improve performance and reliability
-- **Integration Points**: Add external service connectors
 
-### **Shared Library Contributions**
+# Python security linting
 
-- **UI Components**: Add reusable React components
-- **Design System**: Enhance design tokens and themes
-- **Utility Functions**: Add cross-system utilities
-- **API Clients**: Improve type-safe API integration
+`
 
-## 🏆 **Recognition**
+```
 
-### **Contributor Recognition**
+#
 
-- **Contributors listed in CONTRIBUTORS.md**
-- **GitHub contributor badges**
-- **Component-specific acknowledgments**
-- **Community highlights for significant contributions**
+# 🎯 **Component-Specific Contribution Area
 
-### **Maintainer Path**
+s
+
+* *
+
+#
+
+## **RelayCore Contribution
+
+s
+
+* *
+
+- **AI Provider Integrations**: Add new AI provider
+
+s
+
+- **Cost Optimization**: Improve routing algorithm
+
+s
+
+- **Performance Monitoring**: Enhance metrics collectio
+
+n
+
+- **Plugin Development**: Create IDE integration
+
+s
+
+#
+
+## **NeuroWeaver Contribution
+
+s
+
+* *
+
+- **Training Pipelines**: Improve AutoRLAIF implementatio
+
+n
+
+- **Vertical Kits**: Add industry-specific template
+
+s
+
+- **Model Registry**: Enhance model managemen
+
+t
+
+- **Performance Monitoring**: Add ML-specific metric
+
+s
+
+#
+
+## **AutoMatrix Contribution
+
+s
+
+* *
+
+- **Workflow Builder**: Enhance visual edito
+
+r
+
+- **Template System**: Add workflow template
+
+s
+
+- **Execution Engine**: Improve performance and reliabilit
+
+y
+
+- **Integration Points**: Add external service connector
+
+s
+
+#
+
+## **Shared Library Contribution
+
+s
+
+* *
+
+- **UI Components**: Add reusable React component
+
+s
+
+- **Design System**: Enhance design tokens and theme
+
+s
+
+- **Utility Functions**: Add cross-system utilitie
+
+s
+
+- **API Clients**: Improve type-safe API integratio
+
+n
+
+#
+
+# 🏆 **Recognitio
+
+n
+
+* *
+
+#
+
+## **Contributor Recognitio
+
+n
+
+* *
+
+- **Contributors listed in CONTRIBUTORS.md
+
+* *
+
+- **GitHub contributor badges
+
+* *
+
+- **Component-specific acknowledgments
+
+* *
+
+- **Community highlights for significant contributions
+
+* *
+
+#
+
+## **Maintainer Pat
+
+h
+
+* *
 
 Active contributors may be invited to become component maintainers with:
 
-- **Review permissions for component PRs**
-- **Issue triage responsibilities**
-- **Release planning participation**
-- **Community engagement leadership**
+- **Review permissions for component PRs
 
-## 📞 **Getting Help**
+* *
 
-### **Communication Channels**
+- **Issue triage responsibilities
 
-- **GitHub Issues**: [Create an issue](https://github.com/toobutta/auterity-error-iq/issues)
-- **GitHub Discussions**: [Join discussions](https://github.com/toobutta/auterity-error-iq/discussions)
-- **Component Documentation**: [Component docs](docs/components/README.md)
+* *
 
-### **Mentorship**
+- **Release planning participation
+
+* *
+
+- **Community engagement leadership
+
+* *
+
+#
+
+# 📞 **Getting Hel
+
+p
+
+* *
+
+#
+
+## **Communication Channel
+
+s
+
+* *
+
+- **GitHub Issues**: [Create an issue](https://github.com/toobutta/auterity-error-iq/issues
+
+)
+
+- **GitHub Discussions**: [Join discussions](https://github.com/toobutta/auterity-error-iq/discussions
+
+)
+
+- **Component Documentation**: [Component docs](docs/components/README.md
+
+)
+
+#
+
+## **Mentorshi
+
+p
+
+* *
 
 New contributors can request mentorship by:
 
-1. Creating an issue with `help-wanted` label
-2. Joining GitHub discussions
-3. Commenting on existing issues
-4. Reaching out to component maintainers
+1. Creating an issue with `help-wanted` lab
 
-## 📄 **License**
+e
+
+l
+
+2. Joining GitHub discussion
+
+s
+
+3. Commenting on existing issue
+
+s
+
+4. Reaching out to component maintainer
+
+s
+
+#
+
+# 📄 **Licens
+
+e
+
+* *
 
 By contributing to Auterity, you agree that your contributions will be licensed under the MIT License.
 
----
+--
 
-**Thank you for contributing to the Auterity platform! 🚀**
+- **Thank you for contributing to the Auterity platform! 🚀
+
+* *

@@ -20,6 +20,8 @@ from app.executors.step_executors import (
     OutputStepExecutor,
     ProcessStepExecutor,
 )
+from app.executors.crewai_executor import CrewAIStepExecutor
+from app.executors.langgraph_executor import LangGraphStepExecutor
 from app.handlers.error_handler import ErrorHandler
 from app.interfaces.step_executor import StepExecutorFactory
 from app.models.execution import ExecutionLog, ExecutionStatus, WorkflowExecution
@@ -74,6 +76,8 @@ class WorkflowEngine:
         factory.register_executor(
             "data_validation", DataValidationStepExecutor()
         )
+        factory.register_executor("crewai", CrewAIStepExecutor())
+        factory.register_executor("langgraph", LangGraphStepExecutor())
         factory.register_executor("default", DefaultStepExecutor())
         return factory
 

@@ -1,38 +1,129 @@
-# 🤖 AI SDK Documentation
 
-## Overview
+
+# 🤖 AI SDK Documentatio
+
+n
+
+#
+
+# Overvie
+
+w
 
 This document provides comprehensive documentation for Auterity's AI SDK service, which provides unified AI capabilities using multiple providers (OpenAI, Anthropic, Azure, Google, Cohere) with advanced features like structured outputs, tool calling, streaming responses, and cost tracking.
 
-## Table of Contents
+#
 
-1. [Architecture Overview](#architecture-overview)
-2. [Provider Integration](#provider-integration)
-3. [Core Features](#core-features)
-4. [Tool Integration](#tool-integration)
-5. [Performance Optimization](#performance-optimization)
-6. [Cost Management](#cost-management)
-7. [Security Considerations](#security-considerations)
-8. [Development Guidelines](#development-guidelines)
+# Table of Content
 
-## Architecture Overview
+s
 
-### Component Architecture
+1. [Architecture Overview]
+
+(
+
+#architecture-overview
+
+)
+
+2. [Provider Integration]
+
+(
+
+#provider-integration
+
+)
+
+3. [Core Features]
+
+(
+
+#core-features
+
+)
+
+4. [Tool Integration]
+
+(
+
+#tool-integration
+
+)
+
+5. [Performance Optimization]
+
+(
+
+#performance-optimization
+
+)
+
+6. [Cost Management]
+
+(
+
+#cost-management
+
+)
+
+7. [Security Considerations]
+
+(
+
+#security-considerations
+
+)
+
+8. [Development Guidelines]
+
+(
+
+#development-guideline
+
+s
+
+)
+
+#
+
+# Architecture Overvie
+
+w
+
+#
+
+## Component Architecture
+
 ```mermaid
 graph TD
     A[AI SDK Service] --> B[Provider Router]
+
     B --> C[OpenAI Provider]
+
     B --> D[Anthropic Provider]
+
     B --> E[Azure Provider]
+
     B --> F[Google Provider]
+
     B --> G[Cohere Provider]
+
     A --> H[Tool System]
+
     A --> I[Cost Tracker]
-    A --> J[Performance Monitor]
+
+    A --> J[Performance Monitor
+
+]
+
 ```
 
-### Component Locations
+#
+
+## Component Locations
+
 ```
+
 src/services/
 ├── aiSDKService.ts
 ├── providers/
@@ -45,12 +136,22 @@ src/services/
     ├── crm.ts
     ├── workflow.ts
     └── analysis.ts
+
 ```
 
-## Provider Integration
+#
 
-### Configuration
-```typescript
+# Provider Integratio
+
+n
+
+#
+
+## Configuration
+
+```
+
+typescript
 // Environment configuration
 const AI_CONFIG = {
   openai: {
@@ -69,6 +170,7 @@ const AI_CONFIG = {
     endpoint: import.meta.env.VITE_AZURE_OPENAI_ENDPOINT || '',
     apiKey: import.meta.env.VITE_AZURE_OPENAI_API_KEY || '',
     apiVersion: import.meta.env.VITE_AZURE_OPENAI_VERSION || '2024-02-15-preview',
+
     enabled: !!(import.meta.env.VITE_AZURE_OPENAI_ENDPOINT && import.meta.env.VITE_AZURE_OPENAI_API_KEY)
   },
   cohere: {
@@ -76,22 +178,34 @@ const AI_CONFIG = {
     enabled: !!import.meta.env.VITE_COHERE_API_KEY
   }
 };
+
 ```
 
-### Provider Implementation
-```typescript
+#
+
+## Provider Implementation
+
+```
+
+typescript
 import { openai } from '@ai-sdk/openai';
+
 import { anthropic } from '@ai-sdk/anthropic';
+
 import { azure } from '@ai-sdk/azure';
+
 import { google } from '@ai-sdk/google';
-import { cohere } from '@ai-sdk/cohere';
+
+import { cohere } from '@ai-sdk/cohere'
+
+;
 
 class AIProvider {
     constructor(
         private config: ProviderConfig,
         private client: any
     ) {}
-    
+
     async generateText(
         prompt: string,
         options: GenerateOptions = {}
@@ -102,10 +216,10 @@ class AIProvider {
             temperature: options.temperature,
             stop: options.stopSequences
         });
-        
+
         return response.text;
     }
-    
+
     async generateObject<T>(
         prompt: string,
         schema: z.ZodType<T>,
@@ -118,17 +232,23 @@ class AIProvider {
             stop: options.stopSequences,
             format: 'json'
         });
-        
+
         return schema.parse(response.json);
     }
 }
+
 ```
 
-### Provider Router
-```typescript
+#
+
+## Provider Router
+
+```
+
+typescript
 class ProviderRouter {
     private providers: Map<string, AIProvider> = new Map();
-    
+
     constructor(config: AIConfig) {
         if (config.openai.enabled) {
             this.providers.set('openai', new AIProvider(
@@ -136,17 +256,17 @@ class ProviderRouter {
                 openai
             ));
         }
-        
+
         if (config.anthropic.enabled) {
             this.providers.set('anthropic', new AIProvider(
                 config.anthropic,
                 anthropic
             ));
         }
-        
+
         // Initialize other providers...
     }
-    
+
     async route(
         request: AIRequest,
         preferences: ProviderPreferences = {}
@@ -155,16 +275,26 @@ class ProviderRouter {
             request,
             preferences
         );
-        
+
         return provider;
     }
 }
+
 ```
 
-## Core Features
+#
 
-### Text Generation
-```typescript
+# Core Feature
+
+s
+
+#
+
+## Text Generation
+
+```
+
+typescript
 class AISDKService {
     async generateText(
         prompt: string,
@@ -175,20 +305,26 @@ class AISDKService {
             prompt,
             options
         });
-        
+
         const result = await provider.generateText(
             prompt,
             options
         );
-        
+
         await this.trackUsage(provider, result);
         return result;
     }
 }
+
 ```
 
-### Structured Output
-```typescript
+#
+
+## Structured Output
+
+```
+
+typescript
 class AISDKService {
     async generateObject<T>(
         prompt: string,
@@ -200,23 +336,30 @@ class AISDKService {
             prompt,
             options
         });
-        
+
         const result = await provider.generateObject(
             prompt,
             schema,
             options
         );
-        
+
         await this.trackUsage(provider, result);
         return result;
     }
 }
+
 ```
 
-### Streaming Responses
-```typescript
+#
+
+## Streaming Responses
+
+```
+
+typescript
 class AISDKService {
     async *streamText(
+
         prompt: string,
         options: StreamOptions = {}
     ): AsyncGenerator<string> {
@@ -225,24 +368,34 @@ class AISDKService {
             prompt,
             options
         });
-        
+
         const stream = await provider.createStream(
             prompt,
             options
         );
-        
+
         for await (const chunk of stream) {
             yield chunk;
             await this.trackStreamUsage(provider, chunk);
         }
     }
 }
+
 ```
 
-## Tool Integration
+#
 
-### Tool Definition
-```typescript
+# Tool Integratio
+
+n
+
+#
+
+## Tool Definition
+
+```
+
+typescript
 interface Tool {
     name: string;
     description: string;
@@ -264,10 +417,16 @@ const crmTool: Tool = {
         );
     }
 };
+
 ```
 
-### Tool Calling
-```typescript
+#
+
+## Tool Calling
+
+```
+
+typescript
 class AISDKService {
     async executeWithTools(
         prompt: string,
@@ -279,29 +438,46 @@ class AISDKService {
             prompt,
             options
         });
-        
+
         const result = await provider.executeWithTools(
             prompt,
             tools,
             options
         );
-        
+
         await this.trackToolUsage(provider, result);
         return result;
     }
 }
+
 ```
 
-## Performance Optimization
+#
 
-### Caching
-```typescript
+# Performance Optimizatio
+
+n
+
+#
+
+## Caching
+
+```
+
+typescript
 class AISDKService {
     private cache = new LRUCache<string, any>({
         max: 1000,
-        ttl: 1000 * 60 * 60 // 1 hour
+        ttl: 1000
+
+ * 6
+
+0
+
+ * 60 // 1 hour
+
     });
-    
+
     async getCachedResult(
         key: string,
         generator: () => Promise<any>
@@ -310,19 +486,25 @@ class AISDKService {
         if (cached) {
             return cached;
         }
-        
+
         const result = await generator();
         this.cache.set(key, result);
         return result;
     }
 }
+
 ```
 
-### Request Batching
-```typescript
+#
+
+## Request Batching
+
+```
+
+typescript
 class AISDKService {
     private batchQueue: Map<string, Promise<any>> = new Map();
-    
+
     async batchRequest(
         key: string,
         request: () => Promise<any>
@@ -331,10 +513,10 @@ class AISDKService {
         if (existing) {
             return existing;
         }
-        
+
         const promise = request();
         this.batchQueue.set(key, promise);
-        
+
         try {
             return await promise;
         } finally {
@@ -342,15 +524,25 @@ class AISDKService {
         }
     }
 }
+
 ```
 
-## Cost Management
+#
 
-### Usage Tracking
-```typescript
+# Cost Managemen
+
+t
+
+#
+
+## Usage Tracking
+
+```
+
+typescript
 class AISDKService {
     private costTracker = new CostTracker();
-    
+
     async trackUsage(
         provider: string,
         tokens: number,
@@ -364,31 +556,43 @@ class AISDKService {
             cost: this.calculateCost(provider, tokens, type)
         });
     }
-    
+
     private calculateCost(
         provider: string,
         tokens: number,
         type: string
     ): number {
         const rates = this.costTracker.getRates(provider);
-        return tokens * rates[type];
+        return tokens
+
+ * rates[type];
+
     }
 }
+
 ```
 
-### Budget Management
-```typescript
+#
+
+## Budget Management
+
+```
+
+typescript
 class AISDKService {
     async checkBudget(
         request: AIRequest
     ): Promise<boolean> {
         const usage = await this.costTracker.getCurrentUsage();
         const budget = await this.costTracker.getBudget();
-        
+
         const estimatedCost = this.estimateCost(request);
-        return usage + estimatedCost <= budget;
+        return usage
+
+ + estimatedCost <= budget;
+
     }
-    
+
     private estimateCost(request: AIRequest): number {
         const tokenEstimate = this.estimateTokens(request);
         return this.calculateCost(
@@ -398,12 +602,22 @@ class AISDKService {
         );
     }
 }
+
 ```
 
-## Security Considerations
+#
 
-### API Key Management
-```typescript
+# Security Consideration
+
+s
+
+#
+
+## API Key Management
+
+```
+
+typescript
 class AISDKService {
     private async getApiKey(
         provider: string
@@ -412,7 +626,7 @@ class AISDKService {
             `ai_provider_${provider}_key`
         );
     }
-    
+
     private async rotateApiKey(
         provider: string
     ): Promise<void> {
@@ -423,10 +637,16 @@ class AISDKService {
         );
     }
 }
+
 ```
 
-### Request Validation
-```typescript
+#
+
+## Request Validation
+
+```
+
+typescript
 class AISDKService {
     private validateRequest(
         request: AIRequest
@@ -435,24 +655,34 @@ class AISDKService {
         if (this.containsSensitiveData(request.prompt)) {
             throw new Error('Prompt contains sensitive data');
         }
-        
+
         // Validate tool permissions
         if (request.tools) {
             this.validateToolPermissions(request.tools);
         }
-        
+
         // Validate rate limits
         if (!this.checkRateLimit(request)) {
             throw new Error('Rate limit exceeded');
         }
     }
 }
+
 ```
 
-## Development Guidelines
+#
 
-### Error Handling
-```typescript
+# Development Guideline
+
+s
+
+#
+
+## Error Handling
+
+```
+
+typescript
 class AISDKService {
     async handleError(
         error: any,
@@ -463,48 +693,55 @@ class AISDKService {
             error,
             request: this.sanitizeRequest(request)
         });
-        
+
         // Retry if appropriate
         if (this.isRetryable(error)) {
             return await this.retry(request);
         }
-        
+
         // Fallback to alternative provider
         if (this.hasFallback(request)) {
             return await this.useFallback(request);
         }
-        
+
         throw this.normalizeError(error);
     }
 }
+
 ```
 
-### Testing Strategy
-```typescript
+#
+
+## Testing Strategy
+
+```
+
+typescript
 // Example AI SDK test
 import { AISDKService } from './aiSDKService';
 
 describe('AISDKService', () => {
     it('should route to appropriate provider', async () => {
         const service = new AISDKService(testConfig);
-        
+
         const result = await service.generateText(
             'Test prompt',
             {
                 provider: 'openai',
                 model: 'gpt-4'
+
             }
         );
-        
+
         expect(result).toBeDefined();
     });
-    
+
     it('should handle provider failures', async () => {
         const service = new AISDKService(testConfig);
-        
+
         // Mock primary provider failure
         mockOpenAI.fail();
-        
+
         const result = await service.generateText(
             'Test prompt',
             {
@@ -512,10 +749,11 @@ describe('AISDKService', () => {
                 fallback: 'anthropic'
             }
         );
-        
+
         expect(result).toBeDefined();
     });
 });
+
 ```
 
 This documentation provides a comprehensive overview of the AI SDK service in the Auterity platform. For specific implementation details or advanced usage patterns, refer to the individual service documentation or contact the development team.

@@ -1,18 +1,48 @@
-# 🧠 Caching Strategy & Invalidation Patterns
 
-## Overview
+
+# 🧠 Caching Strategy & Invalidation Pattern
+
+s
+
+#
+
+# Overvie
+
+w
 
 Defines a layered caching approach for performance and cost efficiency, with clear invalidation strategies and correctness guarantees.
 
-## Layers
+#
 
-- Client cache (HTTP cache, SWR)
-- Edge/CDN cache (static assets, API GET)
-- Service cache (in-memory LRU)
-- Distributed cache (Redis)
-- Computation cache (model results, embeddings)
+# Layer
 
-## Cache Keys
+s
+
+- Client cache (HTTP cache, SWR
+
+)
+
+- Edge/CDN cache (static assets, API GET
+
+)
+
+- Service cache (in-memory LRU
+
+)
+
+- Distributed cache (Redis
+
+)
+
+- Computation cache (model results, embeddings
+
+)
+
+#
+
+# Cache Key
+
+s
 
 ```typescript
 interface CacheKey {
@@ -21,50 +51,126 @@ interface CacheKey {
   variant?: string; // e.g., query hash
   tenantId?: string;
 }
+
 ```
 
-- Use stable, deterministic keys
-- Include tenant and auth scopes when applicable
+- Use stable, deterministic key
 
-## Invalidation
+s
 
-### Time-Based (TTL)
-- Default TTLs per namespace (e.g., metrics: 60s)
+- Include tenant and auth scopes when applicabl
 
-### Event-Based
-- Invalidate on domain events using routing rules
+e
 
-```typescript
+#
+
+# Invalidatio
+
+n
+
+#
+
+## Time-Based (TTL
+
+)
+
+- Default TTLs per namespace (e.g., metrics: 60s
+
+)
+
+#
+
+## Event-Base
+
+d
+
+- Invalidate on domain events using routing rule
+
+s
+
+```
+
+typescript
 interface InvalidationRule {
   onEvent: string; // e.g., workflow.instance.updated.v1
   targets: (event: any) => string[]; // cache keys to invalidate
 }
+
 ```
 
-### Write-Through / Write-Behind
-- Write-through for strong consistency on hot keys
-- Write-behind for batch-heavy updates
+#
 
-## Coherency & Staleness
+## Write-Through / Write-Behin
 
-- Stale-while-revalidate for non-critical reads
-- Use ETags + If-None-Match for HTTP GETs
+d
 
-## Caching Patterns
+- Write-through for strong consistency on hot key
 
-### Request Result Cache
-- Hash request body to key; respect auth scope
+s
 
-### Query Cache
-- Parameterized queries with normalized ordering
+- Write-behind for batch-heavy update
 
-### Composite Cache
-- Multi-source aggregation cached with component version vector
+s
 
-## Hot Path Examples
+#
 
-```typescript
+# Coherency & Stalenes
+
+s
+
+- Stale-while-revalidate for non-critical read
+
+s
+
+- Use ETag
+
+s
+
+ + If-None-Match for HTTP GET
+
+s
+
+#
+
+# Caching Pattern
+
+s
+
+#
+
+## Request Result Cache
+
+- Hash request body to key; respect auth scop
+
+e
+
+#
+
+## Query Cache
+
+- Parameterized queries with normalized orderin
+
+g
+
+#
+
+## Composite Cache
+
+- Multi-source aggregation cached with component version vecto
+
+r
+
+#
+
+# Hot Path Example
+
+s
+
+```
+
+typescript
 // Redis get-or-set
+
 async function getOrSet<T>(key: string, ttl: number, fn: () => Promise<T>): Promise<T> {
   const cached = await redis.get(key);
   if (cached) return JSON.parse(cached) as T;
@@ -72,21 +178,55 @@ async function getOrSet<T>(key: string, ttl: number, fn: () => Promise<T>): Prom
   await redis.set(key, JSON.stringify(value), { EX: ttl });
   return value;
 }
+
 ```
 
-## Observability
+#
 
-- Metrics: hit rate, evictions, latency, stale ratio
-- Tracing: annotate spans with cache events
+# Observabilit
 
-## Risks
+y
 
-- Thundering herd: use request coalescing and jittered TTLs
-- Cache stampede: probabilistic early expiration
-- Inconsistent reads: use versioning for composite objects
+- Metrics: hit rate, evictions, latency, stale rati
 
-## Related Documentation
+o
 
-- Monitoring & Observability
-- Performance Documentation
-- Redis Caching Strategy
+- Tracing: annotate spans with cache event
+
+s
+
+#
+
+# Risk
+
+s
+
+- Thundering herd: use request coalescing and jittered TTL
+
+s
+
+- Cache stampede: probabilistic early expiratio
+
+n
+
+- Inconsistent reads: use versioning for composite object
+
+s
+
+#
+
+# Related Documentatio
+
+n
+
+- Monitoring & Observabilit
+
+y
+
+- Performance Documentatio
+
+n
+
+- Redis Caching Strateg
+
+y

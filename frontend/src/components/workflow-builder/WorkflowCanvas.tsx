@@ -27,6 +27,10 @@ import {
 } from "../../types/workflow-builder";
 import { NodeData as LegacyNodeData } from "../../types/workflow";
 
+// Import Unified AI Service components
+import { AIServiceProvider, useAIServiceContext } from "../templates/ai-integration";
+import { useUnifiedAIService } from "../templates/ai-integration";
+
 // Import existing node components
 import { StartNode } from "../nodes/StartNode";
 import { AIProcessNode } from "../nodes/AIProcessNode";
@@ -50,7 +54,12 @@ import {
   PriceOptimizationNode,
   CustomerSentimentNode,
   RecommendationEngineNode,
+  CrewAINode,
+  LangGraphNode,
 } from "./nodes";
+
+// Import Unified AI Service Node (we'll create this)
+import UnifiedAINode from "./nodes/UnifiedAINode";
 
 const nodeTypes: NodeTypes = {
   // Legacy nodes
@@ -82,6 +91,15 @@ const nodeTypes: NodeTypes = {
   price_optimization: PriceOptimizationNode,
   customer_sentiment: CustomerSentimentNode,
   recommendation_engine: RecommendationEngineNode,
+
+  // CrewAI multi-agent collaboration
+  crewai: CrewAINode,
+
+  // LangGraph workflow orchestration
+  langgraph: LangGraphNode,
+
+  // Unified AI Service integration
+  unified_ai: UnifiedAINode,
 };
 
 interface WorkflowCanvasInternalProps extends WorkflowCanvasProps {
@@ -473,7 +491,7 @@ const WorkflowCanvasInternal: React.FC<WorkflowCanvasInternalProps> = ({
   );
 };
 
-// Wrapper component with ReactFlowProvider
+// Wrapper component with ReactFlowProvider and AI Service Provider
 const WorkflowCanvas: React.FC<
   WorkflowCanvasProps & {
     selectedNode: WorkflowNode | null;
@@ -481,9 +499,18 @@ const WorkflowCanvas: React.FC<
   }
 > = (props) => {
   return (
-    <ReactFlowProvider>
-      <WorkflowCanvasInternal {...props} />
-    </ReactFlowProvider>
+    <AIServiceProvider initialConfig={{
+      defaultProvider: 'gpt-4',
+      enableRouting: true,
+      enableCostOptimization: true,
+      enableCaching: true,
+      fallbackEnabled: true,
+      monitoringEnabled: true
+    }}>
+      <ReactFlowProvider>
+        <WorkflowCanvasInternal {...props} />
+      </ReactFlowProvider>
+    </AIServiceProvider>
   );
 };
 

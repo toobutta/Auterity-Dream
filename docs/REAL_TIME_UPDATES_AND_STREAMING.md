@@ -1,31 +1,76 @@
-# 🔌 Real-time Updates & Streaming Patterns
 
-## Overview
 
-End-to-end guidance for implementing and documenting real-time experiences across dashboards, charts, and collaboration features using WebSockets and streaming APIs.
+# 🔌 Real-time Updates & Streaming Patter
 
-## Architecture
+n
+
+s
+
+#
+
+# Overvie
+
+w
+
+End-to-end guidance for implementing and documenting real-time experiences across dashboards, charts, and collaboration features using WebSockets and streaming APIs
+
+.
+
+#
+
+# Architectur
+
+e
 
 ```mermaid
 graph TD
   A[Frontend Components] --> B[WebSocket Client]
+
   B --> C[WebSocket Gateway]
+
   C --> D[Event/Message Bus]
+
   D --> E[Producers: Services]
+
   E --> F[Cron/Batch]
-  E --> G[AI/Workers]
+
+  E --> G[AI/Workers
+
+]
+
 ```
 
-## Frontend Patterns
+#
 
-- Connection lifecycle: auto-reconnect, exponential backoff, heartbeat/ping
-- Channel namespacing: `dashboard:{id}`, `chart:{metric}`, `workflow:{id}`
-- Throttling: debounce renders, drop late frames, cap point arrays
-- State: append-only ring buffers for time series; fixed windows for charts
+# Frontend Pattern
 
-## Implementation Sketch (Client)
+s
 
-```ts
+- Connection lifecycle: auto-reconnect, exponential backoff, heartbeat/pin
+
+g
+
+- Channel namespacing: `dashboard:{id}`, `chart:{metric}`, `workflow:{id}
+
+`
+
+- Throttling: debounce renders, drop late frames, cap point array
+
+s
+
+- State: append-only ring buffers for time series; fixed windows for chart
+
+s
+
+#
+
+# Implementation Sketch (Client
+
+)
+
+```
+
+ts
 // Pseudocode hook
 export function useStream<T>(channel: string) {
   const [data, setData] = useState<T[]>([]);
@@ -34,22 +79,44 @@ export function useStream<T>(channel: string) {
     ws.onmessage = (e) => {
       const msg = JSON.parse(e.data);
       setData(prev => [...prev.slice(-999), msg]); // cap length
+
     };
     return () => ws.close();
   }, [channel]);
   return data;
 }
+
 ```
 
-## Backend Considerations
+#
 
-- Backpressure: fan-out via Redis/Kafka; avoid slow client blocking
-- Auth: JWT on connect, per-channel authorization
-- QoS: delivery modes (at-most-once for metrics; at-least-once for logs)
+# Backend Consideration
 
-## Testing
+s
 
-- Simulate bursts and drops; verify UI stability
-- Contract tests for channel schemas
+- Backpressure: fan-out via Redis/Kafka; avoid slow client blockin
 
+g
+
+- Auth: JWT on connect, per-channel authorizatio
+
+n
+
+- QoS: delivery modes (at-most-once for metrics; at-least-once for logs
+
+)
+
+#
+
+# Testin
+
+g
+
+- Simulate bursts and drops; verify UI stabilit
+
+y
+
+- Contract tests for channel schema
+
+s
 

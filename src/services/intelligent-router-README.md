@@ -1,18 +1,46 @@
-# Intelligent Router Service
 
-AI-powered request routing system that intelligently distributes requests between Temporal, n8n, vLLM, LangGraph, CrewAI, and other services based on performance, cost, availability, and task requirements.
 
-## 🚀 Overview
+# Intelligent Router Servic
+
+e
+
+AI-powered request routing system that intelligently distributes requests between Temporal, n8n, vLLM, LangGraph, CrewAI, and other services based on performance, cost, availability, and task requirements
+
+.
+
+#
+
+# 🚀 Overvie
+
+w
 
 The Intelligent Router Service acts as a smart traffic controller for your AI ecosystem, automatically routing requests to the most appropriate service based on:
 
-- **Performance Metrics**: Response time, throughput, reliability
-- **Cost Optimization**: Budget constraints and cost efficiency
-- **Service Health**: Real-time availability and capacity
-- **Task Requirements**: Capabilities, latency needs, data size
-- **Business Rules**: Priority levels, preferred services, time-based routing
+- **Performance Metrics**: Response time, throughput, reliabilit
 
-## 🏗️ Architecture
+y
+
+- **Cost Optimization**: Budget constraints and cost efficienc
+
+y
+
+- **Service Health**: Real-time availability and capacit
+
+y
+
+- **Task Requirements**: Capabilities, latency needs, data siz
+
+e
+
+- **Business Rules**: Priority levels, preferred services, time-based routin
+
+g
+
+#
+
+# 🏗️ Architectur
+
+e
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -26,76 +54,196 @@ The Intelligent Router Service acts as a smart traffic controller for your AI ec
                     │   AI Services   │
                     │   Integration   │
                     └─────────────────┘
+
 ```
 
-## 🎯 Key Features
+#
 
-### Intelligent Decision Making
-- **Multi-Criteria Scoring**: Evaluates services based on 10+ factors
-- **Dynamic Routing**: Adapts to real-time service performance
-- **Predictive Analytics**: Learns from historical performance data
-- **Fallback Strategies**: Automatic failover to alternative services
+# 🎯 Key Feature
 
-### Performance Optimization
-- **Latency Awareness**: Routes to fastest available services
-- **Cost Efficiency**: Optimizes for budget constraints
-- **Load Balancing**: Distributes load across healthy services
-- **Resource Management**: Prevents service overload
+s
 
-### Enterprise Integration
-- **Kong Gateway**: API routing and rate limiting
-- **Health Monitoring**: Real-time service health checks
-- **Metrics Collection**: Comprehensive performance analytics
-- **Audit Logging**: Complete request tracing
+#
 
-### Service Mesh Capabilities
-- **Service Discovery**: Automatic service registration and discovery
-- **Circuit Breaking**: Prevents cascading failures
-- **Request Queuing**: Handles traffic spikes gracefully
-- **Retry Logic**: Intelligent retry with exponential backoff
+## Intelligent Decision Making
 
-## 📋 Prerequisites
+- **Multi-Criteria Scoring**: Evaluates services based on 1
 
-- **Node.js**: 18+ with TypeScript support
-- **AI Services**: At least one of Temporal, n8n, vLLM, LangGraph, CrewAI
-- **Kong Gateway**: For API routing (optional but recommended)
-- **Redis**: For caching and session management (optional)
-- **Monitoring**: Prometheus/Grafana for metrics visualization (optional)
+0
 
-## 🚀 Quick Start
++ factor
 
-### 1. Service Configuration
+s
 
-```typescript
+- **Dynamic Routing**: Adapts to real-time service performanc
+
+e
+
+- **Predictive Analytics**: Learns from historical performance dat
+
+a
+
+- **Fallback Strategies**: Automatic failover to alternative service
+
+s
+
+#
+
+## Performance Optimization
+
+- **Latency Awareness**: Routes to fastest available service
+
+s
+
+- **Cost Efficiency**: Optimizes for budget constraint
+
+s
+
+- **Load Balancing**: Distributes load across healthy service
+
+s
+
+- **Resource Management**: Prevents service overloa
+
+d
+
+#
+
+## Enterprise Integration
+
+- **Kong Gateway**: API routing and rate limitin
+
+g
+
+- **Health Monitoring**: Real-time service health check
+
+s
+
+- **Metrics Collection**: Comprehensive performance analytic
+
+s
+
+- **Audit Logging**: Complete request tracin
+
+g
+
+#
+
+## Service Mesh Capabilities
+
+- **Service Discovery**: Automatic service registration and discover
+
+y
+
+- **Circuit Breaking**: Prevents cascading failure
+
+s
+
+- **Request Queuing**: Handles traffic spikes gracefull
+
+y
+
+- **Retry Logic**: Intelligent retry with exponential backof
+
+f
+
+#
+
+# 📋 Prerequisite
+
+s
+
+- **Node.js**: 1
+
+8
+
++ with TypeScript suppor
+
+t
+
+- **AI Services**: At least one of Temporal, n8n, vLLM, LangGraph, CrewA
+
+I
+
+- **Kong Gateway**: For API routing (optional but recommended
+
+)
+
+- **Redis**: For caching and session management (optional
+
+)
+
+- **Monitoring**: Prometheus/Grafana for metrics visualization (optional
+
+)
+
+#
+
+# 🚀 Quick Star
+
+t
+
+#
+
+##
+
+ 1. Service Configurati
+
+o
+
+n
+
+```
+
+typescript
 import { intelligentRouter } from './services/intelligentRouter';
 
 // Router is automatically initialized with default configuration
 // Customize as needed for your environment
+
 ```
 
-### 2. Basic Request Routing
+#
 
-```typescript
+##
+
+ 2. Basic Request Routi
+
+n
+
+g
+
+```
+
+typescript
 import { RoutingRequest } from './services/intelligentRouter';
 
 // Create a routing request
 const request: RoutingRequest = {
-  id: 'req_' + Date.now(),
+  id: 'req_'
+
+ + Date.now(),
+
   type: 'ai-generation',
+
   priority: 'high',
   requirements: {
     maxLatency: 5000,     // 5 seconds max
     maxCost: 0.01,        // $0.01 per request max
+
     reliability: 0.95     // 95% success rate required
+
   },
   payload: {
     prompt: 'Explain quantum computing in simple terms',
     temperature: 0.7,
+
     maxTokens: 500
   },
   metadata: {
     userId: 'user123',
     source: 'web-app'
+
   }
 };
 
@@ -105,85 +253,168 @@ const result = await intelligentRouter.routeRequest(request);
 console.log('Selected Service:', result.decision.selectedService);
 console.log('Execution Result:', result.executionResult);
 console.log('Actual Cost:', result.actualCost);
+
 ```
 
-### 3. Advanced Routing with Preferences
+#
 
-```typescript
+##
+
+ 3. Advanced Routing with Preferenc
+
+e
+
+s
+
+```
+
+typescript
 const request: RoutingRequest = {
-  id: 'advanced_' + Date.now(),
+  id: 'advanced_'
+
+ + Date.now(),
+
   type: 'workflow',
   priority: 'critical',
   requirements: {
     maxLatency: 10000,
     capabilities: ['fault-tolerance', 'monitoring']
+
   },
   payload: {
     workflowId: 'critical-process',
+
     input: { data: 'sensitive-data' }
+
   },
   preferredServices: ['temporal', 'langgraph'], // Prefer these
   excludedServices: ['openai'],                  // Never use this
   metadata: {
     userId: 'enterprise-user',
+
     tags: ['production', 'critical']
   }
 };
 
 const result = await intelligentRouter.routeRequest(request);
+
 ```
 
-## 📚 API Reference
+#
 
-### Core Methods
+# 📚 API Referenc
 
-#### `routeRequest(request: RoutingRequest): Promise<RoutingResult>`
+e
+
+#
+
+## Core Method
+
+s
+
+#
+
+### `routeRequest(request: RoutingRequest): Promise<RoutingResult>
+
+`
 
 Routes a request to the most appropriate service based on intelligent analysis.
 
-**Parameters:**
-- `request`: RoutingRequest object with requirements and payload
+**Parameters:
 
-**Returns:** Promise<RoutingResult> with execution results and metadata
+* *
 
-#### `getMetrics(): RoutingMetrics`
+- `request`: RoutingRequest object with requirements and payloa
+
+d
+
+**Returns:
+
+* * Promise<RoutingResult> with execution results and metadat
+
+a
+
+#
+
+### `getMetrics(): RoutingMetrics
+
+`
 
 Returns comprehensive routing performance metrics.
 
-**Returns:** Current routing statistics and performance data
+**Returns:
 
-#### `getServiceHealth(): ServiceEndpoint[]`
+* * Current routing statistics and performance dat
+
+a
+
+#
+
+### `getServiceHealth(): ServiceEndpoint[]
+
+`
 
 Returns health status of all registered services.
 
-**Returns:** Array of service health information
+**Returns:
 
-#### `getRoutingHistory(limit?: number): RoutingResult[]`
+* * Array of service health informatio
+
+n
+
+#
+
+### `getRoutingHistory(limit?: number): RoutingResult[]
+
+`
 
 Returns recent routing decisions and results.
 
-**Parameters:**
-- `limit`: Maximum number of results to return (default: 50)
+**Parameters:
 
-### Request Types
+* *
+
+- `limit`: Maximum number of results to return (default: 50
+
+)
+
+#
+
+## Request Type
+
+s
 
 The router supports different request types with specialized routing logic:
 
-```typescript
+```
+
+typescript
 type RequestType =
   | 'workflow'        // Temporal/LangGraph routing
   | 'ai-generation'   // vLLM/OpenAI/Anthropic routing
+
   | 'ai-analysis'     // Analysis-focused routing
+
   | 'multi-agent'     // CrewAI-focused routing
+
   | 'scheduled'       // Temporal scheduling
-  | 'real-time';      // Low-latency routing
+  | 'real-time';      // Low-latency routin
+
+g
+
 ```
 
-### Service Types
+#
+
+## Service Type
+
+s
 
 Supported service types with their characteristics:
 
-```typescript
+```
+
+typescript
 interface ServiceEndpoint {
   name: string;
   type: 'temporal' | 'n8n' | 'vllm' | 'langgraph' | 'crewai' | 'openai' | 'anthropic';
@@ -194,40 +425,67 @@ interface ServiceEndpoint {
   capabilities: string[];
   priority: number;
 }
+
 ```
 
-## 🔧 Configuration
+#
 
-### Environment Variables
+# 🔧 Configuratio
+
+n
+
+#
+
+## Environment Variable
+
+s
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+
 | `TEMPORAL_BASE_URL` | http://localhost:7233 | Temporal service URL |
 | `N8N_BASE_URL` | http://localhost:5678 | n8n service URL |
 | `VLLM_BASE_URL` | http://localhost:8001 | vLLM service URL |
 | `LANGGRAPH_BASE_URL` | http://localhost:8002 | LangGraph service URL |
 | `CREWAI_BASE_URL` | http://localhost:8003 | CrewAI service URL |
-| `OPENAI_API_KEY` | - | OpenAI API key |
-| `ANTHROPIC_API_KEY` | - | Anthropic API key |
+| `OPENAI_API_KEY` |
+
+ - | OpenAI API key |
+
+| `ANTHROPIC_API_KEY` |
+
+ - | Anthropic API key |
+
 | `ROUTER_HEALTH_CHECK_INTERVAL` | 30000 | Health check interval (ms) |
 
-### Advanced Configuration
+#
 
-```typescript
+## Advanced Configuratio
+
+n
+
+```
+
+typescript
 // Custom router configuration
 const customConfig = {
   services: [
     {
       name: 'custom-vllm',
+
       type: 'vllm' as const,
       baseUrl: 'http://custom-gpu:8001',
+
       costPerRequest: 0.008,
+
       capabilities: ['text-generation', 'gpu-accelerated', 'custom-model'],
+
       priority: 10
     }
   ],
   loadBalancing: {
     strategy: 'performance-based' as const,
+
     healthCheckInterval: 15000
   },
   caching: {
@@ -239,47 +497,111 @@ const customConfig = {
 
 // Initialize with custom config
 const customRouter = new IntelligentRouter(customConfig);
+
 ```
 
-## 🧪 Testing
+#
 
-### Unit Tests
+# 🧪 Testin
 
-```bash
+g
+
+#
+
+## Unit Test
+
+s
+
+```
+
+bash
+
 # Run router tests
+
 cd src/services
-npm test -- --testPathPattern=intelligentRouter
+npm test -
+
+- --testPathPattern=intelligentRoute
+
+r
 
 # Run with coverage
-npm test -- --testPathPattern=intelligentRouter --coverage
+
+npm test -
+
+- --testPathPattern=intelligentRouter --coverag
+
+e
+
 ```
 
-### Integration Tests
+#
 
-```bash
+## Integration Test
+
+s
+
+```
+
+bash
+
 # Test with real services
-npm run test:integration -- --testPathPattern=router
+
+npm run test:integration -
+
+- --testPathPattern=route
+
+r
 
 # Test routing decisions
-npm run test:integration -- --testPathPattern=routing-decisions
+
+npm run test:integration -
+
+- --testPathPattern=routing-decision
+
+s
+
 ```
 
-### Load Testing
+#
 
-```bash
+## Load Testin
+
+g
+
+```
+
+bash
+
 # Install Artillery for load testing
-npm install -g artillery
+
+npm install -g artiller
+
+y
 
 # Run load test
-artillery run tests/load/router-load-test.yml
+
+artillery run tests/load/router-load-test.ym
+
+l
 
 # Generate report
-artillery report router-load-test.json
+
+artillery report router-load-test.jso
+
+n
+
 ```
 
-### Performance Benchmarking
+#
 
-```typescript
+## Performance Benchmarkin
+
+g
+
+```
+
+typescript
 // Benchmark routing performance
 import { runRouterBenchmark } from './tests/benchmark';
 
@@ -287,6 +609,7 @@ const results = await runRouterBenchmark({
   concurrentRequests: 100,
   duration: 30000, // 30 seconds
   requestTypes: ['ai-generation', 'workflow', 'multi-agent']
+
 });
 
 console.log('Benchmark Results:', {
@@ -294,67 +617,122 @@ console.log('Benchmark Results:', {
   requestsPerSecond: results.requestsPerSecond,
   errorRate: results.errorRate
 });
+
 ```
 
-## 📊 Monitoring & Analytics
+#
 
-### Real-time Metrics
+# 📊 Monitoring & Analytic
+
+s
+
+#
+
+## Real-time Metri
+
+c
+
+s
 
 The router provides comprehensive metrics:
 
-```typescript
+```
+
+typescript
 const metrics = intelligentRouter.getMetrics();
 
 console.log('Router Performance:', {
   totalRequests: metrics.totalRequests,
-  successRate: `${(metrics.successRate * 100).toFixed(1)}%`,
+  successRate: `${(metrics.successRate
+
+ * 100).toFixed(1)}%`,
+
   averageRoutingTime: `${metrics.averageRoutingTime.toFixed(0)}ms`,
   serviceUtilization: metrics.serviceUtilization
 });
+
 ```
 
-### Service Health Monitoring
+#
 
-```typescript
+## Service Health Monitorin
+
+g
+
+```
+
+typescript
 const health = intelligentRouter.getServiceHealth();
 
 health.forEach(service => {
   console.log(`${service.name}: ${service.health} (${service.responseTime}ms)`);
 });
+
 ```
 
-### Routing Analytics
+#
 
-```typescript
+## Routing Analytic
+
+s
+
+```
+
+typescript
 const stats = intelligentRouter.getRoutingStats();
 
 console.log('Service Performance:', stats.servicePerformance);
 console.log('Request Distribution:', stats.requestTypeDistribution);
 console.log('Priority Distribution:', stats.priorityDistribution);
+
 ```
 
-### Prometheus Integration
+#
 
-```yaml
+## Prometheus Integratio
+
+n
+
+```
+
+yaml
+
 # prometheus.yml
+
 scrape_configs:
+
   - job_name: 'intelligent-router'
+
     static_configs:
+
       - targets: ['router-service:9464']
+
     metrics_path: '/metrics'
 
 # Custom metrics exposed:
+
 /metrics/intelligent_router_requests_total
 /metrics/intelligent_router_routing_time
 /metrics/intelligent_router_service_health
 /metrics/intelligent_router_cost_efficiency
+
 ```
 
-## 🔌 Integration Examples
+#
 
-### With React Frontend
+# 🔌 Integration Example
 
-```tsx
+s
+
+#
+
+## With React Fronten
+
+d
+
+```
+
+tsx
 import { useState, useEffect } from 'react';
 import { intelligentRouter, RoutingRequest } from '../services/intelligentRouter';
 
@@ -368,15 +746,20 @@ function AIServiceComponent() {
     const request: RoutingRequest = {
       id: `ui_${Date.now()}`,
       type: 'ai-generation',
+
       priority: 'medium',
       requirements: {
         maxLatency: 3000,
         capabilities: ['text-generation']
+
       },
       payload: { prompt, temperature: 0.7 },
+
       metadata: {
         userId: 'ui-user',
+
         source: 'react-app'
+
       }
     };
 
@@ -407,11 +790,18 @@ function AIServiceComponent() {
     </div>
   );
 }
+
 ```
 
-### With Express Backend
+#
 
-```typescript
+## With Express Backen
+
+d
+
+```
+
+typescript
 import express from 'express';
 import { intelligentRouter, RoutingRequest } from './services/intelligentRouter';
 
@@ -463,166 +853,431 @@ app.get('/health', (req, res) => {
 app.listen(3000, () => {
   console.log('Intelligent Router API running on port 3000');
 });
+
 ```
 
-### With Kong Gateway
+#
 
-```yaml
+## With Kong Gatewa
+
+y
+
+```
+
+yaml
+
 # kong.yml
+
 services:
+
   - name: intelligent-router
+
     url: http://router-service:3000
+
     plugins:
+
       - name: rate-limiting
+
         config:
           minute: 1000
           hour: 10000
+
       - name: request-size-limiting
+
         config:
-          allowed_payload_size: 10 * 1024 * 1024  # 10MB
+          allowed_payload_size: 10
+
+ * 102
+
+4
+
+ * 1024
+
+
+
+# 10M
+
+B
 
 routes:
+
   - name: ai-routing
+
     service: intelligent-router
+
     paths:
+
       - /api/ai/route
+
     methods:
-      - POST
+
+      - POS
+
+T
 
   - name: router-health
+
     service: intelligent-router
+
     paths:
+
       - /api/ai/health
+
     methods:
-      - GET
-```
 
-## 🏗️ Development
+      - GE
 
-### Project Structure
+T
 
 ```
+
+#
+
+# 🏗️ Developmen
+
+t
+
+#
+
+## Project Structur
+
+e
+
+```
+
 src/services/
-├── intelligentRouter.ts          # Main router service
-├── intelligentRouterExample.ts   # Usage examples
-├── unifiedAIService.ts          # AI service integration
-├── aiSDKService.ts              # Existing AI SDK
+├── intelligentRouter.ts
+
+# Main router service
+
+├── intelligentRouterExample.ts
+
+# Usage examples
+
+├── unifiedAIService.ts
+
+# AI service integration
+
+├── aiSDKService.ts
+
+# Existing AI SDK
+
 └── optimizers/
     ├── CostOptimizationEngine.ts
     └── WorkflowOptimizer.ts
+
 ```
 
-### Adding New Services
+#
 
-1. **Define Service Type**: Add to the ServiceType union
-2. **Implement Service Handler**: Add execution method in the router
-3. **Configure Service**: Add to service configuration
-4. **Add Health Check**: Implement health monitoring
-5. **Update Tests**: Add test cases for new service
+## Adding New Service
+
+s
+
+1. **Define Service Type**: Add to the ServiceType uni
+
+o
+
+n
+
+2. **Implement Service Handler**: Add execution method in the rout
+
+e
+
+r
+
+3. **Configure Service**: Add to service configurati
+
+o
+
+n
+
+4. **Add Health Check**: Implement health monitori
+
+n
+
+g
+
+5. **Update Tests**: Add test cases for new servi
+
+c
+
+e
 
 Example:
 
-```typescript
-// 1. Add to service type
-type ServiceType = 'temporal' | 'n8n' | 'vllm' | 'langgraph' | 'crewai' | 'openai' | 'anthropic' | 'custom-service';
+```
 
-// 2. Add service configuration
+typescript
+//
+
+ 1. Add to service type
+
+type ServiceType = 'temporal' | 'n8n' | 'vllm' | 'langgraph' | 'crewai' | 'openai' | 'anthropic' | 'custom-service'
+
+;
+
+//
+
+ 2. Add service configuration
+
 {
   name: 'custom-service',
+
   type: 'custom-service' as const,
+
   baseUrl: 'http://custom-service:8080',
+
   costPerRequest: 0.003,
+
   capabilities: ['custom-processing', 'specialized-ai'],
+
   priority: 7
 }
 
-// 3. Implement execution method
+//
+
+ 3. Implement execution method
+
 private async executeCustomService(request: RoutingRequest, service: ServiceEndpoint): Promise<any> {
   const response = await axios.post(`${service.baseUrl}/process`, request.payload, {
     timeout: 30000
   });
   return response.data;
 }
+
 ```
 
-### Custom Routing Strategies
+#
 
-```typescript
+## Custom Routing Strategie
+
+s
+
+```
+
+typescript
 // Implement custom routing logic
 private calculateCustomScore(service: ServiceEndpoint, request: RoutingRequest): { score: number; reasoning: string } {
-  let score = service.priority * 10;
+  let score = service.priority
+
+ * 10;
+
   const reasons: string[] = [];
 
   // Custom scoring logic here
   if (request.metadata?.tags?.includes('premium')) {
     if (service.type === 'openai' || service.type === 'anthropic') {
       score += 20;
+
       reasons.push('Premium service for premium request');
     }
   }
 
   return { score, reasoning: reasons.join('; ') };
 }
+
 ```
 
-## 🔒 Security & Compliance
+#
 
-### Authentication & Authorization
+# 🔒 Security & Complianc
 
-- **API Key Management**: Secure service authentication
-- **Request Validation**: Comprehensive input validation
-- **Rate Limiting**: Prevents abuse and ensures fair usage
-- **Audit Logging**: Complete request/response logging
+e
 
-### Data Protection
+#
 
-- **Encryption**: TLS for all service communications
-- **Data Sanitization**: Input validation and sanitization
-- **Privacy Compliance**: GDPR and CCPA compliance
-- **Data Retention**: Configurable data retention policies
+## Authentication & Authorizatio
 
-### Service Security
+n
 
-- **Health Validation**: Continuous service health monitoring
-- **Failover Protection**: Automatic failover to healthy services
-- **Circuit Breaking**: Prevents cascade failures
-- **Resource Limits**: Configurable resource usage limits
+- **API Key Management**: Secure service authenticatio
 
-## 🤝 Contributing
+n
 
-### Development Guidelines
+- **Request Validation**: Comprehensive input validatio
 
-1. **Code Quality**: Follow TypeScript best practices
-2. **Testing**: Comprehensive test coverage for all routing logic
-3. **Documentation**: Update API documentation for new features
-4. **Performance**: Optimize routing algorithms for low latency
-5. **Security**: Implement security best practices
+n
 
-### Feature Development
+- **Rate Limiting**: Prevents abuse and ensures fair usag
 
-1. **Plan**: Design routing logic and service integration
-2. **Implement**: Add service handlers and routing logic
-3. **Test**: Comprehensive testing including load testing
-4. **Document**: Update documentation and examples
-5. **Deploy**: Gradual rollout with monitoring
+e
 
-### Performance Optimization
+- **Audit Logging**: Complete request/response loggin
 
-- **Caching**: Implement intelligent result caching
-- **Load Balancing**: Optimize service load distribution
-- **Async Processing**: Use async/await for non-blocking operations
-- **Connection Pooling**: Reuse connections to reduce overhead
+g
 
-## 📄 License
+#
+
+## Data Protectio
+
+n
+
+- **Encryption**: TLS for all service communication
+
+s
+
+- **Data Sanitization**: Input validation and sanitizatio
+
+n
+
+- **Privacy Compliance**: GDPR and CCPA complianc
+
+e
+
+- **Data Retention**: Configurable data retention policie
+
+s
+
+#
+
+## Service Securit
+
+y
+
+- **Health Validation**: Continuous service health monitorin
+
+g
+
+- **Failover Protection**: Automatic failover to healthy service
+
+s
+
+- **Circuit Breaking**: Prevents cascade failure
+
+s
+
+- **Resource Limits**: Configurable resource usage limit
+
+s
+
+#
+
+# 🤝 Contributin
+
+g
+
+#
+
+## Development Guideline
+
+s
+
+1. **Code Quality**: Follow TypeScript best practic
+
+e
+
+s
+
+2. **Testing**: Comprehensive test coverage for all routing log
+
+i
+
+c
+
+3. **Documentation**: Update API documentation for new featur
+
+e
+
+s
+
+4. **Performance**: Optimize routing algorithms for low laten
+
+c
+
+y
+
+5. **Security**: Implement security best practic
+
+e
+
+s
+
+#
+
+## Feature Developmen
+
+t
+
+1. **Plan**: Design routing logic and service integrati
+
+o
+
+n
+
+2. **Implement**: Add service handlers and routing log
+
+i
+
+c
+
+3. **Test**: Comprehensive testing including load testi
+
+n
+
+g
+
+4. **Document**: Update documentation and exampl
+
+e
+
+s
+
+5. **Deploy**: Gradual rollout with monitori
+
+n
+
+g
+
+#
+
+## Performance Optimizatio
+
+n
+
+- **Caching**: Implement intelligent result cachin
+
+g
+
+- **Load Balancing**: Optimize service load distributio
+
+n
+
+- **Async Processing**: Use async/await for non-blocking operation
+
+s
+
+- **Connection Pooling**: Reuse connections to reduce overhea
+
+d
+
+#
+
+# 📄 Licens
+
+e
 
 This project is part of the Auterity Unified AI Platform. See the main project LICENSE file for details.
 
-## 🆘 Support & Troubleshooting
+#
 
-### Common Issues
+# 🆘 Support & Troubleshootin
 
-**High Latency Routing**
-```typescript
+g
+
+#
+
+## Common Issue
+
+s
+
+**High Latency Routing
+
+* *
+
+```
+
+typescript
 // Check service health
 const health = intelligentRouter.getServiceHealth();
 const slowServices = health.filter(s => s.responseTime > 5000);
@@ -634,10 +1289,16 @@ const request: RoutingRequest = {
   // ... request config
   excludedServices: slowServices.map(s => s.name)
 };
+
 ```
 
-**Service Unavailable**
-```typescript
+**Service Unavailable
+
+* *
+
+```
+
+typescript
 // Check overall health
 const health = intelligentRouter.getServiceHealth();
 const unhealthyServices = health.filter(s => s.health === 'unhealthy');
@@ -646,10 +1307,16 @@ if (unhealthyServices.length > 0) {
   console.warn('Unhealthy services:', unhealthyServices);
   // Implement fallback logic
 }
+
 ```
 
-**Cost Optimization**
-```typescript
+**Cost Optimization
+
+* *
+
+```
+
+typescript
 // Monitor cost efficiency
 const metrics = intelligentRouter.getMetrics();
 console.log('Cost efficiency:', metrics.costEfficiency);
@@ -659,38 +1326,111 @@ const request: RoutingRequest = {
   // ... request config
   requirements: {
     maxCost: 0.005 // Lower cost threshold
+
   }
 };
+
 ```
 
-### Performance Tuning
+#
 
-1. **Monitor Metrics**: Regularly check routing performance
-2. **Adjust Priorities**: Modify service priorities based on usage patterns
-3. **Optimize Caching**: Configure caching for frequently accessed data
-4. **Load Balancing**: Distribute load across multiple service instances
+## Performance Tunin
 
-### Getting Help
+g
 
-- **Documentation**: Comprehensive documentation and examples
-- **GitHub Issues**: Report bugs and request features
-- **Community**: Join the Auterity community discussions
-- **Professional Support**: Enterprise support available
+1. **Monitor Metrics**: Regularly check routing performan
 
-## 🎯 Roadmap
+c
 
-### Upcoming Features
+e
 
-- [ ] **Machine Learning Routing**: ML-powered routing decisions
-- [ ] **Predictive Scaling**: Auto-scaling based on demand patterns
-- [ ] **Advanced Caching**: Intelligent result caching and invalidation
-- [ ] **Real-time Analytics**: Live dashboard for routing metrics
-- [ ] **Custom Plugins**: Extensible plugin system for routing strategies
-- [ ] **Multi-region Support**: Global service distribution and routing
-- [ ] **Advanced Security**: Enhanced authentication and authorization
-- [ ] **Performance Profiling**: Detailed performance analysis tools
+2. **Adjust Priorities**: Modify service priorities based on usage patter
 
----
+n
 
-**Built with ❤️ for the Auterity Unified AI Platform**
+s
+
+3. **Optimize Caching**: Configure caching for frequently accessed da
+
+t
+
+a
+
+4. **Load Balancing**: Distribute load across multiple service instanc
+
+e
+
+s
+
+#
+
+## Getting Hel
+
+p
+
+- **Documentation**: Comprehensive documentation and example
+
+s
+
+- **GitHub Issues**: Report bugs and request feature
+
+s
+
+- **Community**: Join the Auterity community discussion
+
+s
+
+- **Professional Support**: Enterprise support availabl
+
+e
+
+#
+
+# 🎯 Roadma
+
+p
+
+#
+
+## Upcoming Feature
+
+s
+
+- [ ] **Machine Learning Routing**: ML-powered routing decision
+
+s
+
+- [ ] **Predictive Scaling**: Auto-scaling based on demand pattern
+
+s
+
+- [ ] **Advanced Caching**: Intelligent result caching and invalidatio
+
+n
+
+- [ ] **Real-time Analytics**: Live dashboard for routing metric
+
+s
+
+- [ ] **Custom Plugins**: Extensible plugin system for routing strategie
+
+s
+
+- [ ] **Multi-region Support**: Global service distribution and routin
+
+g
+
+- [ ] **Advanced Security**: Enhanced authentication and authorizatio
+
+n
+
+- [ ] **Performance Profiling**: Detailed performance analysis tool
+
+s
+
+--
+
+- **Built with ❤️ for the Auterity Unified AI Platform
+
+* *
 

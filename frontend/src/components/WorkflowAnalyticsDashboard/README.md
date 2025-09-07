@@ -1,10 +1,24 @@
-# WorkflowAnalyticsDashboard Component
+
+
+# WorkflowAnalyticsDashboard Componen
+
+t
 
 A dashboard component with the following features:
-- websocket
-- loading
 
-## Usage
+- websocke
+
+t
+
+- loadin
+
+g
+
+#
+
+# Usag
+
+e
 
 ```tsx
 import { WorkflowAnalyticsDashboard } from './components/WorkflowAnalyticsDashboard';
@@ -13,32 +27,67 @@ function App() {
   return (
     <WorkflowAnalyticsDashboard
       className="my-custom-class"
-      
+
+
     />
   );
 }
+
 ```
 
-## Props
+#
 
+# Prop
 
-- `className`: Additional CSS classes
+s
 
-## Features
+- `className`: Additional CSS classe
 
-- **websocket**: Real-time communication via WebSocket
-- **loading**: Loading states and async operations
+s
 
-## Testing
+#
+
+# Feature
+
+s
+
+- **websocket**: Real-time communication via WebSocke
+
+t
+
+- **loading**: Loading states and async operation
+
+s
+
+#
+
+# Testin
+
+g
 
 Run tests with:
-```bash
-npm test -- WorkflowAnalyticsDashboard.test.tsx
+
 ```
 
-## Stories
+bash
+npm test -
+
+- WorkflowAnalyticsDashboard.test.ts
+
+x
+
+```
+
+#
+
+# Storie
+
+s
 
 View component stories in Storybook:
-```bash
+
+```
+
+bash
 npm run storybook
 ```

@@ -1,32 +1,74 @@
-# 🛠️ Data Pipelines & Transformations
 
-## Overview
+
+# 🛠️ Data Pipelines & Transformation
+
+s
+
+#
+
+# Overvie
+
+w
 
 Standardizes data ingestion, processing, storage, and serving across the platform with clear contracts, observability, and governance.
 
-## Reference Architecture
+#
+
+# Reference Architectur
+
+e
 
 ```mermaid
 graph TD
   A[Sources] --> B[Ingestion]
+
   B --> C[Raw Zone]
+
   C --> D[ETL/ELT]
+
   D --> E[Clean Zone]
+
   E --> F[Aggregation Layer]
-  F --> G[Serving: APIs/Dashboards/ML]
+
+  F --> G[Serving: APIs/Dashboards/ML
+
+]
+
 ```
 
-- Sources: event streams, databases, files, external APIs
-- Ingestion: connectors, CDC, batch loads
-- Zones: raw immutable, clean curated, aggregated marts
+- Sources: event streams, databases, files, external API
 
-## Ingestion
+s
 
-### Connectors
-- Kafka consumers, HTTP pull, S3/GCS loaders, DB replication (CDC)
+- Ingestion: connectors, CDC, batch load
 
-### Contracts
-```typescript
+s
+
+- Zones: raw immutable, clean curated, aggregated mart
+
+s
+
+#
+
+# Ingestio
+
+n
+
+#
+
+## Connectors
+
+- Kafka consumers, HTTP pull, S3/GCS loaders, DB replication (CDC
+
+)
+
+#
+
+## Contracts
+
+```
+
+typescript
 interface IngestionContract {
   source: string;
   schema_version: string;
@@ -34,68 +76,162 @@ interface IngestionContract {
   watermark?: string; // late data handling
   privacy_level: 'public' | 'internal' | 'restricted';
 }
+
 ```
 
-## Transformations
+#
 
-### ELT with Declarative Models
+# Transformation
 
-- SQL-based models with dependencies (DAG)
-- Idempotent, incremental where possible
+s
 
-```sql
--- example incremental model
+#
+
+## ELT with Declarative Model
+
+s
+
+- SQL-based models with dependencies (DAG
+
+)
+
+- Idempotent, incremental where possibl
+
+e
+
+```
+
+sql
+- - example incremental model
+
 create table if not exists analytics.events_daily as
 select date_trunc('day', occurred_at) as day,
        event_type,
        count(*) as event_count
+
 from raw.events
-where occurred_at >= now() - interval '30 days'
+where occurred_at >= now()
+
+ - interval '30 days'
+
 group by 1,2;
+
 ```
 
-### Data Quality
+#
 
-- Constraints: not null, uniqueness, referential integrity
-- Validation tests: freshness, volume, schema conformity
+## Data Qualit
 
-```typescript
+y
+
+- Constraints: not null, uniqueness, referential integrit
+
+y
+
+- Validation tests: freshness, volume, schema conformit
+
+y
+
+```
+
+typescript
 interface DataQualityRule {
   name: string;
   type: 'freshness' | 'uniqueness' | 'completeness' | 'valid_values';
   target: string; // table/column
   threshold: number | string;
 }
+
 ```
 
-## Orchestration
+#
 
-- DAG scheduler with retries, backoff, SLAs
-- Backfill support and lineage tracking
+# Orchestratio
 
-## Serving Layer
+n
 
-- APIs, materialized views, feature stores, vector indices
-- Caching strategies for hot data
+- DAG scheduler with retries, backoff, SLA
 
-## Governance
+s
 
-- Ownership, documentation, change management
-- PII tagging and masking policies
+- Backfill support and lineage trackin
 
-## Observability
+g
 
-- Pipeline metrics: runtime, success rate, data volume
-- Data metrics: freshness, null rates, drift
-- Alerting on SLA breaches
+#
 
-## Change Management
+# Serving Laye
 
-- Schema migration strategy with versioned tables
-- Blue/green for critical data products
+r
 
-## Related Documentation
+- APIs, materialized views, feature stores, vector indice
 
-- Data & Analytics Governance
-- Monitoring & Observability
-- End-to-End Integration
+s
+
+- Caching strategies for hot dat
+
+a
+
+#
+
+# Governanc
+
+e
+
+- Ownership, documentation, change managemen
+
+t
+
+- PII tagging and masking policie
+
+s
+
+#
+
+# Observabilit
+
+y
+
+- Pipeline metrics: runtime, success rate, data volum
+
+e
+
+- Data metrics: freshness, null rates, drif
+
+t
+
+- Alerting on SLA breache
+
+s
+
+#
+
+# Change Managemen
+
+t
+
+- Schema migration strategy with versioned table
+
+s
+
+- Blue/green for critical data product
+
+s
+
+#
+
+# Related Documentatio
+
+n
+
+- Data & Analytics Governanc
+
+e
+
+- Monitoring & Observabilit
+
+y
+
+- End-to-End Integratio
+
+n

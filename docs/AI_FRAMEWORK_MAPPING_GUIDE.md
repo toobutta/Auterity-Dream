@@ -1,42 +1,116 @@
-# 🤖 AI Framework Mapping Guide for Auterity
 
-## Overview
+
+# 🤖 AI Framework Mapping Guide for Auterit
+
+y
+
+#
+
+# Overvie
+
+w
 
 This guide provides comprehensive documentation on how AI SDK and other AI frameworks are mapped and configured in Auterity. It ensures proper integration between Vercel AI SDK, LangChain, and other AI frameworks for optimal performance and user experience.
 
-## 📋 Framework Architecture
+#
 
-### Core Frameworks
+# 📋 Framework Architectur
 
-1. **Vercel AI SDK** - Primary framework for unified AI operations
-2. **LangChain** - Advanced workflow orchestration and agent management
-3. **LiteLLM** - Multi-model routing and fallback management
-4. **Backend AI Services** - Python-based AI processing (RelayCore, LangGraph)
+e
 
-### Integration Points
+#
+
+## Core Framework
+
+s
+
+1. **Vercel AI SD
+
+K
+
+* *
+
+- Primary framework for unified AI operation
+
+s
+
+2. **LangChai
+
+n
+
+* *
+
+- Advanced workflow orchestration and agent managemen
+
+t
+
+3. **LiteLL
+
+M
+
+* *
+
+- Multi-model routing and fallback managemen
+
+t
+
+4. **Backend AI Service
+
+s
+
+* *
+
+- Python-based AI processing (RelayCore, LangGraph
+
+)
+
+#
+
+## Integration Point
+
+s
 
 ```typescript
 // Frontend AI Integration
 src/services/aiSDKService.ts          // Vercel AI SDK Service
 src/services/unifiedAIService.ts       // Cross-app AI Integration
+
 frontend/src/services/enhanced/enhancedAIService.ts
 
 // LangChain Integration
 apps/workflow-studio/src/services/langchain/LangChainService.ts
-apps/workflow-studio/src/services/langchain/LangGraphService.ts
+
+apps/workflow-studio/src/services/langchain/LangGraphService.t
+
+s
 
 // Backend AI Integration
 services/api/src/app/services/ai_service_relaycore.py
 services/api/src/app/services/litellm_service.py
 systems/langgraph/src/langgraph_service.py
+
 ```
 
-## 🔧 Configuration Structure
+#
 
-### External Services Configuration
+# 🔧 Configuration Structur
 
-```yaml
-# config/external-services.yml
+e
+
+#
+
+## External Services Configuratio
+
+n
+
+```
+
+yaml
+
+# config/external-services.ym
+
+l
+
 ai_frameworks:
   ai_sdk:
     enabled: true
@@ -45,11 +119,13 @@ ai_frameworks:
         enabled: true
         api_key: "${OPENAI_API_KEY}"
         models: ["gpt-4o", "gpt-4-turbo-preview"]
+
         capabilities: ["text", "chat", "function_calling"]
       anthropic:
         enabled: true
         api_key: "${ANTHROPIC_API_KEY}"
         models: ["claude-3-5-sonnet-20241022"]
+
         capabilities: ["text", "chat", "reasoning"]
 
   langchain:
@@ -58,24 +134,38 @@ ai_frameworks:
       openai:
         enabled: true
         model: "gpt-4"
+
         temperature: 0.7
+
       anthropic:
         enabled: true
-        model: "claude-3-sonnet-20240229"
+        model: "claude-3-sonnet-20240229
+
+"
 
   framework_mappings:
     ai_sdk_to_langchain:
       openai: "openai"
       anthropic: "anthropic"
       google: "google"
+
 ```
 
-## 🔄 Framework Mappings
+#
 
-### AI SDK ↔ LangChain Provider Mapping
+# 🔄 Framework Mapping
+
+s
+
+#
+
+## AI SDK ↔ LangChain Provider Mappin
+
+g
 
 | AI SDK Provider | LangChain Provider | Status | Notes |
 |-----------------|-------------------|--------|--------|
+
 | `openai` | `openai` | ✅ Mapped | Full compatibility |
 | `anthropic` | `anthropic` | ✅ Mapped | Full compatibility |
 | `google` | `google` | ✅ Mapped | Full compatibility |
@@ -83,10 +173,15 @@ ai_frameworks:
 | `cohere` | `cohere` | 🔄 Partial | LangChain support limited |
 | `ollama` | `ollama` | ❌ Not Mapped | Local model routing |
 
-### Capability Mapping
+#
+
+## Capability Mappin
+
+g
 
 | Capability | AI SDK | LangChain | Backend AI |
 |------------|--------|-----------|------------|
+
 | Text Generation | ✅ | ✅ | ✅ |
 | Chat/Conversation | ✅ | ✅ | ✅ |
 | Function Calling | ✅ | ✅ | ✅ |
@@ -95,67 +190,157 @@ ai_frameworks:
 | Agent Orchestration | ❌ | ✅ | ✅ |
 | Workflow Orchestration | ❌ | ✅ | ✅ |
 | Cost Tracking | ✅ | ❌ | ✅ |
-| Multi-Model Routing | ❌ | ❌ | ✅ |
+| Multi-Model Routing | ❌ | ❌ | ✅
 
-## 🎯 Usage Guidelines
+|
 
-### When to Use Each Framework
+#
 
-#### Vercel AI SDK (Frontend)
-```typescript
+# 🎯 Usage Guideline
+
+s
+
+#
+
+## When to Use Each Framewor
+
+k
+
+#
+
+### Vercel AI SDK (Frontend)
+
+```
+
+typescript
 // Use for:
-- Simple text generation and chat
-- Real-time streaming responses
-- Cost tracking and optimization
-- Function calling with tools
-- Frontend AI interactions
+
+- Simple text generation and cha
+
+t
+
+- Real-time streaming response
+
+s
+
+- Cost tracking and optimizatio
+
+n
+
+- Function calling with tool
+
+s
+
+- Frontend AI interaction
+
+s
 
 const aiService = new AISDKService();
 const response = await aiService.generateTextResponse(prompt);
+
 ```
 
-#### LangChain (Complex Workflows)
-```typescript
+#
+
+### LangChain (Complex Workflows)
+
+```
+
+typescript
 // Use for:
-- Complex multi-step workflows
-- Agent-based orchestration
-- Memory management
-- Advanced prompt engineering
-- Custom tool integration
+
+- Complex multi-step workflow
+
+s
+
+- Agent-based orchestratio
+
+n
+
+- Memory managemen
+
+t
+
+- Advanced prompt engineerin
+
+g
+
+- Custom tool integratio
+
+n
 
 const langChainService = new LangChainService();
 const chain = await langChainService.createConversationChain(config);
+
 ```
 
-#### Backend AI Services (Enterprise)
-```typescript
+#
+
+### Backend AI Services (Enterprise)
+
+```
+
+typescript
 // Use for:
-- High-throughput processing
-- Multi-model routing with fallbacks
-- Enterprise integrations
-- Advanced monitoring
-- Custom model deployments
+
+- High-throughput processin
+
+g
+
+- Multi-model routing with fallback
+
+s
+
+- Enterprise integration
+
+s
+
+- Advanced monitorin
+
+g
+
+- Custom model deployment
+
+s
 
 const relaycoreService = new EnhancedAIService();
 const response = await relaycoreService.process_text(prompt);
+
 ```
 
-## 🔍 Validation and Monitoring
+#
 
-### Framework Status Checking
+# 🔍 Validation and Monitorin
 
-```typescript
+g
+
+#
+
+## Framework Status Checkin
+
+g
+
+```
+
+typescript
 // Check framework status
 const frameworkStatus = aiSDKService.getAIFrameworkStatus();
 
 console.log('AI SDK Status:', frameworkStatus.aiSdk);
 console.log('LangChain Status:', frameworkStatus.langChain);
 console.log('Recommendations:', frameworkStatus.unified.recommendations);
+
 ```
 
-### Conflict Detection
+#
 
-```typescript
+## Conflict Detectio
+
+n
+
+```
+
+typescript
 // Check for configuration conflicts
 const conflicts = aiSDKService.checkFrameworkConflicts();
 
@@ -166,11 +351,18 @@ if (conflicts.conflicts.length > 0) {
 if (conflicts.warnings.length > 0) {
   console.warn('Warnings:', conflicts.warnings);
 }
+
 ```
 
-### Provider Status
+#
 
-```typescript
+## Provider Statu
+
+s
+
+```
+
+typescript
 // Get unified provider status
 const providerStatus = aiSDKService.getUnifiedProviderStatus();
 
@@ -181,107 +373,249 @@ Object.entries(providerStatus).forEach(([provider, status]) => {
     conflicts: status.conflicts
   });
 });
+
 ```
 
-## 🛠️ Configuration Validation
+#
 
-### Automated Validation Tool
+# 🛠️ Configuration Validatio
 
-```bash
+n
+
+#
+
+## Automated Validation Too
+
+l
+
+```
+
+bash
+
 # Validate AI framework mappings
-node tools/local/validate-ai-frameworks.js
+
+node tools/local/validate-ai-frameworks.j
+
+s
+
 ```
 
-### Manual Validation Checklist
+#
 
-- [ ] AI SDK providers properly configured
-- [ ] LangChain providers mapped correctly
-- [ ] API keys present for enabled providers
-- [ ] Framework mappings are bidirectional
-- [ ] No duplicate provider configurations
-- [ ] Cost tracking enabled where needed
-- [ ] Health checks configured
-- [ ] Fallback providers specified
+## Manual Validation Checklis
 
-## 🚨 Common Issues and Solutions
+t
 
-### Issue 1: Missing API Keys
-```typescript
+- [ ] AI SDK providers properly configure
+
+d
+
+- [ ] LangChain providers mapped correctl
+
+y
+
+- [ ] API keys present for enabled provider
+
+s
+
+- [ ] Framework mappings are bidirectiona
+
+l
+
+- [ ] No duplicate provider configuration
+
+s
+
+- [ ] Cost tracking enabled where neede
+
+d
+
+- [ ] Health checks configure
+
+d
+
+- [ ] Fallback providers specifie
+
+d
+
+#
+
+# 🚨 Common Issues and Solution
+
+s
+
+#
+
+## Issue 1: Missing API Keys
+
+```
+
+typescript
 // Problem: Provider enabled but API key missing
 const status = aiSDKService.getUnifiedProviderStatus();
 const missingKeys = Object.entries(status)
   .filter(([_, s]) => s.conflicts.includes('Missing API key'));
 
 // Solution: Add environment variables or disable provider
+
 ```
 
-### Issue 2: Framework Conflicts
-```typescript
+#
+
+## Issue 2: Framework Conflicts
+
+```
+
+typescript
 // Problem: Same provider configured in multiple frameworks
 const conflicts = aiSDKService.checkFrameworkConflicts();
 
 // Solution: Choose primary framework or deduplicate configuration
+
 ```
 
-### Issue 3: Mapping Inconsistencies
-```typescript
+#
+
+## Issue 3: Mapping Inconsistencies
+
+```
+
+typescript
 // Problem: AI SDK ↔ LangChain mappings don't match
 const mappings = aiSDKService.frameworkMappings;
 
 // Solution: Ensure bidirectional consistency in mappings
+
 ```
 
-## 📊 Performance Optimization
+#
 
-### Cost Optimization
-```typescript
+# 📊 Performance Optimizatio
+
+n
+
+#
+
+## Cost Optimization
+
+```
+
+typescript
 // Enable cost tracking
 const costSummary = aiSDKService.getCostSummary();
 console.log('Total costs:', costSummary.total);
 console.log('Savings from Ollama:', costSummary.savings.ollama);
+
 ```
 
-### Provider Selection
-```typescript
+#
+
+## Provider Selection
+
+```
+
+typescript
 // Automatic provider selection based on task
 const optimalProvider = await aiSDKService.selectOptimalProvider(task);
 const response = await aiSDKService.processWithProvider(optimalProvider, task);
+
 ```
 
-### Caching Strategy
-```typescript
+#
+
+## Caching Strategy
+
+```
+
+typescript
 // Enable intelligent caching
 const cachedResponse = await aiSDKService.getCachedResponse(request);
 if (!cachedResponse) {
   const freshResponse = await aiSDKService.processRequest(request);
   await aiSDKService.cacheResponse(request, freshResponse);
 }
+
 ```
 
-## 🔐 Security Considerations
+#
 
-### API Key Management
-- Store API keys in environment variables
-- Use different keys for different environments
-- Rotate keys regularly
-- Monitor key usage
+# 🔐 Security Consideration
 
-### Provider Security
-- Enable provider health checks
-- Implement rate limiting
-- Use secure connections (HTTPS)
-- Monitor for API key leaks
+s
 
-### Data Protection
-- Encrypt sensitive data in transit
-- Implement proper access controls
-- Use secure token storage
-- Regular security audits
+#
 
-## 📈 Monitoring and Analytics
+## API Key Management
 
-### Framework Metrics
-```typescript
+- Store API keys in environment variable
+
+s
+
+- Use different keys for different environment
+
+s
+
+- Rotate keys regularl
+
+y
+
+- Monitor key usag
+
+e
+
+#
+
+## Provider Security
+
+- Enable provider health check
+
+s
+
+- Implement rate limitin
+
+g
+
+- Use secure connections (HTTPS
+
+)
+
+- Monitor for API key leak
+
+s
+
+#
+
+## Data Protection
+
+- Encrypt sensitive data in transi
+
+t
+
+- Implement proper access control
+
+s
+
+- Use secure token storag
+
+e
+
+- Regular security audit
+
+s
+
+#
+
+# 📈 Monitoring and Analytic
+
+s
+
+#
+
+## Framework Metrics
+
+```
+
+typescript
 // Get comprehensive framework metrics
 const metrics = aiSDKService.getFrameworkMetrics();
 
@@ -289,83 +623,260 @@ console.log('Active providers:', metrics.activeProviders);
 console.log('Total requests:', metrics.totalRequests);
 console.log('Error rate:', metrics.errorRate);
 console.log('Average latency:', metrics.averageLatency);
+
 ```
 
-### Performance Tracking
-```typescript
+#
+
+## Performance Tracking
+
+```
+
+typescript
 // Track performance across frameworks
 const performance = {
   aiSdk: aiSDKService.getPerformanceMetrics(),
   langChain: langChainService.getPerformanceMetrics(),
   backend: backendAIService.getPerformanceMetrics()
 };
+
 ```
 
-## 🎯 Best Practices
+#
 
-### 1. Provider Selection Strategy
-- Use AI SDK for simple, cost-sensitive tasks
-- Use LangChain for complex, agent-based workflows
-- Use Backend AI for high-throughput, enterprise scenarios
+# 🎯 Best Practice
 
-### 2. Configuration Management
-- Keep configurations in external files
-- Use environment variables for secrets
-- Validate configurations on startup
-- Monitor configuration drift
+s
 
-### 3. Error Handling
-- Implement proper fallback mechanisms
-- Use circuit breakers for unreliable providers
-- Log errors with sufficient context
-- Provide meaningful error messages
+#
 
-### 4. Cost Management
-- Track costs across all providers
-- Set budget limits and alerts
-- Optimize model selection
-- Use caching to reduce API calls
+##
 
-## 🚀 Future Enhancements
+ 1. Provider Selection Strateg
 
-### Planned Improvements
-- [ ] Unified provider management dashboard
-- [ ] Automatic provider failover
-- [ ] Advanced cost optimization algorithms
-- [ ] Enhanced security features
-- [ ] Real-time performance monitoring
-- [ ] Multi-region provider support
+y
 
-### Framework Extensions
-- [ ] Support for additional AI providers
-- [ ] Custom model deployment integration
-- [ ] Advanced caching strategies
-- [ ] Predictive provider selection
-- [ ] Automated configuration optimization
+- Use AI SDK for simple, cost-sensitive task
 
-## 📞 Support and Troubleshooting
+s
 
-### Getting Help
-1. Check framework status: `aiSDKService.getAIFrameworkStatus()`
-2. Validate configurations: `node tools/local/validate-ai-frameworks.js`
-3. Review logs for errors
-4. Check provider documentation
+- Use LangChain for complex, agent-based workflow
 
-### Common Support Issues
-- Provider API key problems
-- Configuration conflicts
-- Performance issues
-- Cost overruns
+s
 
-### Escalation Path
-1. Check this guide
-2. Review error logs
-3. Contact AI team
-4. Open support ticket
+- Use Backend AI for high-throughput, enterprise scenario
 
----
+s
 
-**Document Version**: 1.0
-**Last Updated**: January 2025
-**Review Cycle**: Monthly
-**Responsible Team**: AI Engineering
+#
+
+##
+
+ 2. Configuration Managemen
+
+t
+
+- Keep configurations in external file
+
+s
+
+- Use environment variables for secret
+
+s
+
+- Validate configurations on startu
+
+p
+
+- Monitor configuration drif
+
+t
+
+#
+
+##
+
+ 3. Error Handlin
+
+g
+
+- Implement proper fallback mechanism
+
+s
+
+- Use circuit breakers for unreliable provider
+
+s
+
+- Log errors with sufficient contex
+
+t
+
+- Provide meaningful error message
+
+s
+
+#
+
+##
+
+ 4. Cost Managemen
+
+t
+
+- Track costs across all provider
+
+s
+
+- Set budget limits and alert
+
+s
+
+- Optimize model selectio
+
+n
+
+- Use caching to reduce API call
+
+s
+
+#
+
+# 🚀 Future Enhancement
+
+s
+
+#
+
+## Planned Improvements
+
+- [ ] Unified provider management dashboar
+
+d
+
+- [ ] Automatic provider failove
+
+r
+
+- [ ] Advanced cost optimization algorithm
+
+s
+
+- [ ] Enhanced security feature
+
+s
+
+- [ ] Real-time performance monitorin
+
+g
+
+- [ ] Multi-region provider suppor
+
+t
+
+#
+
+## Framework Extensions
+
+- [ ] Support for additional AI provider
+
+s
+
+- [ ] Custom model deployment integratio
+
+n
+
+- [ ] Advanced caching strategie
+
+s
+
+- [ ] Predictive provider selectio
+
+n
+
+- [ ] Automated configuration optimizatio
+
+n
+
+#
+
+# 📞 Support and Troubleshootin
+
+g
+
+#
+
+## Getting Help
+
+1. Check framework status: `aiSDKService.getAIFrameworkStatus()
+
+`
+
+2. Validate configurations: `node tools/local/validate-ai-frameworks.j
+
+s
+
+`
+
+3. Review logs for error
+
+s
+
+4. Check provider documentatio
+
+n
+
+#
+
+## Common Support Issues
+
+- Provider API key problem
+
+s
+
+- Configuration conflict
+
+s
+
+- Performance issue
+
+s
+
+- Cost overrun
+
+s
+
+#
+
+## Escalation Path
+
+1. Check this guid
+
+e
+
+2. Review error log
+
+s
+
+3. Contact AI tea
+
+m
+
+4. Open support ticke
+
+t
+
+--
+
+- **Document Version**: 1.
+
+0
+**Last Updated**: January 202
+
+5
+**Review Cycle**: Monthl
+
+y
+**Responsible Team**: AI Engineerin
+
+g

@@ -2,6 +2,8 @@
 export { default as CustomerInquiryNode } from "./CustomerInquiryNode";
 export { default as SendEmailNode } from "./SendEmailNode";
 export { default as LeadQualificationNode } from "./LeadQualificationNode";
+export { default as CrewAINode } from "./CrewAINode";
+export { default as LangGraphNode } from "./LangGraphNode";
 
 // Re-export existing nodes
 export { StartNode } from "../../nodes/StartNode";

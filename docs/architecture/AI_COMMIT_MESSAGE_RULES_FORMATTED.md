@@ -1,12 +1,32 @@
-# AI-Generated Commit Message Rules
 
-## Overview
 
-This document defines the exact format and rules for AI-generated commit messages in the Auterity Error IQ platform. These rules ensure consistency, clarity, and traceability across all code changes.
+# AI-Generated Commit Message Rul
 
-## Core Format
+e
 
-### Conventional Commits Structure
+s
+
+#
+
+# Overvie
+
+w
+
+This document defines the exact format and rules for AI-generated commit messages in the Auterity Error IQ platform. These rules ensure consistency, clarity, and traceability across all code changes
+
+.
+
+#
+
+# Core Forma
+
+t
+
+#
+
+## Conventional Commits Structur
+
+e
 
 ```text
 <type>(<scope>): <description>
@@ -14,20 +34,55 @@ This document defines the exact format and rules for AI-generated commit message
 <body>
 
 <footer>
+
 ```
 
-### Required Elements
+#
 
-1. **Type**: One of the predefined commit types
-2. **Scope**: Component or area affected (recommended)  
-3. **Description**: Brief, imperative description (max 50 chars)
-4. **Body**: Structured explanation for significant changes
-5. **Footer**: References and metadata
+## Required Element
 
-## Commit Types
+s
+
+1. **Type**: One of the predefined commit typ
+
+e
+
+s
+
+2. **Scope**: Component or area affected (recommende
+
+d
+
+)
+
+
+3. **Description**: Brief, imperative description (max 50 char
+
+s
+
+)
+
+4. **Body**: Structured explanation for significant chang
+
+e
+
+s
+
+5. **Footer**: References and metada
+
+t
+
+a
+
+#
+
+# Commit Type
+
+s
 
 | Type | Purpose | Example |
 |------|---------|---------|
+
 | `feat` | New feature | `feat(workflow): add parallel execution engine` |
 | `fix` | Bug fix | `fix(auth): resolve token validation race condition` |
 | `docs` | Documentation | `docs(api): update workflow execution endpoints` |
@@ -40,211 +95,591 @@ This document defines the exact format and rules for AI-generated commit message
 | `chore` | Maintenance tasks | `chore(config): update environment variables` |
 | `revert` | Revert previous commit | `revert: feat(auth): implement SSO integration` |
 
-## Scopes
+#
+
+# Scope
+
+s
 
 | Scope | Description | File Patterns |
 |-------|-------------|---------------|
+
 | `backend` | Backend Python/FastAPI | `backend/**`, `app/**`, `*.py` |
+
 | `frontend` | Frontend React/TypeScript | `frontend/**`, `src/**`, `*.tsx`, `*.ts` |
+
 | `api` | API endpoints | `**/api/**`, `**/routes/**` |
+
 | `db` | Database models/migrations | `**/models/**`, `**/migrations/**` |
+
 | `auth` | Authentication/authorization | `**/auth/**`, `**/security/**` |
+
 | `workflow` | Workflow execution engine | `**/workflow/**`, `**/execution/**` |
+
 | `agent` | AI agent framework | `**/agents/**`, `**/orchestrator/**` |
+
 | `ui` | User interface components | `**/components/**`, `**/styles/**` |
+
 | `config` | Configuration files | `*.json`, `*.yaml`, `*.toml`, `.env*` |
+
 | `infra` | Infrastructure/deployment | `docker/**`, `kubernetes/**` |
+
 | `deps` | Dependencies | `requirements*.txt`, `package*.json` |
+
 | `test` | Test files | `tests/**`, `**/*.test.*` |
+
 | `ci` | CI/CD configuration | `.github/**`, `*.yml` |
-| `docs` | Documentation | `docs/**`, `*.md` |
 
-## Message Structure Rules
+| `docs` | Documentation | `docs/**`, `*.md`
 
-### Subject Line
+|
 
-- **Format**: `<type>(<scope>): <description>`
-- **Length**: Maximum 50 characters
-- **Case**: Lowercase, imperative mood
-- **Punctuation**: No period at the end
-- **Pattern**: `^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z-]+\))?: .{1,50}$`
+#
 
-### Body (For Significant Changes)
+# Message Structure Rule
+
+s
+
+#
+
+## Subject Lin
+
+e
+
+- **Format**: `<type>(<scope>): <description>
+
+`
+
+- **Length**: Maximum 50 character
+
+s
+
+- **Case**: Lowercase, imperative moo
+
+d
+
+- **Punctuation**: No period at the en
+
+d
+
+- **Pattern**: `^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z-]+\))?: .{1,50}$
+
+`
+
+#
+
+## Body (For Significant Changes
+
+)
 
 Use structured format with bullet points:
 
-```text
-- What: <clear description of what changed>
-- Why: <business reason or problem being solved>
-- How: <brief technical implementation detail>
 ```
 
-**Requirements**:
+text
 
-- Start with blank line after subject
-- Maximum 72 characters per line
-- Use present tense, imperative mood
-- Focus on what and why, not how
+- What: <clear description of what changed
 
-### Footer (Optional)
+>
 
-```text
-Refs: #<issue_number>
+- Why: <business reason or problem being solved
+
+>
+
+- How: <brief technical implementation detail
+
+>
+
+```
+
+**Requirements**
+
+:
+
+- Start with blank line after subjec
+
+t
+
+- Maximum 72 characters per lin
+
+e
+
+- Use present tense, imperative moo
+
+d
+
+- Focus on what and why, not ho
+
+w
+
+#
+
+## Footer (Optional
+
+)
+
+```
+
+text
+Refs:
+
+#<issue_number>
+
 Tested: <testing evidence>
 Breaking Change: <if applicable>
-Co-authored-by: <if applicable>
+Co-authored-by: <if applicable
+
+>
+
 ```
 
-## Examples
+#
 
-### Simple Bug Fix
+# Example
 
-```text
+s
+
+#
+
+## Simple Bug Fi
+
+x
+
+```
+
+text
 fix(auth): handle expired token edge case
+
 ```
 
-### Feature with Full Structure
+#
 
-```text
+## Feature with Full Structur
+
+e
+
+```
+
+text
 feat(workflow): add parallel execution engine
 
-- What: Implemented concurrent step processing with dependency resolution
-- Why: Improve workflow performance for complex automation tasks  
-- How: Added TopologicalExecutor with async batch processing
+- What: Implemented concurrent step processing with dependency resolutio
 
-Refs: #147
+n
+
+- Why: Improve workflow performance for complex automation task
+
+s
+
+
+- How: Added TopologicalExecutor with async batch processin
+
+g
+
+Refs:
+
+#147
+
 Tested: Unit tests, integration tests, performance benchmarks
+
 ```
 
-### Refactoring Example
+#
 
-```text
+## Refactoring Exampl
+
+e
+
+```
+
+text
 refactor(backend): standardize error handling patterns
 
-- What: Unified exception hierarchy and response formatting
-- Why: Reduce code duplication and improve error consistency
-- How: Created BaseAppException with proper HTTP status mapping
+- What: Unified exception hierarchy and response formattin
+
+g
+
+- Why: Reduce code duplication and improve error consistenc
+
+y
+
+- How: Created BaseAppException with proper HTTP status mappin
+
+g
 
 Tested: All existing tests pass, error scenarios covered
+
 ```
 
-### Breaking Change Example
+#
 
-```text
+## Breaking Change Exampl
+
+e
+
+```
+
+text
 feat(api): implement new authentication flow
 
-- What: Replaced JWT with OAuth2 + PKCE for enhanced security
-- Why: Address security vulnerabilities in current auth system
-- How: Integrated with industry-standard OAuth2 providers
+- What: Replaced JWT with OAuth
+
+2
+
+ + PKCE for enhanced securit
+
+y
+
+- Why: Address security vulnerabilities in current auth syste
+
+m
+
+- How: Integrated with industry-standard OAuth2 provider
+
+s
 
 Breaking Change: Existing API tokens will be invalidated
-Migration: See docs/auth-migration-guide.md
+Migration: See docs/auth-migration-guide.m
 
-Refs: #203
+d
+
+Refs:
+
+#203
+
 Tested: Full regression suite, security audit
+
 ```
 
-## AI Generation Context
+#
 
-### Analysis Inputs
+# AI Generation Contex
 
-- Changed files and their types
-- Diff statistics (additions, deletions, modifications)
-- Directory structure affected
-- Test file changes
-- Configuration changes
-- Breaking change detection
+t
 
-### Scope Detection Logic
+#
 
-1. Analyze file patterns to determine primary scope
-2. If multiple scopes affected, choose the most business-critical
-3. For cross-cutting changes, use broader scope (e.g., `backend`, `frontend`)
-4. Prioritize business logic over infrastructure changes
+## Analysis Input
 
-### Type Classification
+s
 
-- **New files**: Usually `feat`
-- **Deleted files**: Usually `refactor`
-- **Test files only**: Use `test`
-- **Config files only**: Use `chore`
-- **Documentation only**: Use `docs`
-- **Bug fix keywords**: Use `fix`
-- **Feature keywords**: Use `feat`
+- Changed files and their type
 
-## Validation Rules
+s
 
-### Forbidden Patterns
+- Diff statistics (additions, deletions, modifications
 
-- Generic subjects: "update", "changes", "misc", "stuff", "work"
-- Capitalized first letter (except proper nouns)
-- Ending period
-- Missing type or malformed type
-- WIP/TODO/TEMP prefixes
+)
 
-### Required for Large Changes
+- Directory structure affecte
 
-- Body explanation for changes affecting >5 files
-- Test evidence for new features
-- Issue reference for bug fixes
-- Breaking change notice if applicable
+d
 
-## Quality Checks
+- Test file change
 
-### Automated Validation
+s
 
-1. Conventional commit format compliance
-2. Subject length validation
-3. Scope existence validation  
-4. Body structure for complex changes
-5. Footer format validation
+- Configuration change
 
-### Manual Review Triggers
+s
 
-- Breaking changes
-- Security-related changes
-- Performance modifications
-- Database schema changes
-- API contract changes
+- Breaking change detectio
 
-## Implementation
+n
 
-### VS Code Settings
+#
+
+## Scope Detection Logi
+
+c
+
+1. Analyze file patterns to determine primary scop
+
+e
+
+2. If multiple scopes affected, choose the most business-critic
+
+a
+
+l
+
+3. For cross-cutting changes, use broader scope (e.g., `backend`, `frontend
+
+`
+
+)
+
+4. Prioritize business logic over infrastructure change
+
+s
+
+#
+
+## Type Classificatio
+
+n
+
+- **New files**: Usually `feat
+
+`
+
+- **Deleted files**: Usually `refactor
+
+`
+
+- **Test files only**: Use `test
+
+`
+
+- **Config files only**: Use `chore
+
+`
+
+- **Documentation only**: Use `docs
+
+`
+
+- **Bug fix keywords**: Use `fix
+
+`
+
+- **Feature keywords**: Use `feat
+
+`
+
+#
+
+# Validation Rule
+
+s
+
+#
+
+## Forbidden Pattern
+
+s
+
+- Generic subjects: "update", "changes", "misc", "stuff", "work
+
+"
+
+- Capitalized first letter (except proper nouns
+
+)
+
+- Ending perio
+
+d
+
+- Missing type or malformed typ
+
+e
+
+- WIP/TODO/TEMP prefixe
+
+s
+
+#
+
+## Required for Large Change
+
+s
+
+- Body explanation for changes affecting >5 file
+
+s
+
+- Test evidence for new feature
+
+s
+
+- Issue reference for bug fixe
+
+s
+
+- Breaking change notice if applicabl
+
+e
+
+#
+
+# Quality Check
+
+s
+
+#
+
+## Automated Validatio
+
+n
+
+1. Conventional commit format complianc
+
+e
+
+2. Subject length validatio
+
+n
+
+3. Scope existence validatio
+
+n
+
+
+4. Body structure for complex change
+
+s
+
+5. Footer format validatio
+
+n
+
+#
+
+## Manual Review Trigger
+
+s
+
+- Breaking change
+
+s
+
+- Security-related change
+
+s
+
+- Performance modification
+
+s
+
+- Database schema change
+
+s
+
+- API contract change
+
+s
+
+#
+
+# Implementatio
+
+n
+
+#
+
+## VS Code Setting
+
+s
 
 The rules are configured in `.vscode/settings.json` with:
 
-- Git input validation
-- Commit message templates
-- AI generation context
-- Project-specific mappings
+- Git input validatio
 
-### Git Hooks (Recommended)
+n
 
-```bash
-#!/bin/sh
-# .git/hooks/commit-msg
-node .git/hooks/validate-commit-msg.js "$1"
+- Commit message template
+
+s
+
+- AI generation contex
+
+t
+
+- Project-specific mapping
+
+s
+
+#
+
+## Git Hooks (Recommended
+
+)
+
 ```
 
-### IDE Integration
+bash
 
-- Configure commit message templates
-- Enable conventional commit validation
-- Set up auto-completion for types/scopes
-- Configure AI context inclusion
+#!/bin/s
 
-## Project-Specific Guidelines
+h
 
-### Auterity Error IQ Platform
+# .git/hooks/commit-ms
 
-- **Business Domains**: Workflow automation, AI agent orchestration, multi-tenant auth
-- **Technical Areas**: FastAPI backend, React frontend, PostgreSQL, Redis, Docker
-- **Quality Standards**: All changes need tests, breaking changes need migration guides
+g
 
-### Priority Keywords
+node .git/hooks/validate-commit-msg.js "$1
 
-- Authentication, workflow, agent, security, performance
-- Database, API, frontend, backend, compliance
-- Error handling, testing, documentation
+"
 
-This comprehensive rule set ensures that all AI-generated commit messages maintain high quality, consistency, and provide clear context for code changes across the Auterity platform.
+```
+
+#
+
+## IDE Integratio
+
+n
+
+- Configure commit message template
+
+s
+
+- Enable conventional commit validatio
+
+n
+
+- Set up auto-completion for types/scope
+
+s
+
+- Configure AI context inclusio
+
+n
+
+#
+
+# Project-Specific Guidelin
+
+e
+
+s
+
+#
+
+## Auterity Error IQ Platfor
+
+m
+
+- **Business Domains**: Workflow automation, AI agent orchestration, multi-tenant aut
+
+h
+
+- **Technical Areas**: FastAPI backend, React frontend, PostgreSQL, Redis, Docke
+
+r
+
+- **Quality Standards**: All changes need tests, breaking changes need migration guide
+
+s
+
+#
+
+## Priority Keyword
+
+s
+
+- Authentication, workflow, agent, security, performanc
+
+e
+
+- Database, API, frontend, backend, complianc
+
+e
+
+- Error handling, testing, documentatio
+
+n
+
+This comprehensive rule set ensures that all AI-generated commit messages maintain high quality, consistency, and provide clear context for code changes across the Auterity platform
+
+.

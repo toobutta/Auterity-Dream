@@ -1,65 +1,190 @@
-# HumanLayer + MLflow Integration Guide
 
-## Overview
 
-This guide provides comprehensive instructions for leveraging HumanLayer and MLflow within the Auterity Unified AI Platform. The integration enables human-in-the-loop machine learning workflows, combining automated AI processes with human oversight and decision-making.
+# HumanLayer
 
-## Architecture
+ + MLflow Integration Gui
 
-### Core Components
+d
 
-1. **HumanLayer Service** (`src/services/humanLayerService.ts`)
-   - Handles human approval workflows
-   - Manages critical decision points
-   - Provides security and compliance controls
+e
 
-2. **Enhanced MLflow Service** (`src/services/enhancedMLflowService.ts`)
-   - Manages ML experiments and runs
-   - Tracks model versions and deployments
-   - Provides experiment analytics
+#
 
-3. **HumanLayer-MLflow Integration** (`src/services/humanlayerMLflowIntegration.ts`)
-   - Orchestrates human-AI workflows
-   - Manages ML pipelines with human oversight
-   - Handles model deployment approvals
+# Overvie
 
-4. **Unified Dashboard** (`frontend/src/components/humanlayer-mlflow/HumanLayerMLflowDashboard.tsx`)
-   - Provides comprehensive monitoring interface
-   - Shows workflow progress and approvals
-   - Displays ML experiment results
+w
 
-## Quick Start
+This guide provides comprehensive instructions for leveraging HumanLayer and MLflow within the Auterity Unified AI Platform. The integration enables human-in-the-loop machine learning workflows, combining automated AI processes with human oversight and decision-making
 
-### 1. Installation and Setup
+.
+
+#
+
+# Architectur
+
+e
+
+#
+
+## Core Component
+
+s
+
+1. **HumanLayer Servic
+
+e
+
+* * (`src/services/humanLayerService.ts`
+
+)
+
+   - Handles human approval workflow
+
+s
+
+   - Manages critical decision point
+
+s
+
+   - Provides security and compliance control
+
+s
+
+2. **Enhanced MLflow Servic
+
+e
+
+* * (`src/services/enhancedMLflowService.ts`
+
+)
+
+   - Manages ML experiments and run
+
+s
+
+   - Tracks model versions and deployment
+
+s
+
+   - Provides experiment analytic
+
+s
+
+3. **HumanLayer-MLflow Integratio
+
+n
+
+* * (`src/services/humanlayerMLflowIntegration.ts`
+
+)
+
+   - Orchestrates human-AI workflow
+
+s
+
+   - Manages ML pipelines with human oversigh
+
+t
+
+   - Handles model deployment approval
+
+s
+
+4. **Unified Dashboar
+
+d
+
+* * (`frontend/src/components/humanlayer-mlflow/HumanLayerMLflowDashboard.tsx`
+
+)
+
+   - Provides comprehensive monitoring interfac
+
+e
+
+   - Shows workflow progress and approval
+
+s
+
+   - Displays ML experiment result
+
+s
+
+#
+
+# Quick Star
+
+t
+
+#
+
+##
+
+ 1. Installation and Set
+
+u
+
+p
 
 ```bash
+
 # Install HumanLayer
+
 pip install humanlayer
 
 # Install MLflow
+
 pip install mlflow
 
 # Update Docker Compose
-docker-compose -f infrastructure/docker/docker-compose.unified.yml up -d mlflow humanlayer
+
+docker-compose -f infrastructure/docker/docker-compose.unified.yml up -d mlflow humanlaye
+
+r
+
 ```
 
-### 2. Configuration
+#
+
+##
+
+ 2. Configurati
+
+o
+
+n
 
 Add to your environment variables:
 
-```bash
+```
+
+bash
+
 # HumanLayer Configuration
+
 HUMAN_LAYER_BASE_URL=http://humanlayer:8000
 HUMAN_LAYER_API_KEY=your_api_key_here
 
 # MLflow Configuration
+
 MLFLOW_BASE_URL=http://mlflow:5000
 MLFLOW_TRACKING_URI=http://mlflow:5000
+
 ```
 
-### 3. Basic Usage
+#
 
-```typescript
+##
+
+ 3. Basic Usa
+
+g
+
+e
+
+```
+
+typescript
 import { humanLayerService } from './src/services/humanLayerService';
 import { enhancedMLflowService } from './src/services/enhancedMLflowService';
 import { humanLayerMLflowIntegration } from './src/services/humanlayerMLflowIntegration';
@@ -84,52 +209,106 @@ const approval = await humanLayerService.requestApproval(approvalRequest);
 // Log ML experiment
 await enhancedMLflowService.logToRun(runId, {
   accuracy: 0.95,
+
   loss: 0.05
+
 }, {
   model: 'xgboost',
   dataset: 'customer_data'
 });
+
 ```
 
-## HumanLayer Integration
+#
 
-### Approval Types
+# HumanLayer Integratio
+
+n
+
+#
+
+## Approval Type
+
+s
 
 The HumanLayer service supports several types of human approvals:
 
-#### 1. Code Execution Approval
+#
 
-```typescript
+###
+
+ 1. Code Execution Approv
+
+a
+
+l
+
+```
+
+typescript
 const approval = await humanLayerService.requestCodeExecutionApproval(
   codeSnippet,
   'production',
   userId
 );
+
 ```
 
-#### 2. Content Publishing Approval
+#
 
-```typescript
+###
+
+ 2. Content Publishing Approv
+
+a
+
+l
+
+```
+
+typescript
 const approval = await humanLayerService.requestContentApproval(
   content,
   'social_media',
   userId
 );
+
 ```
 
-#### 3. Workflow Decision Approval
+#
 
-```typescript
+###
+
+ 3. Workflow Decision Approv
+
+a
+
+l
+
+```
+
+typescript
 const approval = await humanLayerService.requestWorkflowApproval(
   workflowId,
   'Deploy model to production?',
   { modelMetrics, riskAssessment }
 );
+
 ```
 
-#### 4. Custom Approvals
+#
 
-```typescript
+###
+
+ 4. Custom Approva
+
+l
+
+s
+
+```
+
+typescript
 const approval = await humanLayerService.requestApproval({
   id: 'custom_123',
   type: 'ai_decision',
@@ -143,11 +322,18 @@ const approval = await humanLayerService.requestApproval({
   urgency: 'medium',
   timeout: 1800
 });
+
 ```
 
-### Approval Monitoring
+#
 
-```typescript
+## Approval Monitorin
+
+g
+
+```
+
+typescript
 // Get approval status
 const status = await humanLayerService.getApprovalStatus(requestId);
 
@@ -156,13 +342,24 @@ await humanLayerService.cancelApproval(requestId);
 
 // Get service metrics
 const metrics = humanLayerService.getMetrics();
+
 ```
 
-## MLflow Integration
+#
 
-### Experiment Management
+# MLflow Integratio
 
-```typescript
+n
+
+#
+
+## Experiment Managemen
+
+t
+
+```
+
+typescript
 // Create experiment
 const experiment = await enhancedMLflowService.createExperiment(
   'customer_churn_prediction',
@@ -175,11 +372,18 @@ const experiments = await enhancedMLflowService.getExperiments();
 
 // Get runs for experiment
 const runs = await enhancedMLflowService.getExperimentRuns(experimentId);
+
 ```
 
-### Model Versioning
+#
 
-```typescript
+## Model Versionin
+
+g
+
+```
+
+typescript
 // Create model version
 const version = await enhancedMLflowService.createModelVersion(
   'churn_predictor',
@@ -200,11 +404,18 @@ const comparison = await enhancedMLflowService.compareModelVersions(
   '1',
   '2'
 );
+
 ```
 
-### Workflow Logging
+#
 
-```typescript
+## Workflow Loggin
+
+g
+
+```
+
+typescript
 // Log workflow execution
 await enhancedMLflowService.logWorkflowExecution(
   workflowId,
@@ -213,16 +424,30 @@ await enhancedMLflowService.logWorkflowExecution(
   success,
   { workflowName, stage: 'training' }
 );
+
 ```
 
-## Human-AI Workflow Integration
+#
 
-### Creating ML Workflows
+# Human-AI Workflow Integrati
 
-```typescript
+o
+
+n
+
+#
+
+## Creating ML Workflow
+
+s
+
+```
+
+typescript
 const workflow = await humanLayerMLflowIntegration.createMLWorkflow(
   'Customer Churn Prediction Pipeline',
   'End-to-end ML pipeline with human oversight',
+
   {
     experimentName: 'churn_prediction_v2',
     modelName: 'churn_predictor',
@@ -239,6 +464,7 @@ const workflow = await humanLayerMLflowIntegration.createMLWorkflow(
         config: {
           algorithm: 'xgboost',
           parameters: { max_depth: 6, learning_rate: 0.1 }
+
         },
         approvalRequired: false
       },
@@ -247,6 +473,7 @@ const workflow = await humanLayerMLflowIntegration.createMLWorkflow(
         type: 'validation',
         config: {
           validationThresholds: { accuracy: 0.85, precision: 0.80 },
+
           testDataset: 'validation_data.csv'
         },
         approvalRequired: true
@@ -266,11 +493,18 @@ const workflow = await humanLayerMLflowIntegration.createMLWorkflow(
     ]
   }
 );
+
 ```
 
-### Executing Workflows
+#
 
-```typescript
+## Executing Workflow
+
+s
+
+```
+
+typescript
 // Execute workflow
 await humanLayerMLflowIntegration.executeWorkflow(workflowId);
 
@@ -282,39 +516,80 @@ const workflows = humanLayerMLflowIntegration.getWorkflows();
 
 // Get integration metrics
 const metrics = humanLayerMLflowIntegration.getMetrics();
+
 ```
 
-## Dashboard Integration
+#
 
-### Using the Unified Dashboard
+# Dashboard Integratio
 
-```tsx
-import { HumanLayerMLflowDashboard } from './components/humanlayer-mlflow/HumanLayerMLflowDashboard';
+n
+
+#
+
+## Using the Unified Dashboar
+
+d
+
+```
+
+tsx
+import { HumanLayerMLflowDashboard } from './components/humanlayer-mlflow/HumanLayerMLflowDashboard'
+
+;
 
 function App() {
   return (
     <div className="min-h-screen bg-gray-50">
+
       <HumanLayerMLflowDashboard
         className="max-w-7xl mx-auto py-6 px-4"
+
         refreshInterval={30000}
       />
     </div>
   );
 }
+
 ```
 
-### Dashboard Features
+#
 
-- **Overview Tab**: Key metrics and recent activity
-- **Human Approvals Tab**: Manage pending approvals
-- **ML Experiments Tab**: View experiments and runs
-- **Analytics Tab**: Performance metrics and trends
+## Dashboard Feature
 
-## Advanced Configuration
+s
 
-### Custom Approval Workflows
+- **Overview Tab**: Key metrics and recent activit
 
-```typescript
+y
+
+- **Human Approvals Tab**: Manage pending approval
+
+s
+
+- **ML Experiments Tab**: View experiments and run
+
+s
+
+- **Analytics Tab**: Performance metrics and trend
+
+s
+
+#
+
+# Advanced Configuratio
+
+n
+
+#
+
+## Custom Approval Workflow
+
+s
+
+```
+
+typescript
 // Create custom approval workflow
 const customApproval = {
   id: 'compliance_check',
@@ -327,7 +602,10 @@ const customApproval = {
     riskLevel: 'high'
   },
   options: [
-    { label: 'Compliant - Proceed', value: 'compliant' },
+    { label: 'Compliant
+
+ - Proceed', value: 'compliant' },
+
     { label: 'Requires Changes', value: 'changes' },
     { label: 'Reject Deployment', value: 'reject' }
   ],
@@ -338,11 +616,18 @@ const customApproval = {
     reviewer: 'chief_risk_officer'
   }
 };
+
 ```
 
-### MLflow Model Registry Integration
+#
 
-```typescript
+## MLflow Model Registry Integratio
+
+n
+
+```
+
+typescript
 // Advanced model management
 const modelRegistry = {
   registerModel: async (name, description) => {
@@ -374,13 +659,24 @@ const modelRegistry = {
     );
   }
 };
+
 ```
 
-## Security and Compliance
+#
 
-### Approval Auditing
+# Security and Complianc
 
-```typescript
+e
+
+#
+
+## Approval Auditin
+
+g
+
+```
+
+typescript
 // Get approval audit trail
 const auditTrail = await humanLayerService.getApprovalAuditTrail(
   requestId,
@@ -395,12 +691,20 @@ const complianceCheck = await humanLayerService.checkContentCompliance(
   content,
   ['hate_speech', 'confidential_data']
 );
+
 ```
 
-### Access Control
+#
 
-```typescript
+## Access Contro
+
+l
+
+```
+
+typescript
 // Role-based approval routing
+
 const approvalRouting = {
   code_execution: ['senior_developer', 'security_team'],
   content_publishing: ['content_team', 'legal'],
@@ -413,13 +717,24 @@ const escalationRules = {
   rejection: 'notify_stakeholders',
   high_risk: 'require_c_level_approval'
 };
+
 ```
 
-## Monitoring and Analytics
+#
 
-### Performance Metrics
+# Monitoring and Analytic
 
-```typescript
+s
+
+#
+
+## Performance Metric
+
+s
+
+```
+
+typescript
 // Get comprehensive metrics
 const humanLayerMetrics = humanLayerService.getMetrics();
 const mlflowMetrics = await enhancedMLflowService.getMetrics();
@@ -443,11 +758,18 @@ const analytics = {
     averageCompletionTime: workflowMetrics.averageCompletionTime
   }
 };
+
 ```
 
-### Alert Configuration
+#
 
-```typescript
+## Alert Configuratio
+
+n
+
+```
+
+typescript
 // Configure alerts
 const alertConfig = {
   approvalTimeouts: {
@@ -466,15 +788,30 @@ const alertConfig = {
     priorityEscalation: true
   }
 };
+
 ```
 
-## Troubleshooting
+#
 
-### Common Issues
+# Troubleshootin
 
-#### HumanLayer Connection Issues
+g
 
-```typescript
+#
+
+## Common Issue
+
+s
+
+#
+
+### HumanLayer Connection Issue
+
+s
+
+```
+
+typescript
 // Check service health
 try {
   const health = await humanLayerService.checkHealth();
@@ -483,11 +820,18 @@ try {
   console.error('HumanLayer connection failed:', error);
   // Fallback to alternative approval mechanism
 }
+
 ```
 
-#### MLflow Tracking Issues
+#
 
-```typescript
+### MLflow Tracking Issue
+
+s
+
+```
+
+typescript
 // Verify MLflow connection
 try {
   await enhancedMLflowService.testConnection();
@@ -496,11 +840,18 @@ try {
   console.error('MLflow connection failed:', error);
   // Switch to local logging
 }
+
 ```
 
-#### Workflow Execution Failures
+#
 
-```typescript
+### Workflow Execution Failure
+
+s
+
+```
+
+typescript
 // Handle workflow failures gracefully
 const workflow = humanLayerMLflowIntegration.getWorkflow(workflowId);
 if (workflow.status === 'failed') {
@@ -511,48 +862,142 @@ if (workflow.status === 'failed') {
   if (failureAnalysis.requiresHumanIntervention) {
     await humanLayerService.requestWorkflowApproval(
       workflowId,
-      'Workflow failed - human intervention required',
+      'Workflow failed
+
+ - human intervention required',
+
       failureAnalysis
     );
   }
 }
+
 ```
 
-## Best Practices
+#
 
-### 1. Approval Design
+# Best Practice
 
-- Keep approval requests focused and actionable
-- Provide clear context and options
-- Set appropriate timeouts based on urgency
-- Use escalation policies for critical approvals
+s
 
-### 2. ML Experiment Tracking
+#
 
-- Log all relevant parameters and metrics
-- Use consistent naming conventions
-- Tag experiments with metadata
-- Implement proper model versioning
+##
 
-### 3. Workflow Orchestration
+ 1. Approval Desi
 
-- Design workflows with clear stages
-- Implement proper error handling
-- Use human oversight for critical decisions
-- Monitor performance and optimize
+g
 
-### 4. Security Considerations
+n
 
-- Validate all inputs and contexts
-- Implement proper access controls
-- Audit all approval decisions
-- Use encryption for sensitive data
+- Keep approval requests focused and actionabl
 
-## API Reference
+e
 
-### HumanLayer Service
+- Provide clear context and option
 
-```typescript
+s
+
+- Set appropriate timeouts based on urgenc
+
+y
+
+- Use escalation policies for critical approval
+
+s
+
+#
+
+##
+
+ 2. ML Experiment Tracki
+
+n
+
+g
+
+- Log all relevant parameters and metric
+
+s
+
+- Use consistent naming convention
+
+s
+
+- Tag experiments with metadat
+
+a
+
+- Implement proper model versionin
+
+g
+
+#
+
+##
+
+ 3. Workflow Orchestrati
+
+o
+
+n
+
+- Design workflows with clear stage
+
+s
+
+- Implement proper error handlin
+
+g
+
+- Use human oversight for critical decision
+
+s
+
+- Monitor performance and optimiz
+
+e
+
+#
+
+##
+
+ 4. Security Consideratio
+
+n
+
+s
+
+- Validate all inputs and context
+
+s
+
+- Implement proper access control
+
+s
+
+- Audit all approval decision
+
+s
+
+- Use encryption for sensitive dat
+
+a
+
+#
+
+# API Referenc
+
+e
+
+#
+
+## HumanLayer Servic
+
+e
+
+```
+
+typescript
 interface HumanLayerService {
   requestApproval(request: HumanApprovalRequest): Promise<HumanApprovalResponse>;
   getApprovalStatus(requestId: string): Promise<ApprovalStatus>;
@@ -561,11 +1006,18 @@ interface HumanLayerService {
   analyzeCodeSecurity(code: string): SecurityAnalysis;
   checkContentCompliance(content: string, policies: string[]): ComplianceResult;
 }
+
 ```
 
-### Enhanced MLflow Service
+#
 
-```typescript
+## Enhanced MLflow Servic
+
+e
+
+```
+
+typescript
 interface EnhancedMLflowService {
   getExperiments(): Promise<Experiment[]>;
   createExperiment(name: string, description?: string): Promise<Experiment>;
@@ -575,11 +1027,20 @@ interface EnhancedMLflowService {
   transitionModelVersion(name: string, version: string, stage: Stage): Promise<ModelVersion>;
   getMetrics(): Promise<MLflowMetrics>;
 }
+
 ```
 
-### HumanLayer-MLflow Integration
+#
 
-```typescript
+## HumanLayer-MLflow Integrati
+
+o
+
+n
+
+```
+
+typescript
 interface HumanLayerMLflowIntegration {
   createMLWorkflow(name: string, description: string, config: WorkflowConfig): Promise<MLWorkflow>;
   executeWorkflow(workflowId: string): Promise<void>;
@@ -587,17 +1048,40 @@ interface HumanLayerMLflowIntegration {
   getWorkflows(): MLWorkflow[];
   getMetrics(): HumanAIWorkflowMetrics;
 }
+
 ```
 
-## Conclusion
+#
 
-The HumanLayer + MLflow integration provides a powerful framework for human-in-the-loop machine learning workflows. By combining automated AI processes with human oversight, you can ensure:
+# Conclusio
 
-- **Quality Control**: Human review of critical decisions
-- **Compliance**: Regulatory and security approvals
-- **Transparency**: Full audit trail of decisions and actions
-- **Reliability**: Human intervention for edge cases and failures
-- **Performance**: Optimized ML workflows with human feedback
+n
+
+The HumanLayer
+
+ + MLflow integration provides a powerful framework for human-in-the-loop machine learning workflows. By combining automated AI processes with human oversight, you can ensure
+
+:
+
+- **Quality Control**: Human review of critical decision
+
+s
+
+- **Compliance**: Regulatory and security approval
+
+s
+
+- **Transparency**: Full audit trail of decisions and action
+
+s
+
+- **Reliability**: Human intervention for edge cases and failure
+
+s
+
+- **Performance**: Optimized ML workflows with human feedbac
+
+k
 
 This integration enables responsible AI deployment while maintaining the benefits of automation and scale.
 

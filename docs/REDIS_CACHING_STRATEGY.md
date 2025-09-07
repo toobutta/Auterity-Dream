@@ -1,18 +1,48 @@
-# 🧰 Redis Caching Strategy
 
-## Overview
 
-Standardized caching for APIs, dashboards, and real-time channels.
+# 🧰 Redis Caching Strateg
 
-## Patterns
+y
 
-- Key design: `namespace:entity:id` with TTLs
-- Cache aside: read-through with TTL; write-through for critical aggregates
-- Invalidation: event-driven on writes; versioned keys to avoid stampedes
-- Use per-tenant prefixes to isolate data
+#
 
-## Observability
+# Overvie
 
-- Track hit rate, evictions; alert on abnormal churn
+w
 
+Standardized caching for APIs, dashboards, and real-time channels
+
+.
+
+#
+
+# Pattern
+
+s
+
+- Key design: `namespace:entity:id` with TTL
+
+s
+
+- Cache aside: read-through with TTL; write-through for critical aggregate
+
+s
+
+- Invalidation: event-driven on writes; versioned keys to avoid stampede
+
+s
+
+- Use per-tenant prefixes to isolate dat
+
+a
+
+#
+
+# Observabilit
+
+y
+
+- Track hit rate, evictions; alert on abnormal chur
+
+n
 

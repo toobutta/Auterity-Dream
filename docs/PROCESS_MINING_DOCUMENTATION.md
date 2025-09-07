@@ -1,16 +1,40 @@
-# 🪪 Process Mining Documentation
 
-## Overview
+
+# 🪪 Process Mining Documentatio
+
+n
+
+#
+
+# Overvie
+
+w
 
 Documentation for the Process Mining dashboard and services: extracting, transforming, and analyzing event logs to derive process models, KPIs, and optimization insights.
 
-## Components
+#
 
-- Frontend: `frontend/src/components/process-mining/ProcessMiningDashboard.tsx`
-- Frontend services: `frontend/src/services/processMiningService.ts`
-- Backend services: process mining engine (API: `/api/v1/process-mining/*`)
+# Component
 
-## Data Flow
+s
+
+- Frontend: `frontend/src/components/process-mining/ProcessMiningDashboard.tsx
+
+`
+
+- Frontend services: `frontend/src/services/processMiningService.ts
+
+`
+
+- Backend services: process mining engine (API: `/api/v1/process-mining/*`
+
+)
+
+#
+
+# Data Flo
+
+w
 
 ```mermaid
 sequenceDiagram
@@ -20,34 +44,74 @@ sequenceDiagram
   participant DB as Event Store
 
   UI->>API: POST /analyze (parameters)
+
   API->>ENG: Start job
+
   ENG->>DB: Read event logs
+
   ENG-->>API: Results (model, KPIs, variants)
-  API-->>UI: Renderable payload
+
+  API-->>UI: Renderable payloa
+
+d
+
 ```
 
-## Features
+#
 
-- Event log ingestion and schema mapping
-- Model discovery (e.g., variants, bottlenecks, throughput)
-- Conformance checking
-- What-if analysis and recommendations
+# Feature
 
-## Payloads (Conceptual)
+s
 
-```json
+- Event log ingestion and schema mappin
+
+g
+
+- Model discovery (e.g., variants, bottlenecks, throughput
+
+)
+
+- Conformance checkin
+
+g
+
+- What-if analysis and recommendation
+
+s
+
+#
+
+# Payloads (Conceptual
+
+)
+
+```
+
+json
 {
   "model": { "nodes": [], "edges": [] },
   "kpis": { "cycle_time_avg": 1234, "throughput": 56 },
   "variants": [ {"path": ["A","B","C"], "count": 120} ],
   "bottlenecks": [ {"node": "B", "wait_ms": 45000} ]
 }
+
 ```
 
-## UI Considerations
+#
 
-- Graph visualization (zoom/pan), node/edge insights
-- Variant table with filters and search
-- KPI cards and trend charts
+# UI Consideration
 
+s
+
+- Graph visualization (zoom/pan), node/edge insight
+
+s
+
+- Variant table with filters and searc
+
+h
+
+- KPI cards and trend chart
+
+s
 

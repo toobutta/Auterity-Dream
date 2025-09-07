@@ -1,19 +1,44 @@
-# 🧵 Celery Workers Documentation
 
-## Overview
 
-Async task processing for long-running/IO-heavy jobs.
+# 🧵 Celery Workers Documentatio
 
-## Patterns
+n
 
-- Dedicated queues per service; retries with backoff; DLQ strategy
-- Idempotent tasks; outbox pattern for reliability
-- Task metrics (duration, failures) exported to Prometheus
+#
 
-## Example Flow
+# Overvie
+
+w
+
+Async task processing for long-running/IO-heavy jobs
+
+.
+
+#
+
+# Pattern
+
+s
+
+- Dedicated queues per service; retries with backoff; DLQ strateg
+
+y
+
+- Idempotent tasks; outbox pattern for reliabilit
+
+y
+
+- Task metrics (duration, failures) exported to Prometheu
+
+s
+
+#
+
+# Example Flo
+
+w
 
 1) API enqueues task with correlation ID
 2) Worker executes; updates status in DB
 3) WebSocket notifies UI on completion
-
 

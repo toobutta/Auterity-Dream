@@ -1,23 +1,56 @@
-# 🏗️ Architecture & Engineering Guide
 
-## Multitenancy
 
-- Isolation (data, cache, queue), tenant-aware routing, limits
+# 🏗️ Architecture & Engineering Guid
 
-## API Versioning & Deprecation
+e
 
-- Semver, sunset headers, compatibility contracts
+#
 
-## Event Schema & Contracts
+# Multitenanc
 
-- Schema registry, versioning rules, contract tests
+y
 
-## Feature Flags & Config
+- Isolation (data, cache, queue), tenant-aware routing, limit
 
-- Safety checks, kill switches, rollout strategies
+s
 
-## Performance Budgets
+#
 
-- Per-route targets; CI enforcement; perf regression gates
+# API Versioning & Deprecatio
 
+n
+
+- Semver, sunset headers, compatibility contract
+
+s
+
+#
+
+# Event Schema & Contract
+
+s
+
+- Schema registry, versioning rules, contract test
+
+s
+
+#
+
+# Feature Flags & Confi
+
+g
+
+- Safety checks, kill switches, rollout strategie
+
+s
+
+#
+
+# Performance Budget
+
+s
+
+- Per-route targets; CI enforcement; perf regression gate
+
+s
 

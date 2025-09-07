@@ -1,15 +1,38 @@
-# 🧑‍⚖️ Human Layer & MLflow Integration
 
-## Overview
 
-Guidance for incorporating human-in-the-loop review, approvals, and interventions with MLflow-powered experiment and model tracking.
+# 🧑‍⚖️ Human Layer & MLflow Integratio
 
-## Components
+n
 
-- Frontend: `src/services/humanLayerService.ts`, `src/services/humanlayerMLflowIntegration.ts`, `frontend/src/components/humanlayer-mlflow/HumanLayerMLflowDashboard.tsx`
-- Backend: approval queues, audit logs, MLflow tracking server
+#
 
-## Flows
+# Overvie
+
+w
+
+Guidance for incorporating human-in-the-loop review, approvals, and interventions with MLflow-powered experiment and model tracking
+
+.
+
+#
+
+# Component
+
+s
+
+- Frontend: `src/services/humanLayerService.ts`, `src/services/humanlayerMLflowIntegration.ts`, `frontend/src/components/humanlayer-mlflow/HumanLayerMLflowDashboard.tsx
+
+`
+
+- Backend: approval queues, audit logs, MLflow tracking serve
+
+r
+
+#
+
+# Flow
+
+s
 
 ```mermaid
 sequenceDiagram
@@ -19,23 +42,60 @@ sequenceDiagram
   participant M as MLflow
 
   UI->>API: Submit item for review
+
   API->>Q: Enqueue
+
   UI->>API: List pending items
-  API-->>UI: Items + model metadata
+
+  API-->>UI: Item
+
+s
+
+ + model metadata
+
   API->>M: Read metrics/artifacts
+
   UI->>API: Approve/Reject with reason
-  API-->>UI: Persist decision + audit
+
+  API-->>UI: Persist decisio
+
+n
+
+ + audi
+
+t
+
 ```
 
-## Policies & Audit
+#
 
-- Per-role approval thresholds
-- Reason capture, immutable logs
-- SLA timers and escalation
+# Policies & Audi
 
-## UI
+t
 
-- Dashboard linking model runs (metrics, params, artifacts) to review tasks
-- Filters: risk, impact, freshness
+- Per-role approval threshold
 
+s
+
+- Reason capture, immutable log
+
+s
+
+- SLA timers and escalatio
+
+n
+
+#
+
+# U
+
+I
+
+- Dashboard linking model runs (metrics, params, artifacts) to review task
+
+s
+
+- Filters: risk, impact, freshnes
+
+s
 

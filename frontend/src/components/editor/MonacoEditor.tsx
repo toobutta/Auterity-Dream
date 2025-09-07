@@ -155,7 +155,6 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
     const analysis = await continueDev.analyzeCode(code, language);
 
     // Display analysis results (could be shown in a panel or tooltip)
-    console.log('Code analysis:', analysis);
 
     // Highlight issues in the editor
     if (analysis.issues && analysis.issues.length > 0) {
@@ -196,10 +195,10 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
   };
 
   // Highlight issues in the editor
-  const highlightIssues = (issues: any[]) => {
+  const highlightIssues = (issues: { line: number; column: number; length?: number; message: string; severity: string }[]) => {
     if (!editorRef.current || !monacoRef.current) return;
 
-    const markers = issues.map((issue: any) => ({
+    const markers = issues.map((issue) => ({
       startLineNumber: issue.line,
       startColumn: issue.column,
       endLineNumber: issue.line,
@@ -209,20 +208,22 @@ export const MonacoEditor: React.FC<MonacoEditorProps> = ({
     }));
 
     const model = editorRef.current.getModel();
-    monacoRef.current.editor.setModelMarkers(model, 'auterity-analysis', markers);
+    Monaco.editor.setModelMarkers(model, 'auterity-analysis', markers);
   };
 
   // Convert severity string to Monaco marker severity
-  const getSeverityLevel = (severity: string) => {
+  const getSeverityLevel = (severity: string): Monaco.MarkerSeverity => {
     switch (severity) {
       case 'error':
-        return monacoRef.current?.MarkerSeverity.Error;
+        return Monaco.MarkerSeverity.Error;
       case 'warning':
-        return monacoRef.current?.MarkerSeverity.Warning;
+        return Monaco.MarkerSeverity.Warning;
       default:
-        return monacoRef.current?.MarkerSeverity.Info;
+        return Monaco.MarkerSeverity.Info;
     }
   };
+
+  const crewai_url = ''; // Placeholder for future use
 
   return (
     <div className={`monaco-editor-container ${className}`}>

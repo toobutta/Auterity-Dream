@@ -1,21 +1,52 @@
-# 📨 Message Queue Architecture (Kafka & RabbitMQ)
 
-## Overview
+
+# 📨 Message Queue Architecture (Kafka & RabbitMQ
+
+)
+
+#
+
+# Overvie
+
+w
 
 Event and queue patterns across services for reliability and decoupling.
 
-## Topics & Queues
+#
 
-- Kafka topics: analytics events, workflow events, ai events
-- RabbitMQ queues: task queues, DLQ per service
+# Topics & Queue
 
-## Patterns
+s
 
-- Producers in core/AI services; consumers in analytics/processors
-- Retry with DLQ; idempotent handlers; outbox where needed
+- Kafka topics: analytics events, workflow events, ai event
 
-## Monitoring
+s
 
-- Export lag, consumer health; alert on DLQ growth
+- RabbitMQ queues: task queues, DLQ per servic
 
+e
+
+#
+
+# Pattern
+
+s
+
+- Producers in core/AI services; consumers in analytics/processor
+
+s
+
+- Retry with DLQ; idempotent handlers; outbox where neede
+
+d
+
+#
+
+# Monitorin
+
+g
+
+- Export lag, consumer health; alert on DLQ growt
+
+h
 

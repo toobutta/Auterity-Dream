@@ -1,131 +1,482 @@
-# Open Source Compliance Audit Report
 
-## Executive Summary
+
+# Open Source Compliance Audit Repor
+
+t
+
+#
+
+# Executive Summar
+
+y
 
 This audit examines the open source integrations and repositories within the Auterity Unified AI Platform to ensure compliance with open source legal and integration requirements.
 
-## Current Open Source Integrations Identified
+#
 
-### 1. AI SDK Integrations
-- **@ai-sdk/anthropic**: Anthropic Claude integration
-- **@ai-sdk/azure**: Microsoft Azure OpenAI integration  
-- **@ai-sdk/cohere**: Cohere AI models integration
-- **@ai-sdk/google**: Google Vertex AI integration
-- **@ai-sdk/openai**: OpenAI GPT models integration
-- **@ai-sdk/react**: React hooks for AI SDK
+# Current Open Source Integrations Identifie
 
-### 2. LangChain Ecosystem
-- **@langchain/core**: Core LangChain functionality
-- **@langchain/openai**: OpenAI integration for LangChain
-- **@langchain/anthropic**: Anthropic integration for LangChain
-- **@langchain/google-genai**: Google Generative AI integration
-- **@langchain/cohere**: Cohere integration for LangChain
-- **langchain**: Main LangChain library
+d
 
-### 3. Machine Learning & AI Libraries
-- **litellm**: Unified interface for multiple LLM providers
-- **@huggingface/transformers**: Hugging Face Transformers library
-- **@huggingface/hub**: Hugging Face Model Hub integration
-- **autogen**: Microsoft AutoGen multi-agent framework
-- **temporalio**: Temporal workflow orchestration
-- **wandb**: Weights & Biases ML experiment tracking
+#
 
-### 4. Development Tools & Frameworks
-- **React/TypeScript**: Frontend framework and language
-- **Vite**: Build tool and dev server
-- **Vitest**: Testing framework
-- **ESLint/Prettier**: Code quality tools
-- **Tailwind CSS**: Utility-first CSS framework
+##
 
-## Compliance Status Assessment
+ 1. AI SDK Integration
 
-### ✅ COMPLIANT AREAS
+s
 
-#### 1. License Declaration
-- **Status**: ✅ **COMPLIANT**
-- **Evidence**: README.md references MIT License
-- **Location**: `README.md` (line 286)
-- **Requirement**: Open source projects must clearly state their license
+- **@ai-sdk/anthropic**: Anthropic Claude integratio
 
-#### 2. Dependency Management
-- **Status**: ✅ **COMPLIANT**
-- **Evidence**: Dependabot configuration properly set up
-- **Location**: `.github/dependabot.yml`
-- **Requirement**: Automated dependency updates for security
+n
 
-#### 3. Security Scanning
-- **Status**: ✅ **COMPLIANT**
-- **Evidence**: Trivy vulnerability scanning in CI/CD
-- **Location**: `.github/workflows/comprehensive-ci.yml` (lines 111-125)
-- **Requirement**: Automated security vulnerability detection
+- **@ai-sdk/azure**: Microsoft Azure OpenAI integratio
 
-#### 4. Code Quality Gates
-- **Status**: ✅ **COMPLIANT**
-- **Evidence**: ESLint, Prettier, and TypeScript checks
-- **Location**: `.github/workflows/comprehensive-ci.yml`
-- **Requirement**: Automated code quality enforcement
+n
 
-### ⚠️ MISSING COMPLIANCE ELEMENTS
 
-#### 1. License File
-- **Status**: ❌ **MISSING**
-- **Issue**: No LICENSE file found in repository root
-- **Impact**: Legal uncertainty for users and contributors
-- **Requirement**: OSI-approved license file must be present
+- **@ai-sdk/cohere**: Cohere AI models integratio
 
-#### 2. Contributing Guidelines
-- **Status**: ❌ **MISSING**
-- **Issue**: No CONTRIBUTING.md file found
-- **Impact**: Contributors don't know how to properly contribute
-- **Requirement**: Clear contribution guidelines for open source projects
+n
 
-#### 3. Code of Conduct
-- **Status**: ❌ **MISSING**
-- **Issue**: No CODE_OF_CONDUCT.md file found
-- **Impact**: No clear behavioral expectations for community
-- **Requirement**: Community code of conduct for inclusive environment
+- **@ai-sdk/google**: Google Vertex AI integratio
 
-#### 4. Third-Party Attribution
-- **Status**: ❌ **MISSING**
-- **Issue**: No NOTICE or ATTRIBUTION file for third-party dependencies
-- **Impact**: Potential license compliance issues
-- **Requirement**: Attribution for dependencies with specific license requirements
+n
 
-#### 5. Open Source Compliance in CI/CD
-- **Status**: ❌ **MISSING**
-- **Issue**: No automated license checking in CI/CD pipeline
-- **Impact**: Dependencies might introduce incompatible licenses
-- **Requirement**: Automated license compatibility checking
+- **@ai-sdk/openai**: OpenAI GPT models integratio
 
-## Specific Integration Compliance
+n
 
-### AI SDK Integrations
-- **License**: Apache 2.0 (confirmed via package metadata)
-- **Compliance**: ✅ Compatible with MIT
-- **Requirements Met**: Attribution required but not implemented
+- **@ai-sdk/react**: React hooks for AI SD
 
-### LangChain Ecosystem
-- **License**: MIT (confirmed via package metadata)
-- **Compliance**: ✅ Compatible with MIT
-- **Requirements Met**: No special attribution requirements
+K
 
-### Hugging Face Libraries
-- **License**: Apache 2.0 (confirmed via package metadata)
-- **Compliance**: ✅ Compatible with MIT
-- **Requirements Met**: Attribution required but not implemented
+#
 
-### Temporal.io
-- **License**: MIT (confirmed via package metadata)
-- **Compliance**: ✅ Compatible with MIT
-- **Requirements Met**: No special requirements
+##
 
-## Recommended Actions
+ 2. LangChain Ecosyste
 
-### HIGH PRIORITY
+m
 
-#### 1. Create LICENSE File
+- **@langchain/core**: Core LangChain functionalit
+
+y
+
+- **@langchain/openai**: OpenAI integration for LangChai
+
+n
+
+- **@langchain/anthropic**: Anthropic integration for LangChai
+
+n
+
+- **@langchain/google-genai**: Google Generative AI integratio
+
+n
+
+- **@langchain/cohere**: Cohere integration for LangChai
+
+n
+
+- **langchain**: Main LangChain librar
+
+y
+
+#
+
+##
+
+ 3. Machine Learning & AI Librarie
+
+s
+
+- **litellm**: Unified interface for multiple LLM provider
+
+s
+
+- **@huggingface/transformers**: Hugging Face Transformers librar
+
+y
+
+- **@huggingface/hub**: Hugging Face Model Hub integratio
+
+n
+
+- **autogen**: Microsoft AutoGen multi-agent framewor
+
+k
+
+- **temporalio**: Temporal workflow orchestratio
+
+n
+
+- **wandb**: Weights & Biases ML experiment trackin
+
+g
+
+#
+
+##
+
+ 4. Development Tools & Framework
+
+s
+
+- **React/TypeScript**: Frontend framework and languag
+
+e
+
+- **Vite**: Build tool and dev serve
+
+r
+
+- **Vitest**: Testing framewor
+
+k
+
+- **ESLint/Prettier**: Code quality tool
+
+s
+
+- **Tailwind CSS**: Utility-first CSS framewor
+
+k
+
+#
+
+# Compliance Status Assessmen
+
+t
+
+#
+
+## ✅ COMPLIANT AREA
+
+S
+
+#
+
+###
+
+ 1. License Declaratio
+
+n
+
+- **Status**: ✅ **COMPLIANT
+
+* *
+
+- **Evidence**: README.md references MIT Licens
+
+e
+
+- **Location**: `README.md` (line 286
+
+)
+
+- **Requirement**: Open source projects must clearly state their licens
+
+e
+
+#
+
+###
+
+ 2. Dependency Managemen
+
+t
+
+- **Status**: ✅ **COMPLIANT
+
+* *
+
+- **Evidence**: Dependabot configuration properly set u
+
+p
+
+- **Location**: `.github/dependabot.yml
+
+`
+
+- **Requirement**: Automated dependency updates for securit
+
+y
+
+#
+
+###
+
+ 3. Security Scannin
+
+g
+
+- **Status**: ✅ **COMPLIANT
+
+* *
+
+- **Evidence**: Trivy vulnerability scanning in CI/C
+
+D
+
+- **Location**: `.github/workflows/comprehensive-ci.yml` (lines 111-125
+
+)
+
+- **Requirement**: Automated security vulnerability detectio
+
+n
+
+#
+
+###
+
+ 4. Code Quality Gate
+
+s
+
+- **Status**: ✅ **COMPLIANT
+
+* *
+
+- **Evidence**: ESLint, Prettier, and TypeScript check
+
+s
+
+- **Location**: `.github/workflows/comprehensive-ci.yml
+
+`
+
+- **Requirement**: Automated code quality enforcemen
+
+t
+
+#
+
+## ⚠️ MISSING COMPLIANCE ELEMENT
+
+S
+
+#
+
+###
+
+ 1. License Fil
+
+e
+
+- **Status**: ❌ **MISSING
+
+* *
+
+- **Issue**: No LICENSE file found in repository roo
+
+t
+
+- **Impact**: Legal uncertainty for users and contributor
+
+s
+
+- **Requirement**: OSI-approved license file must be presen
+
+t
+
+#
+
+###
+
+ 2. Contributing Guideline
+
+s
+
+- **Status**: ❌ **MISSING
+
+* *
+
+- **Issue**: No CONTRIBUTING.md file foun
+
+d
+
+- **Impact**: Contributors don't know how to properly contribut
+
+e
+
+- **Requirement**: Clear contribution guidelines for open source project
+
+s
+
+#
+
+###
+
+ 3. Code of Conduc
+
+t
+
+- **Status**: ❌ **MISSING
+
+* *
+
+- **Issue**: No CODE_OF_CONDUCT.md file foun
+
+d
+
+- **Impact**: No clear behavioral expectations for communit
+
+y
+
+- **Requirement**: Community code of conduct for inclusive environmen
+
+t
+
+#
+
+###
+
+ 4. Third-Party Attributi
+
+o
+
+n
+
+- **Status**: ❌ **MISSING
+
+* *
+
+- **Issue**: No NOTICE or ATTRIBUTION file for third-party dependencie
+
+s
+
+- **Impact**: Potential license compliance issue
+
+s
+
+- **Requirement**: Attribution for dependencies with specific license requirement
+
+s
+
+#
+
+###
+
+ 5. Open Source Compliance in CI/C
+
+D
+
+- **Status**: ❌ **MISSING
+
+* *
+
+- **Issue**: No automated license checking in CI/CD pipelin
+
+e
+
+- **Impact**: Dependencies might introduce incompatible license
+
+s
+
+- **Requirement**: Automated license compatibility checkin
+
+g
+
+#
+
+# Specific Integration Complianc
+
+e
+
+#
+
+## AI SDK Integrations
+
+- **License**: Apache 2.0 (confirmed via package metadat
+
+a
+
+)
+
+- **Compliance**: ✅ Compatible with MI
+
+T
+
+- **Requirements Met**: Attribution required but not implemente
+
+d
+
+#
+
+## LangChain Ecosystem
+
+- **License**: MIT (confirmed via package metadata
+
+)
+
+- **Compliance**: ✅ Compatible with MI
+
+T
+
+- **Requirements Met**: No special attribution requirement
+
+s
+
+#
+
+## Hugging Face Libraries
+
+- **License**: Apache 2.0 (confirmed via package metadat
+
+a
+
+)
+
+- **Compliance**: ✅ Compatible with MI
+
+T
+
+- **Requirements Met**: Attribution required but not implemente
+
+d
+
+#
+
+## Temporal.io
+
+- **License**: MIT (confirmed via package metadata
+
+)
+
+- **Compliance**: ✅ Compatible with MI
+
+T
+
+- **Requirements Met**: No special requirement
+
+s
+
+#
+
+# Recommended Action
+
+s
+
+#
+
+## HIGH PRIORIT
+
+Y
+
+#
+
+###
+
+ 1. Create LICENSE Fil
+
+e
+
 ```bash
+
 # Create MIT License file
+
 MIT License
 
 Copyright (c) 2025 Auterity
@@ -147,120 +498,347 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
 ```
 
-#### 2. Create CONTRIBUTING.md
-```markdown
-# Contributing to Auterity Unified AI Platform
+#
 
-## Development Process
-1. Fork the repository
-2. Create a feature branch
-3. Make changes following our coding standards
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
+###
 
-## Coding Standards
-- TypeScript with strict type checking
-- ESLint configuration must pass
-- Prettier formatting required
-- Minimum 80% test coverage
+ 2. Create CONTRIBUTING.m
 
-## Commit Guidelines
-- Use conventional commits
-- Keep commits focused and atomic
-- Write clear commit messages
+d
+
 ```
 
-#### 3. Create CODE_OF_CONDUCT.md
-```markdown
-# Code of Conduct
+markdown
 
-## Our Pledge
-We pledge to make participation in our project a harassment-free experience for everyone.
+# Contributing to Auterity Unified AI Platfor
 
-## Standards
-- Be respectful and inclusive
-- Focus on constructive feedback
-- Accept responsibility and apologize for mistakes
-- Show empathy towards other community members
+m
 
-## Enforcement
+#
+
+# Development Process
+
+1. Fork the repositor
+
+y
+
+2. Create a feature branc
+
+h
+
+3. Make changes following our coding standard
+
+s
+
+4. Add tests for new functionalit
+
+y
+
+5. Ensure all tests pas
+
+s
+
+6. Submit a pull reques
+
+t
+
+#
+
+# Coding Standards
+
+- TypeScript with strict type checkin
+
+g
+
+- ESLint configuration must pas
+
+s
+
+- Prettier formatting require
+
+d
+
+- Minimum 80% test coverag
+
+e
+
+#
+
+# Commit Guidelines
+
+- Use conventional commit
+
+s
+
+- Keep commits focused and atomi
+
+c
+
+- Write clear commit message
+
+s
+
+```
+
+#
+
+###
+
+ 3. Create CODE_OF_CONDUCT.m
+
+d
+
+```
+
+markdown
+
+# Code of Conduc
+
+t
+
+#
+
+# Our Pledge
+
+We pledge to make participation in our project a harassment-free experience for everyone
+
+.
+
+#
+
+# Standards
+
+- Be respectful and inclusiv
+
+e
+
+- Focus on constructive feedbac
+
+k
+
+- Accept responsibility and apologize for mistake
+
+s
+
+- Show empathy towards other community member
+
+s
+
+#
+
+# Enforcement
+
 Violations will be addressed by project maintainers.
+
 ```
 
-#### 4. Add License Checking to CI/CD
-```yaml
-# Add to .github/workflows/comprehensive-ci.yml
+#
+
+###
+
+ 4. Add License Checking to CI/C
+
+D
+
+```
+
+yaml
+
+# Add to .github/workflows/comprehensive-ci.ym
+
+l
+
 - name: Check licenses
+
   run: |
     npm install -g license-checker
+
     license-checker --production --json > licenses.json
-    # Check for incompatible licenses
+
+
+
+# Check for incompatible licenses
+
     if grep -q "GPL" licenses.json; then
-      echo "❌ GPL license found - incompatible with MIT"
+
+      echo "❌ GPL license found
+
+ - incompatible with MIT"
+
       exit 1
     fi
+
 ```
 
-### MEDIUM PRIORITY
+#
 
-#### 5. Create NOTICE File for Attributions
-```markdown
-# Third-Party Attributions
+## MEDIUM PRIORIT
 
-This project includes third-party software components:
+Y
 
-## AI SDK Libraries
-- @ai-sdk/anthropic: Apache License 2.0
-- @ai-sdk/google: Apache License 2.0
-- @huggingface/transformers: Apache License 2.0
+#
 
-## React Ecosystem
-- React: MIT License
-- TypeScript: Apache License 2.0
+###
+
+ 5. Create NOTICE File for Attribution
+
+s
+
+```
+
+markdown
+
+# Third-Party Attributio
+
+n
+
+s
+
+This project includes third-party software components
+
+:
+
+#
+
+# AI SDK Libraries
+
+- @ai-sdk/anthropic: Apache License 2.
+
+0
+
+- @ai-sdk/google: Apache License 2.
+
+0
+
+- @huggingface/transformers: Apache License 2.
+
+0
+
+#
+
+# React Ecosystem
+
+- React: MIT Licens
+
+e
+
+- TypeScript: Apache License 2.
+
+0
 
 For full license texts, see individual package licenses.
+
 ```
 
-#### 6. Add Security Policy
-```markdown
-# Security Policy
+#
 
-## Reporting Vulnerabilities
+###
+
+ 6. Add Security Polic
+
+y
+
+```
+
+markdown
+
+# Security Polic
+
+y
+
+#
+
+# Reporting Vulnerabilities
+
 Please report security vulnerabilities to: security@auterity.com
 
-## Supported Versions
+#
+
+# Supported Versions
+
 Security updates are provided for the latest major version.
 
-## Security Considerations
-- All dependencies are regularly updated
-- Automated security scanning is performed
-- Code reviews include security checks
+#
+
+# Security Considerations
+
+- All dependencies are regularly update
+
+d
+
+- Automated security scanning is performe
+
+d
+
+- Code reviews include security check
+
+s
+
 ```
 
-## Compliance Score
+#
+
+# Compliance Scor
+
+e
 
 | Category | Score | Status |
 |----------|-------|--------|
+
 | License Management | 7/10 | ⚠️ Needs LICENSE file |
 | Contribution Guidelines | 6/10 | ⚠️ Basic guidelines in README |
 | Security Compliance | 9/10 | ✅ Strong security practices |
 | Dependency Management | 8/10 | ✅ Dependabot configured |
 | CI/CD Automation | 8/10 | ✅ Comprehensive pipelines |
 
-**Overall Compliance Score: 7.6/10**
+**Overall Compliance Score: 7.6/1
 
-## Next Steps
+0
 
-1. **Immediate**: Create LICENSE, CONTRIBUTING.md, and CODE_OF_CONDUCT.md files
-2. **Short-term**: Add license checking to CI/CD pipeline
-3. **Medium-term**: Implement automated attribution generation
-4. **Ongoing**: Regular compliance audits and dependency reviews
+* *
 
----
+#
 
-*Audit completed on: September 1, 2025*
+# Next Step
+
+s
+
+1. **Immediate**: Create LICENSE, CONTRIBUTING.md, and CODE_OF_CONDUCT.md fil
+
+e
+
+s
+
+2. **Short-term**: Add license checking to CI/CD pipeli
+
+n
+
+e
+
+3. **Medium-term**: Implement automated attribution generati
+
+o
+
+n
+
+4. **Ongoing**: Regular compliance audits and dependency revie
+
+w
+
+s
+
+--
+
+- *Audit completed on: September 1, 202
+
+5
+
+*
 *Next audit recommended: December 1, 2025*</content>
-<parameter name="filePath">c:\Users\Andrew\OneDrive\Documents\auterity-error-iq\OPEN_SOURCE_COMPLIANCE_AUDIT.md
+
+<parameter name="filePath">c:\Users\Andrew\OneDrive\Documents\auterity-error-iq\OPEN_SOURCE_COMPLIANCE_AUDIT.m
+
+d

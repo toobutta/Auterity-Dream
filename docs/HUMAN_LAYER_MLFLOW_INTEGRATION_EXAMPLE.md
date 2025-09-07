@@ -1,36 +1,74 @@
-# HumanLayer + MLflow Integration Example
+
+
+# HumanLayer
+
+ + MLflow Integration Examp
+
+l
+
+e
 
 This document provides a complete working example of using the HumanLayer and MLflow integration within the Auterity platform.
 
-## Scenario: Customer Churn Prediction Pipeline
+#
+
+# Scenario: Customer Churn Prediction Pipelin
+
+e
 
 We'll build a complete ML pipeline that includes human oversight at critical decision points, combining automated ML processes with human expertise.
 
-## Complete Implementation
+#
 
-### 1. Setup and Configuration
+# Complete Implementatio
+
+n
+
+#
+
+##
+
+ 1. Setup and Configurati
+
+o
+
+n
 
 ```typescript
 // src/examples/customerChurnPipeline.ts
 import { humanLayerMLflowIntegration } from '../services/humanlayerMLflowIntegration';
-import { HumanLayerMLflowDashboard } from '../components/humanlayer-mlflow/HumanLayerMLflowDashboard';
+import { HumanLayerMLflowDashboard } from '../components/humanlayer-mlflow/HumanLayerMLflowDashboard'
 
-/**
- * Customer Churn Prediction Pipeline with Human Oversight
- * This example demonstrates a complete ML workflow with human-in-the-loop
+;
+
+/*
+
+* * Customer Churn Prediction Pipeline with Human Oversigh
+
+t
+
+ * This example demonstrates a complete ML workflow with human-in-the-loo
+
+p
  */
+
 export class CustomerChurnPipeline {
   private workflowId: string | null = null;
 
-  /**
-   * Initialize the customer churn prediction pipeline
+  /*
+
+* * Initialize the customer churn prediction pipelin
+
+e
    */
+
   async initialize() {
     console.log('🚀 Initializing Customer Churn Prediction Pipeline');
 
     const workflow = await humanLayerMLflowIntegration.createMLWorkflow(
       'Customer Churn Prediction Pipeline',
       'End-to-end ML pipeline for predicting customer churn with human oversight',
+
       {
         experimentName: 'customer_churn_prediction_v3',
         modelName: 'churn_predictor',
@@ -78,9 +116,12 @@ export class CustomerChurnPipeline {
               parameters: {
                 max_depth: 6,
                 learning_rate: 0.1,
+
                 n_estimators: 100,
                 subsample: 0.8,
+
                 colsample_bytree: 0.8
+
               },
               crossValidation: {
                 folds: 5,
@@ -102,10 +143,15 @@ export class CustomerChurnPipeline {
               validationDataset: 'holdout_set.csv',
               validationThresholds: {
                 accuracy: 0.85,
+
                 precision: 0.80,
+
                 recall: 0.75,
+
                 auc: 0.90,
+
                 business_impact_score: 0.82
+
               },
               fairnessChecks: {
                 protectedAttributes: ['gender', 'age_group', 'geographic_region'],
@@ -113,7 +159,9 @@ export class CustomerChurnPipeline {
               },
               stabilityTests: {
                 featureDriftThreshold: 0.1,
+
                 predictionDriftThreshold: 0.15
+
               }
             },
             approvalRequired: true,
@@ -138,7 +186,10 @@ export class CustomerChurnPipeline {
                 { label: 'Deploy to Production', value: 'deploy_production', recommended: true },
                 { label: 'Deploy to Staging First', value: 'deploy_staging' },
                 { label: 'Request Additional Testing', value: 'additional_testing' },
-                { label: 'Reject - Requires Changes', value: 'reject_changes' }
+                { label: 'Reject
+
+ - Requires Changes', value: 'reject_changes' }
+
               ],
               approvalUrgency: 'high',
               approvalTimeout: 7200 // 2 hours
@@ -161,12 +212,14 @@ export class CustomerChurnPipeline {
                 metrics: ['accuracy', 'latency', 'throughput'],
                 alerts: {
                   performanceDrop: 0.05, // 5% drop triggers alert
+
                   latencyIncrease: 100 // 100ms increase triggers alert
                 }
               },
               rollbackPlan: {
                 automaticRollback: true,
                 rollbackThreshold: 0.10, // Rollback if performance drops 10%
+
                 rollbackTimeWindow: 3600 // 1 hour monitoring window
               }
             },
@@ -186,12 +239,16 @@ export class CustomerChurnPipeline {
               ],
               alertThresholds: {
                 accuracy_drop: 0.05,
+
                 latency_increase: 50,
                 feature_drift: 0.15,
+
                 prediction_drift: 0.20
+
               },
               optimizationTriggers: {
                 retrainingThreshold: 0.10, // Trigger retraining if accuracy drops 10%
+
                 modelUpdateFrequency: 'weekly',
                 a_b_testing_enabled: true
               },
@@ -211,6 +268,7 @@ export class CustomerChurnPipeline {
           complianceOfficer: 'Data Protection Officer',
           priority: 'high',
           expectedBusinessValue: '$2.5M annual retention improvement',
+
           regulatoryRequirements: ['GDPR', 'CCPA'],
           riskLevel: 'medium'
         }
@@ -223,9 +281,13 @@ export class CustomerChurnPipeline {
     return workflow;
   }
 
-  /**
-   * Execute the complete pipeline
+  /*
+
+* * Execute the complete pipelin
+
+e
    */
+
   async execute() {
     if (!this.workflowId) {
       throw new Error('Pipeline not initialized. Call initialize() first.');
@@ -244,9 +306,13 @@ export class CustomerChurnPipeline {
     }
   }
 
-  /**
-   * Monitor pipeline progress
+  /*
+
+* * Monitor pipeline progres
+
+s
    */
+
   async monitor() {
     if (!this.workflowId) {
       return;
@@ -269,7 +335,15 @@ export class CustomerChurnPipeline {
         'waiting_approval': '👤'
       }[stage.status] || '❓';
 
-      console.log(`  ${index + 1}. ${statusIcon} ${stage.name} - ${stage.status}`);
+      console.log(`  ${index
+
+ + 1}. ${statusIcon} ${stage.name
+
+}
+
+ - ${stage.status}`)
+
+;
 
       if (stage.status === 'waiting_approval' && stage.approvalRequestId) {
         console.log(`     🔗 Approval Request: ${stage.approvalRequestId}`);
@@ -281,9 +355,13 @@ export class CustomerChurnPipeline {
     });
   }
 
-  /**
-   * Handle pipeline failure with human intervention
+  /*
+
+* * Handle pipeline failure with human interventio
+
+n
    */
+
   private async handlePipelineFailure(error: any) {
     console.log('🔧 Handling pipeline failure with human intervention');
 
@@ -293,7 +371,10 @@ export class CustomerChurnPipeline {
     // Request human intervention
     await humanLayerService.requestWorkflowApproval(
       this.workflowId!,
-      'Pipeline Execution Failed - Human Intervention Required',
+      'Pipeline Execution Failed
+
+ - Human Intervention Required',
+
       {
         error: error.message,
         failureStage: workflow?.stages.find(s => s.status === 'failed')?.name,
@@ -310,9 +391,13 @@ export class CustomerChurnPipeline {
     );
   }
 
-  /**
-   * Analyze pipeline failure
+  /*
+
+* * Analyze pipeline failur
+
+e
    */
+
   private async analyzePipelineFailure(error: any) {
     // Implement failure analysis logic
     return {
@@ -323,14 +408,21 @@ export class CustomerChurnPipeline {
     };
   }
 
-  /**
-   * Display stage results
+  /*
+
+* * Display stage result
+
+s
    */
+
   private displayStageResults(stage: any) {
     switch (stage.type) {
       case 'training':
         if (stage.results?.metrics) {
-          console.log(`     📈 Training Metrics: Accuracy: ${(stage.results.metrics.accuracy * 100).toFixed(2)}%`);
+          console.log(`     📈 Training Metrics: Accuracy: ${(stage.results.metrics.accuracy
+
+ * 100).toFixed(2)}%`);
+
         }
         break;
       case 'validation':
@@ -346,16 +438,24 @@ export class CustomerChurnPipeline {
     }
   }
 
-  /**
-   * Get pipeline metrics
+  /*
+
+* * Get pipeline metric
+
+s
    */
+
   getMetrics() {
     return humanLayerMLflowIntegration.getMetrics();
   }
 
-  /**
-   * Get current workflow status
+  /*
+
+* * Get current workflow statu
+
+s
    */
+
   getStatus() {
     if (!this.workflowId) {
       return null;
@@ -386,8 +486,14 @@ export async function runCustomerChurnPipeline() {
   const metrics = pipeline.getMetrics();
   console.log('📊 Final Pipeline Metrics:');
   console.log(`   • Total Workflows: ${metrics.totalWorkflows}`);
-  console.log(`   • Success Rate: ${(metrics.completedWorkflows / metrics.totalWorkflows * 100).toFixed(1)}%`);
-  console.log(`   • Human Intervention Rate: ${(metrics.humanInterventionRate * 100).toFixed(1)}%`);
+  console.log(`   • Success Rate: ${(metrics.completedWorkflows / metrics.totalWorkflows
+
+ * 100).toFixed(1)}%`);
+
+  console.log(`   • Human Intervention Rate: ${(metrics.humanInterventionRate
+
+ * 100).toFixed(1)}%`);
+
   console.log(`   • Average Completion Time: ${formatDuration(metrics.averageCompletionTime)}`);
 }
 
@@ -413,21 +519,33 @@ export const CustomerChurnPipelineDashboard: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
+
       <div className="mb-8">
+
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
+
           Customer Churn Prediction Pipeline
         </h1>
         <p className="text-gray-600">
+
           ML pipeline with human-in-the-loop oversight for responsible AI deployment
+
         </p>
       </div>
 
-      {/* Control Panel */}
+      {/
+
+* Control Panel */}
+
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+
         <div className="flex items-center justify-between">
+
           <div>
             <h2 className="text-lg font-semibold text-gray-900">Pipeline Control</h2>
+
             <p className="text-sm text-gray-600">
+
               {pipeline ? 'Pipeline initialized and ready' : 'Initialize pipeline to begin'}
             </p>
           </div>
@@ -435,19 +553,29 @@ export const CustomerChurnPipelineDashboard: React.FC = () => {
             onClick={startPipeline}
             disabled={isRunning}
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+
           >
             {isRunning ? (
               <>
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path
+
+>
+
                 </svg>
                 Running Pipeline...
               </>
             ) : (
               <>
                 <svg className="-ml-1 mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /
+
+>
+
                 </svg>
                 Start Pipeline
               </>
@@ -456,28 +584,45 @@ export const CustomerChurnPipelineDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Pipeline Status */}
+      {/
+
+* Pipeline Status */}
+
       {pipeline && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Pipeline Status</h2>
+
           <div className="space-y-3">
+
             {pipeline.getStatus()?.stages.map((stage, index) => (
               <div key={stage.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+
                 <div className="flex items-center space-x-3">
+
                   <div className={`w-3 h-3 rounded-full ${
+
                     stage.status === 'completed' ? 'bg-green-500' :
+
                     stage.status === 'running' ? 'bg-blue-500' :
+
                     stage.status === 'failed' ? 'bg-red-500' :
+
                     stage.status === 'waiting_approval' ? 'bg-yellow-500' :
+
                     'bg-gray-400'
+
                   }`}></div>
                   <div>
                     <div className="font-medium text-gray-900">{stage.name}</div>
+
                     <div className="text-sm text-gray-600 capitalize">{stage.status.replace('_', ' ')}</div>
+
                   </div>
                 </div>
                 {stage.approvalRequired && (
                   <div className="text-sm text-gray-600">
+
                     {stage.approvalRequestId ? 'Approval Requested' : 'Approval Required'}
                   </div>
                 )}
@@ -487,9 +632,17 @@ export const CustomerChurnPipelineDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* HumanLayer + MLflow Dashboard */}
+      {/
+
+* HumanLaye
+
+r
+
+ + MLflow Dashboard */}
+
       <HumanLayerMLflowDashboard
         className="bg-white rounded-lg shadow-sm border border-gray-200"
+
         refreshInterval={30000}
       />
     </div>
@@ -513,7 +666,10 @@ function determineRootCause(error: any): string {
 
 function assessImpact(error: any): string {
   // Implement impact assessment logic
-  return 'Medium impact - pipeline can be restarted';
+  return 'Medium impact
+
+ - pipeline can be restarted';
+
 }
 
 function generateRecoveryRecommendations(error: any): string[] {
@@ -531,11 +687,22 @@ function calculateSeverity(error: any): 'low' | 'medium' | 'high' | 'critical' {
   if (error.message.includes('training')) return 'medium';
   return 'low';
 }
+
 ```
 
-### 2. Dashboard Integration
+#
 
-```tsx
+##
+
+ 2. Dashboard Integrati
+
+o
+
+n
+
+```
+
+tsx
 // src/pages/CustomerChurnPipelinePage.tsx
 import React from 'react';
 import { CustomerChurnPipelineDashboard } from '../examples/customerChurnPipeline';
@@ -543,15 +710,27 @@ import { CustomerChurnPipelineDashboard } from '../examples/customerChurnPipelin
 export const CustomerChurnPipelinePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
+
       <CustomerChurnPipelineDashboard />
     </div>
   );
 };
+
 ```
 
-### 3. API Integration
+#
 
-```typescript
+##
+
+ 3. API Integrati
+
+o
+
+n
+
+```
+
+typescript
 // src/api/customerChurnPipeline.ts
 import express from 'express';
 import { CustomerChurnPipeline } from '../examples/customerChurnPipeline';
@@ -646,11 +825,22 @@ router.post('/:pipelineId/stop', (req, res) => {
 });
 
 export default router;
+
 ```
 
-### 4. Monitoring and Alerting
+#
 
-```typescript
+##
+
+ 4. Monitoring and Alerti
+
+n
+
+g
+
+```
+
+typescript
 // src/services/pipelineMonitoring.ts
 import { humanLayerMLflowIntegration } from './humanlayerMLflowIntegration';
 import { advancedMonitoringService } from './advancedMonitoringService';
@@ -660,6 +850,7 @@ export class PipelineMonitoringService {
     maxPipelineDuration: 3600000, // 1 hour
     maxFailedStages: 2,
     minApprovalSuccessRate: 0.8,
+
     maxPendingApprovals: 5
   };
 
@@ -690,18 +881,26 @@ export class PipelineMonitoringService {
     // Check failure rate
     const failureRate = metrics.failedWorkflows / metrics.totalWorkflows;
     if (failureRate > 0.2) { // 20% failure rate
+
       await this.createAlert(
         'High Pipeline Failure Rate',
-        `Pipeline failure rate is ${(failureRate * 100).toFixed(1)}%, above acceptable threshold`,
+        `Pipeline failure rate is ${(failureRate
+
+ * 100).toFixed(1)}%, above acceptable threshold`,
+
         'error'
       );
     }
 
     // Check human intervention rate
     if (metrics.humanInterventionRate > 0.5) { // 50% intervention rate
+
       await this.createAlert(
         'High Human Intervention Required',
-        `Human intervention rate is ${(metrics.humanInterventionRate * 100).toFixed(1)}%, consider automation improvements`,
+        `Human intervention rate is ${(metrics.humanInterventionRate
+
+ * 100).toFixed(1)}%, consider automation improvements`,
+
         'info'
       );
     }
@@ -723,7 +922,10 @@ export class PipelineMonitoringService {
     if (humanLayerMetrics.approvalRate < this.alertThresholds.minApprovalSuccessRate) {
       await this.createAlert(
         'Low Approval Success Rate',
-        `Approval success rate is ${(humanLayerMetrics.approvalRate * 100).toFixed(1)}%, below acceptable threshold`,
+        `Approval success rate is ${(humanLayerMetrics.approvalRate
+
+ * 100).toFixed(1)}%, below acceptable threshold`,
+
         'warning'
       );
     }
@@ -764,11 +966,22 @@ export class PipelineMonitoringService {
 // Start monitoring
 export const pipelineMonitoringService = new PipelineMonitoringService();
 pipelineMonitoringService.startMonitoring();
+
 ```
 
-### 5. Testing
+#
 
-```typescript
+##
+
+ 5. Testi
+
+n
+
+g
+
+```
+
+typescript
 // tests/integration/customerChurnPipeline.test.ts
 import { CustomerChurnPipeline } from '../../src/examples/customerChurnPipeline';
 import { humanLayerMLflowIntegration } from '../../src/services/humanlayerMLflowIntegration';
@@ -886,96 +1099,199 @@ describe('Customer Churn Pipeline E2E', () => {
     expect(metrics.averageCompletionTime).toBeGreaterThan(0);
   }, 300000); // 5 minute timeout for E2E test
 });
+
 ```
 
-## Configuration Files
+#
 
-### Docker Compose Configuration
+# Configuration File
 
-```yaml
-# docker-compose.customer-churn.yml
-version: '3.8'
+s
+
+#
+
+## Docker Compose Configuratio
+
+n
+
+```
+
+yaml
+
+# docker-compose.customer-churn.ym
+
+l
+
+version: '3.8
+
+'
 
 services:
   customer-churn-pipeline:
+
     build:
       context: .
       dockerfile: systems/customer-churn/Dockerfile
+
     environment:
-      - HUMAN_LAYER_BASE_URL=http://humanlayer:8000
-      - HUMAN_LAYER_API_KEY=${HUMAN_LAYER_API_KEY}
-      - MLFLOW_BASE_URL=http://mlflow:5000
+
+      - HUMAN_LAYER_BASE_URL=http://humanlayer:800
+
+0
+
+      - HUMAN_LAYER_API_KEY=${HUMAN_LAYER_API_KEY
+
+}
+
+      - MLFLOW_BASE_URL=http://mlflow:500
+
+0
+
       - MLFLOW_TRACKING_URI=http://mlflow:5000
+
     depends_on:
-      - mlflow
+
+      - mlflo
+
+w
+
       - humanlayer
+
     volumes:
-      - ./data:/app/data
-      - ./models:/app/models
+
+      - ./data:/app/dat
+
+a
+
+      - ./models:/app/model
+
+s
 
   mlflow:
-    image: python:3.9-slim
-    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/mlflow --default-artifact-root /mlflow/artifacts
+    image: python:3.9-sli
+
+m
+
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/mlflow --default-artifact-root /mlflow/artifact
+
+s
+
     environment:
+
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
     ports:
+
       - "5000:5000"
+
     volumes:
+
       - mlflow_data:/mlflow/artifacts
+
     depends_on:
-      - postgres
+
+      - postgre
+
+s
 
   humanlayer:
     image: humanlayer/humanlayer:latest
     environment:
-      - HUMAN_LAYER_API_KEY=${HUMAN_LAYER_API_KEY}
+
+      - HUMAN_LAYER_API_KEY=${HUMAN_LAYER_API_KEY
+
+}
+
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/humanlayer
+
     ports:
+
       - "8000:8000"
+
     depends_on:
-      - postgres
+
+      - postgre
+
+s
 
   postgres:
     image: postgres:13
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD
+
+}
+
       - POSTGRES_DB=mlflow
+
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+
+      - postgres_data:/var/lib/postgresql/dat
+
+a
 
 volumes:
   mlflow_data:
   postgres_data:
+
 ```
 
-### Environment Configuration
+#
 
-```bash
-# .env.customer-churn
+## Environment Configuratio
+
+n
+
+```
+
+bash
+
+# .env.customer-chu
+
+r
+
+n
+
 # HumanLayer Configuration
+
 HUMAN_LAYER_BASE_URL=http://humanlayer:8000
 HUMAN_LAYER_API_KEY=your_humanlayer_api_key_here
 
 # MLflow Configuration
+
 MLFLOW_BASE_URL=http://mlflow:5000
 MLFLOW_TRACKING_URI=http://mlflow:5000
 
 # Database Configuration
+
 POSTGRES_PASSWORD=your_secure_password_here
 
 # Pipeline Configuration
+
 CUSTOMER_CHURN_DATA_PATH=/app/data
 CUSTOMER_CHURN_MODELS_PATH=/app/models
 PIPELINE_MONITORING_INTERVAL=30000
 PIPELINE_MAX_EXECUTION_TIME=3600000
+
 ```
 
-## Deployment and Operations
+#
 
-### Production Deployment
+# Deployment and Operation
 
-```typescript
+s
+
+#
+
+## Production Deploymen
+
+t
+
+```
+
+typescript
 // scripts/deploy-customer-churn-pipeline.ts
+
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -987,11 +1303,15 @@ export async function deployCustomerChurnPipeline() {
 
     // Build Docker images
     console.log('📦 Building Docker images...');
-    await execAsync('docker-compose -f docker-compose.customer-churn.yml build');
+    await execAsync('docker-compose -f docker-compose.customer-churn.yml build')
+
+;
 
     // Deploy to staging
     console.log('🎭 Deploying to staging environment...');
-    await execAsync('docker-compose -f docker-compose.customer-churn.yml --profile staging up -d');
+    await execAsync('docker-compose -f docker-compose.customer-churn.yml --profile staging up -d')
+
+;
 
     // Run health checks
     console.log('🔍 Running health checks...');
@@ -1003,7 +1323,9 @@ export async function deployCustomerChurnPipeline() {
 
     // Deploy to production
     console.log('🎯 Deploying to production environment...');
-    await execAsync('docker-compose -f docker-compose.customer-churn.yml --profile production up -d');
+    await execAsync('docker-compose -f docker-compose.customer-churn.yml --profile production up -d')
+
+;
 
     // Configure monitoring
     console.log('📊 Configuring monitoring and alerting...');
@@ -1020,7 +1342,9 @@ export async function deployCustomerChurnPipeline() {
 
 async function runHealthChecks() {
   // Implement health checks for all services
-  const services = ['mlflow', 'humanlayer', 'customer-churn-pipeline'];
+  const services = ['mlflow', 'humanlayer', 'customer-churn-pipeline']
+
+;
 
   for (const service of services) {
     const health = await checkServiceHealth(service);
@@ -1033,26 +1357,36 @@ async function runHealthChecks() {
 async function runIntegrationTests() {
   // Run integration tests
   await execAsync('npm run test:integration:customer-churn');
+
 }
 
 async function configureMonitoring() {
   // Configure monitoring and alerting
   await execAsync('npm run configure:monitoring:customer-churn');
+
 }
 
 async function rollbackDeployment() {
   console.log('🔄 Rolling back deployment...');
   try {
     await execAsync('docker-compose -f docker-compose.customer-churn.yml down');
+
   } catch (rollbackError) {
     console.error('Rollback failed:', rollbackError);
   }
 }
+
 ```
 
-### Monitoring Dashboard
+#
 
-```typescript
+## Monitoring Dashboar
+
+d
+
+```
+
+typescript
 // src/components/monitoring/CustomerChurnMonitoringDashboard.tsx
 import React, { useEffect, useState } from 'react';
 import { humanLayerMLflowIntegration } from '../../services/humanlayerMLflowIntegration';
@@ -1080,66 +1414,110 @@ export const CustomerChurnMonitoringDashboard: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
+
       <h1 className="text-3xl font-bold text-gray-900 mb-8">
+
         Customer Churn Pipeline Monitoring
       </h1>
 
-      {/* Key Metrics */}
+      {/
+
+* Key Metrics */}
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
         <div className="bg-white rounded-lg shadow p-6">
+
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Pipeline Success Rate</h3>
+
           <div className="text-3xl font-bold text-green-600">
-            {metrics ? ((metrics.completedWorkflows / metrics.totalWorkflows) * 100).toFixed(1) : 0}%
+
+            {metrics ? ((metrics.completedWorkflows / metrics.totalWorkflows)
+
+ * 100).toFixed(1) : 0}%
+
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
+
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Avg Completion Time</h3>
+
           <div className="text-3xl font-bold text-blue-600">
+
             {metrics ? formatDuration(metrics.averageCompletionTime) : 'N/A'}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
+
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Human Intervention Rate</h3>
+
           <div className="text-3xl font-bold text-orange-600">
-            {metrics ? (metrics.humanInterventionRate * 100).toFixed(1) : 0}%
+
+            {metrics ? (metrics.humanInterventionRate
+
+ * 100).toFixed(1) : 0}%
+
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
+
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Active Pipelines</h3>
+
           <div className="text-3xl font-bold text-purple-600">
+
             {metrics ? metrics.activeWorkflows : 0}
           </div>
         </div>
       </div>
 
-      {/* Active Alerts */}
+      {/
+
+* Active Alerts */}
+
       <div className="bg-white rounded-lg shadow mb-8">
+
         <div className="px-6 py-4 border-b border-gray-200">
+
           <h2 className="text-lg font-semibold text-gray-900">Active Alerts</h2>
+
         </div>
         <div className="p-6">
+
           {alerts.length === 0 ? (
             <p className="text-gray-600">No active alerts</p>
+
           ) : (
             <div className="space-y-4">
+
               {alerts.map((alert, index) => (
                 <div key={index} className={`p-4 rounded-lg border-l-4 ${
+
                   alert.severity === 'critical' ? 'border-red-500 bg-red-50' :
+
                   alert.severity === 'warning' ? 'border-yellow-500 bg-yellow-50' :
+
                   'border-blue-500 bg-blue-50'
+
                 }`}>
                   <div className="flex items-center justify-between">
+
                     <div>
                       <h3 className="font-medium text-gray-900">{alert.title}</h3>
+
                       <p className="text-sm text-gray-600">{alert.description}</p>
+
                     </div>
                     <span className={`px-2 py-1 text-xs font-medium rounded ${
+
                       alert.severity === 'critical' ? 'bg-red-100 text-red-800' :
+
                       alert.severity === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+
                       'bg-blue-100 text-blue-800'
+
                     }`}>
                       {alert.severity}
                     </span>
@@ -1151,13 +1529,21 @@ export const CustomerChurnMonitoringDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Pipeline Stages Status */}
+      {/
+
+* Pipeline Stages Status */}
+
       <div className="bg-white rounded-lg shadow">
+
         <div className="px-6 py-4 border-b border-gray-200">
+
           <h2 className="text-lg font-semibold text-gray-900">Pipeline Stages</h2>
+
         </div>
         <div className="p-6">
+
           <div className="space-y-4">
+
             {[
               'Data Acquisition & Validation',
               'Feature Engineering',
@@ -1168,18 +1554,35 @@ export const CustomerChurnMonitoringDashboard: React.FC = () => {
               'Production Monitoring & Optimization'
             ].map((stage, index) => (
               <div key={stage} className="flex items-center justify-between p-4 bg-gray-50 rounded">
+
                 <div className="flex items-center space-x-4">
+
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="text-sm font-medium text-blue-600">{index + 1}</span>
+
+                    <span className="text-sm font-medium text-blue-600">{inde
+
+x
+
+ + 1}</span>
+
                   </div>
                   <div>
                     <div className="font-medium text-gray-900">{stage}</div>
-                    <div className="text-sm text-gray-600">Stage {index + 1} of 7</div>
+
+                    <div className="text-sm text-gray-600">Stage {inde
+
+x
+
+ + 1} of 7</div>
+
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
+
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
+
                   <span className="text-sm text-gray-600">Completed</span>
+
                 </div>
               </div>
             ))}
@@ -1201,18 +1604,56 @@ async function loadMonitoringAlerts(): Promise<any[]> {
   // Implement alert loading logic
   return [];
 }
+
 ```
 
-## Summary
+#
+
+# Summar
+
+y
 
 This comprehensive example demonstrates how to:
 
-1. **Create Human-AI Workflows**: Combine automated ML processes with human oversight
-2. **Manage Approvals**: Handle critical decision points with human intervention
-3. **Track Experiments**: Use MLflow for comprehensive experiment tracking
-4. **Monitor Performance**: Real-time monitoring and alerting
-5. **Deploy Safely**: Production deployment with rollback capabilities
-6. **Maintain Compliance**: Built-in compliance and security checks
+1. **Create Human-AI Workflows**: Combine automated ML processes with human oversig
 
-The Customer Churn Prediction Pipeline showcases the power of the HumanLayer + MLflow integration for responsible AI deployment, combining the best of automated machine learning with human expertise and oversight.
+h
+
+t
+
+2. **Manage Approvals**: Handle critical decision points with human interventi
+
+o
+
+n
+
+3. **Track Experiments**: Use MLflow for comprehensive experiment tracki
+
+n
+
+g
+
+4. **Monitor Performance**: Real-time monitoring and alerti
+
+n
+
+g
+
+5. **Deploy Safely**: Production deployment with rollback capabiliti
+
+e
+
+s
+
+6. **Maintain Compliance**: Built-in compliance and security chec
+
+k
+
+s
+
+The Customer Churn Prediction Pipeline showcases the power of the HumanLayer
+
+ + MLflow integration for responsible AI deployment, combining the best of automated machine learning with human expertise and oversight
+
+.
 

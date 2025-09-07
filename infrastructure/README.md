@@ -1,8 +1,16 @@
-# Infrastructure Setup
+
+
+# Infrastructure Setu
+
+p
 
 This directory contains the optimized infrastructure setup for Auterity's analytics stack, including ClickHouse, Kafka, Zookeeper, and Apache Superset with resource limits and performance optimizations.
 
-## 🏗️ Architecture Overview
+#
+
+# 🏗️ Architecture Overvie
+
+w
 
 ```
 ┌─────────────────┐    ┌─────────────────┐
@@ -21,268 +29,763 @@ This directory contains the optimized infrastructure setup for Auterity's analyt
 │   Zookeeper     │
 │ (Coordination)  │
 └─────────────────┘
+
 ```
 
-## 🐳 Services
+#
 
-### ClickHouse (Analytics Database)
-- **Image**: `yandex/clickhouse-server:latest`
-- **Purpose**: High-performance OLAP database for real-time analytics
-- **Ports**:
-  - `8123`: HTTP interface for queries
-  - `9000`: Native client interface
-- **Resource Limits**:
-  - Memory: 8GB
-  - CPU: 2 cores
-- **Optimizations**:
-  - Connection pooling enabled
-  - Gzip compression
-  - Memory usage limits
+# 🐳 Service
 
-### Kafka (Message Bus)
-- **Image**: `confluentinc/cp-kafka:latest`
-- **Purpose**: Real-time data ingestion and streaming
-- **Ports**:
-  - `9092`: Kafka broker interface
-- **Resource Limits**:
-  - Memory: 2GB
-  - CPU: 1 core
-- **Configuration**:
-  - Heap size: 1GB
-  - Single broker setup
-  - Offset replication factor: 1
+s
 
-### Zookeeper (Coordination)
-- **Image**: `confluentinc/cp-zookeeper:latest`
-- **Purpose**: Distributed coordination for Kafka
-- **Ports**:
-  - `2181`: Zookeeper client port
-- **Resource Limits**:
-  - Memory: 512MB
-  - CPU: 0.5 cores
-- **Configuration**:
-  - JVM heap: 512MB
-  - Tick time: 2000ms
+#
 
-### Apache Superset (Dashboards)
-- **Image**: `apache/superset:latest`
-- **Purpose**: Business intelligence and data visualization
-- **Ports**:
-  - `8088`: Superset web interface
-- **Resource Limits**:
-  - Memory: 2GB
-  - CPU: 1 core
-- **Configuration**:
-  - Examples disabled for performance
-  - Connected to ClickHouse for data sources
+## ClickHouse (Analytics Database)
 
-## 🚀 Quick Start
+- **Image**: `yandex/clickhouse-server:latest
 
-### Prerequisites
-- Docker 20.10+
-- Docker Compose 2.0+
-- 16GB+ available RAM
-- 4+ CPU cores
+`
 
-### Start All Services
-```bash
+- **Purpose**: High-performance OLAP database for real-time analytic
+
+s
+
+- **Ports**
+
+:
+
+  - `8123`: HTTP interface for querie
+
+s
+
+  - `9000`: Native client interfac
+
+e
+
+- **Resource Limits**
+
+:
+
+  - Memory: 8G
+
+B
+
+  - CPU: 2 core
+
+s
+
+- **Optimizations**
+
+:
+
+  - Connection pooling enable
+
+d
+
+  - Gzip compressio
+
+n
+
+  - Memory usage limit
+
+s
+
+#
+
+## Kafka (Message Bus)
+
+- **Image**: `confluentinc/cp-kafka:latest
+
+`
+
+- **Purpose**: Real-time data ingestion and streamin
+
+g
+
+- **Ports**
+
+:
+
+  - `9092`: Kafka broker interfac
+
+e
+
+- **Resource Limits**
+
+:
+
+  - Memory: 2G
+
+B
+
+  - CPU: 1 cor
+
+e
+
+- **Configuration**
+
+:
+
+  - Heap size: 1G
+
+B
+
+  - Single broker setu
+
+p
+
+  - Offset replication factor:
+
+1
+
+#
+
+## Zookeeper (Coordination)
+
+- **Image**: `confluentinc/cp-zookeeper:latest
+
+`
+
+- **Purpose**: Distributed coordination for Kafk
+
+a
+
+- **Ports**
+
+:
+
+  - `2181`: Zookeeper client por
+
+t
+
+- **Resource Limits**
+
+:
+
+  - Memory: 512M
+
+B
+
+  - CPU: 0.5 cor
+
+e
+
+s
+
+- **Configuration**
+
+:
+
+  - JVM heap: 512M
+
+B
+
+  - Tick time: 2000m
+
+s
+
+#
+
+## Apache Superset (Dashboards)
+
+- **Image**: `apache/superset:latest
+
+`
+
+- **Purpose**: Business intelligence and data visualizatio
+
+n
+
+- **Ports**
+
+:
+
+  - `8088`: Superset web interfac
+
+e
+
+- **Resource Limits**
+
+:
+
+  - Memory: 2G
+
+B
+
+  - CPU: 1 cor
+
+e
+
+- **Configuration**
+
+:
+
+  - Examples disabled for performanc
+
+e
+
+  - Connected to ClickHouse for data source
+
+s
+
+#
+
+# 🚀 Quick Star
+
+t
+
+#
+
+## Prerequisites
+
+- Docker 20.1
+
+0
+
++ - Docker Compose 2.
+
+0
+
++ - 16G
+
+B
+
++ available RA
+
+M
+
+- 4
+
++ CPU core
+
+s
+
+#
+
+## Start All Services
+
+```
+
+bash
 cd infrastructure
-docker-compose up -d
+docker-compose up -
+
+d
+
 ```
 
-### Verify Services
-```bash
+#
+
+## Verify Services
+
+```
+
+bash
+
 # Check container status
-docker-compose ps
+
+docker-compose p
+
+s
 
 # View logs
-docker-compose logs -f [service-name]
+
+docker-compose logs -f [service-name
+
+]
 
 # Test ClickHouse
+
 curl "http://localhost:8123/?query=SELECT%201"
 
 # Test Kafka
-docker-compose exec kafka kafka-console-producer --broker-list localhost:9092 --topic test
+
+docker-compose exec kafka kafka-console-producer --broker-list localhost:9092 --topic tes
+
+t
+
 ```
 
-### Stop Services
-```bash
-docker-compose down
+#
+
+## Stop Services
+
 ```
 
-## ⚙️ Configuration
+bash
+docker-compose dow
 
-### Environment Variables
+n
+
+```
+
+#
+
+# ⚙️ Configuratio
+
+n
+
+#
+
+## Environment Variables
+
 Services are configured with optimized settings for production use:
 
-```yaml
+```
+
+yaml
+
 # ClickHouse
+
 CLICKHOUSE_MAX_MEMORY_USAGE: 8GB
 
 # Kafka
-KAFKA_HEAP_OPTS: "-Xmx1g -Xms1g"
+
+KAFKA_HEAP_OPTS: "-Xmx1g -Xms1g
+
+"
 
 # Zookeeper
-JVMFLAGS: "-Xmx512m -Xms512m"
+
+JVMFLAGS: "-Xmx512m -Xms512m
+
+"
 
 # Superset
+
 SUPERSET_LOAD_EXAMPLES: "no"
+
 ```
 
-### Resource Limits
+#
+
+## Resource Limits
+
 All services have resource constraints to prevent resource exhaustion:
 
 | Service | Memory | CPU | Purpose |
 |---------|--------|-----|---------|
+
 | ClickHouse | 8GB | 2.0 | Analytics queries |
+
 | Kafka | 2GB | 1.0 | Message processing |
+
 | Zookeeper | 512MB | 0.5 | Coordination |
-| Superset | 2GB | 1.0 | Dashboard rendering |
 
-## 📊 Performance Optimizations
+| Superset | 2GB | 1.0 | Dashboard rendering
 
-### ClickHouse Optimizations
-- **Memory Management**: 8GB limit prevents OOM
-- **Connection Pooling**: Efficient resource usage
-- **Compression**: Gzip for network efficiency
-- **Indexing**: Optimized for analytical queries
+|
 
-### Kafka Optimizations
-- **Heap Sizing**: 1GB heap for stable performance
-- **Replication**: Single replica for development
-- **Partitioning**: Configurable partitions per topic
+#
 
-### Superset Optimizations
-- **Examples Disabled**: Faster startup, less memory usage
-- **Caching**: Built-in query result caching
-- **Async Queries**: Non-blocking dashboard loads
+# 📊 Performance Optimization
 
-## 🔧 Maintenance
+s
 
-### Backup ClickHouse Data
-```bash
-# Stop ClickHouse
-docker-compose stop clickhouse
+#
 
-# Backup data volume
-docker run --rm -v auterity_clickhouse_data:/data -v $(pwd):/backup alpine tar czf /backup/clickhouse-backup.tar.gz -C /data .
+## ClickHouse Optimizations
 
-# Start ClickHouse
-docker-compose start clickhouse
+- **Memory Management**: 8GB limit prevents OO
+
+M
+
+- **Connection Pooling**: Efficient resource usag
+
+e
+
+- **Compression**: Gzip for network efficienc
+
+y
+
+- **Indexing**: Optimized for analytical querie
+
+s
+
+#
+
+## Kafka Optimizations
+
+- **Heap Sizing**: 1GB heap for stable performanc
+
+e
+
+- **Replication**: Single replica for developmen
+
+t
+
+- **Partitioning**: Configurable partitions per topi
+
+c
+
+#
+
+## Superset Optimizations
+
+- **Examples Disabled**: Faster startup, less memory usag
+
+e
+
+- **Caching**: Built-in query result cachin
+
+g
+
+- **Async Queries**: Non-blocking dashboard load
+
+s
+
+#
+
+# 🔧 Maintenanc
+
+e
+
+#
+
+## Backup ClickHouse Data
+
 ```
 
-### Monitor Resource Usage
-```bash
+bash
+
+# Stop ClickHouse
+
+docker-compose stop clickhous
+
+e
+
+# Backup data volume
+
+docker run --rm -v auterity_clickhouse_data:/data -v $(pwd):/backup alpine tar czf /backup/clickhouse-backup.tar.gz -C /data
+
+.
+
+# Start ClickHouse
+
+docker-compose start clickhous
+
+e
+
+```
+
+#
+
+## Monitor Resource Usage
+
+```
+
+bash
+
 # View container stats
+
 docker stats
 
 # Check logs for errors
-docker-compose logs --tail=100 [service-name]
+
+docker-compose logs --tail=100 [service-name
+
+]
+
 ```
 
-### Scale Services
-```bash
+#
+
+## Scale Services
+
+```
+
+bash
+
 # Scale Kafka brokers
-docker-compose up -d --scale kafka=3
 
-# Scale ClickHouse (requires cluster setup)
+docker-compose up -d --scale kafka=
+
+3
+
+# Scale ClickHouse (requires cluster setup
+
+)
+
 # See ClickHouse documentation for clustering
+
 ```
 
-## 🔒 Security Considerations
+#
 
-### Network Security
-- Services communicate via Docker networks
-- Exposed ports are documented and minimal
-- No default passwords in production
+# 🔒 Security Consideration
 
-### Data Security
-- ClickHouse data persisted in named volumes
-- Kafka messages can be encrypted at rest
-- Superset requires secure secret key
+s
 
-### Access Control
-- API layer handles authentication
-- Database access restricted to API
-- Monitoring endpoints protected
+#
 
-## 📈 Monitoring
+## Network Security
 
-### Built-in Monitoring
-- **Health Checks**: Container health endpoints
-- **Logs**: Centralized logging with `docker-compose logs`
-- **Metrics**: Prometheus integration in API layer
+- Services communicate via Docker network
 
-### External Monitoring
-```bash
-# Install Prometheus and Grafana
-# Configure scrape targets for containers
+s
+
+- Exposed ports are documented and minima
+
+l
+
+- No default passwords in productio
+
+n
+
+#
+
+## Data Security
+
+- ClickHouse data persisted in named volume
+
+s
+
+- Kafka messages can be encrypted at res
+
+t
+
+- Superset requires secure secret ke
+
+y
+
+#
+
+## Access Control
+
+- API layer handles authenticatio
+
+n
+
+- Database access restricted to AP
+
+I
+
+- Monitoring endpoints protecte
+
+d
+
+#
+
+# 📈 Monitorin
+
+g
+
+#
+
+## Built-in Monitorin
+
+g
+
+- **Health Checks**: Container health endpoint
+
+s
+
+- **Logs**: Centralized logging with `docker-compose logs
+
+`
+
+- **Metrics**: Prometheus integration in API laye
+
+r
+
+#
+
+## External Monitoring
+
+```
+
+bash
+
+# Install Prometheus and Grafan
+
+a
+
+# Configure scrape targets for container
+
+s
+
 # Set up dashboards for resource monitoring
+
 ```
 
-## 🐛 Troubleshooting
+#
 
-### Common Issues
+# 🐛 Troubleshootin
 
-#### ClickHouse Connection Refused
-```bash
+g
+
+#
+
+## Common Issue
+
+s
+
+#
+
+### ClickHouse Connection Refused
+
+```
+
+bash
+
 # Check if container is running
-docker-compose ps clickhouse
+
+docker-compose ps clickhous
+
+e
 
 # View ClickHouse logs
-docker-compose logs clickhouse
+
+docker-compose logs clickhous
+
+e
 
 # Restart ClickHouse
-docker-compose restart clickhouse
+
+docker-compose restart clickhous
+
+e
+
 ```
 
-#### Kafka Broker Not Available
-```bash
+#
+
+### Kafka Broker Not Available
+
+```
+
+bash
+
 # Check Zookeeper first
-docker-compose logs zookeeper
+
+docker-compose logs zookeepe
+
+r
 
 # Check Kafka logs
-docker-compose logs kafka
+
+docker-compose logs kafk
+
+a
 
 # Test connectivity
-docker-compose exec kafka kafka-broker-api-versions --bootstrap-server localhost:9092
+
+docker-compose exec kafka kafka-broker-api-versions --bootstrap-server localhost:909
+
+2
+
 ```
 
-#### Superset Connection Issues
-```bash
+#
+
+### Superset Connection Issues
+
+```
+
+bash
+
 # Check Superset logs
-docker-compose logs superset
+
+docker-compose logs superse
+
+t
 
 # Verify ClickHouse connectivity from Superset
-docker-compose exec superset superset db upgrade
+
+docker-compose exec superset superset db upgrad
+
+e
+
 ```
 
-### Performance Tuning
+#
 
-#### High Memory Usage
-- Reduce ClickHouse memory limit if needed
-- Monitor with `docker stats`
-- Adjust JVM heap sizes
+## Performance Tunin
 
-#### Slow Queries
-- Add indexes to ClickHouse tables
-- Increase Kafka partitions
-- Optimize Superset dashboard queries
+g
 
-## 📚 Additional Resources
+#
 
-- [ClickHouse Documentation](https://clickhouse.com/docs/)
-- [Kafka Documentation](https://kafka.apache.org/documentation/)
-- [Apache Superset Documentation](https://superset.apache.org/docs/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
+### High Memory Usage
 
-## 🤝 Contributing
+- Reduce ClickHouse memory limit if neede
 
-1. Update configurations in `docker-compose.yml`
-2. Test changes locally
-3. Update this README
-4. Submit pull request
+d
 
-## 📄 License
+- Monitor with `docker stats
+
+`
+
+- Adjust JVM heap size
+
+s
+
+#
+
+### Slow Queries
+
+- Add indexes to ClickHouse table
+
+s
+
+- Increase Kafka partition
+
+s
+
+- Optimize Superset dashboard querie
+
+s
+
+#
+
+# 📚 Additional Resource
+
+s
+
+- [ClickHouse Documentation](https://clickhouse.com/docs/
+
+)
+
+- [Kafka Documentation](https://kafka.apache.org/documentation/
+
+)
+
+- [Apache Superset Documentation](https://superset.apache.org/docs/
+
+)
+
+- [Docker Compose Documentation](https://docs.docker.com/compose/
+
+)
+
+#
+
+# 🤝 Contributin
+
+g
+
+1. Update configurations in `docker-compose.ym
+
+l
+
+`
+
+2. Test changes locall
+
+y
+
+3. Update this READM
+
+E
+
+4. Submit pull reques
+
+t
+
+#
+
+# 📄 Licens
+
+e
 
 This infrastructure setup is part of the Auterity project.

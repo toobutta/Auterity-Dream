@@ -1,26 +1,74 @@
-# 📱 Mobile Components & Responsive Design
 
-## Overview
 
-Documentation for mobile-focused components and responsive layout patterns.
+# 📱 Mobile Components & Responsive Desig
 
-## Components
+n
 
-- Location: `frontend/src/components/mobile/`
-  - `MobileNavigation.tsx` — mobile nav patterns and routes
-  - `ResponsiveGrid.tsx` — responsive grid helpers
-  - `SwipeableCard.tsx` — touch-first card interactions
-  - `TouchButton.tsx`, `TouchFeedback.tsx` — touch affordances
+#
 
-## Patterns
+# Overvie
 
-- Breakpoints: sm/md/lg/xl mapped to grid columns
-- Touch targets: min 44px; spacing tokens; safe-area insets
-- Performance: lazy routes, reduce motion, image srcset
+w
 
-## Accessibility
+Documentation for mobile-focused components and responsive layout patterns
 
-- Focus rings for keyboard; semantics for screen readers
-- High-contrast mode and prefers-reduced-motion
+.
 
+#
+
+# Component
+
+s
+
+- Location: `frontend/src/components/mobile/
+
+`
+
+  - `MobileNavigation.tsx` — mobile nav patterns and route
+
+s
+
+  - `ResponsiveGrid.tsx` — responsive grid helper
+
+s
+
+  - `SwipeableCard.tsx` — touch-first card interaction
+
+s
+
+  - `TouchButton.tsx`, `TouchFeedback.tsx` — touch affordance
+
+s
+
+#
+
+# Pattern
+
+s
+
+- Breakpoints: sm/md/lg/xl mapped to grid column
+
+s
+
+- Touch targets: min 44px; spacing tokens; safe-area inset
+
+s
+
+- Performance: lazy routes, reduce motion, image srcse
+
+t
+
+#
+
+# Accessibilit
+
+y
+
+- Focus rings for keyboard; semantics for screen reader
+
+s
+
+- High-contrast mode and prefers-reduced-motio
+
+n
 

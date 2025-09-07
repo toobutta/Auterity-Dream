@@ -275,6 +275,53 @@ class ToolRegistry:
         logger.info(f"Unregistered {count} tools for server {server_id}")
         return count
 
+    def create_tool_from_dict(self, tool_dict: Dict[str, Any]) -> Tool:
+        """Create a Tool instance from a dictionary representation."""
+        try:
+            # Extract required fields
+            name = tool_dict.get("name")
+            tool_type_str = tool_dict.get("type", tool_dict.get("tool_type", "function"))
+            description = tool_dict.get("description", "")
+            server_id_str = tool_dict.get("server_id")
+            schema = tool_dict.get("schema", {})
+            capabilities = tool_dict.get("capabilities", [])
+            metadata = tool_dict.get("metadata", {})
+
+            if not name:
+                raise ValueError("Tool name is required")
+            if not server_id_str:
+                raise ValueError("Server ID is required")
+
+            # Convert string to UUID
+            try:
+                server_id = UUID(server_id_str) if isinstance(server_id_str, str) else server_id_str
+            except (ValueError, TypeError):
+                raise ValueError(f"Invalid server_id format: {server_id_str}")
+
+            # Convert tool type
+            try:
+                tool_type = ToolType(tool_type_str.lower())
+            except ValueError:
+                logger.warning(f"Unknown tool type '{tool_type_str}', defaulting to function")
+                tool_type = ToolType.FUNCTION
+
+            # Create the tool
+            tool = Tool(
+                name=name,
+                tool_type=tool_type,
+                description=description,
+                server_id=server_id,
+                schema=schema,
+                capabilities=capabilities,
+                metadata=metadata
+            )
+
+            return tool
+
+        except Exception as e:
+            logger.error(f"Failed to create tool from dict: {str(e)}")
+            raise
+
     def get_registry_stats(self) -> Dict[str, Any]:
         """Get registry statistics."""
         total_tools = len(self.tools)
