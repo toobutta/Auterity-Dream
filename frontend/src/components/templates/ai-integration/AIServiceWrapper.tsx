@@ -135,7 +135,6 @@ const AIServiceWrapper: React.FC<AIServiceWrapperProps> = ({
       // Update analytics if monitoring is enabled
       if (context?.analytics && effectiveConfig.monitoringEnabled) {
         // In real implementation, this would update the analytics service
-        console.log('AI Service Response:', response);
       }
 
       return response;

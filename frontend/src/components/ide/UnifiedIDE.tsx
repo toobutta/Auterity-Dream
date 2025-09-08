@@ -177,7 +177,7 @@ export const UnifiedIDE: React.FC<UnifiedIDEProps> = ({
       const repository = await githubService.connectRepository(owner, repo);
       setCurrentRepository(repository);
     } catch (error) {
-      console.error('Failed to connect repository:', error);
+      // Repository connection failed
     }
   }, [githubService]);
 
@@ -349,7 +349,7 @@ export const UnifiedIDE: React.FC<UnifiedIDEProps> = ({
                   Select a file from the explorer or create a new one
                 </p>
                 <button
-                  onClick={() => handleFileCreate('welcome.js', '// Welcome to Auterity IDE\nconsole.log("Hello, World!");')}
+                  onClick={() => handleFileCreate('welcome.js', '// Welcome to Auterity IDE\n// Start coding here!')}
                   className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
                   Create Welcome File

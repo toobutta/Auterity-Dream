@@ -335,7 +335,7 @@ export class GitHubWebhookSecurity extends EventEmitter {
 
     // Handle security alerts
     this.on('webhook_rejected', async (data) => {
-      console.log(`🚨 Webhook rejected: ${data.reason}`, data.securityEvents);
+      // Security alert handled
     });
 
     // Monitor for attack patterns

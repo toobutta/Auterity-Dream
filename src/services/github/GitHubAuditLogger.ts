@@ -261,7 +261,6 @@ export class GitHubAuditLogger extends EventEmitter {
       this.emit('entry_stored', entry.id);
 
     } catch (error) {
-      console.error('Failed to store audit entry:', error);
       this.emit('storage_error', { entry, error });
 
       // Queue for retry
@@ -363,12 +362,10 @@ export class GitHubAuditLogger extends EventEmitter {
   private setupEventHandlers(): void {
     this.on('security_alert', (entry: AuditLogEntry) => {
       // Implement alerting logic (email, Slack, etc.)
-      console.log(`🚨 Security Alert: ${entry.action} - ${entry.resource}`);
     });
 
     this.on('failed_authentication', (entry: AuditLogEntry) => {
       // Implement brute force protection
-      console.log(`⚠️ Failed authentication from ${entry.ipAddress}`);
     });
   }
 }
