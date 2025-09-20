@@ -4,6 +4,7 @@ export { default as SendEmailNode } from "./SendEmailNode";
 export { default as LeadQualificationNode } from "./LeadQualificationNode";
 export { default as CrewAINode } from "./CrewAINode";
 export { default as LangGraphNode } from "./LangGraphNode";
+export { default as UnifiedAINode } from "./UnifiedAINode";
 
 // Re-export existing nodes
 export { StartNode } from "../../nodes/StartNode";

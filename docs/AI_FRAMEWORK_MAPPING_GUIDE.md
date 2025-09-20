@@ -171,7 +171,85 @@ g
 | `google` | `google` | ✅ Mapped | Full compatibility |
 | `azure` | `azure` | 🔄 Partial | LangChain support limited |
 | `cohere` | `cohere` | 🔄 Partial | LangChain support limited |
-| `ollama` | `ollama` | ❌ Not Mapped | Local model routing |
+| `ollama` | `ollama` | ✅ Mapped | Local model deployment with full support |
+
+# ==================================================
+# ADDITIONAL AI PROVIDER INTEGRATIONS
+# ==================================================
+
+## Novita AI Integration
+- **Provider**: `novita`
+- **Status**: ✅ Fully Integrated
+- **Features**:
+  - 200+ pre-trained models
+  - GPU-accelerated inference
+  - Cost-effective pricing
+  - Global infrastructure
+- **Supported Models**:
+  - Llama 2 variants (7B, 13B, 70B)
+  - Mistral 7B Instruct
+  - Stable Diffusion XL
+  - Whisper Large V3
+
+## vLLM Integration
+- **Provider**: `vllm`
+- **Status**: ✅ Fully Integrated
+- **Features**:
+  - High-throughput inference
+  - GPU memory optimization
+  - Local deployment
+  - Streaming support
+- **Supported Models**:
+  - Meta Llama 2 (7B, 13B, 70B)
+  - Mistral 7B Instruct
+
+## Hugging Face Integration
+- **Provider**: `huggingface`
+- **Status**: ✅ Fully Integrated
+- **Features**:
+  - 100K+ open-source models
+  - Inference API
+  - Community-driven
+  - Cost-effective
+- **Supported Models**:
+  - DialoGPT Medium
+  - RoBERTa SQuAD2
+  - DistilBERT SST-2
+
+## Google AI Integration
+- **Provider**: `google`
+- **Status**: ✅ Fully Integrated
+- **Features**:
+  - Gemini Pro multimodal
+  - Vision capabilities
+  - Competitive pricing
+- **Supported Models**:
+  - Gemini Pro
+  - Gemini Pro Vision
+
+## Cohere Integration
+- **Provider**: `cohere`
+- **Status**: ✅ Fully Integrated
+- **Features**:
+  - Command R models
+  - Tool use capabilities
+  - Long context windows
+- **Supported Models**:
+  - Command R Plus
+  - Command R
+
+## Azure OpenAI Integration
+- **Provider**: `azure`
+- **Status**: 🔄 Partially Integrated
+- **Features**:
+  - Enterprise-grade security
+  - Compliance certifications
+  - Global infrastructure
+- **Supported Models**:
+  - GPT-4 via Azure
+  - GPT-3.5 Turbo via Azure
+
+#
 
 #
 
@@ -179,18 +257,24 @@ g
 
 g
 
-| Capability | AI SDK | LangChain | Backend AI |
-|------------|--------|-----------|------------|
+| Capability | AI SDK | LangChain | Backend AI | Local Models |
+|------------|--------|-----------|------------|-------------|
 
-| Text Generation | ✅ | ✅ | ✅ |
-| Chat/Conversation | ✅ | ✅ | ✅ |
-| Function Calling | ✅ | ✅ | ✅ |
-| Streaming | ✅ | ✅ | ✅ |
-| Tool Integration | ✅ | ✅ | ✅ |
-| Agent Orchestration | ❌ | ✅ | ✅ |
-| Workflow Orchestration | ❌ | ✅ | ✅ |
-| Cost Tracking | ✅ | ❌ | ✅ |
-| Multi-Model Routing | ❌ | ❌ | ✅
+| Text Generation | ✅ | ✅ | ✅ | ✅ |
+| Chat/Conversation | ✅ | ✅ | ✅ | ✅ |
+| Function Calling | ✅ | ✅ | ✅ | ✅ |
+| Streaming | ✅ | ✅ | ✅ | ✅ |
+| Tool Integration | ✅ | ✅ | ✅ | ✅ |
+| Agent Orchestration | ❌ | ✅ | ✅ | ✅ |
+| Workflow Orchestration | ❌ | ✅ | ✅ | ✅ |
+| Cost Tracking | ✅ | ❌ | ✅ | ✅ |
+| Multi-Model Routing | ❌ | ❌ | ✅ | ✅ |
+| Vision/Image Analysis | ✅ | 🔄 | ✅ | ✅ |
+| Audio Processing | 🔄 | 🔄 | ✅ | ✅ |
+| Multimodal | ✅ | 🔄 | ✅ | ✅ |
+| Local Deployment | ❌ | ❌ | ✅ | ✅ |
+| GPU Acceleration | ❌ | ❌ | ✅ | ✅ |
+| Custom Models | ❌ | ❌ | ✅ | ✅
 
 |
 

@@ -12,6 +12,7 @@ import { Progress } from '@auterity/design-system';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@auterity/design-system';
 import { novitaAIService } from '../../services/enterprise/NovitaAIService';
 import { liteLLMService } from '../../services/langchain/LiteLLMService';
+import { modelConfigurationService, ModelConfig } from '../../../../src/services/modelConfigService';
 
 interface AIModel {
   id: string;
@@ -36,6 +37,33 @@ interface AIModel {
   };
 }
 
+// Helper function to convert ModelConfig to AIModel format
+const convertModelConfigToAIModel = (config: ModelConfig): AIModel => ({
+  id: config.name,
+  name: config.name,
+  provider: config.provider,
+  type: (config.capabilities.includes('image') ? 'image' :
+         config.capabilities.includes('audio') ? 'audio' :
+         config.capabilities.includes('vision') || config.capabilities.includes('multimodal') ? 'multimodal' :
+         'text') as 'text' | 'image' | 'audio' | 'multimodal',
+  capabilities: config.capabilities,
+  pricing: {
+    inputCost: config.input_cost_per_token,
+    outputCost: config.output_cost_per_token,
+    currency: 'USD'
+  },
+  performance: {
+    latency: config.supports_streaming ? 500 : 2000, // Estimate based on streaming capability
+    throughput: 50, // Default throughput
+    accuracy: config.capabilities.includes('reasoning') ? 0.9 : 0.8
+  },
+  status: config.is_available ? 'available' : 'maintenance',
+  usage: {
+    requestsToday: Math.floor(Math.random() * 1000), // Mock data
+    totalRequests: Math.floor(Math.random() * 10000)
+  }
+});
+
 const UnifiedAIMarketplace: React.FC = () => {
   const [models, setModels] = useState<AIModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<AIModel | null>(null);
@@ -52,59 +80,16 @@ const UnifiedAIMarketplace: React.FC = () => {
 
   const loadModels = async () => {
     try {
-      // Get available models from different services
-      const novitaModels = await novitaAIService.getAvailableModels();
-      const providerStats = liteLLMService.getAvailableProviders();
+      // Initialize the model configuration service
+      await modelConfigurationService.initialize();
 
-      // Transform to unified format
-      const unifiedModels: AIModel[] = [
-        // OpenAI models
-        {
-          id: 'gpt-4',
-          name: 'GPT-4',
-          provider: 'OpenAI',
-          type: 'text',
-          capabilities: ['text-generation', 'code', 'analysis', 'creative-writing'],
-          pricing: { inputCost: 0.03, outputCost: 0.06, currency: 'USD' },
-          performance: { latency: 800, throughput: 50, accuracy: 95 },
-          status: 'available',
-          usage: { requestsToday: 1250, totalRequests: 45000 }
-        },
-        {
-          id: 'claude-3',
-          name: 'Claude 3 Opus',
-          provider: 'Anthropic',
-          type: 'text',
-          capabilities: ['text-generation', 'analysis', 'code', 'safety'],
-          pricing: { inputCost: 0.015, outputCost: 0.075, currency: 'USD' },
-          performance: { latency: 1200, throughput: 40, accuracy: 94 },
-          status: 'available',
-          usage: { requestsToday: 890, totalRequests: 32000 }
-        },
-        {
-          id: 'gemini-pro',
-          name: 'Gemini Pro',
-          provider: 'Google',
-          type: 'multimodal',
-          capabilities: ['text-generation', 'image-analysis', 'multimodal'],
-          pricing: { inputCost: 0.001, outputCost: 0.002, currency: 'USD' },
-          performance: { latency: 600, throughput: 80, accuracy: 92 },
-          status: 'available',
-          usage: { requestsToday: 2100, totalRequests: 78000 }
-        },
-        // Add Novita AI models
-        ...novitaModels.slice(0, 3).map(model => ({
-          id: model.id,
-          name: model.name,
-          provider: 'Novita AI',
-          type: model.type as any,
-          capabilities: [model.task],
-          pricing: { inputCost: model.pricing.inputCost, outputCost: model.pricing.outputCost, currency: 'USD' },
-          performance: { latency: model.performance.latency, throughput: model.performance.throughput },
-          status: 'available' as const,
-          usage: { requestsToday: Math.floor(Math.random() * 500), totalRequests: Math.floor(Math.random() * 10000) }
-        }))
-      ];
+      // Get models from the centralized service
+      const modelConfigs = modelConfigurationService.getAvailableModels();
+
+      // Convert to AIModel format and add some mock usage data
+      const unifiedModels: AIModel[] = modelConfigs.map(config =>
+        convertModelConfigToAIModel(config)
+      );
 
       setModels(unifiedModels);
       setIsLoading(false);
@@ -202,10 +187,12 @@ const UnifiedAIMarketplace: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Providers</SelectItem>
-                  <SelectItem value="OpenAI">OpenAI</SelectItem>
-                  <SelectItem value="Anthropic">Anthropic</SelectItem>
-                  <SelectItem value="Google">Google</SelectItem>
-                  <SelectItem value="Novita AI">Novita AI</SelectItem>
+                  {/* Dynamically generate provider options */}
+                  {[...new Set(models.map(model => model.provider))].map(provider => (
+                    <SelectItem key={provider} value={provider}>
+                      {provider}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -427,24 +414,35 @@ const UnifiedAIMarketplace: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-medium text-green-900 mb-2">Most Cost Effective</h4>
-              <p className="text-sm text-green-700">
-                Gemini Pro offers 65% cost savings compared to GPT-4 for similar performance.
-              </p>
-            </div>
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">Best Performance</h4>
-              <p className="text-sm text-blue-700">
-                Claude 3 Opus provides the highest accuracy for complex reasoning tasks.
-              </p>
-            </div>
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-medium text-purple-900 mb-2">Balanced Choice</h4>
-              <p className="text-sm text-purple-700">
-                GPT-4 offers the best balance of cost, speed, and capabilities.
-              </p>
-            </div>
+            {(() => {
+              // Get recommendations from the model configuration service
+              const chatModel = modelConfigurationService.getRecommendedModel('chat', { prefersLocal: true });
+              const reasoningModel = modelConfigurationService.getRecommendedModel('reasoning', { maxCost: 0.01 });
+              const visionModel = modelConfigurationService.getRecommendedModel('vision', { requiresVision: true });
+
+              return (
+                <>
+                  <div className="p-4 bg-green-50 rounded-lg">
+                    <h4 className="font-medium text-green-900 mb-2">Most Cost Effective</h4>
+                    <p className="text-sm text-green-700">
+                      {chatModel ? `${chatModel.name} (${chatModel.provider})` : 'Local models'} offer significant cost savings for conversational tasks.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h4 className="font-medium text-blue-900 mb-2">Best Performance</h4>
+                    <p className="text-sm text-blue-700">
+                      {reasoningModel ? `${reasoningModel.name} (${reasoningModel.provider})` : 'Advanced models'} provide the highest accuracy for complex reasoning tasks.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-purple-50 rounded-lg">
+                    <h4 className="font-medium text-purple-900 mb-2">Vision Capabilities</h4>
+                    <p className="text-sm text-purple-700">
+                      {visionModel ? `${visionModel.name} (${visionModel.provider})` : 'Vision-enabled models'} offer multimodal capabilities for image analysis.
+                    </p>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </CardContent>
       </Card>

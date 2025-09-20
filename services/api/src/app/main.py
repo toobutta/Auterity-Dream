@@ -28,6 +28,7 @@ from app.api import (
     management,
     metrics,
     modelhub,
+    models,
     monitoring,
     process_mining,
     routing,
@@ -170,6 +171,7 @@ app.include_router(ai_advanced.router, prefix="/api")
 app.include_router(analytics.router, prefix="/api")
 app.include_router(enhanced_analytics.router, prefix="/api")
 app.include_router(modelhub.router, prefix="/api")
+app.include_router(models.router)
 app.include_router(routing.router, prefix="/api")
 app.include_router(unified.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")

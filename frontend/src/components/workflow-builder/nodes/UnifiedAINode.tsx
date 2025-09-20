@@ -15,6 +15,224 @@ import { Loader2, Zap, Settings, TrendingUp, AlertCircle, CheckCircle } from 'lu
 import { useUnifiedAIService } from '../../templates/ai-integration';
 import { AIServiceRequest, AIServiceResponse } from '../../templates/ai-integration';
 
+// Model configuration types
+interface ModelConfig {
+  name: string;
+  provider: string;
+  model_family: string;
+  max_tokens: number;
+  cost_per_token: number;
+  input_cost_per_token: number;
+  output_cost_per_token: number;
+  capabilities: string[];
+  context_window: number;
+  supports_streaming: boolean;
+  supports_function_calling: boolean;
+  is_available: boolean;
+  description: string;
+  endpoint?: string;
+}
+
+// Model configuration service
+class ModelConfigService {
+  private static instance: ModelConfigService;
+  private models: ModelConfig[] = [];
+  private isLoaded = false;
+
+  static getInstance(): ModelConfigService {
+    if (!ModelConfigService.instance) {
+      ModelConfigService.instance = new ModelConfigService();
+    }
+    return ModelConfigService.instance;
+  }
+
+  async loadModels(): Promise<ModelConfig[]> {
+    if (this.isLoaded) {
+      return this.models;
+    }
+
+    try {
+      // In production, this would fetch from the API
+      // For now, using mock data that mirrors the models.yaml structure
+      this.models = await this.fetchModelsFromAPI();
+      this.isLoaded = true;
+      return this.models;
+    } catch (error) {
+      console.error('Failed to load models:', error);
+      // Fallback to hardcoded models if API fails
+      return this.getFallbackModels();
+    }
+  }
+
+  private async fetchModelsFromAPI(): Promise<ModelConfig[]> {
+    try {
+      const response = await fetch('/api/models/config');
+      if (!response.ok) {
+        throw new Error('Failed to fetch models');
+      }
+      const data = await response.json();
+      return data.models || [];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  private getFallbackModels(): ModelConfig[] {
+    return [
+      // OpenAI models
+      {
+        name: 'gpt-4o',
+        provider: 'openai',
+        model_family: 'gpt-4',
+        max_tokens: 128000,
+        cost_per_token: 0.000005,
+        input_cost_per_token: 0.000005,
+        output_cost_per_token: 0.000015,
+        capabilities: ['text', 'chat', 'function_calling', 'reasoning', 'vision', 'multimodal'],
+        context_window: 128000,
+        supports_streaming: true,
+        supports_function_calling: true,
+        is_available: true,
+        description: 'Most advanced GPT-4 model with vision capabilities'
+      },
+      {
+        name: 'gpt-4o-mini',
+        provider: 'openai',
+        model_family: 'gpt-4',
+        max_tokens: 128000,
+        cost_per_token: 0.00000015,
+        input_cost_per_token: 0.00000015,
+        output_cost_per_token: 0.0000006,
+        capabilities: ['text', 'chat', 'function_calling', 'reasoning'],
+        context_window: 128000,
+        supports_streaming: true,
+        supports_function_calling: true,
+        is_available: true,
+        description: 'Cost-effective GPT-4 model for most tasks'
+      },
+      {
+        name: 'claude-3-5-sonnet-20241022',
+        provider: 'anthropic',
+        model_family: 'claude-3',
+        max_tokens: 200000,
+        cost_per_token: 0.000003,
+        input_cost_per_token: 0.000003,
+        output_cost_per_token: 0.000015,
+        capabilities: ['text', 'chat', 'reasoning', 'long_context', 'vision', 'multimodal'],
+        context_window: 200000,
+        supports_streaming: true,
+        supports_function_calling: true,
+        is_available: true,
+        description: 'Most intelligent Claude model with vision'
+      },
+      // Novita AI models
+      {
+        name: 'novita-llama-2-70b-chat',
+        provider: 'novita',
+        model_family: 'llama-2',
+        max_tokens: 4096,
+        cost_per_token: 0.000001,
+        input_cost_per_token: 0.000001,
+        output_cost_per_token: 0.000002,
+        capabilities: ['text', 'chat', 'function_calling'],
+        context_window: 4096,
+        supports_streaming: true,
+        supports_function_calling: true,
+        is_available: true,
+        description: 'Llama 2 70B via Novita AI cloud infrastructure'
+      },
+      // vLLM local models
+      {
+        name: 'vllm-meta-llama/Llama-2-7b-chat-hf',
+        provider: 'vllm',
+        model_family: 'llama-2',
+        endpoint: 'http://localhost:8001',
+        max_tokens: 4096,
+        cost_per_token: 0.0,
+        input_cost_per_token: 0.0,
+        output_cost_per_token: 0.0,
+        capabilities: ['text', 'chat', 'local'],
+        context_window: 4096,
+        supports_streaming: true,
+        supports_function_calling: false,
+        is_available: true,
+        description: 'Llama 2 7B running locally via vLLM'
+      },
+      // Hugging Face models
+      {
+        name: 'hf-microsoft/DialoGPT-medium',
+        provider: 'huggingface',
+        model_family: 'dialogpt',
+        endpoint: 'https://api-inference.huggingface.co',
+        max_tokens: 1024,
+        cost_per_token: 0.0,
+        input_cost_per_token: 0.0,
+        output_cost_per_token: 0.0,
+        capabilities: ['text', 'chat', 'conversational'],
+        context_window: 1024,
+        supports_streaming: false,
+        supports_function_calling: false,
+        is_available: true,
+        description: 'DialoGPT for conversational AI via Hugging Face'
+      },
+      // Ollama models
+      {
+        name: 'llama2:7b',
+        provider: 'ollama',
+        model_family: 'llama-2',
+        endpoint: 'http://localhost:11434',
+        max_tokens: 4096,
+        cost_per_token: 0.0,
+        input_cost_per_token: 0.0,
+        output_cost_per_token: 0.0,
+        capabilities: ['text', 'chat', 'local'],
+        context_window: 4096,
+        supports_streaming: true,
+        supports_function_calling: false,
+        is_available: true,
+        description: 'Llama 2 7B via Ollama local deployment'
+      },
+      // Google models
+      {
+        name: 'gemini-pro',
+        provider: 'google',
+        model_family: 'gemini',
+        max_tokens: 32768,
+        cost_per_token: 0.0000005,
+        input_cost_per_token: 0.0000005,
+        output_cost_per_token: 0.0000015,
+        capabilities: ['text', 'chat', 'reasoning', 'multimodal', 'vision'],
+        context_window: 32768,
+        supports_streaming: true,
+        supports_function_calling: true,
+        is_available: true,
+        description: 'Gemini Pro multimodal model from Google'
+      }
+    ];
+  }
+
+  getAvailableModels(): ModelConfig[] {
+    return this.models.filter(model => model.is_available);
+  }
+
+  getModelsByProvider(provider: string): ModelConfig[] {
+    return this.models.filter(model => model.provider === provider && model.is_available);
+  }
+
+  getModelsByCapability(capability: string): ModelConfig[] {
+    return this.models.filter(model =>
+      model.capabilities.includes(capability) && model.is_available
+    );
+  }
+
+  getModelByName(name: string): ModelConfig | undefined {
+    return this.models.find(model => model.name === name);
+  }
+}
+
+// Global model config service instance
+const modelConfigService = ModelConfigService.getInstance();
+
 interface UnifiedAINodeData {
   label: string;
   description: string;
@@ -35,7 +253,28 @@ const UnifiedAINode: React.FC<NodeProps<UnifiedAINodeData>> = ({ data, selected 
   const [isProcessing, setIsProcessing] = useState(false);
   const [lastResponse, setLastResponse] = useState<AIServiceResponse | null>(null);
   const [testPrompt, setTestPrompt] = useState(data.config.prompt || '');
-  const [selectedModel, setSelectedModel] = useState(data.config.model || 'gpt-4');
+  const [selectedModel, setSelectedModel] = useState(data.config.model || 'gpt-4o');
+  const [availableModels, setAvailableModels] = useState<ModelConfig[]>([]);
+  const [modelsLoading, setModelsLoading] = useState(true);
+
+  // Load models on component mount
+  useEffect(() => {
+    const loadModels = async () => {
+      try {
+        const models = await modelConfigService.loadModels();
+        setAvailableModels(models.filter(model => model.is_available));
+      } catch (error) {
+        console.error('Failed to load models:', error);
+        // Fallback models are already loaded in the service
+        const fallbackModels = await modelConfigService.getFallbackModels();
+        setAvailableModels(fallbackModels);
+      } finally {
+        setModelsLoading(false);
+      }
+    };
+
+    loadModels();
+  }, []);
 
   // Use the unified AI service hook
   const aiService = useUnifiedAIService({
@@ -45,11 +284,6 @@ const UnifiedAINode: React.FC<NodeProps<UnifiedAINodeData>> = ({ data, selected 
     enableCaching: data.config.enableCaching ?? true,
     monitoringEnabled: true
   });
-
-  // Update config when model changes
-  useEffect(() => {
-    data.config.model = selectedModel;
-  }, [selectedModel, data.config]);
 
   // Handle AI service execution
   const handleExecute = useCallback(async () => {
@@ -103,17 +337,82 @@ const UnifiedAINode: React.FC<NodeProps<UnifiedAINodeData>> = ({ data, selected 
         {/* Model Selection */}
         <div className="space-y-2">
           <Label className="text-xs font-medium">AI Model</Label>
-          <Select value={selectedModel} onValueChange={setSelectedModel}>
-            <SelectTrigger className="h-8">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="gpt-4">GPT-4 (High Quality)</SelectItem>
-              <SelectItem value="gpt-4-turbo">GPT-4 Turbo (Fast)</SelectItem>
-              <SelectItem value="claude-3-opus">Claude 3 Opus (Balanced)</SelectItem>
-              <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo (Cost Effective)</SelectItem>
-            </SelectContent>
-          </Select>
+          {modelsLoading ? (
+            <div className="flex items-center space-x-2 h-8 px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              <span className="text-xs text-gray-500">Loading models...</span>
+            </div>
+          ) : (
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="h-8">
+                <SelectValue placeholder="Select a model" />
+              </SelectTrigger>
+              <SelectContent>
+                {/* Group models by provider */}
+                {availableModels.reduce((groups: { [key: string]: ModelConfig[] }, model) => {
+                  const provider = model.provider;
+                  if (!groups[provider]) {
+                    groups[provider] = [];
+                  }
+                  groups[provider].push(model);
+                  return groups;
+                }, {}) && Object.entries(
+                  availableModels.reduce((groups: { [key: string]: ModelConfig[] }, model) => {
+                    const provider = model.provider;
+                    if (!groups[provider]) {
+                      groups[provider] = [];
+                    }
+                    groups[provider].push(model);
+                    return groups;
+                  }, {})
+                ).map(([provider, models]) => (
+                  <React.Fragment key={provider}>
+                    <div className="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      {provider.toUpperCase()}
+                    </div>
+                    {models.map((model) => (
+                      <SelectItem key={model.name} value={model.name}>
+                        <div className="flex items-center justify-between w-full">
+                          <span className="text-sm">{model.name}</span>
+                          <div className="flex items-center space-x-1 ml-2">
+                            {model.capabilities.includes('local') && (
+                              <Badge variant="outline" className="text-xs px-1 py-0">Local</Badge>
+                            )}
+                            {model.capabilities.includes('vision') && (
+                              <Badge variant="outline" className="text-xs px-1 py-0">Vision</Badge>
+                            )}
+                            {model.cost_per_token === 0 && (
+                              <Badge variant="outline" className="text-xs px-1 py-0 text-green-600">Free</Badge>
+                            )}
+                          </div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {/* Model Info Display */}
+          {selectedModel && availableModels.length > 0 && (
+            <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+              {(() => {
+                const model = availableModels.find(m => m.name === selectedModel);
+                if (!model) return null;
+                return (
+                  <div>
+                    <div className="font-medium">{model.description}</div>
+                    <div className="flex items-center space-x-4 mt-1">
+                      <span>Context: {model.context_window.toLocaleString()}</span>
+                      <span>Cost: ${(model.cost_per_token * 1000).toFixed(4)}/1K</span>
+                      {model.supports_streaming && <span className="text-green-600">Streaming</span>}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
 
         {/* Service Configuration */}
