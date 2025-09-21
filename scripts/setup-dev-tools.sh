@@ -7,12 +7,12 @@ echo "🔧 Setting up development tools..."
 echo "📦 Installing Python development tools..."
 pip3 install black flake8 isort pytest
 
-# Check if requirements.txt exists and install backend dependencies
-if [ -f "backend/requirements.txt" ]; then
-    echo "📦 Installing backend dependencies..."
-    pip3 install -r backend/requirements.txt
+# Check if requirements.txt exists and install API service dependencies
+if [ -f "services/api/requirements.txt" ]; then
+    echo "📦 Installing API service dependencies..."
+    pip3 install -r services/api/requirements.txt
 else
-    echo "⚠️  backend/requirements.txt not found"
+    echo "⚠️  services/api/requirements.txt not found"
 fi
 
 # Frontend tools
@@ -32,5 +32,5 @@ echo "✅ Development tools setup complete!"
 echo ""
 echo "🚀 You can now run:"
 echo "   ./scripts/format-code.sh    - Format Python code"
-echo "   ./scripts/run-tests.sh      - Run backend tests"
+echo "   ./scripts/run-tests.sh      - Run API tests"
 echo "   ./scripts/deploy-check.sh   - Full deployment check"

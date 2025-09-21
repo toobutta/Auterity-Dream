@@ -61,17 +61,18 @@ npm run health-check
 ```
 auterity-error-iq/
 ├── 🎯 CORE SYSTEMS/
-│   ├── backend/                    # AutoMatrix Core (FastAPI)
-│   │   ├── app/
-│   │   │   ├── api/               # REST API endpoints (16 modules)
-│   │   │   ├── models/            # SQLAlchemy models (6 models)
-│   │   │   ├── services/          # Business logic (8 services)
-│   │   │   ├── executors/         # Workflow execution engine
-│   │   │   └── middleware/        # Security & monitoring
-│   │   ├── tests/                 # Comprehensive test suite
-│   │   ├── alembic/               # Database migrations
-│   │   └── requirements*.txt      # Python dependencies
-│   ├── frontend/                   # AutoMatrix Frontend (React/TS)
+│   ├── services/
+│   │   └── api/                   # Workflow Studio FastAPI service
+│   │       ├── app/
+│   │       │   ├── api/           # REST API endpoints (16 modules)
+│   │       │   ├── models/        # SQLAlchemy models (6 models)
+│   │       │   ├── services/      # Business logic (8 services)
+│   │       │   ├── executors/     # Workflow execution engine
+│   │       │   └── middleware/    # Security & monitoring
+│   │       ├── tests/             # Comprehensive test suite
+│   │       ├── alembic/           # Database migrations
+│   │       └── requirements*.txt  # Python dependencies
+│   ├── frontend/                  # AutoMatrix Frontend (React/TS)
 │   │   ├── src/
 │   │   │   ├── components/        # Reusable UI components
 │   │   │   ├── pages/             # Application pages

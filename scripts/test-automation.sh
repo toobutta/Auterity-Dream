@@ -45,19 +45,19 @@ run_unit_tests() {
     local failed_components=()
 
     # Backend unit tests
-    print_status "Running backend unit tests..."
-    cd "$PROJECT_ROOT/backend"
+    print_status "Running API unit tests..."
+    cd "$PROJECT_ROOT/services/api"
     if python -m pytest tests/ -v \
         --cov=app \
         --cov-report=term-missing \
-        --cov-report=html:"$REPORTS_DIR/backend-coverage" \
-        --cov-report=xml:"$REPORTS_DIR/backend-coverage.xml" \
-        --junit-xml="$REPORTS_DIR/backend-unit-tests.xml" \
+        --cov-report=html:"$REPORTS_DIR/api-coverage" \
+        --cov-report=xml:"$REPORTS_DIR/api-coverage.xml" \
+        --junit-xml="$REPORTS_DIR/api-unit-tests.xml" \
         --tb=short; then
-        print_success "Backend unit tests passed"
+        print_success "API unit tests passed"
     else
-        print_error "Backend unit tests failed"
-        failed_components+=("backend-unit")
+        print_error "API unit tests failed"
+        failed_components+=("api-unit")
     fi
 
     # Frontend unit tests
@@ -136,14 +136,14 @@ check_coverage() {
 
     local coverage_failures=()
 
-    # Check backend coverage
-    if [ -f "$REPORTS_DIR/backend-coverage.xml" ]; then
-        coverage_percent=$(grep -oP 'line-rate="\K[0-9.]+' "$REPORTS_DIR/backend-coverage.xml" | head -1 | awk '{print $1*100}')
+    # Check API coverage
+    if [ -f "$REPORTS_DIR/api-coverage.xml" ]; then
+        coverage_percent=$(grep -oP 'line-rate="\K[0-9.]+' "$REPORTS_DIR/api-coverage.xml" | head -1 | awk '{print $1*100}')
         if (( $(echo "$coverage_percent < $COVERAGE_THRESHOLD" | bc -l) )); then
-            print_warning "Backend coverage ($coverage_percent%) below threshold ($COVERAGE_THRESHOLD%)"
-            coverage_failures+=("backend")
+            print_warning "API coverage ($coverage_percent%) below threshold ($COVERAGE_THRESHOLD%)"
+            coverage_failures+=("api")
         else
-            print_success "Backend coverage: $coverage_percent%"
+            print_success "API coverage: $coverage_percent%"
         fi
     fi
 
@@ -193,10 +193,10 @@ run_e2e_tests() {
     # Start all services
     print_status "Starting application services..."
 
-    # Start backend services
-    cd "$PROJECT_ROOT/backend"
+    # Start API service
+    cd "$PROJECT_ROOT/services/api"
     python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &
-    BACKEND_PID=$!
+    API_PID=$!
 
     cd "$PROJECT_ROOT/systems/relaycore"
     npm start &
@@ -239,7 +239,7 @@ run_e2e_tests() {
 
     # Cleanup processes
     print_status "Stopping services..."
-    kill $BACKEND_PID $RELAYCORE_PID $NEUROWEAVER_BACKEND_PID $FRONTEND_PID $NEUROWEAVER_FRONTEND_PID 2>/dev/null || true
+    kill $API_PID $RELAYCORE_PID $NEUROWEAVER_BACKEND_PID $FRONTEND_PID $NEUROWEAVER_FRONTEND_PID 2>/dev/null || true
 
     return $e2e_result
 }
@@ -260,7 +260,7 @@ run_security_scans() {
 
     # Run dependency scans
     print_status "Running Python dependency audit..."
-    cd "$PROJECT_ROOT/backend"
+    cd "$PROJECT_ROOT/services/api"
     if command -v pip-audit &> /dev/null; then
         pip-audit -r requirements.txt --output "$REPORTS_DIR/python-audit.json" --format json || true
     fi
@@ -312,10 +312,10 @@ export default function () {
 }
 EOF
 
-        # Start backend for performance testing
-        cd "$PROJECT_ROOT/backend"
+        # Start API for performance testing
+        cd "$PROJECT_ROOT/services/api"
         python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &
-        PERF_BACKEND_PID=$!
+        PERF_API_PID=$!
 
         sleep 10
 
@@ -324,7 +324,7 @@ EOF
         perf_result=$?
 
         # Cleanup
-        kill $PERF_BACKEND_PID 2>/dev/null || true
+        kill $PERF_API_PID 2>/dev/null || true
 
         if [ $perf_result -eq 0 ]; then
             print_success "Performance tests passed"
@@ -364,7 +364,7 @@ generate_test_report() {
 
 ### Coverage Analysis
 - **Threshold:** $COVERAGE_THRESHOLD%
-- **Backend Coverage:** Available in \`backend-coverage/index.html\`
+- **API Coverage:** Available in \`api-coverage/index.html\`
 - **Frontend Coverage:** Available in \`frontend-coverage/index.html\`
 - **RelayCore Coverage:** Available in \`relaycore-coverage/index.html\`
 - **NeuroWeaver Coverage:** Available in coverage directories
@@ -380,7 +380,7 @@ generate_test_report() {
 ## Test Reports
 
 ### Unit Test Results
-- Backend: \`backend-unit-tests.xml\`
+- API: \`api-unit-tests.xml\`
 - Frontend: \`frontend-unit-tests.xml\`
 - RelayCore: Component test results
 - NeuroWeaver: \`neuroweaver-backend-unit-tests.xml\`

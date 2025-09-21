@@ -47,28 +47,28 @@ The Auterity Unified Platform uses GitHub Actions for continuous integration and
 **Purpose**: Generate cache keys and prepare environment
 **Outputs**:
 
-- `backend-cache-key`: Cache key for Python dependencies
+- `api-cache-key`: Cache key for Python dependencies
 - `frontend-cache-key`: Cache key for Node.js dependencies
 
 ```yaml
 setup:
   runs-on: ubuntu-latest
   outputs:
-    backend-cache-key: ${{ steps.backend-cache-key.outputs.key }}
+    api-cache-key: ${{ steps.api-cache-key.outputs.key }}
     frontend-cache-key: ${{ steps.frontend-cache-key.outputs.key }}
   steps:
     - uses: actions/checkout@v4
-    - name: Generate backend cache key
-      id: backend-cache-key
-      run: echo "key=backend-${{ hashFiles('backend/requirements.txt') }}-$(date +'%Y-%m')" >> $GITHUB_OUTPUT
+    - name: Generate API cache key
+      id: api-cache-key
+      run: echo "key=api-${{ hashFiles('services/api/requirements.txt') }}-$(date +'%Y-%m')" >> $GITHUB_OUTPUT
     - name: Generate frontend cache key
       id: frontend-cache-key
       run: echo "key=frontend-${{ hashFiles('frontend/package-lock.json') }}-$(date +'%Y-%m')" >> $GITHUB_OUTPUT
 ```
 
-#### 2. Backend Test Job
+#### 2. API Test Job
 
-**Purpose**: Test Python backend components
+**Purpose**: Test Python API components
 **Dependencies**: setup job
 **Environment**: Ubuntu Latest with Python 3.12
 
@@ -78,9 +78,9 @@ setup:
 2. **Setup Python** - `actions/setup-python@v4`
    - Python version: 3.12
    - Pip cache enabled
-   - Cache dependency path: `backend/requirements.txt`
+   - Cache dependency path: `services/api/requirements.txt`
 3. **Cache Python dependencies** - `actions/cache@v3`
-4. **Install dependencies** - `pip install -r backend/requirements.txt`
+4. **Install dependencies** - `pip install -r services/api/requirements.txt`
 5. **Run linting** - `flake8` and `black --check`
 6. **Run tests** - `pytest` with coverage
 7. **Upload coverage** - Coverage reports to codecov (if configured)
@@ -107,7 +107,7 @@ setup:
 #### 4. Systems Integration Tests
 
 **Purpose**: Test RelayCore and NeuroWeaver systems
-**Dependencies**: backend-test, frontend-test
+**Dependencies**: api-test, frontend-test
 
 **RelayCore Tests**:
 

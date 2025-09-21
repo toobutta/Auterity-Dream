@@ -9,15 +9,17 @@
 
 ### Technical Architecture
 
+- **[Architecture Narrative](ARCHITECTURE_OVERVIEW.md)** - Workflow Studio ↔ RelayCore ↔ NeuroWeaver flow
 - **[System Architecture](architecture/system-architecture.md)** - High-level cloud-native architecture design
 - **[Frontend Architecture](architecture/frontend-architecture.md)** - React/TypeScript application specification
-- **[Backend Architecture](architecture/backend-architecture.md)** - FastAPI microservices architecture
+- **[API Architecture](architecture/backend-architecture.md)** - FastAPI microservices (`services/api`)
 - **[Technology Stack](architecture/technology-stack.md)** - Comprehensive framework and tooling documentation
 - **[Realtime Monitoring](architecture/REALTIME_MONITORING_IMPLEMENTATION.md)** - WebSocket implementation guide
 
 ### Features & Development
 
 - **[Feature Specifications](features/feature-specifications.md)** - Detailed feature specs with implementation status
+- **[Auterity IDE Onboarding](features/auterity-ide.md)** - VS Code + GitHub developer workspace
 - **[Development Setup](development/setup.md)** - Complete environment configuration
 - **[Contributing Guidelines](development/contributing.md)** - Git workflow and development standards
 - **[API Documentation](api/api-overview.md)** - Complete endpoint reference
@@ -43,7 +45,7 @@
 
 ## 📋 Current Status
 
-- ✅ **Core Implementation Complete** - Backend, Frontend, Authentication
+- ✅ **Core Implementation Complete** - services/api, Frontend, Authentication
 - 🔴 **Critical Issues** - Security vulnerabilities, TypeScript errors
 - 🚧 **In Development** - Real-time monitoring, Enhanced error handling
 - 📋 **Planned** - Production deployment, Comprehensive testing

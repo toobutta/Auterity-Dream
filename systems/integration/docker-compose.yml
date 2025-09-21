@@ -116,7 +116,7 @@ services:
   # Backend API
   backend:
     build:
-      context: ../../backend
+      context: ../../services/api
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
@@ -129,7 +129,7 @@ services:
       - postgres
       - redis
     volumes:
-      - ../../backend:/app
+      - ../../services/api:/app
     networks:
       - auterity-network
     restart: unless-stopped

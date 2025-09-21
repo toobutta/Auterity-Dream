@@ -17,7 +17,7 @@ services:
   # Celery Workers
   celery-worker:
     build:
-      context: ./backend
+      context: ./services/api
       dockerfile: Dockerfile.prod
     command: celery -A app.celery_app worker --loglevel=info
     environment:
@@ -35,7 +35,7 @@ services:
   # Celery Beat (Scheduler)
   celery-beat:
     build:
-      context: ./backend
+      context: ./services/api
       dockerfile: Dockerfile.prod
     command: celery -A app.celery_app beat --loglevel=info
     environment:

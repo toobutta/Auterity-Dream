@@ -1,5 +1,5 @@
 # Performance Benchmark Script
-# Simple benchmarking for backend endpoints
+# Simple benchmarking for API endpoints
 
 import time
 

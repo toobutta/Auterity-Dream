@@ -1,8 +1,8 @@
 @echo off
 echo Setting up Auterity development environment...
 
-REM Backend Python setup
-cd backend
+REM API service Python setup
+cd services\api
 if not exist .venv (
     echo Creating Python virtual environment...
     python -m venv .venv
@@ -20,5 +20,5 @@ if not exist node_modules (
 cd ..
 
 echo Environment setup complete!
-echo - Backend: cd backend && .venv\Scripts\activate.bat
+echo - API service: cd services\api && .venv\Scripts\activate.bat
 echo - Frontend: cd frontend && npm run dev

@@ -2,7 +2,7 @@
 # Format Python code with Black and isort
 
 echo "🎨 Formatting Python code..."
-cd backend
+cd services/api
 
 # Check if tools are installed
 if ! command -v black &> /dev/null; then

@@ -31,10 +31,10 @@ echo "Fixing React Hook dependency warnings..."
 
 cd ..
 
-# Phase 2: Backend Code Quality Fixes
-echo "🔧 Phase 2: Backend Code Quality Fixes"
+# Phase 2: API Code Quality Fixes
+echo "🔧 Phase 2: API Code Quality Fixes"
 
-cd backend
+cd services/api
 
 # Fix Python import organization
 echo "Organizing Python imports..."

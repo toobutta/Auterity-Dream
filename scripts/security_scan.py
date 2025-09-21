@@ -20,4 +20,4 @@ def run_bandit_scan(target_dir: str):
 
 
 if __name__ == "__main__":
-    run_bandit_scan("../backend")
+    run_bandit_scan("../services/api")
