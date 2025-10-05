@@ -1,317 +1,309 @@
-# Auterity Unified AI Platform
+# 🚀 Auterity Unified AI Platform
 
-[![Production Ready](<https://img.shields.io/badge/Status-Production%20Ready%20(90%25)-brightgreen>)](https://github.com/toobutta/auterity-error-iq)
-[![Services](https://img.shields.io/badge/Services-26%20Integrated-blue)](#services)
-[![Architecture](https://img.shields.io/badge/Architecture-Three--System%20Integration-purple)](#architecture)
-[![Documentation](https://img.shields.io/badge/Documentation-Comprehensive-orange)](#documentation)
+**Enterprise-grade AI automation platform with integrated Workflow Studio, RelayCore, and comprehensive monitoring capabilities.**
 
-## 🎯 Enterprise AI Platform with Three-System Integration
+[![Node.js Version](https://img.shields.io/badge/node-18.x-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Auterity** is a **production-ready unified AI platform** featuring three integrated systems: **AutoMatrix** (workflow automation), **RelayCore** (AI routing), and **NeuroWeaver** (model management) with 26 enterprise services for intelligent operations.
+## 📋 Table of Contents
 
-### **🏗️ Three-System Architecture**
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Services](#services)
+- [Development](#development)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Monitoring](#monitoring)
+- [Contributing](#contributing)
+
+## 🎯 Overview
+
+The **Auterity Unified AI Platform** is a comprehensive enterprise solution that combines:
+
+- **Workflow Studio**: Visual workflow designer with drag-and-drop interface
+- **RelayCore**: Advanced AI routing and model management system
+- **API Services**: RESTful APIs for system integration
+- **Frontend Applications**: Modern React/TypeScript user interfaces
+- **Chrome DevTools Integration**: Complete debugging and performance monitoring suite
+
+This unified platform provides a complete AI automation ecosystem for automotive dealerships and enterprise workflows.
+
+## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        AUTERITY UNIFIED AI PLATFORM                        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐        │
-│  │   AutoMatrix    │◄──►│   RelayCore     │◄──►│ NeuroWeaver     │        │
-│  │   (Core Engine) │    │   (AI Router)   │    │ (Model Mgmt)    │        │
-│  │   Port: 8000    │    │   Port: 3001    │    │ Port: 3002      │        │
-│  │   Python/React  │    │   Node.js/TS    │    │   Python/React  │        │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘        │
-│           │                       │                       │                │
-│           └───────────────────────┼───────────────────────┘                │
-│                                   │                                        │
-│              ┌─────────────────────────────────────┐                       │
-│              │        Shared Infrastructure        │                       │
-│              │   Auth • Monitoring • Database     │                       │
-│              └─────────────────────────────────────┘                       │
-└─────────────────────────────────────────────────────────────────────────────┘
+Auterity Unified AI Platform
+├── 🎨 Frontend (React/TypeScript)
+│   ├── Main Application
+│   ├── Workflow Studio Interface
+│   └── Chrome DevTools Integration
+├── 🔧 Backend Services
+│   ├── API Gateway (apps/api)
+│   ├── RelayCore (systems/relaycore)
+│   └── Workflow Engine
+├── 📦 Shared Libraries
+│   ├── Design System (packages/design-system)
+│   ├── Workflow Contracts (packages/workflow-contracts)
+│   └── Utilities (shared/)
+└── 🛠️ Infrastructure
+    ├── Docker Compose
+    ├── PostgreSQL & Redis
+    ├── MinIO & Kong Gateway
+    └── Monitoring Stack
 ```
 
-## ⚡ Quick Start
+### Integrated Services
+
+| Service | Location | Purpose |
+|---------|----------|---------|
+| **Frontend** | `frontend/` | Main React application with Workflow Studio |
+| **Workflow Studio** | `apps/workflow-studio/` | Visual workflow designer |
+| **API** | `apps/api/` | RESTful API services |
+| **RelayCore** | `systems/relaycore/` | AI routing and model management |
+| **Design System** | `packages/design-system/` | Shared UI components |
+| **Workflow Contracts** | `packages/workflow-contracts/` | Type-safe workflow definitions |
+
+## ✨ Features
+
+### 🎨 Workflow Studio
+- **Visual Designer**: Drag-and-drop workflow creation
+- **Real-time Collaboration**: Multi-user editing capabilities
+- **AI Integration**: Vercel AI SDK integration
+- **Template Library**: Pre-built workflow templates
+- **Version Control**: Workflow versioning and rollback
+
+### 🤖 AI & Automation
+- **Multi-Model Support**: OpenAI, Anthropic, Google, Azure AI
+- **Intelligent Routing**: RelayCore AI model orchestration
+- **Performance Monitoring**: Real-time AI performance metrics
+- **Cost Optimization**: AI usage tracking and optimization
+
+### 🔍 Chrome DevTools Integration
+- **Performance Monitoring**: Web Vitals tracking
+- **Network Analysis**: API and WebSocket monitoring
+- **Memory Profiling**: Heap analysis and leak detection
+- **Console Enhancement**: Advanced logging system
+- **Accessibility Auditing**: WCAG compliance checking
+- **Security Scanning**: Security headers validation
+
+### 🏢 Enterprise Features
+- **Multi-tenancy**: Isolated workspace management
+- **Role-based Access**: Granular permission system
+- **Audit Logging**: Complete activity tracking
+- **High Availability**: Docker-based deployment
+- **Scalable Architecture**: Microservices design
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18.x or later
+- Docker & Docker Compose
+- Git
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/auterity-unified-platform.git
+   cd auterity-unified-platform
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start development environment**
+   ```bash
+   npm run dev
+   ```
+
+4. **Access the applications**
+   - Frontend: http://localhost:3000
+   - Workflow Studio: http://localhost:3000/workflow-studio
+   - API: http://localhost:8000
+   - Chrome DevTools: Available in browser developer tools
+
+### Development Setup
 
 ```bash
-# Clone and deploy complete platform
-git clone https://github.com/toobutta/auterity-error-iq.git
-cd auterity-error-iq
-
-# Setup environment
-cp .env.example .env
-# Edit .env with your API keys and configuration
-
-# Install dependencies
+# Install all workspace dependencies
 npm install
-cd frontend && npm install
-cd ../backend && pip install -r requirements-dev.txt
 
-# Start development environment (all 26 services)
+# Start all services
 npm run dev
 
-# Production deployment
-npm run prod
+# View logs
+npm run dev:logs
+
+# Stop all services
+npm run dev:stop
 ```
 
-**🌐 Access Points:**
+## 🛠️ Services
 
-- **Application Dashboard**: http://localhost:3000
-- **API Gateway**: http://localhost:8000
-- **Kong Admin**: http://localhost:8001
-- **Monitoring (Grafana)**: http://localhost:3001
-- **ML Tracking (MLflow)**: http://localhost:5000
-- **Tracing (Jaeger)**: http://localhost:16686
-
-## 🏗️ System Components
-
-### **AutoMatrix** - Core Workflow Engine (Port 8000)
-
-- **Visual Workflow Builder**: Drag-and-drop interface with React Flow
-- **Execution Engine**: Parallel processing with retry mechanisms
-- **Template Library**: Pre-built workflow templates
-- **Real-time Monitoring**: WebSocket-based progress tracking
-- **API Integration**: RESTful API with OpenAPI documentation
-
-### **RelayCore** - AI Request Router (Port 3001)
-
-- **Intelligent Routing**: Cost-optimized AI model selection
-- **Budget Management**: Real-time cost tracking and limits
-- **Performance Analytics**: Latency and accuracy metrics
-- **Multi-Provider Support**: OpenAI, Anthropic, custom models
-- **Steering Rules**: Configurable routing logic
-
-### **NeuroWeaver** - Model Management (Port 3002)
-
-- **Custom Model Training**: Automated fine-tuning pipeline
-- **Model Registry**: Centralized catalog with versioning
-- **Performance Monitoring**: Model accuracy and speed tracking
-- **Automotive Specialization**: Pre-built automotive AI templates
-- **Deployment Automation**: One-click model deployment
-
-## 🏗️ Service Architecture
-
-### **Core Services** (Production Ready)
-
-- **Authentication**: JWT, OAuth2, SSO integration
-- **Database**: PostgreSQL with clustering
-- **Cache**: Redis with persistence
-- **Queue**: RabbitMQ + Celery workers
-
-### **Communication Services** (Production Ready)
-
-- **Twilio**: SMS, voice, campaigns, IVR
-- **WhatsApp**: Business API, templates, interactive messages
-- **Email**: SMTP integration with MailHog development server
-- **Notifications**: Multi-channel (Email, Slack, SMS, WhatsApp, webhooks)
-
-### **Automation Services** (Production Ready)
-
-- **Playwright**: Web scraping, form automation, testing
-- **Puppeteer**: Browser automation, PDF generation, screenshots
-- **Workflow Engine**: Visual workflow builder with AI integration
-
-### **AI/ML Services** (Production Ready)
-
-- **Vector Databases**: Pinecone, Weaviate integration
-- **LLM Providers**: OpenAI, Anthropic, Azure OpenAI
-- **MLflow**: Experiment tracking, model registry
-- **Embeddings**: Automated text embedding generation
-
-### **Infrastructure Services** (Production Ready)
-
-- **API Gateway**: Kong with rate limiting, CORS
-- **Load Balancer**: Nginx with SSL termination
-- **Monitoring**: Prometheus, Grafana, Jaeger tracing, Alertmanager
-- **Logging**: Loki centralized logging with Promtail collection
-- **Secrets**: HashiCorp Vault integration
-- **Event Streaming**: Apache Kafka with Zookeeper
-- **Object Storage**: MinIO S3-compatible storage
-- **System Monitoring**: Node, Redis, Postgres exporters
-
-## 📊 Complete Service List (26 Services)
-
-| Service               | Type          | Status         | Port        | Description            |
-| --------------------- | ------------- | -------------- | ----------- | ---------------------- |
-| **kong**              | Gateway       | ✅ Production  | 8000, 8001  | API Gateway & Admin    |
-| **nginx**             | Load Balancer | ✅ Production  | 80, 443     | Load Balancer & SSL    |
-| **backend**           | API           | ✅ Production  | 8080        | FastAPI Backend        |
-| **frontend**          | Web           | ✅ Production  | 3000        | React Frontend         |
-| **postgres**          | Database      | ✅ Production  | 5432        | Primary Database       |
-| **redis**             | Cache         | ✅ Production  | 6379        | Cache & Sessions       |
-| **rabbitmq**          | Queue         | ✅ Production  | 5672, 15672 | Message Queue          |
-| **kafka**             | Streaming     | ✅ Production  | 9092        | Event Streaming        |
-| **zookeeper**         | Coordination  | ✅ Production  | 2181        | Kafka Dependency       |
-| **vault**             | Secrets       | ✅ Production  | 8200        | Secrets Management     |
-| **mlflow**            | ML            | ✅ Production  | 5000        | ML Experiment Tracking |
-| **weaviate**          | Vector DB     | ✅ Production  | 8081        | Vector Database        |
-| **puppeteer**         | Automation    | ✅ Production  | 3000        | Browser Automation     |
-| **mailhog**           | Email         | ✅ Development | 1025, 8025  | SMTP Development       |
-| **celery-worker**     | Workers       | ✅ Production  | -           | Task Processing        |
-| **prometheus**        | Metrics       | ✅ Production  | 9090        | Metrics Collection     |
-| **grafana**           | Monitoring    | ✅ Production  | 3001        | Monitoring Dashboard   |
-| **alertmanager**      | Alerts        | ✅ Production  | 9093        | Alert Management       |
-| **jaeger**            | Tracing       | ✅ Production  | 16686       | Distributed Tracing    |
-| **loki**              | Logging       | ✅ Production  | 3100        | Log Aggregation        |
-| **promtail**          | Logs          | ✅ Production  | 9080        | Log Collection         |
-| **node-exporter**     | Metrics       | ✅ Production  | 9100        | System Metrics         |
-| **redis-exporter**    | Metrics       | ✅ Production  | 9121        | Redis Metrics          |
-| **postgres-exporter** | Metrics       | ✅ Production  | 9187        | Postgres Metrics       |
-| **minio**             | Storage       | ✅ Production  | 9000, 9001  | Object Storage         |
-
-## 🔧 Configuration
-
-### Environment Variables
-
+### Frontend Application
 ```bash
-# Core Services
-POSTGRES_PASSWORD=your_secure_password
-REDIS_URL=redis://redis:6379
-RABBITMQ_PASSWORD=your_rabbitmq_password
-
-# AI Services
-OPENAI_API_KEY=your_openai_key
-ANTHROPIC_API_KEY=your_anthropic_key
-PINECONE_API_KEY=your_pinecone_key
-
-# Communication Services
-TWILIO_ACCOUNT_SID=your_twilio_sid
-WHATSAPP_ACCESS_TOKEN=your_whatsapp_token
-
-# Infrastructure
-VAULT_TOKEN=your_vault_token
-KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+cd frontend
+npm run dev
 ```
+- **Port**: 3000
+- **Technology**: React 18, TypeScript, Vite
+- **Features**: Main UI, Workflow Studio integration, Chrome DevTools
 
-### Service Health Checks
-
+### Workflow Studio
 ```bash
-# Check all services
-curl http://localhost:8001/status
-
-# Individual service health
-curl http://localhost:8080/api/health (Backend)
-curl http://localhost:8081/v1/meta (Weaviate)
-curl http://localhost:5000/health (MLflow)
-curl http://localhost:8200/v1/sys/health (Vault)
+npm run dev:workflow-studio
 ```
+- **Port**: 3000 (integrated)
+- **Technology**: React Flow, PixiJS, AI SDK
+- **Features**: Visual workflow designer, AI integration
 
-## 🚀 Deployment Options
-
-### **Development**
-
+### API Services
 ```bash
-docker-compose -f docker-compose.unified.yml up -d
+npm run api:dev
 ```
+- **Port**: 8000
+- **Technology**: Node.js, Express, TypeScript
+- **Features**: RESTful APIs, authentication, data management
 
-### **Production**
-
+### RelayCore
 ```bash
-# With load balancing and clustering
-docker-compose -f docker-compose.unified.yml -f docker-compose.production.yml up -d
+cd systems/relaycore
+npm run dev
 ```
-
-### **Kubernetes**
-
-```bash
-kubectl apply -f kubernetes/
-```
-
-## 📈 Monitoring & Observability
-
-- **Metrics**: Prometheus + Grafana dashboards
-- **Tracing**: Jaeger distributed tracing
-- **Logging**: Loki centralized logging
-- **Health Checks**: Automated service monitoring
-- **Alerts**: Multi-channel alerting system
-
-## 🔒 Security Features
-
-- **API Gateway**: Rate limiting, CORS, authentication
-- **Secrets Management**: HashiCorp Vault integration
-- **SSL/TLS**: End-to-end encryption
-- **Input Validation**: SQL injection and XSS protection
-- **Audit Logging**: Complete audit trail
+- **Port**: 8001
+- **Technology**: Python, FastAPI, AI SDK
+- **Features**: AI model routing, performance optimization
 
 ## 🧪 Testing
 
 ```bash
 # Run all tests
-docker-compose exec backend python -m pytest
+npm test
 
-# Integration tests
-python -m pytest tests/integration/
+# Run specific test suites
+npm run test:frontend
+npm run test:workflow-studio
+npm run test:integration
 
-# Load testing
-python -m pytest tests/load/
+# Generate coverage reports
+npm run test:coverage
 
-# Security testing
-python -m pytest tests/security/
+# Run quality gates
+npm run quality-gate
 ```
 
-## 📚 Comprehensive Documentation
+### Test Structure
+```
+tests/
+├── unit/           # Unit tests
+├── integration/    # Integration tests
+├── e2e/           # End-to-end tests
+└── performance/   # Performance tests
+```
 
-### **📖 For AI Coding Tools**
+## 🚢 Deployment
 
-- **[AI Comprehensive Context Document](AI_COMPREHENSIVE_CONTEXT_DOCUMENT.md)** - Essential context for any AI coding tool to immediately understand the project
-
-### **🔧 Development & Technical**
-
-- **[Development Guide](docs/DEVELOPMENT_GUIDE_COMPREHENSIVE.md)** - Complete development workflow, testing, debugging
-- **[API Documentation](docs/API_DOCUMENTATION_COMPREHENSIVE.md)** - Full API reference with examples and SDKs
-- **[Technical Specifications](docs/TECHNICAL_SPECIFICATIONS.md)** - System architecture and design patterns
-- **[Technology Stack](docs/architecture/technology-stack.md)** - Detailed framework and tooling documentation
-
-### **🚀 Deployment & Operations**
-
-- **[Deployment Guide](docs/DEPLOYMENT_GUIDE_COMPREHENSIVE.md)** - Production deployment with 26 services
-- **[Architecture Overview](docs/ARCHITECTURE_OVERVIEW.md)** - System design and data flow
-- **[Monitoring Setup](docs/MONITORING_SETUP.md)** - Observability and performance tracking
-
-### **📊 Project Status & Planning**
-
-- **[Current Project Status](CURRENT_PROJECT_STATUS.md)** - Real-time implementation progress
-- **[Project Structure](PROJECT_STRUCTURE_COMPREHENSIVE.md)** - Complete directory organization
-- **[Development Roadmap](DEVELOPMENT_ROADMAP.md)** - Future features and milestones
-
-## 🧪 Testing & Quality
-
+### Development
 ```bash
-# Complete test suite
-npm run test                       # All tests across systems
-npm run test:frontend              # React component tests
-npm run test:backend               # Python API tests
-npm run test:integration           # Cross-system integration tests
-npm run test:e2e                   # End-to-end Playwright tests
-
-# Code quality pipeline
-npm run quality-gate               # Full CI/CD quality check
-npm run lint                       # ESLint + Flake8 linting
-npm run type-check                 # TypeScript compliance
-npm run security-scan              # Dependency vulnerability scan
+npm run dev
 ```
 
-## 🔒 Security & Compliance
+### Production
+```bash
+npm run prod
+```
 
-- **🔐 Authentication**: JWT with refresh tokens, OAuth2, SAML integration
-- **🛡️ API Security**: Rate limiting, CORS, input validation
-- **🔑 Secrets Management**: HashiCorp Vault integration
-- **📊 Audit Logging**: Comprehensive audit trail with structured logging
-- **🔍 Security Scanning**: Automated dependency and vulnerability scanning
+### Docker Deployment
+```bash
+# Build all services
+npm run build:all
+
+# Deploy to staging
+npm run deploy:staging
+
+# Deploy to production
+npm run deploy:production
+```
+
+### Environment Configuration
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Configure your settings
+nano .env
+```
+
+## 📊 Monitoring
+
+### Chrome DevTools Integration
+Access comprehensive monitoring through browser developer tools:
+
+1. **Performance Tab**: Web Vitals, Core Web Vitals
+2. **Network Tab**: API monitoring, WebSocket tracking
+3. **Memory Tab**: Heap analysis, leak detection
+4. **Console Tab**: Enhanced logging with AI insights
+5. **Security Tab**: Security headers validation
+
+### Application Monitoring
+- **Health Checks**: Automated service health monitoring
+- **Metrics Collection**: Performance and usage metrics
+- **Log Aggregation**: Centralized logging system
+- **Alert Management**: Automated alerting for issues
 
 ## 🤝 Contributing
 
+### Development Workflow
 1. Fork the repository
-2. Create feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open Pull Request
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes
+4. Run tests: `npm run quality-gate`
+5. Commit your changes: `git commit -m 'Add your feature'`
+6. Push to the branch: `git push origin feature/your-feature`
+7. Submit a pull request
+
+### Code Standards
+- **TypeScript**: Strict type checking enabled
+- **ESLint**: Airbnb configuration with TypeScript support
+- **Prettier**: Automated code formatting
+- **Testing**: Minimum 80% code coverage required
+
+### Commit Guidelines
+- Use conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `test:`
+- Keep commits focused and atomic
+- Write clear, descriptive commit messages
+
+## 📚 Documentation
+
+- [Architecture Overview](./docs/ARCHITECTURE_OVERVIEW.md)
+- [API Documentation](./docs/API_DOCUMENTATION_COMPREHENSIVE.md)
+- [Development Guide](./docs/DEVELOPMENT_GUIDE_COMPREHENSIVE.md)
+- [Deployment Guide](./docs/DEPLOYMENT_GUIDE_COMPREHENSIVE.md)
+- [Chrome DevTools Integration](./docs/CHROME_DEVTOOLS_INTEGRATION_GUIDE.md)
+
+## 🔐 Security
+
+- **Security Scanning**: Automated vulnerability scanning
+- **Dependency Updates**: Automated dependency management
+- **Access Control**: Role-based access control (RBAC)
+- **Audit Logging**: Complete audit trail for all actions
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🆘 Support
+
+- **Documentation**: [docs/](./docs/)
+- **Issues**: [GitHub Issues](https://github.com/your-org/auterity-unified-platform/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/your-org/auterity-unified-platform/discussions)
+
 ---
 
-**🎯 Enterprise-ready AI platform with 25+ integrated services, production deployment, and comprehensive monitoring.**
+**Built with ❤️ for the automotive industry**</content>
+<parameter name="filePath">c:\Users\Andrew\OneDrive\Documents\auterity-error-iq\README.md
