@@ -61,15 +61,15 @@ check_service_health() {
     return 1
 }
 
-# Function to run backend tests
-run_backend_tests() {
-    print_status "Running backend integration tests..."
+# Function to run API service tests
+run_api_tests() {
+    print_status "Running API integration tests..."
 
     # Set test environment variables
     export PYTEST_CURRENT_TEST=true
     export DATABASE_URL="sqlite:///:memory:"
 
-    cd backend
+    cd services/api
 
     # Install test dependencies if needed
     if [ ! -d "venv" ]; then
@@ -82,7 +82,7 @@ run_backend_tests() {
     fi
 
     # Run integration tests with coverage
-    print_status "Executing backend integration tests..."
+    print_status "Executing API integration tests..."
     pytest tests/integration/ -v \
         --tb=short \
         --cov=app \
@@ -91,16 +91,16 @@ run_backend_tests() {
         --junit-xml=test-results.xml \
         --durations=10
 
-    local backend_exit_code=$?
+    local api_exit_code=$?
 
-    if [ $backend_exit_code -eq 0 ]; then
-        print_success "Backend integration tests passed"
+    if [ $api_exit_code -eq 0 ]; then
+        print_success "API integration tests passed"
     else
-        print_error "Backend integration tests failed"
+        print_error "API integration tests failed"
     fi
 
     cd ..
-    return $backend_exit_code
+    return $api_exit_code
 }
 
 # Function to run frontend tests
@@ -140,7 +140,7 @@ run_frontend_tests() {
 run_performance_tests() {
     print_status "Running performance and load tests..."
 
-    cd backend
+    cd services/api
     source venv/bin/activate
 
     # Run performance tests with special markers
@@ -174,18 +174,18 @@ generate_test_report() {
 
 ## Test Summary
 
-### Backend Integration Tests
-- **Location:** \`backend/tests/integration/\`
-- **Coverage Report:** \`backend/htmlcov/index.html\`
-- **Results:** \`backend/test-results.xml\`
+### API Integration Tests
+- **Location:** \`services/api/tests/integration/\`
+- **Coverage Report:** \`services/api/htmlcov/index.html\`
+- **Results:** \`services/api/test-results.xml\`
 
 ### Frontend Integration Tests
 - **Location:** \`frontend/src/tests/integration/\`
 - **Coverage Report:** \`frontend/coverage/index.html\`
 
 ### Performance Tests
-- **Location:** \`backend/tests/integration/test_performance_load.py\`
-- **Results:** \`backend/performance-results.xml\`
+- **Location:** \`services/api/tests/integration/test_performance_load.py\`
+- **Results:** \`services/api/performance-results.xml\`
 
 ## Test Categories Covered
 
@@ -250,32 +250,32 @@ EOF
 # Main execution flow
 main() {
     local start_time=$(date +%s)
-    local backend_passed=false
+    local api_passed=false
     local frontend_passed=false
     local performance_passed=false
 
     print_status "Starting integration test suite..."
 
     # Parse command line arguments
-    RUN_BACKEND=true
+    RUN_API=true
     RUN_FRONTEND=true
     RUN_PERFORMANCE=true
     SKIP_SETUP=false
 
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --backend-only)
+            --api-only)
                 RUN_FRONTEND=false
                 RUN_PERFORMANCE=false
                 shift
                 ;;
             --frontend-only)
-                RUN_BACKEND=false
+                RUN_API=false
                 RUN_PERFORMANCE=false
                 shift
                 ;;
             --performance-only)
-                RUN_BACKEND=false
+                RUN_API=false
                 RUN_FRONTEND=false
                 shift
                 ;;
@@ -286,7 +286,7 @@ main() {
             --help)
                 echo "Usage: $0 [OPTIONS]"
                 echo "Options:"
-                echo "  --backend-only     Run only backend tests"
+                echo "  --api-only         Run only API tests"
                 echo "  --frontend-only    Run only frontend tests"
                 echo "  --performance-only Run only performance tests"
                 echo "  --skip-setup       Skip Docker setup"
@@ -312,7 +312,7 @@ main() {
 
         # Run database migrations
         print_status "Running database migrations..."
-        cd backend
+        cd services/api
         if [ -d "venv" ]; then
             source venv/bin/activate
             alembic upgrade head
@@ -321,9 +321,9 @@ main() {
     fi
 
     # Run tests based on flags
-    if [ "$RUN_BACKEND" = true ]; then
-        if run_backend_tests; then
-            backend_passed=true
+    if [ "$RUN_API" = true ]; then
+        if run_api_tests; then
+            api_passed=true
         fi
     fi
 
@@ -352,11 +352,11 @@ main() {
     echo "🏁 Integration Test Results"
     echo "================================================"
 
-    if [ "$RUN_BACKEND" = true ]; then
-        if [ "$backend_passed" = true ]; then
-            print_success "Backend Tests: PASSED"
+    if [ "$RUN_API" = true ]; then
+        if [ "$api_passed" = true ]; then
+            print_success "API Tests: PASSED"
         else
-            print_error "Backend Tests: FAILED"
+            print_error "API Tests: FAILED"
         fi
     fi
 
@@ -381,7 +381,7 @@ main() {
     print_status "Detailed reports available in test-report.md"
 
     # Exit with appropriate code
-    if [ "$backend_passed" = true ] && [ "$frontend_passed" = true ] && [ "$performance_passed" = true ]; then
+    if [ "$api_passed" = true ] && [ "$frontend_passed" = true ] && [ "$performance_passed" = true ]; then
         print_success "All integration tests passed! 🎉"
         exit 0
     else

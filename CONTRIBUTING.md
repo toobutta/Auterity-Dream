@@ -34,7 +34,7 @@ cd auterity-error-iq
 npm install                    # Root dependencies
 cd frontend && npm install     # Frontend dependencies
 cd ../systems/relaycore && npm install  # RelayCore dependencies
-cd ../../backend && pip install -r requirements.txt  # Backend dependencies
+cd ../../services/api && pip install -r requirements.txt  # API service dependencies
 ```
 
 ### **3. Create Feature Branch**
@@ -154,11 +154,12 @@ npm run type-check            # TypeScript validation
 npm test                      # Unit tests
 npm run test:coverage         # Coverage report
 
-# Backend (AutoMatrix, NeuroWeaver backend)
-black .                       # Code formatting
-isort .                       # Import organization
-flake8 .                      # Linting
-pytest                        # Unit tests
+# API service (Workflow Studio FastAPI)
+cd services/api && \
+  black . && \
+  isort . && \
+  flake8 . && \
+  pytest
 
 # RelayCore (TypeScript/Node.js)
 npm run lint                  # ESLint checks
@@ -368,7 +369,7 @@ Routes an AI request to the optimal provider.
 # Run security scans
 npm audit                      # Frontend security scan
 safety check                  # Python security scan
-bandit -r backend/            # Python security linting
+bandit -r services/api/       # Python security linting
 ````
 
 ## 🎯 **Component-Specific Contribution Areas**

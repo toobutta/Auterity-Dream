@@ -18,7 +18,7 @@ services:
 
   # Core Services
   backend:
-    build: ./backend
+    build: ./services/api
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/auterity
       - REDIS_URL=redis://redis:6379
@@ -153,7 +153,7 @@ services:
 
   # Task Workers
   celery-worker:
-    build: ./backend
+    build: ./services/api
     command: celery -A app.celery_app worker --loglevel=info
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/auterity

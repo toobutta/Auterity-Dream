@@ -20,7 +20,7 @@ echo "📚 Archiving old documentation..."
 mkdir -p archive/docs
 mv docs/api-reference archive/docs/
 mv docs/architecture archive/docs/
-mv docs/backend archive/docs/
+mv docs/api archive/docs/
 mv docs/business archive/docs/
 mv docs/deployment archive/docs/
 mv docs/development archive/docs/
@@ -153,7 +153,7 @@ echo "🔧 Updating service registry..."
 # Service registry is already created
 
 # 8. Create service status endpoint
-cat > backend/app/api/service_status.py << 'EOF'
+cat > services/api/app/api/service_status.py << 'EOF'
 from fastapi import APIRouter
 from app.services.registry import service_registry
 

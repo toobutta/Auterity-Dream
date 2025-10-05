@@ -14,7 +14,7 @@ echo -e "${GREEN}Validating deployment configuration...${NC}"
 # Check if required files exist
 required_files=(
     "docker-compose.prod.yml"
-    "backend/Dockerfile.prod"
+    "services/api/Dockerfile.prod"
     "frontend/Dockerfile.prod"
     "nginx/nginx.conf"
     ".env.production"
@@ -40,7 +40,7 @@ executable_scripts=(
     "scripts/deploy.sh"
     "scripts/deploy-check.sh"
     "scripts/backup.sh"
-    "backend/start-production.sh"
+    "services/api/start-production.sh"
 )
 
 echo -e "${YELLOW}Checking script permissions...${NC}"
@@ -92,7 +92,7 @@ done
 
 # Check backend production configuration
 echo -e "${YELLOW}Checking backend production configuration...${NC}"
-if grep -q "ENVIRONMENT.*os.getenv" backend/app/main.py; then
+if grep -q "ENVIRONMENT.*os.getenv" services/api/app/main.py; then
     echo -e "${GREEN}✓ Backend has production environment configuration${NC}"
 else
     echo -e "${RED}✗ Backend missing production environment configuration${NC}"
@@ -101,7 +101,7 @@ fi
 
 # Check if health check endpoints exist
 echo -e "${YELLOW}Checking health check endpoints...${NC}"
-if grep -q "@router.get.*health" backend/app/api/monitoring.py; then
+if grep -q "@router.get.*health" services/api/app/api/monitoring.py; then
     echo -e "${GREEN}✓ Health check endpoints exist${NC}"
 else
     echo -e "${RED}✗ Health check endpoints missing${NC}"

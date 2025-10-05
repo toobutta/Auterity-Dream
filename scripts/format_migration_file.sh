@@ -10,7 +10,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Path to the migration file
-MIGRATION_FILE="$PROJECT_ROOT/backend/alembic/versions/add_model_tracking_tables.py"
+MIGRATION_FILE="$PROJECT_ROOT/services/api/alembic/versions/add_model_tracking_tables.py"
 
 # Check if the file exists
 if [ ! -f "$MIGRATION_FILE" ]; then

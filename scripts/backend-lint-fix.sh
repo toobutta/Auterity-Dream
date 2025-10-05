@@ -1,11 +1,11 @@
 #!/bin/bash
-# backend-lint-fix.sh - Script to automatically fix Python linting issues
+# api-lint-fix.sh - Script to automatically fix Python linting issues
 # Usage: ./backend-lint-fix.sh [--check-only]
 
 set -e
 
 cd "$(dirname "$0")/.."
-BACKEND_DIR="$(pwd)/backend"
+API_DIR="$(pwd)/services/api"
 
 # Check if we're only checking or actually fixing
 CHECK_ONLY=false
@@ -13,8 +13,8 @@ if [ "$1" == "--check-only" ]; then
   CHECK_ONLY=true
 fi
 
-echo "=== Auterity Backend Linting Tool ==="
-echo "Working directory: $BACKEND_DIR"
+echo "=== Auterity API Linting Tool ==="
+echo "Working directory: $API_DIR"
 echo ""
 
 # Ensure we have the required tools
@@ -53,28 +53,28 @@ fi
 # Step 1: Check/Apply Black formatting
 echo "Step 1: Checking Black formatting..."
 if $CHECK_ONLY; then
-  python3 -m black --check "$BACKEND_DIR/app"
+  python3 -m black --check "$API_DIR/app"
   BLACK_STATUS=$?
 else
   echo "Applying Black formatting..."
-  python3 -m black "$BACKEND_DIR/app"
+  python3 -m black "$API_DIR/app"
   BLACK_STATUS=$?
 fi
 
 # Step 2: Check/Fix import sorting
 echo "Step 2: Checking import sorting with isort..."
 if $CHECK_ONLY; then
-  python3 -m isort --check-only "$BACKEND_DIR/app"
+  python3 -m isort --check-only "$API_DIR/app"
   ISORT_STATUS=$?
 else
   echo "Fixing import sorting with isort..."
-  python3 -m isort "$BACKEND_DIR/app"
+  python3 -m isort "$API_DIR/app"
   ISORT_STATUS=$?
 fi
 
 # Step 3: Check remaining flake8 issues
 echo "Step 3: Checking remaining flake8 issues..."
-python3 -m flake8 "$BACKEND_DIR/app" > flake8-report.txt
+python3 -m flake8 "$API_DIR/app" > flake8-report.txt
 FLAKE8_STATUS=$?
 
 # Summary

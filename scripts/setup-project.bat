@@ -5,7 +5,7 @@ echo ========================================
 
 echo.
 echo [1/6] Fixing Python dependencies...
-cd backend
+cd services\api
 pip install --upgrade huggingface-hub sentence-transformers
 pip install --upgrade pydantic==2.7.4 pydantic-settings==2.4.0
 cd ..
@@ -36,9 +36,9 @@ cd systems/neuroweaver/frontend && npm install && cd ../../..
 
 echo.
 echo [6/6] Running quick validation...
-echo Testing backend health...
-cd backend
-python -c "print('Backend Python environment: OK')"
+echo Testing API health...
+cd services\api
+python -c "print('API Python environment: OK')"
 cd ..
 
 echo Testing frontend build...

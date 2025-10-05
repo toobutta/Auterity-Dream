@@ -26,10 +26,10 @@ Access the application:
 
 ## Option 2: Manual Setup
 
-### Backend Setup
+### API Service Setup
 
 ```bash
-cd backend
+cd services/api
 pip install -r requirements.txt
 python -m app.main
 ```
@@ -48,7 +48,7 @@ Copy the example environment files:
 
 ```bash
 cp .env.example .env.production.local
-cp backend/.env.example backend/.env
+cp services/api/.env.example services/api/.env
 cp frontend/.env.example frontend/.env
 ```
 

@@ -43,16 +43,16 @@ const config = {
     "README_INFRASTRUCTURE.md",
     "docker-compose.old.yml",
 
-    // Duplicate backend API files (keep the enhanced versions)
-    "backend/app/api/error_correlation.py", // Keep error_management.py instead
-    "backend/app/api/orchestration_routes.py", // Functionality moved to workflows.py
+    // Duplicate API files (keep the enhanced versions)
+    "services/api/app/api/error_correlation.py", // Keep error_management.py instead
+    "services/api/app/api/orchestration_routes.py", // Functionality moved to workflows.py
 
     // Duplicate frontend components (keep enhanced versions)
     "frontend/src/components/ErrorToast.tsx", // Keep shared/components/ErrorToast.tsx
     "frontend/src/components/MetricCard.tsx", // Keep shared/components/MetricCard.tsx
 
     // Old test files
-    "backend/test_*.py", // Keep organized tests/ directory
+    "services/api/test_*.py", // Keep organized tests/ directory
     "frontend/fix-*.js", // Keep organized scripts
 
     // Duplicate documentation
@@ -69,8 +69,8 @@ const config = {
   // Merge these files (combine best features)
   mergeFiles: [
     {
-      target: "backend/app/api/workflows.py",
-      sources: ["backend/app/api/orchestration_routes.py"],
+      target: "services/api/app/api/workflows.py",
+      sources: ["services/api/app/api/orchestration_routes.py"],
       action: "merge_orchestration_features",
     },
     {

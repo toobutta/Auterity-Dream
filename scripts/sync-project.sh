@@ -43,8 +43,8 @@ print_status "Validating project structure..."
 print_status "Cleaning up unnecessary files..."
 
 # Remove virtual environment from git tracking if it exists
-if [ -d "backend/venv312" ]; then
-    git rm -r --cached backend/venv312/ 2>/dev/null || true
+if [ -d "services/api/venv312" ]; then
+    git rm -r --cached services/api/venv312/ 2>/dev/null || true
     print_success "Removed virtual environment from git tracking"
 fi
 
@@ -59,7 +59,7 @@ print_success "Updated README timestamp"
 print_status "Validating project structure..."
 
 # Ensure critical directories exist
-mkdir -p docs/{architecture,backend,frontend,deployment,features,business,legal}
+mkdir -p docs/{architecture,api,frontend,deployment,features,business,legal}
 mkdir -p scripts
 mkdir -p monitoring/{prometheus,grafana,alertmanager}
 mkdir -p shared/{api,components,contexts,hooks,services,types,utils}
@@ -87,7 +87,7 @@ print_status "Creating comprehensive commit..."
 COMMIT_MESSAGE="🔄 Project Sync: Centralize and organize unified workspace
 
 ✅ Completed:
-- Backend code quality fixes (999+ violations resolved)
+- API service code quality fixes (999+ violations resolved)
 - Frontend security improvements
 - Unified monitoring system implementation
 - RelayCore cost-aware model switching
@@ -102,7 +102,7 @@ COMMIT_MESSAGE="🔄 Project Sync: Centralize and organize unified workspace
 - Enterprise SSO integration ready
 
 📊 Status:
-- Backend: Production ready (critical violations fixed)
+- API service: Production ready (critical violations fixed)
 - Frontend: Security patches applied
 - Infrastructure: Docker + Terraform ready
 - Documentation: Comprehensive and up-to-date
@@ -151,7 +151,7 @@ cat > PROJECT_SYNC_REPORT.md << EOF
 - **Repository**: https://github.com/toobutta/auterity-error-iq
 - **Branch**: $(git branch --show-current)
 - **Last Commit**: $(git log -1 --format="%h - %s")
-- **Total Files**: $(find . -type f -not -path './.git/*' -not -path './backend/venv312/*' | wc -l | tr -d ' ')
+- **Total Files**: $(find . -type f -not -path './.git/*' -not -path './services/api/venv312/*' | wc -l | tr -d ' ')
 
 ## ✅ Completed Tasks
 - [x] Backend code quality emergency fix (999+ violations → 49)
@@ -216,7 +216,7 @@ print_status "Running final validation..."
 CRITICAL_FILES=(
     "README.md"
     "docker-compose.yml"
-    "backend/requirements.txt"
+    "services/api/requirements.txt"
     "frontend/package.json"
     "CURRENT_PROJECT_STATUS.md"
 )
@@ -237,7 +237,7 @@ print_success "Repository Status:"
 echo "  📍 Remote: $(git remote get-url origin)"
 echo "  🌿 Branch: $(git branch --show-current)"
 echo "  📝 Latest: $(git log -1 --format="%h - %s")"
-echo "  📊 Files: $(find . -type f -not -path './.git/*' -not -path './backend/venv312/*' | wc -l | tr -d ' ') tracked files"
+echo "  📊 Files: $(find . -type f -not -path './.git/*' -not -path './services/api/venv312/*' | wc -l | tr -d ' ') tracked files"
 echo ""
 print_success "✅ Project is now centralized, organized, and GitHub is up-to-date!"
 echo ""
