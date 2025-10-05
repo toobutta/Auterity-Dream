@@ -56,7 +56,7 @@
     "build": "vite build",
     "build:analyze": "ANALYZE=true vite build",
     "preview": "vite preview",
-    "lint": "eslint . --config .eslintrc.minimal.cjs --max-warnings 50",
+    "lint": "eslint . --max-warnings 50",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "test:coverage": "vitest run --coverage --config vitest.config.ts",

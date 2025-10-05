@@ -14,6 +14,9 @@ export default tseslint.config(
       "coverage/",
       ".next/",
       "!.eslintrc.js",
+      "*.config.ts",
+      "*.config.js",
+      "vitest.setup.ts",
     ],
   },
 

@@ -48,7 +48,7 @@ export const getDefaultRetryOptions = (
         ...baseOptions,
         maxAttempts: 5,
         baseDelay: 500,
-        retryCondition: (error) => {
+        retryCondition: (error: unknown): boolean => {
           const status = (error as { response?: { status?: number } }).response
             ?.status;
           return !status || status >= 500 || status === 408 || status === 429;
@@ -61,7 +61,7 @@ export const getDefaultRetryOptions = (
         maxAttempts: 3,
         baseDelay: 2000,
         maxDelay: 30000,
-        retryCondition: (error) => {
+        retryCondition: (error: unknown): boolean => {
           const status = (error as { response?: { status?: number } }).response
             ?.status;
           return status === 503 || status === 502 || status === 429;
@@ -73,7 +73,7 @@ export const getDefaultRetryOptions = (
         ...baseOptions,
         maxAttempts: 3,
         baseDelay: 1000,
-        retryCondition: (error) => {
+        retryCondition: (error: unknown): boolean => {
           const status = (error as { response?: { status?: number } }).response
             ?.status;
           return status >= 500 || status === 429;
@@ -85,7 +85,7 @@ export const getDefaultRetryOptions = (
         ...baseOptions,
         maxAttempts: 2,
         baseDelay: 2000,
-        retryCondition: (error) => {
+        retryCondition: (error: unknown): boolean => {
           const status = (error as { response?: { status?: number } }).response
             ?.status;
           return status === 503 || status === 502;
@@ -96,7 +96,7 @@ export const getDefaultRetryOptions = (
       return {
         ...baseOptions,
         maxAttempts: 1,
-        retryCondition: () => false,
+        retryCondition: (): boolean => false,
       };
   }
 };
@@ -171,7 +171,7 @@ export async function retryWithBackoff<T>(
       lastError = error;
 
       // Check if we should retry this error
-      if (!config.retryCondition!(error)) {
+      if (!config.retryCondition?.(error)) {
         logWarn("Error not retryable, failing immediately", {
           component: context?.component,
           action: context?.action,
@@ -302,7 +302,12 @@ export class CircuitBreaker {
     return this.state;
   }
 
-  getMetrics() {
+  getMetrics(): {
+    state: CircuitBreakerState;
+    failureCount: number;
+    successCount: number;
+    lastFailureTime: Date | undefined;
+  } {
     return {
       state: this.state,
       failureCount: this.failureCount,
@@ -328,7 +333,9 @@ export function withRetry<T extends (...args: unknown[]) => Promise<unknown>>(
   options: Partial<RetryOptions> = {},
   context?: { component?: string; action?: string },
 ): T {
-  return (async (...args: Parameters<T>) => {
+  return (async (
+    ...args: Parameters<T>
+  ): Promise<Awaited<ReturnType<T>>> => {
     return retryWithBackoff(() => fn(...args), options, context);
   }) as T;
 }
