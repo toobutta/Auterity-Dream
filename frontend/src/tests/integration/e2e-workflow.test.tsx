@@ -5,12 +5,24 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach, Mock } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../../contexts/AuthContext";
 import { ErrorProvider } from "../../contexts/ErrorContext";
 import App from "../../App";
 import * as workflowsApi from "../../api/workflows";
 import * as templatesApi from "../../api/templates";
 import * as authApi from "../../api/auth";
+
+// Mock react-router-dom to use MemoryRouter instead of BrowserRouter
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    BrowserRouter: ({ children }: { children: React.ReactNode }) => (
+      <MemoryRouter initialEntries={["/dashboard"]}>{children}</MemoryRouter>
+    ),
+  };
+});
 
 // Mock API modules with complete exports
 vi.mock("../../api/workflows", () => ({
@@ -67,17 +79,13 @@ vi.mock("reactflow", () => ({
 // Mock the useAuth hook directly to avoid complex auth setup
 const mockUseAuth = vi.fn();
 vi.mock("../../contexts/AuthContext", () => ({
-  AuthProvider: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="auth-provider">{children}</div>
-  ),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
   useAuth: () => mockUseAuth(),
 }));
 
-// Test wrapper component - App provides its own BrowserRouter
+// Test wrapper component - simplified since App provides its own providers
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ErrorProvider>
-    <AuthProvider>{children}</AuthProvider>
-  </ErrorProvider>
+  <div data-testid="test-wrapper">{children}</div>
 );
 
 describe("End-to-End Workflow Integration Tests", () => {
@@ -153,6 +161,17 @@ describe("End-to-End Workflow Integration Tests", () => {
   beforeEach(() => {
     // Reset all mocks
     vi.clearAllMocks();
+
+    // Setup auth hook mock to return authenticated state
+    mockUseAuth.mockReturnValue({
+      user: mockUser,
+      isAuthenticated: true,
+      isLoading: false,
+      error: null,
+      login: vi.fn(),
+      logout: vi.fn(),
+      token: "mock-token",
+    });
 
     // Setup default auth mock - use AuthApi class methods
     (authApi.AuthApi.getCurrentUser as Mock).mockResolvedValue(mockUser);

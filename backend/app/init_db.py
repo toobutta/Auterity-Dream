@@ -3,6 +3,11 @@
 import logging
 
 from passlib.context import CryptContext
+from sqlalchemy.orm import Session
+
+from app.database import get_db_session, check_database_connection, create_tables
+from app.models.user import User
+from app.models.template import Template, TemplateParameter
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
